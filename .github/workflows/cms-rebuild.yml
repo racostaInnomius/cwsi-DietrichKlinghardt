@@ -1,0 +1,29 @@
+name: CMS rebuild (self-hosted → Plesk)
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [cms-update]
+  workflow_dispatch: {}
+
+concurrency:
+  group: cms-rebuild
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, plesk]
+    steps:
+      - name: Trigger Plesk pull + build
+        run: |
+          set -euo pipefail
+          code=$(curl -sk -o /tmp/plesk-hook.out -w '%{http_code}' -X POST -m 30 \
+            -H 'X-GitHub-Event: push' \
+            -H 'Content-Type: application/json' \
+            -d '{"ref":"refs/heads/main"}' \
+            "https://127.0.0.1:8443/modules/git/public/web-hook.php?uuid=${{ secrets.PLESK_GIT_HOOK_UUID }}")
+          case "$code" in
+            2*) echo "Plesk accepted the deploy trigger." ;;
+            *) echo "::error::Plesk webhook returned HTTP $code"; exit 1 ;;
+          esac
