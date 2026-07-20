@@ -5,18 +5,18 @@ import { mediaUrl, richTextBlocks } from "@/lib/cms";
 import { text, usePageContent } from "@/lib/content";
 import { env } from "@/lib/env";
 
-const FALLBACK_HEADING = "Klinghardt™ Newsletter";
-const FALLBACK_DESCRIPTION = "Stay current with upcoming events, clinical research updates, and receive invitations to live webinar hosted each week by Dr. Klinghardt™, and guests.";
+const FALLBACK_HEADING = "Klinghardt® Newsletter";
+const FALLBACK_DESCRIPTION = "Stay current with upcoming events, clinical research updates, and receive invitations to live webinar hosted each week by Dr. Klinghardt®, and guests.";
 const FALLBACK_CONSENT = "By subscribing you agree to receive email communications from the Klinghardt Institute.";
 const FALLBACK_PRIVACY = "Your information is never shared.";
 const FALLBACK_NO_SPAM = "No spam. Unsubscribe at any time.";
 
 function TrademarkText({ value }: { value: string }) {
-  const parts = value.split("™");
-  return <>{parts.map((part, index) => (
-    <span className="trademark-part" key={`${part}-${index}`}>
-      {part}{index < parts.length - 1 && <sup>™</sup>}
-    </span>
+  const parts = value.split(/([™®])/);
+  return <>{parts.filter(Boolean).map((part, index) => (
+    part === "™" || part === "®"
+      ? <sup key={`${part}-${index}`}>{part}</sup>
+      : <span className="trademark-part" key={`${part}-${index}`}>{part}</span>
   ))}</>;
 }
 
