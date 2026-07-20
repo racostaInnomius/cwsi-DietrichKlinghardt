@@ -36,16 +36,28 @@ export async function fetchPageContents(): Promise<ContentDoc[]> {
   }
 }
 
-export function richText(doc: unknown): string {
-  if (!doc || typeof doc !== "object") return "";
+interface LexicalNode {
+  type?: string;
+  text?: string;
+  children?: unknown[];
+}
+
+function lexicalText(node: unknown): string {
+  if (!node || typeof node !== "object") return "";
+  const item = node as LexicalNode;
+  if (item.type === "linebreak") return "\n";
+  if (typeof item.text === "string") return item.text;
+  return item.children?.map(lexicalText).join("") ?? "";
+}
+
+export function richTextBlocks(doc: unknown): string[] {
+  if (!doc || typeof doc !== "object") return [];
   const root = (doc as { root?: { children?: unknown[] } }).root;
-  const walk = (node: unknown): string => {
-    if (!node || typeof node !== "object") return "";
-    const item = node as { text?: string; children?: unknown[] };
-    if (typeof item.text === "string") return item.text;
-    return item.children?.map(walk).join("") ?? "";
-  };
-  return root?.children?.map(walk).filter(Boolean).join("\n\n") ?? "";
+  return root?.children?.map(lexicalText).map((value) => value.trim()).filter(Boolean) ?? [];
+}
+
+export function richText(doc: unknown): string {
+  return richTextBlocks(doc).join("\n\n");
 }
 
 export function mediaUrl(media: unknown): string | undefined {

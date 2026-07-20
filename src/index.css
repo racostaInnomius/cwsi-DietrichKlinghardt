@@ -43,8 +43,9 @@ h1, h2, h3, p { margin-top: 0; }
 .newsletter-copy { min-width: 0; padding: 68px clamp(45px, 4.7vw, 72px) 54px; }
 .eyebrow { margin-bottom: 9px; color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: .25em; text-transform: uppercase; }
 .newsletter-copy h1 { max-width: 620px; margin-bottom: 27px; font: 500 clamp(43px, 3.6vw, 54px)/1.02 "Cormorant Garamond", Georgia, serif; letter-spacing: -.035em; }
-.newsletter-copy h1 span { display: block; }
-.newsletter-copy h1 span + span { margin-top: 7px; }
+.newsletter-copy h1 > span { display: block; }
+.newsletter-copy h1 > span + span { margin-top: 7px; }
+.newsletter-copy h1 .trademark-part { display: inline; }
 .newsletter-copy h1 sup { margin-left: 2px; font: 600 10px/1 "Inter", Arial, sans-serif; letter-spacing: 0; vertical-align: .65em; }
 .newsletter-copy > p:not(.eyebrow) { max-width: 620px; margin-bottom: 20px; font-size: 18px; line-height: 1.7; letter-spacing: -.015em; }
 .newsletter-image { min-width: 0; overflow: hidden; }

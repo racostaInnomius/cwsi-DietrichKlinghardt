@@ -3,7 +3,11 @@ import { env } from "@/lib/env";
 
 type Status = "idle" | "sending" | "done" | "error";
 
-export function NewsletterForm() {
+interface NewsletterFormProps {
+  consentLines: string[];
+}
+
+export function NewsletterForm({ consentLines }: NewsletterFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -75,7 +79,11 @@ export function NewsletterForm() {
         <label><span className="sr-only">Email Address</span><input name="email" type="email" autoComplete="email" placeholder="Email Address" required /></label>
         <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Subscribing…" : "Subscribe"}</button>
-        <p className="consent">By subscribing you agree to receive email communications from the Klinghardt Institute.<br />Your information is never shared.</p>
+        <p className="consent">
+          {consentLines.map((line, index) => (
+            <span key={`${line}-${index}`}>{index > 0 && <br />}{line}</span>
+          ))}
+        </p>
       </form>
 
       {(status === "done" || status === "error") && (
