@@ -1,7 +1,8 @@
 import { Brand } from "@/components/Brand";
 import { InstagramIcon, MenuIcon, VimeoIcon } from "@/components/Icons";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { mediaUrl, richTextBlocks } from "@/lib/cms";
+import { MusicPlayer } from "@/components/MusicPlayer";
+import { mediaUrl, musicEmbed, richTextBlocks } from "@/lib/cms";
 import { text, usePageContent } from "@/lib/content";
 import { env } from "@/lib/env";
 
@@ -24,6 +25,12 @@ export function LandingPage() {
   const home = usePageContent("home");
   const newsletter = usePageContent("newsletter");
   const heroImage = mediaUrl(newsletter?.heroImage ?? home?.heroImage) ?? "/images/dietrich-klinghardt.jpg";
+  const music = musicEmbed(newsletter?.featuredMusic ?? home?.featuredMusic);
+  const musicPlacement =
+    newsletter?.musicPlacement === "afterHero" ||
+    newsletter?.musicPlacement === "beforeBody"
+      ? newsletter.musicPlacement
+      : "afterBody";
   const blocks = richTextBlocks(newsletter?.body);
   const details = (blocks[3] ?? `${FALLBACK_PRIVACY}\n${FALLBACK_NO_SPAM}`).split(/\n+/).filter(Boolean);
   const heading = blocks[0] ?? FALLBACK_HEADING;
@@ -51,14 +58,19 @@ export function LandingPage() {
             <span>Sign Up for</span>
             <span><TrademarkText value={heading} /></span>
           </h1>
+          {music && musicPlacement === "beforeBody" && <MusicPlayer music={music} />}
           <p>{description}</p>
           <NewsletterForm consentLines={consentLines} />
           <div className="no-spam"><span />{noSpam}</div>
+          {music && musicPlacement === "afterBody" && <MusicPlayer music={music} />}
         </div>
         <div className="newsletter-image">
-          <img src={heroImage} alt="Dr. Dietrich Klinghardt" width="1920" height="1080" fetchPriority="high" />
+          <img src={heroImage} alt="Dr. Dietrich Klinghardt" width="2574" height="3861" fetchPriority="high" />
         </div>
       </section>
+      {music && musicPlacement === "afterHero" && (
+        <MusicPlayer music={music} standalone />
+      )}
     </main>
 
     <footer><Brand inverted /></footer>

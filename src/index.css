@@ -49,7 +49,7 @@ h1, h2, h3, p { margin-top: 0; }
 .newsletter-copy h1 sup { margin-left: 2px; font: 600 10px/1 "Inter", Arial, sans-serif; letter-spacing: 0; vertical-align: .65em; }
 .newsletter-copy > p:not(.eyebrow) { max-width: 620px; margin-bottom: 20px; font-size: 18px; line-height: 1.7; letter-spacing: -.015em; }
 .newsletter-image { min-width: 0; overflow: hidden; }
-.newsletter-image img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: right center; }
+.newsletter-image img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; }
 
 .newsletter-form { width: 100%; display: grid; gap: 9px; }
 .name-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -63,6 +63,24 @@ h1, h2, h3, p { margin-top: 0; }
 .honeypot { position: absolute; left: -9999px; }
 .no-spam { margin-top: 17px; display: flex; align-items: center; gap: 18px; color: #397f82; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; }
 .no-spam span { width: 39px; height: 1px; flex: 0 0 auto; background: #397f82; }
+
+.music-player { width: 100%; max-width: 620px; margin-top: 34px; color: var(--deep-teal); }
+.music-player h2 { margin-bottom: 18px; font: 500 clamp(30px, 2.7vw, 40px)/1.05 "Cormorant Garamond", Georgia, serif; letter-spacing: -.025em; }
+.music-player--standalone { max-width: none; margin: 0; padding: 76px max(24px, calc((100vw - 920px) / 2)); background: #e9f1ed; }
+.music-player--standalone h2 { max-width: 920px; }
+.music-artist { margin: -9px 0 18px; color: #596b69; font-size: 14px; }
+.soundcloud-frame { width: 100%; overflow: hidden; border-radius: 8px; background: #dce7e3; box-shadow: 0 14px 35px rgba(23,63,67,.12); }
+.soundcloud-frame--track { height: 166px; }
+.soundcloud-frame--playlist { height: 450px; }
+.soundcloud-frame iframe { width: 100%; height: 100%; display: block; border: 0; }
+.soundcloud-consent { width: 100%; height: 100%; display: grid; place-items: center; padding: 24px; background-position: center; background-size: cover; }
+.soundcloud-consent::before { content: ""; position: absolute; inset: 0; background: rgba(23,63,67,.78); }
+.soundcloud-consent { position: relative; }
+.soundcloud-consent__content { position: relative; z-index: 1; max-width: 420px; color: white; text-align: center; }
+.soundcloud-consent__content p { margin-bottom: 16px; font-size: 13px; line-height: 1.55; }
+.soundcloud-consent__content button { min-height: 46px; padding: 12px 20px; border: 1px solid rgba(255,255,255,.7); border-radius: 5px; background: white; color: var(--deep-teal); cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.soundcloud-consent__content button:hover { background: var(--paper); }
+.music-caption { margin: 14px 0 0; color: #596b69; font-size: 13px; line-height: 1.65; }
 
 .cms-refresh { position: fixed; z-index: 300; inset: 0; display: grid; place-content: center; justify-items: center; gap: 30px; background: var(--paper); color: var(--deep-teal); }
 .cms-refresh .brand { font-size: 48px; }
@@ -113,12 +131,15 @@ footer .brand { font-size: 52px; }
   .contact-link, .social-link { display: none; }
   .newsletter-section { min-height: 0; padding: 0; grid-template-columns: minmax(0, 1fr); }
   .newsletter-image { height: 420px; grid-row: 1; }
-  .newsletter-image img { object-position: 66% center; }
+  .newsletter-image img { object-position: center top; }
   .newsletter-copy { grid-row: 2; padding: 62px 24px 68px; }
   .newsletter-copy h1 { font-size: clamp(43px, 12.5vw, 54px); }
   .newsletter-copy > p:not(.eyebrow) { font-size: 16px; }
   .name-fields { grid-template-columns: 1fr; gap: 9px; }
   .no-spam { font-size: 9px; }
+  .music-player { margin-top: 38px; }
+  .music-player--standalone { margin: 0; padding: 58px 24px; }
+  .soundcloud-frame--playlist { height: min(450px, 115vw); min-height: 360px; }
   footer { min-height: 220px; }
   footer .brand { font-size: 44px; }
   .feedback-dialog { padding: 43px 25px 34px; }
