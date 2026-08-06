@@ -48,8 +48,8 @@ h1, h2, h3, p { margin-top: 0; }
 .newsletter-copy h1 .trademark-part { display: inline; }
 .newsletter-copy h1 sup { margin-left: 2px; font: 600 10px/1 "Inter", Arial, sans-serif; letter-spacing: 0; vertical-align: .65em; }
 .newsletter-copy > p:not(.eyebrow) { max-width: 620px; margin-bottom: 20px; font-size: 18px; line-height: 1.7; letter-spacing: -.015em; }
-.newsletter-image { min-width: 0; overflow: hidden; }
-.newsletter-image img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; }
+.newsletter-image { min-width: 0; overflow: hidden; background: #c8cbd1; }
+.newsletter-image img { width: 100%; height: 100%; display: block; object-fit: contain; object-position: center top; }
 
 .newsletter-form { width: 100%; display: grid; gap: 9px; }
 .name-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -130,8 +130,8 @@ footer .brand { font-size: 52px; }
   .site-header nav { padding: 0; gap: 7px; }
   .contact-link, .social-link { display: none; }
   .newsletter-section { min-height: 0; padding: 0; grid-template-columns: minmax(0, 1fr); }
-  .newsletter-image { height: 420px; grid-row: 1; }
-  .newsletter-image img { object-position: center top; }
+  .newsletter-image { height: auto; grid-row: 1; }
+  .newsletter-image img { height: auto; object-position: center top; }
   .newsletter-copy { grid-row: 2; padding: 62px 24px 68px; }
   .newsletter-copy h1 { font-size: clamp(43px, 12.5vw, 54px); }
   .newsletter-copy > p:not(.eyebrow) { font-size: 16px; }

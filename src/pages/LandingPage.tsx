@@ -2,7 +2,7 @@ import { Brand } from "@/components/Brand";
 import { InstagramIcon, MenuIcon, VimeoIcon } from "@/components/Icons";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { MusicPlayer } from "@/components/MusicPlayer";
-import { mediaUrl, musicEmbed, richTextBlocks } from "@/lib/cms";
+import { musicEmbed, richTextBlocks } from "@/lib/cms";
 import { text, usePageContent } from "@/lib/content";
 import { env } from "@/lib/env";
 
@@ -24,7 +24,6 @@ function TrademarkText({ value }: { value: string }) {
 export function LandingPage() {
   const home = usePageContent("home");
   const newsletter = usePageContent("newsletter");
-  const heroImage = mediaUrl(newsletter?.heroImage ?? home?.heroImage) ?? "/images/dietrich-klinghardt.jpg";
   const music = musicEmbed(newsletter?.featuredMusic ?? home?.featuredMusic);
   const musicPlacement =
     newsletter?.musicPlacement === "afterHero" ||
@@ -65,7 +64,13 @@ export function LandingPage() {
           {music && musicPlacement === "afterBody" && <MusicPlayer music={music} />}
         </div>
         <div className="newsletter-image">
-          <img src={heroImage} alt="Dr. Dietrich Klinghardt" width="2574" height="3861" fetchPriority="high" />
+          <img
+            src="/images/dietrich-klinghardt.jpg?v=20260805"
+            alt="Dr. Dietrich Klinghardt"
+            width="2574"
+            height="3861"
+            fetchPriority="high"
+          />
         </div>
       </section>
       {music && musicPlacement === "afterHero" && (

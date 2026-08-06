@@ -21,8 +21,8 @@ npm run build
 
 ## Beytrax integration
 
-- `page-contents/newsletter` controls the newsletter paragraph and optional CMS image.
-- `page-contents/home` remains an image fallback for compatibility with existing content.
+- `page-contents/newsletter` controls the newsletter paragraph and featured music.
+- The landing portrait is a fixed approved brand asset; CMS hero images do not override it.
 - Local fallback content keeps the temporary landing available when the CMS is offline.
 - The signup form posts `firstName`, `lastName` and `email` to
   `POST /api/public/newsletter/subscribe` together with the public tenant/site UUIDs.
@@ -50,5 +50,5 @@ URLs intentionally default to the signup section until the client supplies final
 
 ## Image provenance
 
-`public/images/dietrich-klinghardt.jpg` is the original 1920×1080 image embedded in
-the client-provided PDF. No external stock imagery is used.
+`public/images/dietrich-klinghardt.jpg` is the approved 2574×3861 portrait supplied
+by the client. No external stock imagery is used.
