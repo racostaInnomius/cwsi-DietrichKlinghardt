@@ -288,6 +288,47 @@ funcional sin API keys de pago (salvo decisión D7 distinta).
 
 </details>
 
+### Fase 5 — Donaciones Foundation ✅ (código) · ⛔ bloqueada operativamente
+
+> **Implementada 2026-08-27**, commit `e817def` en `cwsi-dietrich`. Sin cambios
+> de CMS ni de API: el flujo de donaciones MoR ya existía completo para
+> SistWorld y solo se portó y re-tematizó.
+>
+> **Foundation** (`/foundation`): copy real del frame 0:5277 — titular de tres
+> frases, propósito, los cuatro compromisos y la quote de cierre. Corregido el
+> typo "DDr. Klinghardt" del diseño.
+>
+> **Donación** (`/foundation/donate` + `/foundation/donate/return`): Stripe
+> Elements en modo diferido con `onBehalfOf` = la cuenta conectada de la
+> Fundación, que **debe** coincidir con el `on_behalf_of` que el API pone en el
+> PaymentIntent o Stripe rechaza la confirmación. La página de retorno
+> **recupera el PaymentIntent** en vez de confiar en el `redirect_status` de la
+> URL — un parámetro de URL no es prueba de que el dinero se movió — y
+> re-consulta mientras siga `processing`.
+>
+> **Si se puede donar se decide en RUNTIME, no en el build:** depende del
+> onboarding de Stripe de la Fundación, que cambia sin rebuild, así que hornearlo
+> en el HTML acabaría siendo mentira. Falta la clave publicable también degrada
+> igual, para que nunca aparezca un formulario que falla en el último paso.
+>
+> ⛔ **Bloqueo operativo — la página NO puede cobrar todavía:**
+> 1. El tenant Dietrich **no tiene cuenta Stripe Connect** (`stripe_connect_accounts`
+>    solo tiene a SistWorld). Sin ella `POST /api/donations/create-intent`
+>    responde 409 y la página muestra "Donations open soon".
+> 2. Falta `VITE_PUBLIC_STRIPE_PUBLISHABLE_KEY` (la clave **de la plataforma**,
+>    no la del tenant) en el entorno del sitio.
+> 3. El propio diseño dice que la Fundación *"is being established"*, así que el
+>    estado cerrado puede además ser el correcto por ahora.
+>
+> **Verificado** contra `site-context` de producción en las dos ramas:
+> `dietrich-klinghardt.com` → sin cuenta conectada (estado cerrado, revisado en
+> navegador) · `sistworldfoundation.org` → cuenta real (rama del formulario).
+> Elements en sí queda sin verificar end-to-end: no hay cuenta ni clave, que es
+> justo el prerrequisito que el plan ya anticipaba.
+
+<details>
+<summary>Plan original de la fase</summary>
+
 ### Fase 5 — Donaciones Foundation
 **Objetivo:** página de donación clonada de SistWorld, re-tematizada DK (D5).
 **Tareas:** portar `DonatePage`/`DonateReturnPage` del patrón sistworld (Stripe
@@ -297,6 +338,8 @@ MoR vía plataforma — distinto del Stripe personal de events/store; coordinar 
 **Criterio:** donación de prueba end-to-end + correo de recibo; degradación correcta si
 Connect no está listo (patrón auto-degradante ya existente).
 **Esfuerzo:** medio (reuso alto).
+
+</details>
 
 ### Fase 6 — Store + carrito (la fase con más backend)
 **Objetivo:** catálogo con categorías + carrito unificado (D1/D6/D9).
