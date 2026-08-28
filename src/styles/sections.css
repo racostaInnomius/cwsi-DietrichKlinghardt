@@ -312,6 +312,15 @@
 .home-art {
   color: var(--white);
 }
+/* The eyebrow is the one element that does not inherit the light colour above:
+   `.eyebrow` sets `--gold-text` itself, and that gold is measured against cream
+   and white. Over the navy this section opens with it lands at 2.28:1 — the
+   "A.R.T. Klinghardt™" line was practically invisible. The hero had already
+   overridden it (`.hero__eyebrow`); this is the same correction, and it applies
+   to all three pages that use this section — Home, A.R.T. and Foundation. */
+.home-art .eyebrow {
+  color: var(--cream-3);
+}
 .home-art__inner {
   padding-block: var(--section-y);
 }
@@ -1622,12 +1631,28 @@
 .directory-search input,
 .directory-search select {
   width: 100%;
-  min-height: 52px;
+  /* Fixed height, not min-height: a native <select> only honours a height it is
+     given outright, and the three controls have to line up exactly. */
+  height: 52px;
   padding: 0 18px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--surface-2);
   outline: 0;
+  /* Safari draws a <select> as a native menu and ignores the box it is given,
+     which is why the dropdown sat at a different height from the input and the
+     button there while matching them in Chrome. (The font is already handled
+     globally by the `font: inherit` reset in base.css.) */
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* Room for the chevron, which replaces the native one lost with `appearance`. */
+.directory-search select {
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%236B6456' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  background-size: 12px 8px;
 }
 .directory-search input::placeholder {
   color: var(--muted-2);
@@ -1637,7 +1662,7 @@
   border-color: var(--brand);
 }
 .directory-search .btn {
-  min-height: 52px;
+  height: 52px;
 }
 
 .directory-count {

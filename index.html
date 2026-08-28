@@ -18,6 +18,18 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Kalice Regular carries every heading on every page, so it is worth
+         fetching before the CSS that asks for it. Only this one face is
+         preloaded: the others are declared in base.css but rarely matched, and
+         preloading a font the page never uses wastes the request. -->
+    <link
+      rel="preload"
+      href="/fonts/kalice-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <!-- The document title is emitted per route by components/Seo. A static
          one here would become a duplicate on every built page. -->
   </head>

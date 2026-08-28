@@ -3,13 +3,30 @@
  * (buttons, eyebrows, section rhythm) used by every page of the site.
  */
 
-/* Kalice — licensed files go in public/fonts/ (see the README there). The
-   @font-face blocks are declared up front so dropping the files in is the only
-   step needed; until then the stack in --font-display takes over silently. */
+/* Kalice — the brand display face, licensed (© 2023 Margot Lévêque). The files
+   in public/fonts/ are the real webfonts, not the Figma trial.
+   Four faces are declared but a page only downloads the ones it actually uses:
+   the site sets weight 400 on every display element, so Regular is normally the
+   only request. Medium, Bold and Italic are here so a heading that asks for them
+   renders in the brand face instead of silently falling back to Georgia. */
 @font-face {
   font-family: "Kalice";
   src: url("/fonts/kalice-regular.woff2") format("woff2");
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Kalice";
+  src: url("/fonts/kalice-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Kalice";
+  src: url("/fonts/kalice-medium.woff2") format("woff2");
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }

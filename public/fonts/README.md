@@ -1,23 +1,25 @@
 # Fonts
 
-## Kalice — display face (pending)
+## Kalice — display face ✅ installed
 
-Every heading in the design uses **Kalice** (36–117px). The `@font-face` blocks
-are already declared in `src/styles/base.css`, so shipping it is only a matter of
-dropping two files here:
+The brand display face, used by every heading (36–117px). Licensed webfonts,
+delivered by the client on 2026-08-28 — **not** the `Kalice-Trial` the Figma
+file references, whose licence does not cover web embedding.
 
-```
-public/fonts/kalice-regular.woff2   (weight 400)
-public/fonts/kalice-bold.woff2      (weight 700)
-```
+    kalice-regular.woff2   400 normal   ← the only face a page normally fetches
+    kalice-italic.woff2    400 italic
+    kalice-medium.woff2    500 normal
+    kalice-bold.woff2      700 normal
 
-No code change is needed — `--font-display` picks them up automatically.
+© 2023 Margot Lévêque. The full family, including the `.otf` masters and the
+weights not shipped here (ExtraBold, Black and their italics), is kept in
+`Kalice Family 2026/` at the root of this repository, which is private.
 
-⚠️ **The Figma file uses `Kalice-Trial`.** A trial licence does not cover web
-embedding, so the production files must come with a proper webfont licence from
-the designer (Noemi) or the foundry. Until they arrive the stack falls back to
-Cormorant Garamond → Georgia → serif, which keeps the layout honest but is *not*
-the brand face.
+Four faces are declared in `src/styles/base.css` but a page downloads only what
+it matches: the site sets `font-weight: 400` on every display element, so
+Regular is normally the single request. The others exist so that a heading that
+does ask for them renders in the brand face rather than dropping to Georgia.
+`kalice-regular.woff2` is preloaded from `index.html`.
 
 ## DM Sans — body
 
@@ -26,7 +28,7 @@ embed, nothing to host.
 
 ## Fraunces — serif accents
 
-Also from Google Fonts (weight 300, plus italics). The design uses it for card
-titles and italic accents such as *"AUTONOMIC RESPONSE TESTING®"*. If the client
-prefers Kalice in those places instead, change the single `--font-serif` token in
+Also from Google Fonts (weight 300, plus italics). Used for card titles and
+italic accents such as *"AUTONOMIC RESPONSE TESTING®"*. If the client prefers
+Kalice in those places instead, change the single `--font-serif` token in
 `src/styles/tokens.css` — no component references the family directly.
