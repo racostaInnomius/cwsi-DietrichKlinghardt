@@ -42,7 +42,7 @@ const ContentContext = createContext<ContentMap>(demoContent);
  * collection the tenant has no capability for simply comes back empty.
  */
 export async function loadSiteContent(): Promise<LoaderContent> {
-  const [pages, events, faqs, board, products, videos, music, legal] =
+  const [pages, events, faqs, board, products, videos, music, legal, paths] =
     await Promise.all([
       fetchPageContents(),
       fetchEvents(),
@@ -52,6 +52,7 @@ export async function loadSiteContent(): Promise<LoaderContent> {
       fetchCollection("video-embeds", { scopeToSite: false }),
       fetchMusicEmbeds(),
       fetchCollection("legal-pages"),
+      fetchCollection("training-paths"),
     ]);
   return {
     "page-contents": pages,
@@ -62,6 +63,7 @@ export async function loadSiteContent(): Promise<LoaderContent> {
     "video-embeds": videos,
     "music-embeds": music,
     "legal-pages": legal,
+    "training-paths": paths,
   };
 }
 
