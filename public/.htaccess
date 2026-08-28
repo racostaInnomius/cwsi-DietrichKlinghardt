@@ -9,3 +9,14 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{2,5}$
 RewriteRule . /index.html [L]
+
+# A missing file is answered here, rather than being left to fall through.
+#
+# Plesk has Node.js hosting enabled on this domain, so mod_passenger claims any
+# request that does not resolve to a file — and the app root has no `app.js`, so
+# it answers "Web application could not be started" with HTTP 500. A missing
+# asset, or /sitemap.xml on a preview deployment, must be a 404: a 500 tells a
+# crawler (and an uptime check) that the server is broken.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . - [R=404,L]
