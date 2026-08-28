@@ -124,7 +124,24 @@ definir el mapa de slugs (`home`, `about`, `contact`, `five-levels`, `weekly-tal
 sección, motion primitives demostradas en una página, typecheck/lint/build verdes.
 **Esfuerzo:** medio-alto.
 
-### Fase 2 — Páginas CMS-driven con colecciones existentes (el grueso SSG)
+### Fase 2 — Páginas CMS-driven con colecciones existentes (el grueso SSG) ✅
+
+> **Implementada 2026-08-27** (commits `bb2fc49`, `6e18006`, `03945ca`, `d17544b`).
+> El landing temporal se eliminó de esta repo (sigue vivo en su URL actual; este
+> proyecto se publica en otra). Rutas entregadas: Home, Events (listado + detalle
+> pre-renderizado por slug), About, Contact, Academy, A.R.T., 5 Levels, Music,
+> Foundation, Weekly Talks, Privacy/Terms, y el ramal Sophia completo (landing,
+> Team, New Patients, Travel & accommodations). `/newsletter/confirmed|error`
+> intactas, ahora dentro del shell.
+>
+> Quedan como scaffold, re-etiquetadas a su fase real: Publications (F3),
+> Akademie (carga de contenido), Courses (F3), Therapists (F4), Store y Cart (F6).
+>
+> **Deuda conocida de F2:** falta el copy de New Patients y el retrato de About
+> (ambos del cliente) — las secciones colapsan en vez de dejar media rejilla
+> vacía; y la fila `newsletter` del CMS todavía trae el copy del landing (§7).
+
+
 **Objetivo:** todas las páginas que NO requieren colecciones nuevas.
 **Tareas (por página, todas con loader SSG + revalidación runtime):**
 - **Home**: hero + intro (`page-contents`), eventos próximos (`events`), bloque ART,
@@ -283,7 +300,8 @@ junto a su markup; nunca queda en blanco ni corre el resto del texto.
 | `announcement` | Barra dorada superior (todas las páginas). Lleva además `ctaLabel` + `ctaUrl` |
 | `home-hero` · `home-intro` · `home-events` · `home-art` · `home-shop` · `home-talks` | Bloques del Home, en ese orden |
 | `newsletter` | Bloque de suscripción (Home, Events y el resto de páginas) |
-| `about` · `contact` · `five-levels` · `music` · `foundation` · `weekly-talks` | Páginas propias |
+| `about` · `contact` · `academy` · `art` · `five-levels` · `music` · `foundation` · `weekly-talks` | Páginas propias |
+| `about-timeline` · `contact-cards` · `five-levels-list` · `music-links` · `accommodations-list` · `accommodations-map` · `weekly-talks-cta` | Listas: **una línea por registro, campos separados por `\|`** (ver `useRecords` en `src/lib/sections.ts`) |
 | `sophia-home` · `sophia-team` · `new-patients` · `accommodations` | Ramal Sophia (tema teal) |
 
 ⚠️ **Colisión pendiente de contenido:** la fila `newsletter` ya existe en el CMS
