@@ -27,14 +27,16 @@ deploy de arriba + un **Pull/Deploy manual** en Plesk. No hace falta configurar
 variables de entorno en la suscripción: `.env.production` está commiteado con
 los valores de preview correctos.
 
-**Automatizar los rebuilds** (push a `main` y cambios de contenido del CMS)
-necesita además dos cosas, ninguna de las cuales bloquea la publicación:
-1. Un **runner self-hosted** registrado en esta repo con la etiqueta `plesk`.
-   El workflow pide `runs-on: [self-hosted, plesk]` y la repo tiene 0, así que
-   los runs se encolan y se cancelan. El panel de Plesk no es accesible desde
-   fuera, así que un runner de GitHub no sirve.
-2. Un **token de rebuild acotado a esta repo** (ver B21): repuntar
+**Automatizar los rebuilds:**
+1. ✅ **Runner self-hosted** — `plesk-runner-dkk`, en el VPS
+   (`/home/cwsadmin/actions-runner-dkk`, servicio systemd bajo `cwsadmin`).
+   El workflow pide `runs-on: [self-hosted, plesk]`; el panel de Plesk no es
+   accesible desde fuera, así que un runner alojado por GitHub no sirve.
+   Verificado: un push a `main` publica solo.
+2. ⛔ Un **token de rebuild acotado a esta repo** (ver B21): repuntar
    `rebuild_repo` no basta, el PAT guardado sólo alcanza la repo de la landing.
+   Hasta que exista, los pushes republican pero los cambios de contenido del CMS
+   no disparan nada.
 
 ### 1.2 Variables de entorno de la suscripción
 
@@ -73,7 +75,9 @@ contenido ya esté cargado en la base. *(Pendiente B1.)*
 
 - [ ] `https://dkk.beytrax.com/robots.txt` dice `Disallow: /`
 - [ ] Cualquier página trae `<meta name="robots" content="noindex">`
-- [ ] **No** existe `/sitemap.xml` (correcto en preview)
+- [ ] **No** existe `/sitemap.xml` (correcto en preview). Hoy responde **500**,
+      no 404, por el hosting Node.js que Plesk tiene activo en el dominio —
+      ver B23; afecta a cualquier archivo ausente y no es exclusivo de este sitio
 - [ ] `/academy/therapists` muestra 136 terapeutas y el mapa con pines
 - [ ] `/courses` muestra los 5 métodos; `/courses/art` la ruta de 9 pasos
 - [ ] El alta al newsletter responde y llega el correo de confirmación
