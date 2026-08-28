@@ -4,7 +4,8 @@
 > **lo que nos deben** (insumos de terceros que no podemos producir nosotros) y
 > **lo que nos toca** (trabajo o decisiones nuestras).
 >
-> Actualizado: 2026-08-28, al cerrar F8.
+> Actualizado: 2026-08-28, al cerrar F9. La **secuencia** de publicación está
+> en `GO_LIVE.md`; aquí está el inventario.
 > El detalle de cada fase está en `IMPLEMENTATION_PLAN.md`.
 
 ---
@@ -40,7 +41,9 @@ y qué se queda bloqueado mientras no llegue.
 |---|---|---|---|
 | B1 | **Reiniciar el CMS en el servidor** (`docker compose pull && up -d`) | F3, F4 | ⛔ Pendiente. Las migraciones ya están aplicadas, pero `portal.beytrax.com/api/training-paths` y `/api/practitioners` dan 404 hasta el reinicio |
 | B2 | **Desplegar el API** | F6 | ⛔ Pendiente. `POST /api/public/checkout-session` da 404 en prod |
-| B3 | **Definir la URL pública de este sitio** y cablear su deploy | F2 | El workflow del repo no tiene secrets y nunca ha desplegado. La landing vieja sigue en la URL actual |
+| B3 | **Cablear el deploy a `dkk.beytrax.com`** | F2/F9 | Subdominio ya creado en el VPS. Falta: Document Root → `dist/`, acción de deploy `bash scripts/plesk-deploy.sh`, TLS, y copiar el UUID del webhook de Plesk al secret `PLESK_GIT_HOOK_UUID`. **El workflow existe pero nunca ha desplegado** por falta de ese secret |
+| B18 | **Añadir `dkk.beytrax.com` a `ALLOWED_ORIGINS`** del API y redesplegar | F9 | Sin esto el sitio se ve pero fallan en silencio la revalidación del CMS, el newsletter, el formulario de contacto y las donaciones |
+| B19 | **Variables de entorno de la suscripción en Plesk** | F9 | `SITE_URL`, `CMS_SITE_DOMAIN`, `INDEXABLE=false`, API/CMS/tenant/site. Se hornean en el build: cambiarlas exige redesplegar |
 | B4 | **`VITE_PUBLIC_STRIPE_PUBLISHABLE_KEY`** (clave de la **plataforma**, no del tenant) en el entorno del sitio | F5 | Sin ella la donación degrada aunque la Fundación ya tenga Connect |
 
 ### B.2 Código pendiente

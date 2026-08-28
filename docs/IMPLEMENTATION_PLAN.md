@@ -1,6 +1,9 @@
 # Plan de implementación — Sitio completo Dietrich Klinghardt™
 
-> **Estado: PROPUESTO (2026-08-28).** Reemplaza la landing temporal de `cwsi-dietrich`
+> **Estado: F1–F9 IMPLEMENTADAS (2026-08-28).** Pendiente el despliegue y los
+> insumos del cliente — ver `GO_LIVE.md` y `PENDIENTES.md`.
+>
+> Origen del encargo: Reemplaza la landing temporal de `cwsi-dietrich`
 > por el sitio completo del Figma `dkt_final` (22 frames, file `1UictD2h0rCrONQOGVRh1Y`).
 > Fuentes de verdad: el Figma + `docs/FIGMA_NOTES.md` (56 hilos de la diseñadora,
 > rescatados 2026-08-27). Tenant `75cadacc-…`, site `d333e78f-…`,
@@ -524,6 +527,43 @@ escrito; Lighthouse ≥90; revisión de Noemi aprobada.
 
 </details>
 
+### Fase 9 — Contenido + go-live ✅ (código listo; falta desplegar e insumos)
+
+> **Implementada 2026-08-28**, commit `6cafcb1` en `cwsi-dietrich`.
+> **La secuencia de publicación vive en `docs/GO_LIVE.md`.**
+>
+> **Dos publicaciones, no una** (dato de Javier): el sitio definitivo se publica
+> primero en **`dkk.beytrax.com`** (subdominio ya creado en el VPS) mientras
+> `dietrich-klinghardt.com` **sigue sirviendo la landing temporal, que vive en
+> otra repo**. El dominio real se toma después, cuando el cliente lo decida.
+>
+> Eso obligó a separar dos cosas que el build confundía:
+> - `VITE_PUBLIC_SITE_URL` — **desde dónde se sirve**.
+> - `VITE_PUBLIC_CMS_SITE_DOMAIN` — **con qué dominio lo conoce el CMS**, que
+>   sigue siendo el real porque así está la fila `sites` y `site-context`
+>   resuelve las donaciones por ahí.
+>
+> **`VITE_PUBLIC_INDEXABLE` protege lo primero.** Mientras sea `false`, cada
+> página lleva `noindex` y `robots.txt` prohíbe todo: si no, el preview quedaría
+> indexado como duplicado del sitio en el que se va a convertir, con canonicals
+> apuntando a un dominio que hoy sirve otro contenido. Verificado en los dos
+> sentidos — **37/37 noindex y sin sitemap** en preview, **9/37 y 28 URLs** en
+> público — así que el go-live es **una variable de entorno**.
+>
+> `robots.txt` ahora se genera junto al sitemap (no se envía estático) para que
+> no puedan contradecirse, y `plesk-deploy.sh` imprime qué tipo de build acaba
+> de producir: servir un preview desde el dominio real sería invisible hasta que
+> lo note un buscador.
+>
+> ⚠️ **F9 NO está terminada operativamente.** Falta lo que no depende de código:
+> el secret `PLESK_GIT_HOOK_UUID` (el workflow existe pero **nunca ha
+> desplegado**), el Document Root y el TLS del subdominio, añadir
+> `dkk.beytrax.com` a `ALLOWED_ORIGINS` del API, el reinicio del CMS, y la carga
+> de contenido del cliente. Todo listado en `GO_LIVE.md` y `PENDIENTES.md`.
+
+<details>
+<summary>Plan original de la fase</summary>
+
 ### Fase 9 — Contenido + go-live
 **Objetivo:** reemplazo en producción sin romper lo vivo.
 **Tareas:** carga de contenido real en el CMS (slugs de F0; eventos/cursos/productos
@@ -535,6 +575,8 @@ deploy final (el dominio ya apunta al repo — es un replace, no un cutover DNS)
 **Criterio:** sitio completo vivo en `dietrich-klinghardt.com`; la landing vieja fuera;
 double opt-in histórico sigue funcionando.
 **Esfuerzo:** medio.
+
+</details>
 
 ## 5. Orden y dependencias
 
