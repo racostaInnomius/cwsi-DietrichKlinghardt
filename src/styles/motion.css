@@ -129,15 +129,32 @@
   html {
     scroll-behavior: auto;
   }
+
+  /* Belt and braces. The rules below name the effects that would otherwise
+     leave content invisible, but hover lifts, image zooms and drifting
+     gradients live in four stylesheets and more get added with every page —
+     so everything is stopped globally, and the specific resets undo the
+     starting states that a stopped transition would freeze. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Without these the reveal, the quote lines and the rotating word would stay
+     at their pre-animation state — invisible or translated off. */
   .reveal,
   .line-quote__line > span,
   .rotating-word__item {
     opacity: 1 !important;
     transform: none !important;
-    transition: none !important;
   }
   .animated-gradient::before,
   .teachers__track {
-    animation: none;
+    animation: none !important;
+    transform: none !important;
   }
 }

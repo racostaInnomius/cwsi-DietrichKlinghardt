@@ -1,9 +1,8 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { splitByTime } from "@/lib/format";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { LineQuote } from "@/components/motion/LineQuote";
@@ -65,14 +64,11 @@ export function HomePage() {
 
   return (
     <>
-      <Head>
-        <title>Dr. Dietrich Klinghardt™ — Healing Beyond Symptoms</title>
-        <meta
-          name="description"
-          content="Physician, educator and innovator in biological medicine. Autonomic Response Testing, the 5 Levels of Healing, live weekly talks and upcoming events."
-        />
-        <link rel="canonical" href={env.SITE_URL} />
-      </Head>
+      <Seo
+        title={"Dr. Dietrich Klinghardt™ — Healing Beyond Symptoms"}
+        description="Physician, educator and innovator in biological medicine. Autonomic Response Testing, the 5 Levels of Healing, live weekly talks and upcoming events."
+        path="/"
+      />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <AnimatedGradient variant="hero" intensity="strong" className="hero">

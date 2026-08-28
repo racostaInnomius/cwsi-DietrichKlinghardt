@@ -1,8 +1,7 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection } from "@/lib/sections";
 import { useTrainingPaths } from "@/lib/trainingPaths";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -27,14 +26,11 @@ export function CoursesPage() {
 
   return (
     <>
-      <Head>
-        <title>Online Courses — Dr. Dietrich Klinghardt™</title>
-        <meta
-          name="description"
-          content="A.R.T., MFT, PK, SRT and the Master of ANK: the five training paths of the Klinghardt Method."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/courses`} />
-      </Head>
+      <Seo
+        title={"Online Courses — Dr. Dietrich Klinghardt™"}
+        description="A.R.T., MFT, PK, SRT and the Master of ANK: the five training paths of the Klinghardt Method."
+        path="/courses"
+      />
 
       <AnimatedGradient variant="page" intensity="normal" className="courses-hero">
         <div className="wrap courses-hero__inner">

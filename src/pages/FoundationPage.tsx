@@ -1,7 +1,6 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -52,14 +51,11 @@ export function FoundationPage() {
 
   return (
     <>
-      <Head>
-        <title>Dr. Klinghardt Foundation™</title>
-        <meta
-          name="description"
-          content="Preserving the archive, advancing education, encouraging research and expanding access to Dr. Klinghardt's work."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/foundation`} />
-      </Head>
+      <Seo
+        title={"Dr. Klinghardt Foundation™"}
+        description="Preserving the archive, advancing education, encouraging research and expanding access to Dr. Klinghardt's work."
+        path="/foundation"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { splitByTime } from "@/lib/format";
@@ -29,13 +29,11 @@ export function EventsPage() {
 
   return (
     <>
-      <Head>
-        <title>Events & Webinars — Dr. Dietrich Klinghardt™</title>
-        <meta
-          name="description"
-          content="Upcoming workshops, seminars and live webinars with Dr. Dietrich Klinghardt."
-        />
-      </Head>
+      <Seo
+        title={"Events & Webinars — Dr. Dietrich Klinghardt™"}
+        description="Upcoming workshops, seminars and live webinars with Dr. Dietrich Klinghardt."
+        path="/events"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

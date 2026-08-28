@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import {
   featuredProducts,
@@ -11,7 +11,6 @@ import {
 import { useCart } from "@/lib/cart";
 import { useSection } from "@/lib/sections";
 import { money } from "@/lib/format";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -40,14 +39,11 @@ export function StorePage() {
 
   return (
     <>
-      <Head>
-        <title>Store — Dr. Dietrich Klinghardt™</title>
-        <meta
-          name="description"
-          content="Books, work materials, testing kits and professional resources from Dr. Dietrich Klinghardt."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/store`} />
-      </Head>
+      <Seo
+        title={"Store — Dr. Dietrich Klinghardt™"}
+        description="Books, work materials, testing kits and professional resources from Dr. Dietrich Klinghardt."
+        path="/store"
+      />
 
       {/* The designer marks Shop as one of the two places the gradient should
           move most. */}

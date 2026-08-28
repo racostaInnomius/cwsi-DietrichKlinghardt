@@ -1,4 +1,4 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { checkoutHref } from "@/lib/checkout";
@@ -59,14 +59,11 @@ export function WeeklyTalksPage() {
 
   return (
     <>
-      <Head>
-        <title>Weekly Talks — Dr. Dietrich Klinghardt™</title>
-        <meta
-          name="description"
-          content="A live session with Dr. Klinghardt every week, plus the replay and the full archive."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/weekly-talks`} />
-      </Head>
+      <Seo
+        title={"Weekly Talks — Dr. Dietrich Klinghardt™"}
+        description="A live session with Dr. Klinghardt every week, plus the replay and the full archive."
+        path="/weekly-talks"
+      />
 
       <AnimatedGradient variant="hero" intensity="strong" className="hero">
         <div className="wrap hero__inner">

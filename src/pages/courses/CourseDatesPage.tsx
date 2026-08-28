@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
 import { useTrainingPath, eventsForPath } from "@/lib/trainingPaths";
 import { checkoutHref } from "@/lib/checkout";
 import { eventDateParts, eventLocation, money, splitByTime } from "@/lib/format";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -34,10 +33,10 @@ export function CourseDatesPage() {
   if (!path) {
     return (
       <>
-        <Head>
-          <title>Training path not found — Dr. Dietrich Klinghardt™</title>
-          <meta name="robots" content="noindex" />
-        </Head>
+        <Seo
+        title={"Training path not found — Dr. Dietrich Klinghardt™"}
+        noindex
+      />
         <section className="section wrap">
           <h1>This training path is no longer listed.</h1>
           <Link className="btn btn-primary" to="/courses">
@@ -53,14 +52,11 @@ export function CourseDatesPage() {
 
   return (
     <>
-      <Head>
-        <title>{`${path.abbreviation} Course Dates — Dr. Dietrich Klinghardt™`}</title>
-        <meta
-          name="description"
-          content={`Upcoming ${path.abbreviation} course dates with Dr. Dietrich Klinghardt.`}
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/courses/${path.slug}/dates`} />
-      </Head>
+      <Seo
+        title={`${path.abbreviation} Course Dates — Dr. Dietrich Klinghardt™`}
+        description={`Upcoming ${path.abbreviation} course dates with Dr. Dietrich Klinghardt.`}
+        path={`/courses/${path.slug}/dates`}
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

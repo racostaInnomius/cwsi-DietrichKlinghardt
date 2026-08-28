@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link, useSearchParams } from "react-router-dom";
 import { useCart } from "@/lib/cart";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -29,10 +29,10 @@ export function CartReturnPage() {
 
   return (
     <>
-      <Head>
-        <title>Thank you — Dr. Dietrich Klinghardt™</title>
-        <meta name="robots" content="noindex" />
-      </Head>
+      <Seo
+        title={"Thank you — Dr. Dietrich Klinghardt™"}
+        noindex
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="status-page">
         <div className="wrap status-page__inner">

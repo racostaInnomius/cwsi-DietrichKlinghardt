@@ -1,10 +1,9 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number } from "@/lib/content";
 import { mediaUrl, richTextBlocks } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { eventLocation, eventLongDate, money } from "@/lib/format";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -26,10 +25,10 @@ export function EventDetailPage() {
   if (!event) {
     return (
       <>
-        <Head>
-          <title>Event not found — Dr. Dietrich Klinghardt™</title>
-          <meta name="robots" content="noindex" />
-        </Head>
+        <Seo
+        title={"Event not found — Dr. Dietrich Klinghardt™"}
+        noindex
+      />
         <section className="section wrap">
           <h1>This event is no longer listed.</h1>
           <p className="lead">
@@ -58,11 +57,11 @@ export function EventDetailPage() {
 
   return (
     <>
-      <Head>
-        <title>{`${title} — Dr. Dietrich Klinghardt™`}</title>
-        {summary ? <meta name="description" content={summary} /> : null}
-        <link rel="canonical" href={`${env.SITE_URL}/events/${slug}`} />
-      </Head>
+      <Seo
+        title={`${title} — Dr. Dietrich Klinghardt™`}
+        description={summary}
+        path={`/events/${slug}`}
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

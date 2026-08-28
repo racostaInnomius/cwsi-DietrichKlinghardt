@@ -1,7 +1,6 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useCollection, text } from "@/lib/content";
 import { richTextBlocks } from "@/lib/cms";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -28,11 +27,10 @@ export function LegalPage({ type }: { type: "privacy" | "terms" | "refunds" }) {
 
   return (
     <>
-      <Head>
-        <title>{`${title} — Dr. Dietrich Klinghardt™`}</title>
-        {doc ? null : <meta name="robots" content="noindex" />}
-        <link rel="canonical" href={`${env.SITE_URL}/${type}`} />
-      </Head>
+      <Seo
+        title={`${title} — Dr. Dietrich Klinghardt™`}
+        noindex
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

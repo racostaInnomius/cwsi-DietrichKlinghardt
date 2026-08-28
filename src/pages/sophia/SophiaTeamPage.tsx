@@ -1,8 +1,7 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { mediaUrl } from "@/lib/cms";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -28,11 +27,11 @@ export function SophiaTeamPage() {
 
   return (
     <>
-      <Head>
-        <title>Meet Our Team — Sophia Health Institute™</title>
-        <meta name="description" content="The clinicians of the Sophia Health Institute." />
-        <link rel="canonical" href={`${env.SITE_URL}/sophia/team`} />
-      </Head>
+      <Seo
+        title={"Meet Our Team — Sophia Health Institute™"}
+        description="The clinicians of the Sophia Health Institute."
+        path="/sophia/team"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

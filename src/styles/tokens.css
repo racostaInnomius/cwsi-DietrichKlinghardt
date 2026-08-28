@@ -17,7 +17,10 @@
   --ink: #1c1916;          /* body copy, display headings on light */
   --ink-soft: #4b4640;
   --muted: #6b6456;        /* secondary copy */
-  --muted-2: #9a9080;      /* meta, captions */
+  /* Was #9a9080, which measured 2.8:1 on cream — a WCAG AA failure at the
+     11–14px sizes it is actually used at. Darkened to the first value that
+     clears 4.5:1 on cream and white. */
+  --muted-2: #746c60;      /* meta, captions */
   --white: #ffffff;
 
   /* Warm paper family */
@@ -26,10 +29,17 @@
   --cream-3: #fdf8e3;
   --line: #ddd8c8;         /* hairlines, card borders */
 
-  /* Gold accents (shared — eyebrows, announcement bar, "Klinghardt's pick") */
+  /* Gold accents (shared — the announcement bar, "Klinghardt's pick", large
+     display numerals). These are the BRAND golds and are decorative or
+     large-text only: on cream they measure 2.6–3.0:1, which is fine above 18pt
+     but fails WCAG AA for body-sized text. */
   --gold: #bc8f44;
   --gold-deep: #c27d09;
   --gold-bright: #e9a43f;
+  /* The same hue walked down until it clears 4.5:1 on BOTH cream and white —
+     used wherever gold carries small text (eyebrows, labels, meta). Measured,
+     not eyeballed: 4.59 on cream, 5.23 on white. */
+  --gold-text: #876731;
 
   /* Feedback */
   --error: #ec221f;

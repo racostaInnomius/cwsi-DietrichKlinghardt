@@ -1,6 +1,5 @@
-import MuxPlayer from "@mux/mux-player-react";
-import { useEffect, useMemo, useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { Seo } from "@/components/Seo";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
 import { checkoutHref } from "@/lib/checkout";
@@ -16,7 +15,14 @@ import {
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
-import { LiveChatWidget } from "@/components/live/LiveChatWidget";
+
+// The two heaviest dependencies on the site, and only this page uses them:
+// loaded on demand so no other page pays for a video player and a websocket
+// client it never touches.
+const MuxPlayer = lazy(() => import("@mux/mux-player-react"));
+const LiveChatWidget = lazy(() =>
+  import("@/components/live/LiveChatWidget").then((m) => ({ default: m.LiveChatWidget })),
+);
 
 /**
  * The live weekly talk.
@@ -131,11 +137,10 @@ export function LiveTalkPage() {
 
   return (
     <>
-      <Head>
-        <title>{`${title} — Dr. Dietrich Klinghardt™`}</title>
-        {/* Private, per-viewer and time-bound: nothing here belongs in an index. */}
-        <meta name="robots" content="noindex" />
-      </Head>
+      <Seo
+        title={`${title} — Dr. Dietrich Klinghardt™`}
+        noindex
+      />
 
       <section className="section wrap live-page">
         <Breadcrumbs
@@ -154,6 +159,7 @@ export function LiveTalkPage() {
         <div className="live-layout">
         <div className="live-stage" aria-live="polite">
           {session?.playbackId && session.tokens ? (
+            <Suspense fallback={<LiveNotice eyebrow="One moment" title="Loading the player…" />}>
             <MuxPlayer
               playbackId={session.playbackId}
               tokens={session.tokens}
@@ -170,6 +176,7 @@ export function LiveTalkPage() {
                   : { width: "100%", aspectRatio: "16 / 9" }
               }
             />
+            </Suspense>
           ) : error?.code === "purchase_required" ? (
             <LiveNotice
               eyebrow="Members only"
@@ -225,7 +232,9 @@ export function LiveTalkPage() {
           )}
         </div>
         {/* Keyed by event so switching talks starts a clean room. */}
-        <LiveChatWidget key={eventId} chat={session?.chat ?? null} />
+        <Suspense fallback={null}>
+          <LiveChatWidget key={eventId} chat={session?.chat ?? null} />
+        </Suspense>
         </div>
 
         <footer className="live-footer">

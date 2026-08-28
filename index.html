@@ -4,22 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f5f0e6" />
-    <meta name="description" content="Stay informed with the Klinghardt Academy newsletter, clinical research updates and upcoming events." />
-    <meta property="og:title" content="Dr. Dietrich Klinghardt" />
-    <meta property="og:description" content="Join the Klinghardt Academy newsletter." />
+    <!--
+      GLOBAL tags only. Anything page-specific — title, description, canonical,
+      og:title/description/url/image — is emitted per route by components/Seo.
+      Leaving them here too produced two canonicals on every page, the second
+      pointing at "/", which asks search engines to fold the whole site into the
+      homepage.
+    -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Dr. Dietrich Klinghardt" />
-    <meta property="og:url" content="https://dietrich-klinghardt.com/" />
-    <meta property="og:image" content="https://dietrich-klinghardt.com/images/dietrich-klinghardt.jpg" />
+    <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Dr. Dietrich Klinghardt" />
-    <meta name="twitter:description" content="Join the Klinghardt Academy newsletter." />
-    <meta name="twitter:image" content="https://dietrich-klinghardt.com/images/dietrich-klinghardt.jpg" />
-    <link rel="canonical" href="https://dietrich-klinghardt.com/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <title>Dr. Dietrich Klinghardt</title>
+    <!-- The document title is emitted per route by components/Seo. A static
+         one here would become a duplicate on every built page. -->
   </head>
   <body>
     <div id="root"></div>

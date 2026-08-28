@@ -1,8 +1,7 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection } from "@/lib/sections";
 import { videoEmbed } from "@/lib/cms";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -29,14 +28,11 @@ export function ArtPage() {
 
   return (
     <>
-      <Head>
-        <title>A.R.T. Klinghardt™ — Autonomic Response Testing</title>
-        <meta
-          name="description"
-          content="Autonomic Response Testing: reading the body's own regulation to find what is driving illness, and in which order to treat it."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/academy/art`} />
-      </Head>
+      <Seo
+        title={"A.R.T. Klinghardt™ — Autonomic Response Testing"}
+        description="Autonomic Response Testing: reading the body's own regulation to find what is driving illness, and in which order to treat it."
+        path="/academy/art"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link, useSearchParams } from "react-router-dom";
 import { getStripe } from "@/lib/donations";
 import { money } from "@/lib/format";
@@ -96,10 +96,10 @@ export function DonateReturnPage() {
 
   return (
     <>
-      <Head>
-        <title>Thank you — Dr. Klinghardt Foundation™</title>
-        <meta name="robots" content="noindex" />
-      </Head>
+      <Seo
+        title={"Thank you — Dr. Klinghardt Foundation™"}
+        noindex
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="status-page">
         <div className="wrap status-page__inner">

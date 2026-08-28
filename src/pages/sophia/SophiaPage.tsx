@@ -1,7 +1,6 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection, SECTION } from "@/lib/sections";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -28,14 +27,11 @@ export function SophiaPage() {
 
   return (
     <>
-      <Head>
-        <title>Sophia Health Institute™ — Dr. Dietrich Klinghardt</title>
-        <meta
-          name="description"
-          content="A healing centre for chronic illness, founded by Dr. Dietrich Klinghardt."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/sophia`} />
-      </Head>
+      <Seo
+        title={"Sophia Health Institute™ — Dr. Dietrich Klinghardt"}
+        description="A healing centre for chronic illness, founded by Dr. Dietrich Klinghardt."
+        path="/sophia"
+      />
 
       <AnimatedGradient variant="hero" intensity="strong" className="hero">
         <div className="wrap hero__inner">

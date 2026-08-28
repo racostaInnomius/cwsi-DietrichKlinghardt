@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCart } from "@/lib/cart";
 import { startCheckout, useStoreProducts } from "@/lib/store";
 import { money } from "@/lib/format";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -43,11 +42,10 @@ export function CartPage() {
 
   return (
     <>
-      <Head>
-        <title>Your Cart — Dr. Dietrich Klinghardt™</title>
-        <meta name="robots" content="noindex" />
-        <link rel="canonical" href={`${env.SITE_URL}/cart`} />
-      </Head>
+      <Seo
+        title={"Your Cart — Dr. Dietrich Klinghardt™"}
+        noindex
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

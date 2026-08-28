@@ -1,12 +1,11 @@
 import { lazy, Suspense, useMemo, useState, type FormEvent } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useSection } from "@/lib/sections";
 import {
   QUALIFICATIONS,
   filterPractitioners,
   usePractitioners,
 } from "@/lib/practitioners";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -68,14 +67,11 @@ export function DirectoryPage() {
 
   return (
     <>
-      <Head>
-        <title>Find an A.R.T.® Therapist — Dr. Dietrich Klinghardt™</title>
-        <meta
-          name="description"
-          content="Global directory of practitioners certified in Autonomic Response Testing, Psycho-Kinesiology and Mental Field Techniques."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/academy/therapists`} />
-      </Head>
+      <Seo
+        title={"Find an A.R.T.® Therapist — Dr. Dietrich Klinghardt™"}
+        description="Global directory of practitioners certified in Autonomic Response Testing, Psycho-Kinesiology and Mental Field Techniques."
+        path="/academy/therapists"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

@@ -1,4 +1,4 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -13,14 +13,12 @@ import { Reveal } from "@/components/motion/Reveal";
 export function SubscriptionStatusPage({ success }: { success: boolean }) {
   return (
     <>
-      <Head>
-        <title>
-          {success
+      <Seo
+        title={success
             ? "You’re subscribed — Dr. Dietrich Klinghardt™"
             : "Link no longer valid — Dr. Dietrich Klinghardt™"}
-        </title>
-        <meta name="robots" content="noindex" />
-      </Head>
+        noindex
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="status-page">
         <div className="wrap status-page__inner">

@@ -1,10 +1,9 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useCollection, text } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { externalUrl, mediaUrl, musicEmbed } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { money } from "@/lib/format";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -48,11 +47,11 @@ export function MusicPage() {
 
   return (
     <>
-      <Head>
-        <title>Music — Dr. Dietrich Klinghardt™</title>
-        <meta name="description" content="Recordings and sound work by Dr. Dietrich Klinghardt." />
-        <link rel="canonical" href={`${env.SITE_URL}/music`} />
-      </Head>
+      <Seo
+        title={"Music — Dr. Dietrich Klinghardt™"}
+        description="Recordings and sound work by Dr. Dietrich Klinghardt."
+        path="/music"
+      />
 
       <AnimatedGradient variant="page" intensity="normal" className="page-hero">
         <div className="wrap page-hero__inner">

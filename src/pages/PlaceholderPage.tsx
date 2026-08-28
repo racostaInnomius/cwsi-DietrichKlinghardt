@@ -1,4 +1,4 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Breadcrumbs, type Crumb } from "@/components/shell/Breadcrumbs";
@@ -27,10 +27,10 @@ export function PlaceholderPage({
 }) {
   return (
     <>
-      <Head>
-        <title>{`${title} — Dr. Dietrich Klinghardt`}</title>
-        <meta name="robots" content="noindex" />
-      </Head>
+      <Seo
+        title={`${title} — Dr. Dietrich Klinghardt`}
+        noindex
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

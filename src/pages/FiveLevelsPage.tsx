@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { videoEmbed } from "@/lib/cms";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -42,14 +41,11 @@ export function FiveLevelsPage() {
 
   return (
     <>
-      <Head>
-        <title>The 5 Levels of Healing — Dr. Dietrich Klinghardt™</title>
-        <meta
-          name="description"
-          content="The framework that places physical findings inside the mental, emotional and spiritual layers around them."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/academy/five-levels`} />
-      </Head>
+      <Seo
+        title={"The 5 Levels of Healing — Dr. Dietrich Klinghardt™"}
+        description="The framework that places physical findings inside the mental, emotional and spiritual layers around them."
+        path="/academy/five-levels"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

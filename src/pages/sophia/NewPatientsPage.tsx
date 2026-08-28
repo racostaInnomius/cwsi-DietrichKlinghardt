@@ -1,7 +1,6 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -38,14 +37,11 @@ export function NewPatientsPage() {
 
   return (
     <>
-      <Head>
-        <title>New Patient Information — Sophia Health Institute™</title>
-        <meta
-          name="description"
-          content="How to become a patient at the Sophia Health Institute: what to send, what to expect."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/sophia/new-patients`} />
-      </Head>
+      <Seo
+        title={"New Patient Information — Sophia Health Institute™"}
+        description="How to become a patient at the Sophia Health Institute: what to send, what to expect."
+        path="/sophia/new-patients"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

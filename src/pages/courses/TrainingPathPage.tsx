@@ -1,7 +1,6 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link, useParams } from "react-router-dom";
 import { useTrainingPath } from "@/lib/trainingPaths";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -23,10 +22,10 @@ export function TrainingPathPage() {
   if (!path) {
     return (
       <>
-        <Head>
-          <title>Training path not found — Dr. Dietrich Klinghardt™</title>
-          <meta name="robots" content="noindex" />
-        </Head>
+        <Seo
+        title={"Training path not found — Dr. Dietrich Klinghardt™"}
+        noindex
+      />
         <section className="section wrap">
           <h1>This training path is no longer listed.</h1>
           <p className="lead">Browse the current methods instead.</p>
@@ -42,11 +41,11 @@ export function TrainingPathPage() {
 
   return (
     <>
-      <Head>
-        <title>{`${path.abbreviation} Training Path — Dr. Dietrich Klinghardt™`}</title>
-        <meta name="description" content={path.shortDescription} />
-        <link rel="canonical" href={`${env.SITE_URL}/courses/${path.slug}`} />
-      </Head>
+      <Seo
+        title={`${path.abbreviation} Training Path — Dr. Dietrich Klinghardt™`}
+        description={path.shortDescription}
+        path={`/courses/${path.slug}`}
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

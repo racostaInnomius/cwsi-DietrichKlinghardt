@@ -1,7 +1,6 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection } from "@/lib/sections";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -62,14 +61,11 @@ export function AcademyPage() {
 
   return (
     <>
-      <Head>
-        <title>Dr. Klinghardt Academy™</title>
-        <meta
-          name="description"
-          content="A.R.T., the 5 Levels of Healing, certification training and the practitioner directory."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/academy`} />
-      </Head>
+      <Seo
+        title={"Dr. Klinghardt Academy™"}
+        description="A.R.T., the 5 Levels of Healing, certification training and the practitioner directory."
+        path="/academy"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

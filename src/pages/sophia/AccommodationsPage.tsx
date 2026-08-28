@@ -1,7 +1,6 @@
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { externalUrl, mapEmbedUrl } from "@/lib/cms";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -33,14 +32,11 @@ export function AccommodationsPage() {
 
   return (
     <>
-      <Head>
-        <title>Travel & Accommodations — Sophia Health Institute™</title>
-        <meta
-          name="description"
-          content="How to reach the Sophia Health Institute and where to stay during treatment."
-        />
-        <link rel="canonical" href={`${env.SITE_URL}/sophia/accommodations`} />
-      </Head>
+      <Seo
+        title={"Travel & Accommodations — Sophia Health Institute™"}
+        description="How to reach the Sophia Health Institute and where to stay during treatment."
+        path="/sophia/accommodations"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">

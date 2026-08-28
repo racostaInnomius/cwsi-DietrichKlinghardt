@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Head } from "vite-react-ssg";
+import { Seo } from "@/components/Seo";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
-import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -35,11 +34,11 @@ export function ContactPage() {
 
   return (
     <>
-      <Head>
-        <title>Contact — Dr. Dietrich Klinghardt™</title>
-        <meta name="description" content="How to reach the practice, the academy and the Sophia Health Institute." />
-        <link rel="canonical" href={`${env.SITE_URL}/contact`} />
-      </Head>
+      <Seo
+        title={"Contact — Dr. Dietrich Klinghardt™"}
+        description="How to reach the practice, the academy and the Sophia Health Institute."
+        path="/contact"
+      />
 
       <AnimatedGradient variant="page" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
