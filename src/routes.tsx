@@ -17,6 +17,7 @@ import { SophiaPage } from "@/pages/sophia/SophiaPage";
 import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
 import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
 import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
+import { LegalPage } from "@/pages/LegalPage";
 import { SubscriptionStatusPage } from "@/pages/SubscriptionStatusPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
 
@@ -161,14 +162,8 @@ export const routes: RouteRecord[] = [
           { path: "weekly-talks", element: <WeeklyTalksPage /> },
           { path: "foundation", element: <FoundationPage /> },
           { path: "contact", element: <ContactPage /> },
-          {
-            path: "privacy",
-            element: placeholder({ title: "Privacy Policy", phase: "F2" }),
-          },
-          {
-            path: "terms",
-            element: placeholder({ title: "Terms of Service", phase: "F2" }),
-          },
+          { path: "privacy", element: <LegalPage type="privacy" /> },
+          { path: "terms", element: <LegalPage type="terms" /> },
 
           // ── Sophia Health Institute (teal theme, route-driven) ────
           { path: "sophia", element: <SophiaPage /> },
