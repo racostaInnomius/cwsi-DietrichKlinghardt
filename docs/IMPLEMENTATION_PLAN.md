@@ -353,6 +353,54 @@ Connect no está listo (patrón auto-degradante ya existente).
 
 </details>
 
+### Fase 6 — Store + carrito ✅ (construida) · 🔒 checkout cerrado a propósito
+
+> **Implementada 2026-08-28.** Sitio `eceb968` (cwsi-dietrich) · CMS `f0e2d0d`
+> (cwsf-beytrax) · API `d95a523` (CWSB-Baytrax). **D6 cerrada: restricted key del
+> tenant, cifrada.**
+>
+> **CMS:** `digital-products` gana `category` (select → claves estables para el
+> filtro), `featuredRank` (picks del mes) e `isPhysical`. Migración aditiva,
+> 0 DROPs, drift verde, **aplicada a prod**.
+>
+> **API:** migración `040` añade `stripe_secret_key_encrypted` a
+> `tenant_payment_config` (pgcrypto, igual que el whsec) — lo que va ahí es una
+> **restricted key** de Stripe limitada a *Checkout Sessions: write*, que no
+> mueve dinero ni lee clientes. **Aplicada a prod.** Nuevo
+> `POST /api/public/checkout-session`: recibe ids y cantidades y **nada más** —
+> precio, moneda y `stripe_price_id` se leen de la fila cada vez, y las URLs de
+> retorno se arman con el dominio del sitio (aceptarlas del request lo
+> convertiría en un open redirect por el que Stripe pasea al comprador después
+> de pagar). Una cesta con algún ítem ausente, en borrador o sin precio se
+> rechaza **entera**. 12 tests del límite de confianza.
+>
+> **Sitio:** tienda con picks + filtros por categoría + add-to-cart, carrito con
+> cantidades/subtotal/envío, y página de retorno. **Corregido el carrito de F1**:
+> indexaba por `stripePriceId`, que está cerrado a lectores autenticados y una
+> página pública nunca puede conocer; ahora la clave es el id de documento del
+> CMS, que es lo que el checkout envía.
+>
+> 🔒 **El checkout está deliberadamente cerrado** (`CART_FULFILLMENT_IMPLEMENTED
+> = false`). Una sesión de carrito no lleva Payment Link, así que
+> `resolveFulfillment` no puede saber qué se compró, y **`product_fulfillments`
+> tiene UNA fila por sesión**: una cesta de tres productos todavía no se puede
+> registrar ni entregar. Abrirlo ahora cobraría y no entregaría nada — justo el
+> fallo que este código pasó julio arreglando. `resolveCartFulfillables` es la
+> primera mitad de ese trabajo.
+>
+> **Falta para abrirlo (en este orden):**
+> 1. Fulfillment por línea: ledger por ítem (migración) + bucle del correo de
+>    acceso. Ojo: el template de `sendAccessEmail` es de un solo ítem y está en
+>    la ruta viva de Iconic — no reescribirlo, o hacerlo con tests.
+> 2. Variante del correo para **productos físicos** ("va en camino", sin liga de
+>    acceso): hoy un pedido solo-físico no recibiría correo de Beytrax.
+> 3. La **restricted key** del tenant en `tenant_payment_config` + categorías
+>    finales del catálogo con Vic.
+> 4. Desplegar el API (el endpoint aún da 404 en prod) y borrar el guard.
+
+<details>
+<summary>Plan original de la fase</summary>
+
 ### Fase 6 — Store + carrito (la fase con más backend)
 **Objetivo:** catálogo con categorías + carrito unificado (D1/D6/D9).
 **Tareas:**
@@ -374,6 +422,8 @@ pide dirección); Payments-vs-Emails card sigue reconciliando (registro al recib
 implementado).
 **Esfuerzo:** alto. **Riesgo:** el mayor del plan; si D6 se rechaza, degradar a compra
 directa por producto (F2-Music ya lo deja funcionando).
+
+</details>
 
 ### Fase 7 — Weekly Talks live (+ membresía según D3)
 **Objetivo:** el live in-house con la interfaz del diseño.
