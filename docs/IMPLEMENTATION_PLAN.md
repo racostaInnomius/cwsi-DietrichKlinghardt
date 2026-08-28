@@ -164,6 +164,39 @@ sección, motion primitives demostradas en una página, typecheck/lint/build ver
 de double opt-in sigue aterrizando bien; Lighthouse ≥90 en las claves.
 **Esfuerzo:** alto (es la fase más grande).
 
+### Fase 3 — Cursos (colección nueva + 3 plantillas) ✅
+
+> **Implementada 2026-08-27.** Sitio: `5b7a155` en `cwsi-dietrich`. CMS: `e5c55bb`
+> en `cwsf-beytrax` (autorizado explícitamente por Javier — es el CMS compartido).
+>
+> **Sitio** — 3 plantillas de los frames 0:2063 / 0:2403 / 0:2732: grid de los 5
+> métodos, página de training path completa (about, during training, ruta
+> numerada, requisitos de examen, seminarios recomendados, listado de seminarios)
+> y página de fechas comprables. 10 rutas pre-renderizadas (`/courses/<slug>` y
+> `/courses/<slug>/dates`).
+>
+> El contenido real de los 5 métodos está transcrito del Figma en
+> `src/data/trainingPaths.ts` y `useTrainingPaths()` monta encima las filas del
+> CMS **campo por campo** — una fila a medio llenar no puede blanquear el resto.
+>
+> **CMS** — colección `training-paths` capability-gated (`training-paths`, clave =
+> slug por la regla zero-backfill del catálogo) + `events.trainingPath`,
+> `events.instructor`, `events.language`. Migración `20260828_030618`: **solo
+> aditiva**, 0 DROPs en el UP, `drift:check` verde.
+>
+> **Decisión de diseño clave:** una fecha de curso NO es un objeto nuevo — es una
+> fila de `events` apuntando a su path. El pago, el fulfillment y la conciliación
+> son exactamente los que ya existen; no se construyó nada para cobrar un seminario.
+>
+> **Pendientes de F3:** header animado de Courses (`TeachersStrip` está listo pero
+> no renderiza sin la fila `courses-teachers`; faltan las fotos de Vic) · cargar
+> los 5 métodos en el CMS · aplicar la migración en prod (ver
+> `MIGRATIONS_OWNERSHIP.md`, imagen `-migrator`) · activar la capability
+> `training-paths` en el tenant Dietrich.
+
+<details>
+<summary>Plan original de la fase</summary>
+
 ### Fase 3 — Cursos (colección nueva + 3 plantillas)
 **Objetivo:** Online Courses completo según D2.
 **Tareas:**
@@ -181,6 +214,8 @@ de double opt-in sigue aterrizando bien; Lighthouse ≥90 en las claves.
 **Criterio:** los 5 métodos administrables desde el CMS; fechas = events comprables con
 fulfillment ya probado; otros tenants NO ven la colección.
 **Esfuerzo:** medio-alto.
+
+</details>
 
 ### Fase 4 — Directorio de terapeutas
 **Objetivo:** el directorio completo con datos reales migrados (D4).
