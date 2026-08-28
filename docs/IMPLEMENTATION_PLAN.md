@@ -507,7 +507,15 @@ con el copy del landing temporal (título *"Stay informed"*, primer párrafo
 Newsletter"* del diseño, así que hoy renderiza el texto viejo. Es una edición de
 un campo en el CMS — queda en la carga de contenido de F9, no es código.
 
-## 8. Referencias
+## 8. Pendientes
+
+El registro completo y vivo vive en **`docs/PENDIENTES.md`**, separado en lo que
+**nos deben** (insumos de terceros: fuentes, copy, fotos, cuentas de Stripe,
+base legal) y lo que **nos toca** (despliegues, código pendiente y carga de
+contenido). Cada fase de arriba anota sus pendientes en su propio bloque; ese
+documento los junta todos.
+
+## 9. Referencias
 
 - `docs/FIGMA_NOTES.md` — notas completas de la diseñadora (y JSON crudo).
 - Memoria de sesión: mapa frame→node-id de los 22 frames.
