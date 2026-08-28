@@ -136,7 +136,8 @@
     transform: none !important;
     transition: none !important;
   }
-  .animated-gradient::before {
+  .animated-gradient::before,
+  .teachers__track {
     animation: none;
   }
 }

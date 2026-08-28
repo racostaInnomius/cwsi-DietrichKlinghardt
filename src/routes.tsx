@@ -2,7 +2,8 @@ import { Navigate, Outlet } from "react-router-dom";
 import type { RouteRecord } from "vite-react-ssg";
 import { ContentProvider, loadSiteContent } from "@/lib/content";
 import { CartProvider } from "@/lib/cart";
-import { fetchEvents } from "@/lib/cms";
+import { fetchCollection, fetchEvents } from "@/lib/cms";
+import { trainingPaths } from "@/data/trainingPaths";
 import { SiteShell } from "@/components/shell/SiteShell";
 import { HomePage } from "@/pages/HomePage";
 import { EventsPage } from "@/pages/EventsPage";
@@ -17,6 +18,9 @@ import { SophiaPage } from "@/pages/sophia/SophiaPage";
 import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
 import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
 import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
+import { CoursesPage } from "@/pages/courses/CoursesPage";
+import { TrainingPathPage } from "@/pages/courses/TrainingPathPage";
+import { CourseDatesPage } from "@/pages/courses/CourseDatesPage";
 import { AcademyPage } from "@/pages/AcademyPage";
 import { ArtPage } from "@/pages/ArtPage";
 import { LegalPage } from "@/pages/LegalPage";
@@ -47,6 +51,25 @@ function ShellLayout() {
     </SiteShell>
   );
 }
+
+/**
+ * Method slugs to pre-render: the bundled five, plus any the CMS adds. Built
+ * from both so a new method is a content change, not a code change.
+ */
+async function trainingPathSlugs(): Promise<string[]> {
+  const rows = await fetchCollection("training-paths");
+  const slugs = new Set(trainingPaths.map((path) => path.slug));
+  for (const row of rows) {
+    if (typeof row.slug === "string" && row.slug) slugs.add(row.slug);
+  }
+  return [...slugs];
+}
+
+/** Full paths for the two course templates (see the note on events/:slug). */
+const coursePaths = async () =>
+  (await trainingPathSlugs()).map((slug) => `courses/${slug}`);
+const courseDatePaths = async () =>
+  (await trainingPathSlugs()).map((slug) => `courses/${slug}/dates`);
 
 /** Small helper so the scaffold stays readable. */
 const placeholder = (props: Parameters<typeof PlaceholderPage>[0]) => (
@@ -81,11 +104,16 @@ export const routes: RouteRecord[] = [
             // CMS is unreachable at build time the list comes back empty and no
             // detail pages are emitted — the listing still builds, and the SPA
             // fallback serves the route client-side.
+            //
+            // These are FULL paths, not bare slugs: vite-react-ssg resolves a
+            // returned path against the parent route's prefix, which is "" here,
+            // so returning "my-event" writes dist/my-event.html at the root.
             getStaticPaths: async () => {
               const events = await fetchEvents();
               return events
-                .map((event) => event.slug)
-                .filter((slug): slug is string => typeof slug === "string" && !!slug);
+                .filter((event): event is typeof event & { slug: string } =>
+                  typeof event.slug === "string" && !!event.slug)
+                .map((event) => `events/${event.slug}`);
             },
           },
           { path: "academy", element: <AcademyPage /> },
@@ -121,13 +149,19 @@ export const routes: RouteRecord[] = [
               crumbs: [{ label: "Academy", href: "/academy" }, { label: "Klinghardt Akademie" }],
             }),
           },
+          { path: "courses", element: <CoursesPage /> },
+          // One pre-rendered page per method, for both templates. The slugs
+          // come from the same source the pages read, so a method added in the
+          // CMS is built as soon as the next deploy runs.
           {
-            path: "courses",
-            element: placeholder({
-              title: "Online Courses",
-              eyebrow: "Training paths",
-              phase: "F3",
-            }),
+            path: "courses/:slug",
+            element: <TrainingPathPage />,
+            getStaticPaths: coursePaths,
+          },
+          {
+            path: "courses/:slug/dates",
+            element: <CourseDatesPage />,
+            getStaticPaths: courseDatePaths,
           },
           {
             path: "store",
