@@ -20,11 +20,21 @@
 - **Document Root** → el `dist/` de esta repo.
 - **Git**: repo `cwsi-dietrich`, rama `main`.
 - **Additional deployment actions**: `bash scripts/plesk-deploy.sh`
-- Copiar el **UUID del webhook de Git** de Plesk al secret
-  `PLESK_GIT_HOOK_UUID` del repo en GitHub — sin él,
-  `.github/workflows/cms-rebuild.yml` no puede disparar el build (hoy el
-  workflow existe pero **nunca ha desplegado**, porque el secret no está).
-- Certificado TLS para el subdominio.
+- ✅ Certificado TLS y secret `PLESK_GIT_HOOK_UUID` — ya hechos.
+
+**Publicar el sitio (sin depender de automatización):** basta con la acción de
+deploy de arriba + un **Pull/Deploy manual** en Plesk. No hace falta configurar
+variables de entorno en la suscripción: `.env.production` está commiteado con
+los valores de preview correctos.
+
+**Automatizar los rebuilds** (push a `main` y cambios de contenido del CMS)
+necesita además dos cosas, ninguna de las cuales bloquea la publicación:
+1. Un **runner self-hosted** registrado en esta repo con la etiqueta `plesk`.
+   El workflow pide `runs-on: [self-hosted, plesk]` y la repo tiene 0, así que
+   los runs se encolan y se cancelan. El panel de Plesk no es accesible desde
+   fuera, así que un runner de GitHub no sirve.
+2. Un **token de rebuild acotado a esta repo** (ver B21): repuntar
+   `rebuild_repo` no basta, el PAT guardado sólo alcanza la repo de la landing.
 
 ### 1.2 Variables de entorno de la suscripción
 
