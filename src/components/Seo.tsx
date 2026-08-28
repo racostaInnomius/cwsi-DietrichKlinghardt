@@ -25,6 +25,8 @@ export function Seo({
   image?: string;
   noindex?: boolean;
 }) {
+  // A preview deployment is never indexable, whatever the page asked for.
+  const hidden = noindex || !env.INDEXABLE;
   const url = path ? `${env.SITE_URL}${path === "/" ? "" : path}` : undefined;
   const card = image ?? `${env.SITE_URL}/images/dietrich-klinghardt.jpg`;
 
@@ -36,20 +38,20 @@ export function Seo({
       {/* A noindex page gets no canonical and no social card: it is either
           private, per-viewer or duplicate, and advertising it would undo the
           point of hiding it. */}
-      {noindex ? <meta name="robots" content="noindex" /> : null}
-      {!noindex && url ? <link rel="canonical" href={url} /> : null}
+      {hidden ? <meta name="robots" content="noindex" /> : null}
+      {!hidden && url ? <link rel="canonical" href={url} /> : null}
 
-      {!noindex ? <meta property="og:title" content={title} /> : null}
-      {!noindex && description ? (
+      {!hidden ? <meta property="og:title" content={title} /> : null}
+      {!hidden && description ? (
         <meta property="og:description" content={description} />
       ) : null}
-      {!noindex && url ? <meta property="og:url" content={url} /> : null}
-      {!noindex ? <meta property="og:image" content={card} /> : null}
-      {!noindex ? <meta name="twitter:title" content={title} /> : null}
-      {!noindex && description ? (
+      {!hidden && url ? <meta property="og:url" content={url} /> : null}
+      {!hidden ? <meta property="og:image" content={card} /> : null}
+      {!hidden ? <meta name="twitter:title" content={title} /> : null}
+      {!hidden && description ? (
         <meta name="twitter:description" content={description} />
       ) : null}
-      {!noindex ? <meta name="twitter:image" content={card} /> : null}
+      {!hidden ? <meta name="twitter:image" content={card} /> : null}
     </Head>
   );
 }

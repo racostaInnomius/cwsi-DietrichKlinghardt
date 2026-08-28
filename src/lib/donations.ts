@@ -54,13 +54,17 @@ export function useDonationContext(): {
 
   useEffect(() => {
     let active = true;
-    const domain = (() => {
-      try {
-        return new URL(env.SITE_URL).host;
-      } catch {
-        return "";
-      }
-    })();
+    // The CMS knows this site by its own domain, which is not necessarily
+    // where this build is served from (see env.CMS_SITE_DOMAIN).
+    const domain =
+      env.CMS_SITE_DOMAIN ||
+      (() => {
+        try {
+          return new URL(env.SITE_URL).host;
+        } catch {
+          return "";
+        }
+      })();
 
     // No publishable key means Elements cannot mount at all, so the answer is
     // the same as an un-onboarded Foundation: donations are closed. Checked
