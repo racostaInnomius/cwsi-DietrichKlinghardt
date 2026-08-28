@@ -1,186 +1,22 @@
-/* Google faces: DM Sans (body) and Fraunces (serif accents) belong to the new
-   design system; Cormorant + Inter are still used by the temporary landing and
-   act as the fallback stack for Kalice until the licensed files arrive. */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+/* Google faces: DM Sans carries the body and UI, Fraunces the serif accents.
+   Cormorant Garamond stays loaded as the fallback for Kalice until the licensed
+   .woff2 files arrive (see public/fonts/README.md). */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Cormorant+Garamond:wght@400;500&display=swap');
 
-/* New site layers (F1). Order matters: tokens → base → shell → motion. */
+/* Layer order matters: tokens → base → shell → sections → motion. */
 @import "./styles/tokens.css";
 @import "./styles/base.css";
 @import "./styles/shell.css";
+@import "./styles/sections.css";
 @import "./styles/motion.css";
 
+/* The shell owns the page background; both themes define --surface, and the
+   default keeps the paper tone before the theme attribute is applied. */
 :root {
-  --paper: #f5f0e6;
-  --teal: #118b94;
-  --deep-teal: #173f43;
-  --cyan: #299eb6;
-  --gold: #c4933f;
-  --muted: #989791;
-  --error: #a35445;
-  color: #0c0d0d;
-  background: var(--paper);
-  font-family: "Inter", Arial, sans-serif;
-  font-synthesis: none;
+  color-scheme: light;
+  background: var(--cream);
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; background: var(--paper); }
-body:has(.feedback-backdrop), body:has(.cms-refresh) { overflow: hidden; }
-a { color: inherit; text-decoration: none; }
-button, input { font: inherit; }
-button, a { -webkit-tap-highlight-color: transparent; }
-button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
-h1, h2, h3, p { margin-top: 0; }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-
-/* Landing-scoped from here down: these selectors (.site-header, .skip-link,
-   .eyebrow, header nav) are also part of the new shell, and since this file is
-   parsed after the imported layers the unscoped versions would win and break
-   it. Scoping keeps both alive until F2 retires the landing. */
-.landing-shell .skip-link { position: fixed; z-index: 100; top: -60px; left: 20px; padding: 12px 18px; background: var(--deep-teal); color: white; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
-.landing-shell .skip-link:focus { top: 16px; }
-
-.landing-shell .site-header { position: absolute; z-index: 10; top: 0; left: 0; right: 0; height: 84px; padding: 17px clamp(34px, 5vw, 72px); display: flex; align-items: flex-start; justify-content: space-between; }
-.brand { display: inline-flex; flex-direction: column; width: max-content; font: 500 38px/.76 "Cormorant Garamond", Georgia, serif; letter-spacing: -.045em; }
-.brand span:last-child { white-space: nowrap; }
-.brand i { margin-left: 2px; color: currentColor; font: 500 10px/1 "Inter", Arial, sans-serif; letter-spacing: 0; vertical-align: .25em; }
-.landing-shell .site-header nav { display: flex; align-items: center; gap: 12px; padding-top: 11px; }
-.contact-link { margin-right: 18px; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
-.social-link { width: 41px; height: 41px; border: 1.5px solid var(--deep-teal); border-radius: 50%; display: grid; place-items: center; }
-.social-link svg { width: 19px; height: 19px; fill: var(--deep-teal); stroke: var(--deep-teal); stroke-width: 1.5; }
-.social-link svg rect, .social-link svg circle:not(.fill) { fill: none; }
-.menu-link { width: 50px; height: 41px; display: grid; place-items: center; margin-left: 4px; }
-.menu-link svg { width: 29px; fill: none; stroke: var(--deep-teal); stroke-width: 1.4; }
-
-.newsletter-section { min-height: 770px; padding-top: 84px; display: grid; grid-template-columns: 48.5% 51.5%; background: var(--paper); color: var(--deep-teal); }
-.newsletter-copy { min-width: 0; padding: 68px clamp(45px, 4.7vw, 72px) 54px; }
-.landing-shell .eyebrow, .status-page .eyebrow { margin-bottom: 9px; color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: .25em; text-transform: uppercase; }
-.newsletter-copy h1 { max-width: 620px; margin-bottom: 27px; font: 500 clamp(43px, 3.6vw, 54px)/1.02 "Cormorant Garamond", Georgia, serif; letter-spacing: -.035em; }
-.newsletter-copy h1 > span { display: block; }
-.newsletter-copy h1 > span + span { margin-top: 7px; }
-.newsletter-copy h1 .trademark-part { display: inline; }
-.newsletter-copy h1 sup { margin-left: 2px; font: 600 10px/1 "Inter", Arial, sans-serif; letter-spacing: 0; vertical-align: .65em; }
-.newsletter-copy > p:not(.eyebrow) { max-width: 620px; margin-bottom: 20px; font-size: 18px; line-height: 1.7; letter-spacing: -.015em; }
-.newsletter-image { min-width: 0; overflow: hidden; background: #c8cbd1; }
-.newsletter-image img { width: 100%; height: 100%; display: block; object-fit: contain; object-position: center top; }
-
-.newsletter-form { width: 100%; display: grid; gap: 9px; }
-.name-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.newsletter-form input { width: 100%; min-height: 58px; padding: 0 20px; border: 1px solid #a9c3be; border-radius: 5px; background: rgba(255,255,255,.66); color: var(--deep-teal); outline: 0; }
-.newsletter-form input::placeholder { color: #92928e; }
-.newsletter-form input:focus { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(17,139,148,.12); }
-.newsletter-form button { min-height: 58px; border: 0; border-radius: 5px; background: var(--cyan); color: white; cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; transition: background .2s, transform .2s; }
-.newsletter-form button:hover { background: var(--deep-teal); transform: translateY(-1px); }
-.newsletter-form button:disabled { cursor: wait; opacity: .7; transform: none; }
-.consent { margin: 11px 0 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
-.honeypot { position: absolute; left: -9999px; }
-.no-spam { margin-top: 17px; display: flex; align-items: center; gap: 18px; color: #397f82; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; }
-.no-spam span { width: 39px; height: 1px; flex: 0 0 auto; background: #397f82; }
-
-.music-player { width: 100%; max-width: 620px; margin-top: 34px; color: var(--deep-teal); }
-.music-player h2 { margin-bottom: 18px; font: 500 clamp(30px, 2.7vw, 40px)/1.05 "Cormorant Garamond", Georgia, serif; letter-spacing: -.025em; }
-.music-player--standalone { max-width: none; margin: 0; padding: 76px max(24px, calc((100vw - 920px) / 2)); background: #e9f1ed; }
-.music-player--standalone h2 { max-width: 920px; }
-.music-artist { margin: -9px 0 18px; color: #596b69; font-size: 14px; }
-.soundcloud-frame { width: 100%; overflow: hidden; border-radius: 8px; background: #dce7e3; box-shadow: 0 14px 35px rgba(23,63,67,.12); }
-.soundcloud-frame--track { height: 166px; }
-.soundcloud-frame--playlist { height: 450px; }
-.soundcloud-frame iframe { width: 100%; height: 100%; display: block; border: 0; }
-.soundcloud-consent { width: 100%; height: 100%; display: grid; place-items: center; padding: 24px; background-position: center; background-size: cover; }
-.soundcloud-consent::before { content: ""; position: absolute; inset: 0; background: rgba(23,63,67,.78); }
-.soundcloud-consent { position: relative; }
-.soundcloud-consent__content { position: relative; z-index: 1; max-width: 420px; color: white; text-align: center; }
-.soundcloud-consent__content p { margin-bottom: 16px; font-size: 13px; line-height: 1.55; }
-.soundcloud-consent__content button { min-height: 46px; padding: 12px 20px; border: 1px solid rgba(255,255,255,.7); border-radius: 5px; background: white; color: var(--deep-teal); cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-.soundcloud-consent__content button:hover { background: var(--paper); }
-.music-caption { margin: 14px 0 0; color: #596b69; font-size: 13px; line-height: 1.65; }
-
-.cms-refresh { position: fixed; z-index: 300; inset: 0; display: grid; place-content: center; justify-items: center; gap: 30px; background: var(--paper); color: var(--deep-teal); }
-.cms-refresh .brand { font-size: 48px; }
-.cms-refresh-line { position: relative; width: 118px; height: 2px; overflow: hidden; background: rgba(17,139,148,.18); }
-.cms-refresh-line::after { content: ""; position: absolute; inset: 0; width: 45%; background: var(--teal); animation: cms-loading 1s ease-in-out infinite; }
-
-.feedback-backdrop { position: fixed; z-index: 200; inset: 0; padding: 24px; display: grid; place-items: center; background: rgba(9, 39, 42, .58); backdrop-filter: blur(7px); animation: fade-in .2s ease-out; }
-.feedback-dialog { position: relative; width: min(100%, 480px); padding: 47px 44px 40px; overflow: hidden; border: 1px solid rgba(255,255,255,.65); border-radius: 20px; background: var(--paper); color: var(--deep-teal); text-align: center; box-shadow: 0 30px 80px rgba(8, 41, 43, .3); animation: dialog-in .28s cubic-bezier(.2,.8,.2,1); }
-.feedback-dialog::before { content: ""; position: absolute; width: 190px; height: 190px; top: -120px; left: -85px; border-radius: 50%; background: rgba(41,158,182,.12); }
-.feedback-close { position: absolute; z-index: 1; top: 13px; right: 15px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--deep-teal); cursor: pointer; font-size: 25px; line-height: 1; }
-.feedback-close:hover { background: rgba(23,63,67,.08); }
-.feedback-mark { width: 62px; height: 62px; margin: 0 auto 22px; display: grid; place-items: center; border-radius: 50%; background: var(--teal); color: white; font-size: 29px; box-shadow: 0 0 0 9px rgba(17,139,148,.11); }
-.feedback-dialog.error .feedback-mark { background: var(--error); box-shadow: 0 0 0 9px rgba(163,84,69,.11); }
-.feedback-dialog .eyebrow { margin-bottom: 12px; }
-.feedback-dialog h2 { margin-bottom: 13px; font: 500 42px/1 "Cormorant Garamond", Georgia, serif; }
-.feedback-dialog #feedback-message { margin-bottom: 27px; color: #596b69; font-size: 14px; line-height: 1.7; }
-.feedback-action { min-width: 180px; min-height: 50px; padding: 12px 22px; border: 0; border-radius: 5px; background: var(--cyan); color: white; cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
-.feedback-dialog.error .feedback-action { background: var(--error); }
-
-footer { min-height: 263px; display: grid; place-items: center; background: var(--teal); color: white; }
-footer .brand { font-size: 52px; }
-.brand-inverted i { color: white; }
-
-.status-page { min-height: 100svh; padding: 36px clamp(24px, 6vw, 88px); display: flex; flex-direction: column; background: var(--paper); }
-.status-page > section { max-width: 700px; margin: auto; text-align: center; color: var(--deep-teal); }
-.status-page h1 { font: 500 clamp(52px, 7vw, 88px)/.95 "Cormorant Garamond", Georgia, serif; }
-.status-page section > p:not(.eyebrow) { margin: 0 auto 35px; max-width: 600px; line-height: 1.8; color: #586866; }
-.status-page .primary-button { min-width: 210px; min-height: 58px; padding: 18px 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; background: var(--cyan); color: white; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
-.status-icon { width: 68px; height: 68px; margin: 0 auto 30px; border-radius: 50%; display: grid; place-items: center; color: white; font-size: 28px; }
-.status-icon.success { background: var(--teal); }
-.status-icon.error { background: var(--error); }
-
-@keyframes fade-in { from { opacity: 0; } }
-@keyframes dialog-in { from { opacity: 0; transform: translateY(14px) scale(.97); } }
-@keyframes cms-loading { from { transform: translateX(-110%); } to { transform: translateX(245%); } }
-
-@media (max-width: 1000px) {
-  .newsletter-copy { padding-left: 42px; padding-right: 42px; }
-  .newsletter-copy h1 { font-size: 43px; }
-  .newsletter-copy > p:not(.eyebrow) { font-size: 16px; }
-  .no-spam { font-size: 9px; gap: 12px; }
-}
-
-@media (max-width: 760px) {
-  .site-header { position: relative; height: 80px; padding: 17px 22px; align-items: center; }
-  .site-header .brand { font-size: 30px; }
-  .site-header nav { padding: 0; gap: 7px; }
-  .contact-link, .social-link { display: none; }
-  .newsletter-section { min-height: 0; padding: 0; grid-template-columns: minmax(0, 1fr); }
-  .newsletter-image { height: auto; grid-row: 1; }
-  .newsletter-image img { height: auto; object-position: center top; }
-  .newsletter-copy { grid-row: 2; padding: 62px 24px 68px; }
-  .newsletter-copy h1 { font-size: clamp(43px, 12.5vw, 54px); }
-  .newsletter-copy > p:not(.eyebrow) { font-size: 16px; }
-  .name-fields { grid-template-columns: 1fr; gap: 9px; }
-  .no-spam { font-size: 9px; }
-  .music-player { margin-top: 38px; }
-  .music-player--standalone { margin: 0; padding: 58px 24px; }
-  .soundcloud-frame--playlist { height: min(450px, 115vw); min-height: 360px; }
-  footer { min-height: 220px; }
-  footer .brand { font-size: 44px; }
-  .feedback-dialog { padding: 43px 25px 34px; }
-  .feedback-dialog h2 { font-size: 37px; }
-  .status-page { padding-top: 24px; }
-  .status-page > section { padding: 60px 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  * { transition: none !important; animation: none !important; }
-}
-
-/**
- * Legacy scope — the temporary newsletter landing.
- *
- * The F1 design system introduces `--gold`/`--muted`/`--error` and a DM Sans
- * body font at :root. The landing (still live in production, still collecting
- * double opt-in signups) was built against its own values, so they are pinned
- * to its containers here rather than letting the new tokens silently restyle a
- * page that is in front of real users. This whole block disappears in F2, when
- * the designed Home replaces the landing.
- */
-.landing-shell,
-.status-page {
-  --gold: #c4933f;
-  --muted: #989791;
-  --error: #a35445;
-  font-family: "Inter", Arial, sans-serif;
+body:has(.feedback-backdrop) {
+  overflow: hidden;
 }

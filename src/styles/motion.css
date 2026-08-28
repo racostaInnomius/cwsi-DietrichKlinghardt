@@ -59,7 +59,15 @@
 .animated-gradient {
   position: relative;
   isolation: isolate;
-  background: var(--grad-warm);
+  /* The drifting layer is deliberately larger than its section (inset: -20%),
+     so it has to be clipped here — otherwise, being positioned, it paints over
+     the static announcement bar above it. */
+  overflow: hidden;
+  /* Same gradient underneath, static. The drifting layer above is often drawn
+     at reduced opacity, and blending it against the page cream would wash the
+     section out — fatal where the copy is white. Blended against itself, the
+     section keeps its full contrast at every intensity. */
+  background: var(--gradient-image, var(--grad-warm));
 }
 .animated-gradient::before {
   content: "";

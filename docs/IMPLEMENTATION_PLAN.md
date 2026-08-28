@@ -268,7 +268,31 @@ publicable** (todo lo demás puede llegar por fases sobre el sitio vivo — SSG 
 | KALICE sin licencia web | Media | Bloqueo explícito en F0; fallback temporal serif del sistema solo en dev |
 | Membresía gated crece de alcance | Media | D3 la saca del go-live; Payment Link recurrente como mínimo viable |
 
-## 7. Referencias
+## 7. Mapa de slugs de `page-contents`
+
+Cerrado en F2 (era entregable de F0). La fuente de verdad en código es
+`src/lib/sections.ts`; esta tabla es su lectura para quien carga contenido.
+
+**Regla:** *una fila por bloque*, no una fila por página. Una fila con toda la
+página adentro obliga a leer el copy por índice de bloque — el mismo acoplamiento
+posicional que rompió Iconic. Falta una fila ⇒ el bloque cae al fallback que vive
+junto a su markup; nunca queda en blanco ni corre el resto del texto.
+
+| Slug | Dónde aparece |
+|---|---|
+| `announcement` | Barra dorada superior (todas las páginas). Lleva además `ctaLabel` + `ctaUrl` |
+| `home-hero` · `home-intro` · `home-events` · `home-art` · `home-shop` · `home-talks` | Bloques del Home, en ese orden |
+| `newsletter` | Bloque de suscripción (Home, Events y el resto de páginas) |
+| `about` · `contact` · `five-levels` · `music` · `foundation` · `weekly-talks` | Páginas propias |
+| `sophia-home` · `sophia-team` · `new-patients` · `accommodations` | Ramal Sophia (tema teal) |
+
+⚠️ **Colisión pendiente de contenido:** la fila `newsletter` ya existe en el CMS
+con el copy del landing temporal (título *"Stay informed"*, primer párrafo
+*"Klinghardt® Newsletter"*). El sitio nuevo la usa para el bloque *"Join Our
+Newsletter"* del diseño, así que hoy renderiza el texto viejo. Es una edición de
+un campo en el CMS — queda en la carga de contenido de F9, no es código.
+
+## 8. Referencias
 
 - `docs/FIGMA_NOTES.md` — notas completas de la diseñadora (y JSON crudo).
 - Memoria de sesión: mapa frame→node-id de los 22 frames.

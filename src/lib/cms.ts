@@ -37,6 +37,53 @@ async function fetchTenantMusic(): Promise<ContentDoc[]> {
   }
 }
 
+/**
+ * Reads any tenant-scoped collection in pages of 100 and concatenates every
+ * row. Site-scoped collections take `site` too; the caller decides, because a
+ * few collections (music-embeds) are tenant-wide rather than per-site.
+ *
+ * Never throws: a CMS hiccup must degrade to the local fallback content, not
+ * blank a statically generated page.
+ */
+export async function fetchCollection<T extends ContentDoc>(
+  collection: string,
+  { scopeToSite = true, where = {} }: { scopeToSite?: boolean; where?: Record<string, string> } = {},
+): Promise<T[]> {
+  if (!env.TENANT_ID) return [];
+  if (scopeToSite && !env.SITE_ID) return [];
+
+  const rows: T[] = [];
+  let page = 1;
+  while (true) {
+    const params = new URLSearchParams({
+      "where[tenant][equals]": env.TENANT_ID,
+      depth: "2",
+      limit: "100",
+      page: String(page),
+      ...where,
+    });
+    if (scopeToSite) params.set("where[site][equals]", env.SITE_ID);
+
+    try {
+      const response = await fetch(`${env.CMS_URL}/api/${collection}?${params}`, {
+        credentials: "omit",
+      });
+      if (!response.ok) return rows;
+      const result = (await response.json()) as PayloadPage<T>;
+      rows.push(...(result.docs ?? []));
+      if (!result.hasNextPage && page >= (result.totalPages ?? 1)) return rows;
+      page = result.nextPage ?? page + 1;
+    } catch {
+      return rows;
+    }
+  }
+}
+
+/** Published events, newest first — the Home strip and the Events page. */
+export async function fetchEvents(): Promise<ContentDoc[]> {
+  return fetchCollection("events", { where: { "where[status][equals]": "published" } });
+}
+
 export async function fetchPageContents(): Promise<ContentDoc[]> {
   if (!env.TENANT_ID || !env.SITE_ID) return [];
   const rows: ContentDoc[] = [];

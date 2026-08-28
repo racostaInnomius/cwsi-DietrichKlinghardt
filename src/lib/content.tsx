@@ -6,78 +6,109 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useLoaderData, useLocation } from "react-router-dom";
-import { Brand } from "@/components/Brand";
+import { useLoaderData } from "react-router-dom";
 import { demoContent, type ContentDoc } from "@/data/demo";
 import { env } from "./env";
-import { fetchPageContents, richText } from "./cms";
+import { fetchEvents, fetchPageContents, richText } from "./cms";
+
+/**
+ * Content store for the whole site: statically generated at build time by the
+ * route loaders, then revalidated in the browser against the live CMS.
+ *
+ * Fallback rule (unchanged from the landing, now applied per collection): a
+ * collection the CMS answers with rows replaces the local one; an empty or
+ * failed answer keeps the bundled fallback, so a page never renders blank
+ * because the CMS blinked.
+ */
 
 type ContentMap = Record<string, ContentDoc[]>;
+
+export interface LoaderContent {
+  pages?: ContentDoc[];
+  events?: ContentDoc[];
+}
+
 const ContentContext = createContext<ContentMap>(demoContent);
 
+/** Loader shared by every route — one fetch pass feeds the whole tree. */
+export async function loadSiteContent(): Promise<LoaderContent> {
+  const [pages, events] = await Promise.all([
+    fetchPageContents(),
+    fetchEvents().catch(() => []),
+  ]);
+  return { pages, events };
+}
+
+/**
+ * CMS rows win field by field, but a page still inherits any field the CMS
+ * leaves empty from its local fallback — that is what keeps a half-filled CMS
+ * from stripping copy the design depends on.
+ */
 function mergePages(rows: ContentDoc[]): ContentDoc[] {
   const fallbacks = demoContent["page-contents"] ?? [];
-  return rows.map((row) => {
+  const merged = rows.map((row) => {
     const local = fallbacks.find((item) => item.slug === row.slug);
     return local ? { ...local, ...row } : row;
   });
+  // Keep fallback-only pages (e.g. the announcement bar) that the CMS has no
+  // row for yet, so the shell never loses its copy.
+  const seen = new Set(merged.map((row) => row.slug));
+  return [...merged, ...fallbacks.filter((row) => !seen.has(row.slug))];
+}
+
+function buildContent(loaded: LoaderContent): ContentMap {
+  return {
+    ...demoContent,
+    "page-contents": loaded.pages?.length
+      ? mergePages(loaded.pages)
+      : (demoContent["page-contents"] ?? []),
+    events: loaded.events?.length ? loaded.events : (demoContent.events ?? []),
+  };
 }
 
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const loader = useLoaderData() as { pages?: ContentDoc[] } | undefined;
-  const { pathname } = useLocation();
-  const initial = useMemo(() => {
-    const loaded = loader?.pages ?? [];
-    return loaded.length
-      ? { ...demoContent, "page-contents": mergePages(loaded) }
-      : demoContent;
-  }, [loader]);
+  const loader = useLoaderData() as LoaderContent | undefined;
+  const initial = useMemo(() => buildContent(loader ?? {}), [loader]);
   const [content, setContent] = useState<ContentMap>(initial);
-  // Revalidate against the CMS on every route, not just the landing: each page
-  // of the full site is statically generated and then refreshed at runtime.
-  const shouldRefresh = env.RUNTIME_CMS && Boolean(env.TENANT_ID) && Boolean(env.SITE_ID);
-  // The full-screen brand loader belongs to the landing entrance only —
-  // elsewhere the refresh happens quietly behind already-rendered content.
-  const [refreshing, setRefreshing] = useState(shouldRefresh && pathname === "/");
+
+  const shouldRefresh =
+    env.RUNTIME_CMS && Boolean(env.TENANT_ID) && Boolean(env.SITE_ID);
 
   useEffect(() => {
     if (!shouldRefresh) return;
     let active = true;
-    const minimumDisplay = new Promise<void>((resolve) => window.setTimeout(resolve, 250));
-    void Promise.all([fetchPageContents(), minimumDisplay])
-      .then(([rows]) => {
-        if (active && rows.length) {
-          setContent((current) => ({ ...current, "page-contents": mergePages(rows) }));
-        }
-      })
-      .finally(() => {
-        if (active) setRefreshing(false);
-      });
-    return () => { active = false; };
+    void loadSiteContent().then((fresh) => {
+      if (active) setContent(buildContent(fresh));
+    });
+    return () => {
+      active = false;
+    };
   }, [shouldRefresh]);
 
-  return (
-    <ContentContext.Provider value={content}>
-      {children}
-      {refreshing && (
-        <div className="cms-refresh" role="status" aria-live="polite" aria-label="Loading latest content">
-          <Brand />
-          <span className="cms-refresh-line" aria-hidden="true" />
-          <span className="sr-only">Loading latest content…</span>
-        </div>
-      )}
-    </ContentContext.Provider>
-  );
+  return <ContentContext.Provider value={content}>{children}</ContentContext.Provider>;
 }
 
-export function usePageContent(slug: string) {
-  return useContext(ContentContext)["page-contents"]?.find((item) => item.slug === slug);
+/** Every row of a collection, in CMS order. */
+export function useCollection(name: string): ContentDoc[] {
+  return useContext(ContentContext)[name] ?? [];
 }
 
-export function text(doc: ContentDoc | undefined, key: string, fallback = "") {
+/** The `page-contents` row for a slug, e.g. "home" or "announcement". */
+export function usePageContent(slug: string): ContentDoc | undefined {
+  return useCollection("page-contents").find((item) => item.slug === slug);
+}
+
+/** Reads a field as text, flattening Lexical rich text when needed. */
+export function text(doc: ContentDoc | undefined, key: string, fallback = ""): string {
   if (!doc) return fallback;
   const value = key === "bodyText" && doc.body != null ? doc.body : doc[key];
-  if (typeof value === "string") return value;
-  if (typeof value === "object") return richText(value) || fallback;
+  if (typeof value === "string") return value || fallback;
+  if (typeof value === "object" && value !== null) return richText(value) || fallback;
   return fallback;
+}
+
+/** Reads a numeric field (price, capacity) with a fallback. */
+export function number(doc: ContentDoc | undefined, key: string, fallback = 0): number {
+  const value = doc?.[key];
+  return typeof value === "number" ? value : fallback;
 }

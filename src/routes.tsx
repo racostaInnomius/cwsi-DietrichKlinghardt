@@ -1,26 +1,20 @@
 import { Navigate, Outlet } from "react-router-dom";
 import type { RouteRecord } from "vite-react-ssg";
-import { ContentProvider } from "@/lib/content";
+import { ContentProvider, loadSiteContent } from "@/lib/content";
 import { CartProvider } from "@/lib/cart";
-import { fetchPageContents } from "@/lib/cms";
+import { fetchEvents } from "@/lib/cms";
 import { SiteShell } from "@/components/shell/SiteShell";
-import { LandingPage } from "@/pages/LandingPage";
+import { HomePage } from "@/pages/HomePage";
+import { EventsPage } from "@/pages/EventsPage";
+import { EventDetailPage } from "@/pages/EventDetailPage";
 import { SubscriptionStatusPage } from "@/pages/SubscriptionStatusPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
 
-async function loadContent() {
-  return { pages: await fetchPageContents() };
-}
-
 /**
  * Root: content + cart providers wrap everything, so any page (and the header's
- * cart badge) can read them.
- *
- * Two shells coexist on purpose during F1. `/` and the newsletter status pages
- * are the *live* temporary landing — they keep their own minimal chrome and are
- * not touched, because they are in production collecting double opt-in signups.
- * Every new route renders inside `SiteShell`, the designed frame. F2 moves the
- * home page into the shell and the landing retires.
+ * cart badge) can read them. One loader feeds the whole tree — `page-contents`
+ * and `events` are fetched once at build time and revalidated together in the
+ * browser.
  */
 function Root() {
   return (
@@ -50,17 +44,21 @@ export const routes: RouteRecord[] = [
   {
     path: "/",
     element: <Root />,
-    loader: loadContent,
+    loader: loadSiteContent,
     children: [
-      // ── Live temporary landing (untouched until F2) ──────────────
-      { index: true, element: <LandingPage /> },
-      { path: "newsletter/confirmed", element: <SubscriptionStatusPage success /> },
-      { path: "newsletter/error", element: <SubscriptionStatusPage success={false} /> },
-
-      // ── The designed site ────────────────────────────────────────
       {
         element: <ShellLayout />,
         children: [
+          { index: true, element: <HomePage /> },
+
+          // Double opt-in landings. Confirmation emails already in inboxes
+          // point at these two paths — they never change.
+          { path: "newsletter/confirmed", element: <SubscriptionStatusPage success /> },
+          {
+            path: "newsletter/error",
+            element: <SubscriptionStatusPage success={false} />,
+          },
+
           {
             path: "about",
             element: placeholder({
@@ -71,15 +69,20 @@ export const routes: RouteRecord[] = [
               phase: "F2",
             }),
           },
+          { path: "events", element: <EventsPage /> },
           {
-            path: "events",
-            element: placeholder({
-              title: "Learn Directly from Dr. Klinghardt",
-              eyebrow: "Events & webinars",
-              intro:
-                "Browse upcoming workshops, webinars and live sessions with Dr. Dietrich Klinghardt.",
-              phase: "F2",
-            }),
+            path: "events/:slug",
+            element: <EventDetailPage />,
+            // Every published event gets its own pre-rendered HTML file. If the
+            // CMS is unreachable at build time the list comes back empty and no
+            // detail pages are emitted — the listing still builds, and the SPA
+            // fallback serves the route client-side.
+            getStaticPaths: async () => {
+              const events = await fetchEvents();
+              return events
+                .map((event) => event.slug)
+                .filter((slug): slug is string => typeof slug === "string" && !!slug);
+            },
           },
           {
             path: "academy",
