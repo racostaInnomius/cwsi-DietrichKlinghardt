@@ -3,10 +3,12 @@ import { useCollection, text, number } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { checkoutHref } from "@/lib/checkout";
 import { eventLongDate, splitByTime } from "@/lib/format";
+import { calendarHref } from "@/lib/calendar";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Link } from "react-router-dom";
 import { Accordion } from "@/components/sections/Accordion";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -35,9 +37,16 @@ export function WeeklyTalksPage() {
   const joinHref = checkoutHref(ctaUrl);
 
   // The next live session, taken from the events the CMS already publishes.
+  // `liveMode` is the CMS select ("mux"), not a boolean — anything truthy other
+  // than "off" means this event streams.
   const nextLive = splitByTime(
-    useCollection("events").filter((event) => event.liveMode === true),
+    useCollection("events").filter(
+      (event) => typeof event.liveMode === "string" && event.liveMode !== "off",
+    ),
   ).upcoming[0];
+  const addToCalendar = calendarHref(nextLive, {
+    url: `${env.SITE_URL}/weekly-talks`,
+  });
 
   const faqs = [...useCollection("faqs")]
     .sort((a, b) => number(a, "order") - number(b, "order"))
@@ -80,6 +89,20 @@ export function WeeklyTalksPage() {
                   Get notified
                 </a>
               )}
+              {nextLive ? (
+                <Link className="btn btn-ghost" to={`/weekly-talks/live/${String(nextLive.id)}`}>
+                  Watch the live
+                </Link>
+              ) : null}
+              {addToCalendar ? (
+                <a
+                  className="btn btn-ghost"
+                  href={addToCalendar}
+                  download="weekly-talk.ics"
+                >
+                  Add to calendar
+                </a>
+              ) : null}
             </div>
           </Reveal>
         </div>

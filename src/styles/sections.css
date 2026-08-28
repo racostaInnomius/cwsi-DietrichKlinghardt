@@ -1066,6 +1066,68 @@
   margin: clamp(28px, 3vw, 44px) auto 0;
 }
 
+/* ── Live talk ────────────────────────────────────────────────── */
+
+.live-page h1 {
+  margin-bottom: 8px;
+}
+.live-page .breadcrumbs {
+  margin-bottom: clamp(20px, 2.4vw, 32px);
+}
+.live-stage {
+  margin-top: clamp(24px, 3vw, 40px);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--ink);
+}
+.live-stage mux-player {
+  display: block;
+  --controls-backdrop-color: rgba(28, 25, 22, 0.5);
+}
+.live-notice {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: clamp(280px, 42vw, 460px);
+  padding: clamp(28px, 4vw, 56px);
+  color: var(--cream);
+  text-align: center;
+}
+.live-notice .eyebrow {
+  margin: 0;
+  color: var(--gold-bright);
+}
+.live-notice h2 {
+  max-width: 24ch;
+  color: var(--cream);
+  font-size: var(--fs-display-sm);
+}
+.live-notice p {
+  max-width: 52ch;
+  margin: 0;
+  color: rgba(244, 240, 229, 0.78);
+  font-size: var(--fs-sm);
+}
+.live-notice .btn {
+  margin-top: 8px;
+}
+.live-notice .btn-outline {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--cream);
+}
+.live-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 22px;
+}
+.live-footer small {
+  color: var(--muted-2);
+  font-size: var(--fs-meta);
+}
+
 /* ── Store ────────────────────────────────────────────────────── */
 
 .store-filters {

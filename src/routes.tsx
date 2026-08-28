@@ -16,6 +16,7 @@ import { FoundationPage } from "@/pages/FoundationPage";
 import { DonatePage } from "@/pages/foundation/DonatePage";
 import { DonateReturnPage } from "@/pages/foundation/DonateReturnPage";
 import { WeeklyTalksPage } from "@/pages/WeeklyTalksPage";
+import { LiveTalkPage } from "@/pages/LiveTalkPage";
 import { SophiaPage } from "@/pages/sophia/SophiaPage";
 import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
 import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
@@ -175,6 +176,9 @@ export const routes: RouteRecord[] = [
           { path: "cart/return", element: <CartReturnPage /> },
           { path: "music", element: <MusicPage /> },
           { path: "weekly-talks", element: <WeeklyTalksPage /> },
+          // Per-viewer, token-gated and time-bound — never pre-rendered with
+          // content, and marked noindex by the page itself.
+          { path: "weekly-talks/live/:eventId", element: <LiveTalkPage /> },
           { path: "foundation", element: <FoundationPage /> },
           { path: "foundation/donate", element: <DonatePage /> },
           { path: "foundation/donate/return", element: <DonateReturnPage /> },
