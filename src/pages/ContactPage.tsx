@@ -4,6 +4,7 @@ import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 
 /** label | email | what this address is for */
 const CARDS_FALLBACK: string[][] = [
@@ -44,7 +45,7 @@ export function ContactPage() {
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Get in touch</p>
-            <h1>{contact.title}</h1>
+            <h1><Marked text={contact.title} /></h1>
             {contact.lead ? <p className="lead">{contact.lead}</p> : null}
           </Reveal>
         </div>

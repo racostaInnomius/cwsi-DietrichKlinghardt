@@ -5,6 +5,7 @@ import { videoEmbed } from "@/lib/cms";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { LineQuote } from "@/components/motion/LineQuote";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { VideoPlayer } from "@/components/sections/VideoPlayer";
@@ -57,7 +58,7 @@ export function FiveLevelsPage() {
           />
           <Reveal>
             <p className="eyebrow">A framework for wholeness</p>
-            <h1>{page.title}</h1>
+            <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
           </Reveal>
         </div>

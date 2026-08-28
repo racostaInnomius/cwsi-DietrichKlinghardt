@@ -6,6 +6,7 @@ import { eventLongDate, splitByTime } from "@/lib/format";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { Accordion } from "@/components/sections/Accordion";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -62,7 +63,7 @@ export function WeeklyTalksPage() {
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Exclusive membership</p>
-            <h1 className="display-xl">{page.title}</h1>
+            <h1 className="display-xl"><Marked text={page.title} /></h1>
             <p className="hero__lead">{page.lead}</p>
             {nextLive ? (
               <p className="hero__badge">

@@ -4,6 +4,7 @@ import { richTextBlocks } from "@/lib/cms";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 
 const HEADINGS: Record<string, string> = {
   privacy: "Privacy Policy",
@@ -37,7 +38,7 @@ export function LegalPage({ type }: { type: "privacy" | "terms" | "refunds" }) {
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Legal</p>
-            <h1>{title}</h1>
+            <h1><Marked text={title} /></h1>
             {effective ? (
               <p className="lead">
                 Effective{" "}

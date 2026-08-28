@@ -5,6 +5,7 @@ import { mediaUrl } from "@/lib/cms";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -38,7 +39,7 @@ export function SophiaTeamPage() {
           <Breadcrumbs items={[{ label: "Sophia", href: "/sophia" }, { label: "Our team" }]} />
           <Reveal>
             <p className="eyebrow">Sophia Health Institute™</p>
-            <h1>{page.title}</h1>
+            <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
           </Reveal>
         </div>

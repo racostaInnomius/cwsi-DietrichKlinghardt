@@ -705,6 +705,46 @@
   color: var(--muted);
 }
 
+/* ── Hub grid (Academy branches) ──────────────────────────────── */
+
+.branch-grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(18px, 2.4vw, 32px);
+}
+.branch a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 10px;
+  padding: clamp(24px, 2.6vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  transition: border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.branch a:hover {
+  border-color: var(--brand);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+.branch h2 {
+  font-size: var(--fs-display-sm);
+}
+.branch p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.branch .arrow-link {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
 /* ── Contact ──────────────────────────────────────────────────── */
 
 .contact-grid {

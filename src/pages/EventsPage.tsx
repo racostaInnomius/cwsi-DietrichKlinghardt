@@ -5,6 +5,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { splitByTime } from "@/lib/format";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { EventRow } from "@/components/sections/EventRow";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -40,7 +41,7 @@ export function EventsPage() {
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Events & webinars</p>
-            <h1>{copy.title}</h1>
+            <h1><Marked text={copy.title} /></h1>
             {copy.lead ? <p className="lead">{copy.lead}</p> : null}
           </Reveal>
         </div>

@@ -4,6 +4,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { Accordion } from "@/components/sections/Accordion";
 import { ContactForm } from "@/components/sections/ContactForm";
@@ -53,7 +54,7 @@ export function NewPatientsPage() {
           />
           <Reveal>
             <p className="eyebrow">Sophia Health Institute™</p>
-            <h1>{page.title}</h1>
+            <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
           </Reveal>
         </div>

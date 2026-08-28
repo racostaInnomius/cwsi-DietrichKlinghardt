@@ -7,6 +7,7 @@ import { money } from "@/lib/format";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -57,7 +58,7 @@ export function MusicPage() {
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Sound and healing</p>
-            <h1>{page.title}</h1>
+            <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
             {links.length ? (
               <p className="music-links">

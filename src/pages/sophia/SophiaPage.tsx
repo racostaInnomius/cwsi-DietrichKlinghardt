@@ -4,6 +4,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
@@ -40,7 +41,7 @@ export function SophiaPage() {
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Sophia Health Institute™</p>
-            <h1>{page.title}</h1>
+            <h1><Marked text={page.title} /></h1>
             <p className="hero__lead">{page.lead}</p>
             <div className="hero__actions">
               <Link className="btn btn-light" to="/sophia/new-patients">

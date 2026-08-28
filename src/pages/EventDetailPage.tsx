@@ -7,6 +7,7 @@ import { eventLocation, eventLongDate, money } from "@/lib/format";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -70,7 +71,7 @@ export function EventDetailPage() {
           />
           <Reveal>
             {location ? <p className="eyebrow">{location}</p> : null}
-            <h1>{title}</h1>
+            <h1><Marked text={title} /></h1>
             {date ? <p className="lead">{date}</p> : null}
           </Reveal>
         </div>

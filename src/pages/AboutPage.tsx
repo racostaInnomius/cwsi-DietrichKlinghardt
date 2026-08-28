@@ -3,6 +3,7 @@ import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { Marked } from "@/components/Marked";
 import { LineQuote } from "@/components/motion/LineQuote";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -45,7 +46,7 @@ export function AboutPage() {
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">About</p>
-            <h1>{about.title}</h1>
+            <h1><Marked text={about.title} /></h1>
           </Reveal>
         </div>
       </AnimatedGradient>

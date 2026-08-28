@@ -17,6 +17,8 @@ import { SophiaPage } from "@/pages/sophia/SophiaPage";
 import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
 import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
 import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
+import { AcademyPage } from "@/pages/AcademyPage";
+import { ArtPage } from "@/pages/ArtPage";
 import { LegalPage } from "@/pages/LegalPage";
 import { SubscriptionStatusPage } from "@/pages/SubscriptionStatusPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
@@ -86,23 +88,8 @@ export const routes: RouteRecord[] = [
                 .filter((slug): slug is string => typeof slug === "string" && !!slug);
             },
           },
-          {
-            path: "academy",
-            element: placeholder({
-              title: "Dr. Klinghardt Academy",
-              eyebrow: "Learning center",
-              phase: "F2",
-            }),
-          },
-          {
-            path: "academy/art",
-            element: placeholder({
-              title: "A.R.T. Klinghardt",
-              eyebrow: "Signature method",
-              phase: "F2",
-              crumbs: [{ label: "Academy", href: "/academy" }, { label: "A.R.T. Klinghardt" }],
-            }),
-          },
+          { path: "academy", element: <AcademyPage /> },
+          { path: "academy/art", element: <ArtPage /> },
           { path: "academy/five-levels", element: <FiveLevelsPage /> },
           {
             path: "academy/therapists",
@@ -119,7 +106,7 @@ export const routes: RouteRecord[] = [
             element: placeholder({
               title: "Educational Resources",
               eyebrow: "Publications",
-              phase: "F2",
+              phase: "F3",
               crumbs: [{ label: "Academy", href: "/academy" }, { label: "Publications" }],
             }),
           },
@@ -128,7 +115,9 @@ export const routes: RouteRecord[] = [
             element: placeholder({
               title: "Klinghardt Akademie",
               eyebrow: "Learning center",
-              phase: "F2",
+              // The designer's notes mark the Akademie as separate work the
+              // client is handling; it lands with the content load, not before.
+              phase: "F9",
               crumbs: [{ label: "Academy", href: "/academy" }, { label: "Klinghardt Akademie" }],
             }),
           },
