@@ -35,7 +35,7 @@ export function EventsPage() {
         path="/events"
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Events & webinars</p>

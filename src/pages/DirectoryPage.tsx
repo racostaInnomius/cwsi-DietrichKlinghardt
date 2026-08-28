@@ -73,10 +73,10 @@ export function DirectoryPage() {
         path="/academy/therapists"
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
-            items={[{ label: "Academy", href: "/academy" }, { label: "Find a therapist" }]}
+            items={[{ label: "Akademy", href: "/academy" }, { label: "Find a therapist" }]}
           />
           <Reveal>
             <p className="eyebrow">Global practitioner directory</p>

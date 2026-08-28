@@ -54,39 +54,47 @@
   font-size: var(--fs-lead);
 }
 
-/* ── Animated gradient backdrop ───────────────────────────────── */
+/* ── Inset gradient cards ─────────────────────────────────────────
+   The page background is NOT here — it is one gradient on <main> (shell.css),
+   which is how the design does it. What lives here is the other thing the
+   design paints: a rounded gradient panel inset from the page, used by the home
+   hero and the "Join My Weekly Talks" band. Both carry dark type, so the
+   gradients they use stay in the light half of the palette. */
 
-.animated-gradient {
+.gradient-card {
   position: relative;
   isolation: isolate;
-  /* The drifting layer is deliberately larger than its section (inset: -20%),
-     so it has to be clipped here — otherwise, being positioned, it paints over
-     the static announcement bar above it. */
+  /* The drifting layer is larger than the card, so it has to be clipped — and
+     the clip is what gives the panel its rounded corners too. */
   overflow: hidden;
-  /* Same gradient underneath, static. The drifting layer above is often drawn
-     at reduced opacity, and blending it against the page cream would wash the
-     section out — fatal where the copy is white. Blended against itself, the
-     section keeps its full contrast at every intensity. */
-  background: var(--gradient-image, var(--grad-warm));
+  border-radius: var(--radius-lg, 22px);
+  /* The same gradient underneath, static: the drifting layer above is drawn at
+     reduced opacity, and blending it against the page would wash the panel out. */
+  background: var(--gradient-image, var(--grad-card));
 }
-.animated-gradient::before {
+.gradient-card::before {
   content: "";
   position: absolute;
   inset: -20%;
   z-index: -1;
-  background: var(--gradient-image, var(--grad-hero));
+  background: var(--gradient-image, var(--grad-card));
   background-size: 220% 220%;
   animation: gradient-drift var(--dur-gradient) ease-in-out infinite alternate;
   opacity: var(--gradient-strength, 1);
 }
-/* Softer drift where the note asks for subtlety, stronger on hero/shop/newsletter. */
-.animated-gradient[data-intensity="soft"] {
+.gradient-card[data-intensity="soft"] {
   --gradient-strength: 0.55;
   --dur-gradient: 26s;
 }
-.animated-gradient[data-intensity="strong"] {
+.gradient-card[data-intensity="strong"] {
   --gradient-strength: 1;
   --dur-gradient: 14s;
+}
+
+/* Sections with no background of their own: the page gradient shows through.
+   This is the normal case — the class exists to say so out loud. */
+.plain-section {
+  position: relative;
 }
 
 @keyframes gradient-drift {
@@ -152,7 +160,8 @@
     opacity: 1 !important;
     transform: none !important;
   }
-  .animated-gradient::before,
+  .gradient-card::before,
+  .site-shell > main::before,
   .teachers__track {
     animation: none !important;
     transform: none !important;

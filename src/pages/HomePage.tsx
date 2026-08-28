@@ -71,7 +71,7 @@ export function HomePage() {
       />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <AnimatedGradient variant="hero" intensity="strong" className="hero">
+      <AnimatedGradient variant="card" intensity="strong" className="hero">
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Dr. Dietrich Klinghardt™</p>
@@ -146,7 +146,7 @@ export function HomePage() {
       )}
 
       {/* ── A.R.T. ───────────────────────────────────────────────── */}
-      <AnimatedGradient variant="section" intensity="soft" className="home-art">
+      <AnimatedGradient variant="plain" intensity="soft" className="home-art">
         <div className="wrap home-art__inner">
           <Reveal>
             <p className="eyebrow">A.R.T. Klinghardt™</p>

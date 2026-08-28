@@ -38,7 +38,7 @@ export function DonatePage() {
         path="/foundation/donate"
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Foundation", href: "/foundation" }, { label: "Support" }]}

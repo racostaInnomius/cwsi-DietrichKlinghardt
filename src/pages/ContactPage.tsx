@@ -40,7 +40,7 @@ export function ContactPage() {
         path="/contact"
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Get in touch</p>

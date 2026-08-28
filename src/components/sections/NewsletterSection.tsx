@@ -95,7 +95,7 @@ export function NewsletterSection() {
   return (
     <AnimatedGradient
       id="newsletter"
-      variant="warm"
+      variant="plain"
       intensity="strong"
       className="newsletter"
     >

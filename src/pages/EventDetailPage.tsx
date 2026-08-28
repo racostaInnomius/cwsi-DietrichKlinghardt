@@ -63,7 +63,7 @@ export function EventDetailPage() {
         path={`/events/${slug}`}
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Events", href: "/events" }, { label: title }]}

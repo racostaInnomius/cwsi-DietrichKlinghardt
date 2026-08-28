@@ -20,7 +20,7 @@ export function SubscriptionStatusPage({ success }: { success: boolean }) {
         noindex
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="status-page">
+      <AnimatedGradient variant="plain" intensity="soft" className="status-page">
         <div className="wrap status-page__inner">
           <Reveal>
             <span

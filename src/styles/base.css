@@ -260,17 +260,27 @@ h3,
   background: color-mix(in srgb, var(--brand) 8%, transparent);
 }
 
-/* On dark/gradient surfaces */
+/* Secondary buttons, as the design draws them: a cream fill and a navy outline,
+   both on LIGHT ground. They used to be white-on-dark, which was right while
+   sections painted dark gradients — now that the page carries one gradient and
+   the type is dark throughout, a white ghost button would be invisible. */
 .btn-light {
   background: var(--cream);
   color: var(--ink);
 }
 .btn-ghost {
-  border-color: rgba(255, 255, 255, 0.55);
-  color: var(--white);
+  border-color: var(--brand);
+  color: var(--brand);
 }
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+}
+/* Sophia's brand teal is far lighter than DK's navy, and as button text over
+   the pale end of its own page gradient it stops at 4.06:1 — so the outline
+   button takes the darker teal on those pages. */
+[data-theme="sophia"] .btn-ghost {
+  border-color: var(--brand-3);
+  color: var(--brand-3);
 }
 
 .arrow-link {
@@ -296,6 +306,12 @@ h3,
    the Events / Directory / Courses frames. Deliberately NOT white-on-dark —
    the design reserves that treatment for the Home hero, and gold eyebrows are
    only legible against the light band. */
+/* Internal page headers sit in the dark top of the page gradient, and the
+   design colours them exactly this way (measured on the Directory frame): a
+   WHITE eyebrow, because at that height the ground is still blue, and an ink
+   heading and lead just below, where the gradient has lightened enough to carry
+   them — #1c1916 on the #55889e it lands on is 4.75:1. Navy type would
+   disappear into the navy, which is what `--brand` used to do here. */
 .page-hero {
   color: var(--ink);
 }
@@ -303,15 +319,27 @@ h3,
   padding-block: clamp(48px, 6vw, 96px);
 }
 .page-hero .eyebrow {
-  color: var(--gold-text);
+  color: var(--white);
 }
 .page-hero h1 {
   max-width: 20ch;
-  color: var(--brand);
+  color: var(--ink);
 }
 .page-hero .lead {
   margin-top: 18px;
-  color: var(--muted);
+  color: var(--ink);
+}
+/* Breadcrumbs ride at the very top of the page, on the darkest part of the
+   gradient, so every piece of them goes light — the link, the trail and the
+   separator, which otherwise keep the muted greys meant for white ground. */
+.page-hero .breadcrumbs ol,
+.page-hero .breadcrumbs a,
+.page-hero .breadcrumbs__sep,
+.page-hero .breadcrumbs__arrow {
+  color: var(--white);
+}
+.page-hero .breadcrumbs a:hover {
+  color: var(--cream-3);
 }
 .page-hero .breadcrumbs {
   margin-bottom: clamp(24px, 3vw, 44px);

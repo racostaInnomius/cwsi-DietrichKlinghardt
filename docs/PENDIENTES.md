@@ -30,6 +30,7 @@ y qué se queda bloqueado mientras no llegue.
 | A11 | **Página Akademie** | Vic | F9 | Ruta scaffolded; el cliente la trabaja aparte |
 | A12 | **Validación de diseño en móvil** | Noemi | F8 | El Figma no trae diseños mobile; el responsive es criterio propio |
 | A13 | **Decisión de membresía Weekly Talks** ($25/mes, trial 7d) | Cliente | F7 | Define si el CTA va a un Payment Link recurrente o a un flujo con gating. Hoy el CTA sale de la fila `weekly-talks-cta` y pasa por `checkoutHref`: **sin Payment Link live no aparece botón** |
+| A14 | **Confirmar la grafía de la marca: `Akademy™` o `Academy™`** | Cliente / Noemi | F9 | El Figma se contradice: escribe **`Dr. Klinghardt Akademy™` 15 veces** (incluida la barra de navegación) y `Academy™` 4. Seguimos la forma de la navegación, que es la dominante. Es una **marca registrada**: publicarla mal escrita es peor que discrepar del Figma, así que hay que confirmarlo antes del go-live. Ojo: `Klinghardt Akademie` es otra cosa — la academia alemana en Europa — y esa sí va así |
 
 ---
 

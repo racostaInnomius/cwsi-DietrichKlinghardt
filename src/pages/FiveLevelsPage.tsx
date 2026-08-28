@@ -47,10 +47,10 @@ export function FiveLevelsPage() {
         path="/academy/five-levels"
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
-            items={[{ label: "Academy", href: "/academy" }, { label: page.title }]}
+            items={[{ label: "Akademy", href: "/academy" }, { label: page.title }]}
           />
           <Reveal>
             <p className="eyebrow">A framework for wholeness</p>

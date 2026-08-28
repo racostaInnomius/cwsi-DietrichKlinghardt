@@ -58,7 +58,7 @@ export function CourseDatesPage() {
         path={`/courses/${path.slug}/dates`}
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[

@@ -9,29 +9,34 @@
 
 /* ── Home hero ────────────────────────────────────────────────── */
 
+/* The hero is an inset PANEL, not a full-bleed band: in the design it is a
+   rounded box with margins, sitting on the navy top of the page gradient, and
+   its type is dark navy — not white. That is what makes the eyebrow and the
+   lead readable without any special-casing. */
 .hero {
-  color: var(--white);
+  margin: 0 clamp(12px, 2.2vw, 34px);
+  color: var(--ink);
 }
 .hero__inner {
   display: flex;
-  min-height: min(78vh, 720px);
+  min-height: min(64vh, 600px);
   flex-direction: column;
   justify-content: flex-end;
-  padding-block: clamp(72px, 11vw, 168px) clamp(48px, 6vw, 96px);
+  padding-block: clamp(64px, 9vw, 128px) clamp(40px, 5vw, 72px);
 }
 .hero__eyebrow {
-  color: var(--cream-3);
+  color: var(--gold-text);
 }
 .hero h1 {
   max-width: 16ch;
   margin-bottom: 24px;
-  color: var(--white);
+  color: var(--brand);
 }
 .hero__lead {
   max-width: 52ch;
   margin-bottom: 34px;
   font-size: var(--fs-lead);
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--muted);
 }
 .hero__actions {
   display: flex;
@@ -309,17 +314,11 @@
 
 /* ── Home: A.R.T. + teasers ───────────────────────────────────── */
 
+/* In the design this section is part of the page's white band: dark heading,
+   grey body, gold eyebrow — no band of its own. The white-on-gradient version
+   this replaces is what made "A.R.T. Klinghardt™" unreadable. */
 .home-art {
-  color: var(--white);
-}
-/* The eyebrow is the one element that does not inherit the light colour above:
-   `.eyebrow` sets `--gold-text` itself, and that gold is measured against cream
-   and white. Over the navy this section opens with it lands at 2.28:1 — the
-   "A.R.T. Klinghardt™" line was practically invisible. The hero had already
-   overridden it (`.hero__eyebrow`); this is the same correction, and it applies
-   to all three pages that use this section — Home, A.R.T. and Foundation. */
-.home-art .eyebrow {
-  color: var(--cream-3);
+  color: var(--on-surface);
 }
 .home-art__inner {
   padding-block: var(--section-y);
@@ -327,12 +326,12 @@
 .home-art h2 {
   max-width: 18ch;
   margin-bottom: 22px;
-  color: var(--white);
+  color: var(--on-surface);
 }
 .home-art__copy {
   max-width: 58ch;
   margin-bottom: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--muted);
 }
 .home-art__actions {
   display: flex;
@@ -432,9 +431,12 @@
   position: absolute;
   left: -9999px;
 }
+/* The newsletter sits in the warm foot of the page gradient, where `--muted`
+   reaches only 2.75:1 and even `--ink-soft` stops at 4.37:1 — small print needs
+   the full ink there. */
 .newsletter__note {
   margin: 4px 0 0;
-  color: var(--muted);
+  color: var(--ink);
   font-size: var(--fs-meta);
   letter-spacing: 0.06em;
   text-align: center;
@@ -2225,11 +2227,13 @@
   border-radius: var(--radius);
 }
 
+/* Navy outline, not white: the hero is a light panel now. */
 .hero__badge {
   display: inline-block;
   margin-bottom: 26px;
   padding: 8px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid color-mix(in srgb, var(--brand) 45%, transparent);
+  color: var(--brand);
   border-radius: var(--radius-pill);
   font-size: var(--fs-meta);
   letter-spacing: 0.08em;

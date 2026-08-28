@@ -12,8 +12,39 @@
   color: var(--on-surface);
 }
 
+/**
+ * The page gradient lives here — on <main>, exactly the span the design's
+ * `Rectangle 296` covers: from under the announcement bar and header down to
+ * where the footer starts.
+ *
+ * Putting it on the element rather than on each section is the whole point.
+ * The gradient stretches to the page's own height, so its stops land at the
+ * same *proportions* the design uses whatever the page is long — the wide
+ * white band always ends up under the body copy. Sections stay transparent and
+ * inherit dark type; only the header, the footer and the two inset cards paint
+ * a background of their own.
+ */
 .site-shell > main {
   flex: 1;
+  position: relative;
+  isolation: isolate;
+  background: var(--grad-page-full);
+}
+
+/* The designer asked for a background that moves (ref. newgenre.studio). It
+   drifts once, for the page, instead of once per section: an oversized copy of
+   the same gradient sliding behind the content. Same gradient underneath means
+   any opacity keeps the page's real colours. */
+.site-shell > main::before {
+  content: "";
+  position: absolute;
+  inset: -8% -20%;
+  z-index: -1;
+  background: var(--grad-page-full);
+  background-size: 160% 160%;
+  opacity: 0.55;
+  animation: gradient-drift 32s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
 /* ── Announcement bar ─────────────────────────────────────────── */
@@ -321,12 +352,20 @@
 }
 
 /* Oversized signature bleeding off the bottom edge, as in every frame. */
+/* "Dr. Dietrich Klinghardt" on one line, so its size has to be tied to how wide
+   the line actually is: 23 characters of Kalice run roughly 10.4× the font
+   size, and at the old 11vw that overflowed the viewport — the last letters
+   were cut off on the right and the line sat straight on top of the legal row.
+   7vw keeps the whole name on screen (and matches the design, where it is 93px
+   on a 1440 frame), the clip is a belt-and-braces guard, and the margin gives
+   the legal row its own air. */
 .site-footer__watermark {
-  margin: 0;
+  margin: 0 0 clamp(18px, 2.4vw, 34px);
   padding-inline: var(--gutter);
+  overflow: hidden;
   font-family: var(--font-display);
-  font-size: clamp(56px, 11vw, 168px);
-  line-height: 0.8;
+  font-size: clamp(38px, 7vw, 132px);
+  line-height: 0.9;
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.07);
   pointer-events: none;

@@ -53,7 +53,7 @@ const BRANCHES = [
  */
 export function AcademyPage() {
   const page = useSection("academy", {
-    title: "Dr. Klinghardt Academy™",
+    title: "Dr. Klinghardt Akademy™",
     paragraphs: [
       "Everything taught under the Klinghardt name in one place: the method, the framework it sits inside, the training that certifies it, and the practitioners who work with it.",
     ],
@@ -62,12 +62,12 @@ export function AcademyPage() {
   return (
     <>
       <Seo
-        title={"Dr. Klinghardt Academy™"}
+        title={"Dr. Klinghardt Akademy™"}
         description="A.R.T., the 5 Levels of Healing, certification training and the practitioner directory."
         path="/academy"
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Learning centre</p>

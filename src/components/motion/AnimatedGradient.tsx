@@ -1,48 +1,62 @@
 import type { ElementType, ReactNode } from "react";
 
 /**
- * Section wrapper with the brand gradient drifting behind the content —
- * "aquí está la referencia para cómo queremos que se mueva el background de
- * tonos entre secciones" (ref: newgenre.studio). The note asks for it to be
- * noticeable in the hero (down to the "Learn more" button) and strongest on
- * Shop and Newsletter, so intensity is a prop rather than a global setting.
+ * A section that may carry its own gradient — but usually does not.
  *
- * The gradient itself comes from the active theme (`--grad-hero` /
- * `--grad-section` / `--grad-warm`), which is why a Sophia section drifts teal
- * and a DK section drifts navy→gold without either knowing about the other.
+ * This component used to paint a gradient behind *every* section it wrapped.
+ * That was a misreading of the design: the file paints ONE gradient per page
+ * (`Rectangle 296`, identical across 13 frames) and leaves the sections
+ * transparent on top of it. Replaying the full navy→amber range inside each
+ * block put white type over colours meant to sit under dark type — 3.13:1 on
+ * the teal, 1.65:1 on the amber. See docs/AUDIT_FIGMA.md §1.
+ *
+ * So the page gradient now lives on `<main>` (shell.css) and drifts there, and
+ * this component paints a background only for `card` — the two places the
+ * design really does inset a gradient box: the home hero panel and the "Join My
+ * Weekly Talks" band. Both are rounded, both have margins, and both carry dark
+ * type.
+ *
+ * The other variants are kept so call sites keep reading naturally; they render
+ * a plain transparent section and let the page gradient show through.
  */
 export function AnimatedGradient({
   children,
   as: Tag = "section",
-  variant = "hero",
+  variant = "plain",
   intensity = "normal",
   className = "",
   id,
 }: {
   children: ReactNode;
   as?: ElementType;
-  /** Which themed gradient to drift. `page` is the light internal-page band. */
-  variant?: "hero" | "section" | "warm" | "page";
-  /** `strong` for hero/shop/newsletter, `soft` where it should stay quiet. */
+  /**
+   * `card` insets a gradient panel (hero, weekly-talks band); `card-warm` is
+   * its warmer twin. Everything else is transparent — the page gradient behind
+   * it is the background.
+   */
+  variant?: "card" | "card-warm" | "plain" | "hero" | "section" | "warm" | "page";
+  /** Kept for the card variants: how strongly the panel's own gradient drifts. */
   intensity?: "soft" | "normal" | "strong";
   className?: string;
   id?: string;
 }) {
   const gradient =
-    variant === "section"
-      ? "var(--grad-section)"
-      : variant === "warm"
-        ? "var(--grad-warm)"
-        : variant === "page"
-          ? "var(--grad-page)"
-          : "var(--grad-hero)";
+    variant === "card"
+      ? "var(--grad-card)"
+      : variant === "card-warm"
+        ? "var(--grad-card-warm)"
+        : undefined;
 
   return (
     <Tag
       id={id}
-      className={`animated-gradient${className ? ` ${className}` : ""}`}
-      data-intensity={intensity}
-      style={{ "--gradient-image": gradient } as React.CSSProperties}
+      className={`${gradient ? "gradient-card" : "plain-section"}${
+        className ? ` ${className}` : ""
+      }`}
+      data-intensity={gradient ? intensity : undefined}
+      style={
+        gradient ? ({ "--gradient-image": gradient } as React.CSSProperties) : undefined
+      }
     >
       {children}
     </Tag>

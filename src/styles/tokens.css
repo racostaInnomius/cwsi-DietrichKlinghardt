@@ -108,14 +108,54 @@
   --surface-2: var(--white);
   --on-surface: var(--ink);
 
-  /* Hero / section gradients straight from the file's gradient stops */
-  --grad-hero: linear-gradient(135deg, #023866 0%, #5b9dcd 55%, #f0a437 100%);
-  --grad-section: linear-gradient(180deg, #023866 0%, #1a9ca0 50%, #f3ba4b 100%);
-  --grad-warm: linear-gradient(180deg, var(--cream) 0%, #ffeac6 55%, #e4b17c 100%);
-  /* Internal page headers are LIGHT in the design (see the Events and
-     Directory frames): pale blue settling into cream, with navy type on top —
-     not white type on a dark band. */
-  --grad-page: linear-gradient(160deg, #b9d2e6 0%, #dfe9ef 42%, var(--cream) 100%);
+  /* ── The page gradient ────────────────────────────────────────────
+     THE central background rule of the design, and the one thing not to
+     misread: every one of the 19 frames has a single `Rectangle 296` running
+     the whole page, from just under the announcement bar down to the footer.
+     The stops below are that rectangle's, verbatim — identical across 13 DK
+     frames, so this is the rule and not one page's decoration.
+
+     Because it stretches over the entire page, the wide `#ffffff` band from
+     52% to 77% is where the body of every page lands, which is why the design
+     sets DARK type on it. Sections must NOT paint their own gradient: doing
+     that replays the whole navy→amber journey inside each block and drops
+     white text onto colours meant to sit under dark text (measured: 3.13:1 on
+     the teal, 1.65:1 on the amber). See docs/AUDIT_FIGMA.md §1.
+
+     One deliberate departure from the literal stops: they are anchored in
+     pixels, not percentages. The design's frames run 1620–5597px, so its
+     percentages keep the dark strip roughly one screen tall on every page. Our
+     pages range much wider, and at 52% a long page pushes the white band far
+     below the fold — body copy then lands on the teal and fails contrast
+     exactly as before. Anchoring the dark top and the warm foot to absolute
+     distances keeps the design's *rule* (dark strip → white body → warm foot)
+     true at any page length, which the percentages only achieve at the
+     design's own.
+
+     The intermediate colours are sampled from the RENDERED frame, not copied
+     from the stop list: the gradient handles in the file skew the axis, so the
+     declared #199b9f teal actually renders as a desaturated blue on the way
+     down. These are the colours the design really shows, measured at x=690 of
+     the exported Directory frame, where it reaches near-white by 520px — which
+     is where the anchors below come from. */
+  --grad-page-full: linear-gradient(
+    180deg,
+    #023866 0,
+    #295b7f 120px,
+    #4d819a 200px,
+    #c0dbde 360px,
+    #eef3f3 560px,
+    #ffffff 760px,
+    #ffffff calc(100% - 520px),
+    #eaaa58 calc(100% - 120px),
+    #f79b09 100%
+  );
+
+  /* Inset gradient CARDS — the only gradients the design paints inside a page:
+     the home hero panel and the "Join My Weekly Talks" band. Both are rounded
+     boxes with margins, sitting on the page gradient, and both carry dark type. */
+  --grad-card: linear-gradient(135deg, #199b9f 0%, #7fc4c0 45%, #e9b45c 100%);
+  --grad-card-warm: linear-gradient(135deg, #2a9aa2 0%, #cfd9a8 55%, #e9b45c 100%);
 }
 
 /* ── Brand: Sophia Health Institute ─────────────────────────────── */
@@ -132,8 +172,21 @@
   --surface-2: var(--white);
   --on-surface: var(--ink);
 
-  --grad-hero: linear-gradient(135deg, #0d858d 0%, #228c97 55%, #e6f4f4 100%);
-  --grad-section: linear-gradient(180deg, #228c97 0%, #faf6e8 50%, #228c97 100%);
-  --grad-warm: linear-gradient(180deg, #f0f9f9 0%, #e6f4f4 100%);
-  --grad-page: linear-gradient(160deg, #bcdedd 0%, #e6f4f4 45%, #f0f9f9 100%);
+  /* Sophia runs the same one-gradient-per-page rule with its own palette:
+     teal at both ends, a pale band through the middle. Verbatim from the four
+     Sophia frames (Homepage, team, new patients, accommodations). Note it never
+     goes dark — Sophia pages carry dark type from top to bottom. */
+  --grad-page-full: linear-gradient(
+    180deg,
+    #146a7d 0,
+    #b7d0d2 240px,
+    #e6f4f4 560px,
+    #eef7f8 720px,
+    #eef7f8 calc(100% - 620px),
+    #b7d0d2 calc(100% - 200px),
+    #228c97 100%
+  );
+
+  --grad-card: linear-gradient(135deg, #228c97 0%, #b7d0d2 55%, #e6f4f4 100%);
+  --grad-card-warm: linear-gradient(135deg, #146a7d 0%, #b7d0d2 55%, #eef7f8 100%);
 }

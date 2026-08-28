@@ -65,7 +65,7 @@ export function WeeklyTalksPage() {
         path="/weekly-talks"
       />
 
-      <AnimatedGradient variant="hero" intensity="strong" className="hero">
+      <AnimatedGradient variant="card" intensity="strong" className="hero">
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Exclusive membership</p>

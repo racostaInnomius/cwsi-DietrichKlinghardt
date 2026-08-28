@@ -47,7 +47,7 @@ export function StorePage() {
 
       {/* The designer marks Shop as one of the two places the gradient should
           move most. */}
-      <AnimatedGradient variant="page" intensity="strong" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="strong" className="page-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Shop</p>

@@ -32,7 +32,7 @@ export function CoursesPage() {
         path="/courses"
       />
 
-      <AnimatedGradient variant="page" intensity="normal" className="courses-hero">
+      <AnimatedGradient variant="plain" intensity="normal" className="courses-hero">
         <div className="wrap courses-hero__inner">
           <Reveal>
             <p className="eyebrow">Online courses</p>

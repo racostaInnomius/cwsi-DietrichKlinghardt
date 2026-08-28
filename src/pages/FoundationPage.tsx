@@ -57,7 +57,7 @@ export function FoundationPage() {
         path="/foundation"
       />
 
-      <AnimatedGradient variant="page" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Klinghardt Foundation™</p>
@@ -128,7 +128,7 @@ export function FoundationPage() {
         </div>
       </section>
 
-      <AnimatedGradient variant="section" intensity="soft" className="home-art">
+      <AnimatedGradient variant="plain" intensity="soft" className="home-art">
         <div className="wrap home-art__inner">
           <Reveal>
             <p className="eyebrow">Support the work</p>

@@ -33,7 +33,7 @@ export function SophiaPage() {
         path="/sophia"
       />
 
-      <AnimatedGradient variant="hero" intensity="strong" className="hero">
+      <AnimatedGradient variant="card" intensity="strong" className="hero">
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Sophia Health Institute™</p>
@@ -70,7 +70,7 @@ export function SophiaPage() {
         </Reveal>
       </section>
 
-      <AnimatedGradient variant="section" intensity="soft" className="home-art">
+      <AnimatedGradient variant="plain" intensity="soft" className="home-art">
         <div className="wrap home-art__inner" id="naturopathic-care">
           <Reveal>
             <p className="eyebrow">Naturopathic care</p>
