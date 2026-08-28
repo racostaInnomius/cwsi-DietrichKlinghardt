@@ -322,9 +322,21 @@ funcional sin API keys de pago (salvo decisión D7 distinta).
 >
 > **Verificado** contra `site-context` de producción en las dos ramas:
 > `dietrich-klinghardt.com` → sin cuenta conectada (estado cerrado, revisado en
-> navegador) · `sistworldfoundation.org` → cuenta real (rama del formulario).
+> navegador) · `sistworldfoundation.org` → devuelve una cuenta (rama del formulario).
 > Elements en sí queda sin verificar end-to-end: no hay cuenta ni clave, que es
 > justo el prerrequisito que el plan ya anticipaba.
+>
+> ⚠️ **Corrección (Javier, 2026-08-27): el flujo de donaciones NUNCA estuvo en
+> producción.** Con SistWorld solo se probó en **sandbox** y al final decidieron
+> no integrarlo: sistworldfoundation.org ya es pública pero **no usa Connect ni
+> donativos**. Es decir, **Dietrich sería el primero en llevar esto a prod**, así
+> que el flujo debe tratarse como no probado, no como código rodado. Antes del
+> go-live: cobro de prueba real end-to-end + verificar que el correo de recibo
+> sale. Además la fila de `stripe_connect_accounts` de SistWorld
+> (`acct_1TotQd3…`, `charges_enabled=true`) es de aquellas pruebas y hoy la
+> devuelve el `site-context` **público de producción** — conviene revisar si es
+> una cuenta sandbox viva en prod (misma clase de riesgo que el incidente Iconic)
+> y borrarla si ya no sirve.
 
 <details>
 <summary>Plan original de la fase</summary>
