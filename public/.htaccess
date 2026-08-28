@@ -1,4 +1,11 @@
 RewriteEngine On
+
+# SPA fallback for ROUTES only.
+#
+# Without the extension guard below, every missing path returns index.html with
+# HTTP 200 — including /sitemap.xml, which is exactly what a crawler asks for.
+# A missing file must 404; only extension-less paths are client-side routes.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{2,5}$
 RewriteRule . /index.html [L]
