@@ -88,3 +88,25 @@ Se anotan para no volver a levantarlos.
 - ✅ `sites.rebuild_repo` repuntado de `racostaInnomius/cwsi-DietrichKlinghardt` a `javierpacher/cwsi-dietrich` (2026-08-28): la landing ya no recibirá cambios, este pasa a ser el sitio del CMS.
 - ✅ **F8**: canonicals duplicados (cada página apuntaba a `/`), og de la landing en todas las páginas, tres fallos de contraste AA, reduced-motion incompleto y `app.js` de 384→67 KB gzip.
 - ✅ Chat en vivo portado (B16 cerrado): verificado que nada del lado del chat estaba incompleto antes de tocarlo.
+
+---
+
+## D. Desviaciones contra el diseño (auditoría 2026-08-28)
+
+El detalle completo, con método y evidencia, está en `AUDIT_FIGMA.md`. Aquí solo
+el índice para seguimiento.
+
+| # | Qué | Prioridad | Nota |
+|---|---|---|---|
+| D1 | **Decidir el modelo de fondo**: el diseño usa **un gradiente de página con banda blanca central**, no gradientes por sección | ⛔ Primero | Condiciona el color de texto de todas las secciones. El contraste que se pierde (blanco a 3.13:1 sobre el teal, 1.65:1 sobre el ámbar) es síntoma de esto, no la causa |
+| D2 | **Sophia** (`/sophia`) prácticamente no coincide con el frame `0:6594` | Alta | Falta la landing entera: cifras 10K/25+/100%/5, Six Pillars, y 4 secciones más |
+| D3 | **New Patients** incompleta | Alta | Faltan los dos bloques *You May Be Wondering…*, la lista 01–05, las 4 tarjetas y *What to Expect as a Patient* |
+| D4 | **Homepage**: faltan las secciones de **Events**, **Sophia** y **Shop**; el hero es a sangre en vez de tarjeta con foto | Alta | Weekly Talks y Shop están como teaser pequeño; el diseño los trae como secciones completas |
+| D5 | **5 Levels**: falta la pirámide numerada `01st`–`05th` y la cita | Media | |
+| D6 | **Weekly Talks**: faltan *Learn, Connect, Grow Together*, el bloque de **$25** y el **FAQ** | Media | |
+| D7 | **Store**: falta *Dr. Klinghardt's Top 5 Picks of the Month* + *August 2026* | Media | En el diseño abre la página |
+| D8 | **Accommodations**: faltan *Hotels in The Local Area* y *Ready to Take The Next Step* | Media | |
+| D9 | **Academy**: falta *Klinghardt Akademie*, sobra *Online Courses*, y el orden difiere | Media | |
+| D10 | **Copy sustituido donde el diseño sí lo trae escrito**: About (*A Life Dedicated to Healing*), A.R.T., y las 4 etiquetas de Contact | Baja | Donde el diseño trae lorem, el copy propio es correcto y se queda |
+| D11 | **Libre Baskerville 700** no está declarada | Baja | 20 nodos reales del diseño: los ordinales de la pirámide de los 5 Niveles |
+| D12 | **Music**: falta el bloque *Discography* | Baja | |
