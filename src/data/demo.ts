@@ -3,6 +3,16 @@ export type ContentDoc = Record<string, unknown> & { id?: string | number };
 export const demoContent: Record<string, ContentDoc[]> = {
   "page-contents": [
     {
+      // Announcement bar — editable from the CMS like any other page copy.
+      // The bar is on every page, so its fallback matters more than most: an
+      // empty CMS must not leave a blank gold strip at the top of the site.
+      id: "announcement-fallback",
+      slug: "announcement",
+      title: "Join my weekly talk: next session September 1st.",
+      ctaLabel: "Join now",
+      ctaUrl: "/weekly-talks",
+    },
+    {
       id: "home-fallback",
       slug: "home",
       title: "Healing Beyond Symptoms",

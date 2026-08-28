@@ -1,4 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+/* Google faces: DM Sans (body) and Fraunces (serif accents) belong to the new
+   design system; Cormorant + Inter are still used by the temporary landing and
+   act as the fallback stack for Kalice until the licensed files arrive. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+
+/* New site layers (F1). Order matters: tokens → base → shell → motion. */
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/shell.css";
+@import "./styles/motion.css";
 
 :root {
   --paper: #f5f0e6;
@@ -24,14 +33,19 @@ button, a { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
 h1, h2, h3, p { margin-top: 0; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-.skip-link { position: fixed; z-index: 100; top: -60px; left: 20px; padding: 12px 18px; background: var(--deep-teal); color: white; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
-.skip-link:focus { top: 16px; }
 
-.site-header { position: absolute; z-index: 10; top: 0; left: 0; right: 0; height: 84px; padding: 17px clamp(34px, 5vw, 72px); display: flex; align-items: flex-start; justify-content: space-between; }
+/* Landing-scoped from here down: these selectors (.site-header, .skip-link,
+   .eyebrow, header nav) are also part of the new shell, and since this file is
+   parsed after the imported layers the unscoped versions would win and break
+   it. Scoping keeps both alive until F2 retires the landing. */
+.landing-shell .skip-link { position: fixed; z-index: 100; top: -60px; left: 20px; padding: 12px 18px; background: var(--deep-teal); color: white; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+.landing-shell .skip-link:focus { top: 16px; }
+
+.landing-shell .site-header { position: absolute; z-index: 10; top: 0; left: 0; right: 0; height: 84px; padding: 17px clamp(34px, 5vw, 72px); display: flex; align-items: flex-start; justify-content: space-between; }
 .brand { display: inline-flex; flex-direction: column; width: max-content; font: 500 38px/.76 "Cormorant Garamond", Georgia, serif; letter-spacing: -.045em; }
 .brand span:last-child { white-space: nowrap; }
 .brand i { margin-left: 2px; color: currentColor; font: 500 10px/1 "Inter", Arial, sans-serif; letter-spacing: 0; vertical-align: .25em; }
-.site-header nav { display: flex; align-items: center; gap: 12px; padding-top: 11px; }
+.landing-shell .site-header nav { display: flex; align-items: center; gap: 12px; padding-top: 11px; }
 .contact-link { margin-right: 18px; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
 .social-link { width: 41px; height: 41px; border: 1.5px solid var(--deep-teal); border-radius: 50%; display: grid; place-items: center; }
 .social-link svg { width: 19px; height: 19px; fill: var(--deep-teal); stroke: var(--deep-teal); stroke-width: 1.5; }
@@ -41,7 +55,7 @@ h1, h2, h3, p { margin-top: 0; }
 
 .newsletter-section { min-height: 770px; padding-top: 84px; display: grid; grid-template-columns: 48.5% 51.5%; background: var(--paper); color: var(--deep-teal); }
 .newsletter-copy { min-width: 0; padding: 68px clamp(45px, 4.7vw, 72px) 54px; }
-.eyebrow { margin-bottom: 9px; color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: .25em; text-transform: uppercase; }
+.landing-shell .eyebrow, .status-page .eyebrow { margin-bottom: 9px; color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: .25em; text-transform: uppercase; }
 .newsletter-copy h1 { max-width: 620px; margin-bottom: 27px; font: 500 clamp(43px, 3.6vw, 54px)/1.02 "Cormorant Garamond", Georgia, serif; letter-spacing: -.035em; }
 .newsletter-copy h1 > span { display: block; }
 .newsletter-copy h1 > span + span { margin-top: 7px; }
@@ -151,4 +165,22 @@ footer .brand { font-size: 52px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { transition: none !important; animation: none !important; }
+}
+
+/**
+ * Legacy scope — the temporary newsletter landing.
+ *
+ * The F1 design system introduces `--gold`/`--muted`/`--error` and a DM Sans
+ * body font at :root. The landing (still live in production, still collecting
+ * double opt-in signups) was built against its own values, so they are pinned
+ * to its containers here rather than letting the new tokens silently restyle a
+ * page that is in front of real users. This whole block disappears in F2, when
+ * the designed Home replaces the landing.
+ */
+.landing-shell,
+.status-page {
+  --gold: #c4933f;
+  --muted: #989791;
+  --error: #a35445;
+  font-family: "Inter", Arial, sans-serif;
 }

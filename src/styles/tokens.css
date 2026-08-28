@@ -1,0 +1,129 @@
+/**
+ * Design tokens — extracted from the Figma file `dkt_final` via the Figma API
+ * (2026-08-28), not eyeballed from screenshots. Every hex below appears in the
+ * design's own fills.
+ *
+ * TWO BRANDS, ONE SYSTEM. The designer's note: "a partir de aquí empiezan las
+ * páginas internas de Sophia. Cambia el color scheme, pero es el mismo font y
+ * estilos." So neutrals, type and spacing are shared; only the brand ramp swaps
+ * via `data-theme` on the shell wrapper.
+ *
+ * Never hardcode a brand colour in a component — read `--brand*`, so a section
+ * inherits whichever theme wraps it.
+ */
+
+:root {
+  /* ── Neutrals (shared by both brands) ─────────────────────────── */
+  --ink: #1c1916;          /* body copy, display headings on light */
+  --ink-soft: #4b4640;
+  --muted: #6b6456;        /* secondary copy */
+  --muted-2: #9a9080;      /* meta, captions */
+  --white: #ffffff;
+
+  /* Warm paper family */
+  --cream: #f4f0e5;        /* page background */
+  --cream-2: #ede8da;      /* alternating sections */
+  --cream-3: #fdf8e3;
+  --line: #ddd8c8;         /* hairlines, card borders */
+
+  /* Gold accents (shared — eyebrows, announcement bar, "Klinghardt's pick") */
+  --gold: #bc8f44;
+  --gold-deep: #c27d09;
+  --gold-bright: #e9a43f;
+
+  /* Feedback */
+  --error: #ec221f;
+
+  /* ── Type ─────────────────────────────────────────────────────── */
+  /* Kalice is the display face for every heading (36–117px in the file).
+     See public/fonts/README.md — the licensed files are pending; until they
+     land the stack degrades to a serif so layout stays truthful. */
+  --font-display: "Kalice", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  /* Fraunces carries card titles (36px) + italic accents (18px italic) in the
+     design. It is a free Google face; swap this one token to --font-display if
+     the client prefers Kalice everywhere. */
+  --font-serif: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+  /* Fluid display scale (min → max mirror the Figma sizes) */
+  --fs-display-xl: clamp(48px, 7.2vw, 117px); /* "Join My Weekly Talks" */
+  --fs-display-lg: clamp(40px, 5.4vw, 86px);  /* "Innovator in Medicine" */
+  --fs-display-md: clamp(34px, 3.8vw, 57px);  /* section headings */
+  --fs-display-sm: clamp(26px, 2.4vw, 36px);  /* card titles / lead serif */
+  --fs-lead: clamp(17px, 1.2vw, 18px);
+  --fs-body: 16px;
+  --fs-sm: 15px;
+  --fs-xs: 14px;
+  --fs-meta: 13px;
+  --fs-eyebrow: 12px;
+
+  --lh-display: 1.04;
+  --lh-body: 1.65;
+  --tracking-eyebrow: 0.22em;
+  --tracking-button: 0.16em;
+
+  /* ── Space / shape / motion ───────────────────────────────────── */
+  --gutter: clamp(24px, 5vw, 96px);
+  --section-y: clamp(56px, 7vw, 120px);
+  --maxw: 1440px;
+  --maxw-prose: 68ch;
+
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 2px 10px rgba(28, 25, 22, 0.06);
+  --shadow-lift: 0 12px 32px rgba(28, 25, 22, 0.12);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 180ms;
+  --dur: 320ms;
+  --dur-slow: 720ms;
+  /* Background gradients drift slowly between sections (newgenre.studio ref). */
+  --dur-gradient: 18s;
+}
+
+/* ── Brand: Dietrich Klinghardt (default) ───────────────────────── */
+[data-theme="dk"] {
+  --brand: #023866;         /* deep navy */
+  --brand-2: #18476f;
+  --brand-3: #193968;
+  --brand-ink: var(--white);/* text on brand surfaces */
+  --brand-soft: var(--cream);
+  --brand-soft-2: var(--cream-2);
+  --brand-contrast: var(--gold-bright);
+
+  --surface: var(--cream);
+  --surface-2: var(--white);
+  --on-surface: var(--ink);
+
+  /* Hero / section gradients straight from the file's gradient stops */
+  --grad-hero: linear-gradient(135deg, #023866 0%, #5b9dcd 55%, #f0a437 100%);
+  --grad-section: linear-gradient(180deg, #023866 0%, #1a9ca0 50%, #f3ba4b 100%);
+  --grad-warm: linear-gradient(180deg, var(--cream) 0%, #ffeac6 55%, #e4b17c 100%);
+  /* Internal page headers are LIGHT in the design (see the Events and
+     Directory frames): pale blue settling into cream, with navy type on top —
+     not white type on a dark band. */
+  --grad-page: linear-gradient(160deg, #b9d2e6 0%, #dfe9ef 42%, var(--cream) 100%);
+}
+
+/* ── Brand: Sophia Health Institute ─────────────────────────────── */
+[data-theme="sophia"] {
+  --brand: #0d858d;         /* teal */
+  --brand-2: #228c97;
+  --brand-3: #17646b;
+  --brand-ink: var(--white);
+  --brand-soft: #e6f4f4;
+  --brand-soft-2: #f0f9f9;
+  --brand-contrast: var(--gold);
+
+  --surface: var(--brand-soft-2);
+  --surface-2: var(--white);
+  --on-surface: var(--ink);
+
+  --grad-hero: linear-gradient(135deg, #0d858d 0%, #228c97 55%, #e6f4f4 100%);
+  --grad-section: linear-gradient(180deg, #228c97 0%, #faf6e8 50%, #228c97 100%);
+  --grad-warm: linear-gradient(180deg, #f0f9f9 0%, #e6f4f4 100%);
+  --grad-page: linear-gradient(160deg, #bcdedd 0%, #e6f4f4 45%, #f0f9f9 100%);
+}

@@ -1,0 +1,134 @@
+/**
+ * Motion layer. The designer's notes make animation a first-class requirement,
+ * with references:
+ *   - animated background gradient between sections → newgenre.studio
+ *   - sections entering softly on scroll + quotes revealing line by line
+ *     → beautyunscripted.com
+ *   - a hero word that moves ("tal vez que gire") → new.consciouslife.com
+ *
+ * Everything here is IntersectionObserver + CSS (no animation library): the site
+ * is statically generated and shipping a runtime for this would cost more than
+ * it buys. Every effect degrades to "just visible" under reduced-motion.
+ */
+
+/* ── Reveal on scroll ─────────────────────────────────────────── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift, 24px));
+  transition: opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Quote revealed line by line ──────────────────────────────── */
+
+.line-quote {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-sm);
+  line-height: 1.35;
+  color: var(--on-surface);
+}
+.line-quote__line {
+  display: block;
+  overflow: hidden; /* the mask each line slides out from */
+}
+.line-quote__line > span {
+  display: block;
+  transform: translateY(110%);
+  transition: transform var(--dur-slow) var(--ease);
+  transition-delay: calc(var(--line-index, 0) * 110ms);
+}
+.line-quote.is-visible .line-quote__line > span {
+  transform: none;
+}
+.line-quote__cite {
+  display: block;
+  margin-top: 18px;
+  color: var(--brand);
+  font-size: var(--fs-lead);
+}
+
+/* ── Animated gradient backdrop ───────────────────────────────── */
+
+.animated-gradient {
+  position: relative;
+  isolation: isolate;
+  background: var(--grad-warm);
+}
+.animated-gradient::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background: var(--gradient-image, var(--grad-hero));
+  background-size: 220% 220%;
+  animation: gradient-drift var(--dur-gradient) ease-in-out infinite alternate;
+  opacity: var(--gradient-strength, 1);
+}
+/* Softer drift where the note asks for subtlety, stronger on hero/shop/newsletter. */
+.animated-gradient[data-intensity="soft"] {
+  --gradient-strength: 0.55;
+  --dur-gradient: 26s;
+}
+.animated-gradient[data-intensity="strong"] {
+  --gradient-strength: 1;
+  --dur-gradient: 14s;
+}
+
+@keyframes gradient-drift {
+  0% {
+    background-position: 0% 20%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+  100% {
+    background-position: 20% 100%;
+  }
+}
+
+/* ── Hero rotating word ───────────────────────────────────────── */
+
+.rotating-word {
+  display: inline-grid;
+  vertical-align: bottom;
+  perspective: 600px;
+}
+.rotating-word__item {
+  grid-area: 1 / 1;
+  transform-origin: 50% 100%;
+  transition: opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+.rotating-word__item[data-state="out"] {
+  opacity: 0;
+  transform: rotateX(-90deg) translateY(-0.2em);
+}
+.rotating-word__item[data-state="in"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Reduced motion: show everything, animate nothing ─────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .line-quote__line > span,
+  .rotating-word__item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .animated-gradient::before {
+    animation: none;
+  }
+}

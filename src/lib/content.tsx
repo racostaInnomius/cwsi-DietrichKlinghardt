@@ -33,8 +33,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       : demoContent;
   }, [loader]);
   const [content, setContent] = useState<ContentMap>(initial);
-  const shouldRefresh = pathname === "/" && env.RUNTIME_CMS && Boolean(env.TENANT_ID) && Boolean(env.SITE_ID);
-  const [refreshing, setRefreshing] = useState(shouldRefresh);
+  // Revalidate against the CMS on every route, not just the landing: each page
+  // of the full site is statically generated and then refreshed at runtime.
+  const shouldRefresh = env.RUNTIME_CMS && Boolean(env.TENANT_ID) && Boolean(env.SITE_ID);
+  // The full-screen brand loader belongs to the landing entrance only —
+  // elsewhere the refresh happens quietly behind already-rendered content.
+  const [refreshing, setRefreshing] = useState(shouldRefresh && pathname === "/");
 
   useEffect(() => {
     if (!shouldRefresh) return;
