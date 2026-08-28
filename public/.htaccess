@@ -1,5 +1,12 @@
 RewriteEngine On
 
+# mod_dir would 301 `/courses` to `/courses/` the moment it sees a directory of
+# that name, and it does so *before* per-directory rewrites get a chance to run
+# — so the rule below never fired until this was switched off. Nothing here
+# wants directory URLs: every page is a file, and `courses/` only exists to hold
+# `courses/art.html`.
+DirectorySlash Off
+
 # Clean URLs — and the reason this rule has to come first.
 #
 # The SSG emits a page and its children as siblings: `courses.html` *and* a
