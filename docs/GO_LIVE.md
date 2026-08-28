@@ -56,13 +56,24 @@ Se hornean en el build, así que cambiarlas exige **redesplegar**, no reiniciar.
 > `dietrich-klinghardt.com` (así está la fila `sites`), pero el build se sirve
 > desde otro host. `site-context` resuelve por el primero.
 
-### 1.3 CORS en el API
+### 1.3 CORS — son DOS listas, no una
 
-Añadir `https://dkk.beytrax.com` a `ALLOWED_ORIGINS` de `CWSB-Baytrax` y
-redesplegar. **Sin esto** el sitio se ve, pero fallan en silencio: la
-revalidación del CMS en runtime, el alta al newsletter, el formulario de
-contacto y la resolución de donaciones. Mantener también el dominio de la
-landing en la lista.
+Cada origen nuevo hay que darlo de alta en los dos sitios, o el sitio se ve pero
+falla en silencio:
+
+| Servicio | Variable | Archivo en el VPS |
+|---|---|---|
+| API (`api.beytrax.com`) | `ALLOWED_ORIGINS` | `api.beytrax.com/.env` |
+| CMS (`portal.beytrax.com`) | `BEYTRAX_PUBLIC_ORIGINS` | `portal.beytrax.com/.env` |
+
+La del CMS es de donde Payload saca `cors` **y** `csrf` (`payload.config.ts`).
+Sin ella las colecciones responden 200 pero **sin cabecera CORS**, así que el
+navegador descarta la respuesta: `training-paths`, `practitioners` y la
+revalidación en runtime quedan vacías. Con la del API fallan además el alta al
+newsletter, el formulario de contacto y la resolución de donaciones.
+
+Ambas se hornean en el proceso: cambiarlas exige **recrear el contenedor**, no
+recargarlo. Mantener también el dominio de la landing en las dos listas.
 
 ### 1.4 Reinicio del CMS
 
@@ -75,9 +86,12 @@ contenido ya esté cargado en la base. *(Pendiente B1.)*
 
 - [ ] `https://dkk.beytrax.com/robots.txt` dice `Disallow: /`
 - [ ] Cualquier página trae `<meta name="robots" content="noindex">`
-- [ ] **No** existe `/sitemap.xml` (correcto en preview). Hoy responde **500**,
-      no 404, por el hosting Node.js que Plesk tiene activo en el dominio —
-      ver B23; afecta a cualquier archivo ausente y no es exclusivo de este sitio
+- [x] **No** existe `/sitemap.xml` (correcto en preview) y responde **404**.
+      Requirió apagar el hosting Node.js del dominio (B23): con Passenger activo
+      cualquier archivo ausente devolvía 500. Verificado también en assets
+- [x] Las 37 páginas construidas responden 200 — incluidas `/courses`,
+      `/academy`, `/foundation` y `/sophia`, que son a la vez página y
+      directorio (B24)
 - [ ] `/academy/therapists` muestra 136 terapeutas y el mapa con pines
 - [ ] `/courses` muestra los 5 métodos; `/courses/art` la ruta de 9 pasos
 - [ ] El alta al newsletter responde y llega el correo de confirmación
