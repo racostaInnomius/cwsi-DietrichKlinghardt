@@ -11,20 +11,20 @@ import {
 /**
  * Cart state. The designer asked for a cart in the nav that covers both the
  * shop and the courses, so the line item is deliberately generic: anything
- * sellable carries a `priceId` (Stripe) plus display fields.
+ * sellable carries a `sourceId` plus display fields.
  *
- * F1 ships the store, the badge and persistence; F6 turns `items` into a Stripe
- * Checkout Session server-side (see the implementation plan, D6). Keeping the
- * shape stable now means the buy buttons written in F2/F3 don't need revisiting.
+ * The line is keyed by `sourceId` — the CMS document id — NOT by a Stripe price
+ * id. `digital-products.stripePriceId` is gated to authenticated readers, so a
+ * public page cannot know it; checkout posts document ids and the API resolves
+ * the price server-side, which is also what stops a crafted cart from setting
+ * its own price.
  *
  * SSG note: every storage access is guarded — this module is imported during
  * the static render, where `window` does not exist.
  */
 
 export interface CartItem {
-  /** Stripe Price id — the only field checkout truly needs. */
-  priceId: string;
-  /** CMS document id, so the server can re-validate the item. */
+  /** CMS document id — the line's identity, and what checkout posts. */
   sourceId: string;
   kind: "product" | "course" | "event";
   title: string;
@@ -42,12 +42,14 @@ interface CartValue {
   count: number;
   subtotal: number;
   add: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
-  remove: (priceId: string) => void;
-  setQuantity: (priceId: string, quantity: number) => void;
+  remove: (sourceId: string) => void;
+  setQuantity: (sourceId: string, quantity: number) => void;
   clear: () => void;
 }
 
-const STORAGE_KEY = "dk_cart_v1";
+// Bumped when the line shape changed (priceId → sourceId): an old stored
+// cart would deserialise into lines checkout cannot resolve.
+const STORAGE_KEY = "dk_cart_v2";
 
 const CartContext = createContext<CartValue | null>(null);
 
@@ -64,7 +66,7 @@ function readStored(): CartItem[] {
       (item): item is CartItem =>
         Boolean(item) &&
         typeof item === "object" &&
-        typeof (item as CartItem).priceId === "string" &&
+        typeof (item as CartItem).sourceId === "string" &&
         typeof (item as CartItem).title === "string" &&
         Number.isFinite((item as CartItem).quantity),
     );
@@ -93,10 +95,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const add = useCallback((item: Omit<CartItem, "quantity">, quantity = 1) => {
     setItems((current) => {
-      const existing = current.find((row) => row.priceId === item.priceId);
+      const existing = current.find((row) => row.sourceId === item.sourceId);
       if (existing) {
         return current.map((row) =>
-          row.priceId === item.priceId
+          row.sourceId === item.sourceId
             ? { ...row, quantity: row.quantity + quantity }
             : row,
         );
@@ -105,15 +107,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const remove = useCallback((priceId: string) => {
-    setItems((current) => current.filter((row) => row.priceId !== priceId));
+  const remove = useCallback((sourceId: string) => {
+    setItems((current) => current.filter((row) => row.sourceId !== sourceId));
   }, []);
 
-  const setQuantity = useCallback((priceId: string, quantity: number) => {
+  const setQuantity = useCallback((sourceId: string, quantity: number) => {
     setItems((current) =>
       quantity <= 0
-        ? current.filter((row) => row.priceId !== priceId)
-        : current.map((row) => (row.priceId === priceId ? { ...row, quantity } : row)),
+        ? current.filter((row) => row.sourceId !== sourceId)
+        : current.map((row) => (row.sourceId === sourceId ? { ...row, quantity } : row)),
     );
   }, []);
 

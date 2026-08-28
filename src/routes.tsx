@@ -25,6 +25,9 @@ import { TrainingPathPage } from "@/pages/courses/TrainingPathPage";
 import { CourseDatesPage } from "@/pages/courses/CourseDatesPage";
 import { loadPractitioners } from "@/lib/practitioners";
 import { loadTrainingPaths } from "@/lib/trainingPaths";
+import { StorePage } from "@/pages/StorePage";
+import { CartPage } from "@/pages/CartPage";
+import { CartReturnPage } from "@/pages/CartReturnPage";
 import { DirectoryPage } from "@/pages/DirectoryPage";
 import { AcademyPage } from "@/pages/AcademyPage";
 import { ArtPage } from "@/pages/ArtPage";
@@ -167,24 +170,9 @@ export const routes: RouteRecord[] = [
             loader: loadTrainingPaths,
             getStaticPaths: courseDatePaths,
           },
-          {
-            path: "store",
-            element: placeholder({
-              title: "Explore the Klinghardt Store",
-              eyebrow: "Shop",
-              intro:
-                "Books, work materials, testing kits, scripts and other professional resources.",
-              phase: "F6",
-            }),
-          },
-          {
-            path: "cart",
-            element: placeholder({
-              title: "Your Cart",
-              eyebrow: "Checkout",
-              phase: "F6",
-            }),
-          },
+          { path: "store", element: <StorePage /> },
+          { path: "cart", element: <CartPage /> },
+          { path: "cart/return", element: <CartReturnPage /> },
           { path: "music", element: <MusicPage /> },
           { path: "weekly-talks", element: <WeeklyTalksPage /> },
           { path: "foundation", element: <FoundationPage /> },
