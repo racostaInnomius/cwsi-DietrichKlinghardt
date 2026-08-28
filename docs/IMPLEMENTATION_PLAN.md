@@ -425,6 +425,40 @@ directa por producto (F2-Music ya lo deja funcionando).
 
 </details>
 
+### Fase 7 — Weekly Talks live ✅ (sin chat)
+
+> **Implementada 2026-08-28**, commit `37b0c3f` en `cwsi-dietrich`. Sin cambios
+> de CMS ni de API: la maquinaria de Mux Live (`events.liveMode`,
+> `muxLiveResourceId`, replay, entitlements firmados) ya existía y el endpoint
+> `POST /api/public/mux/live-playback` también.
+>
+> **Live** (`/weekly-talks/live/:eventId`): port del cliente Mux Live que
+> `cwsi-BistroRestaurant` ya corre en producción. La página canjea un token de
+> acceso por tokens Mux firmados de corta vida y re-consulta mientras la emisión
+> pasa por waiting → live → replay, así que **nada se puede ver adivinando una
+> URL**. Dos detalles portados a propósito: el objeto de tokens se **preserva**
+> entre polls de estado (reemplazarlo cambia la URL HLS y rebufferea el
+> stream), y un token que el API rechaza se **descarta** en vez de reintentarse,
+> para que el lector vea la puerta de membresía y no una credencial muerta. El
+> token se borra de la barra de direcciones al guardarlo. La ruta no se
+> pre-renderiza y se marca `noindex`: es por-espectador y con caducidad.
+>
+> **Add-to-calendar**: `.ics` generado como data URL, no un enlace a un
+> proveedor — funciona con lo que el lector realmente use, no depende de un
+> tercero y no filtra quién asiste. Verificado: UTC, UID, comas escapadas.
+>
+> **Membresía**: el CTA sale de la fila `weekly-talks-cta` y pasa por
+> `checkoutHref`, así que sin un Payment Link **live** no aparece botón.
+>
+> ⚠️ **Sin chat, a propósito.** El API devuelve un token de invitado en cada
+> poll y el widget existe en `cwsi-BistroRestaurant`, pero a esta sesión se le
+> indicó no tocar código de livechat. ADR-0004 ya fue **cerrado** por la otra
+> sesión (las 6 fases hechas y desplegadas), así que hoy es un port pendiente de
+> tu visto bueno, no un conflicto. Anotado en `PENDIENTES.md`.
+
+<details>
+<summary>Plan original de la fase</summary>
+
 ### Fase 7 — Weekly Talks live (+ membresía según D3)
 **Objetivo:** el live in-house con la interfaz del diseño.
 **Tareas:** página live usando la maquinaria existente (`events.live_mode` + Mux Live +
@@ -433,6 +467,8 @@ suscripción $25/mes vía Payment Link recurrente (mínimo viable); si D3 aprueb
 fase separada post-launch (magic-link de miembro + archivo de replays filtrado).
 **Criterio:** un live de prueba visible en la página con chat; CTA de membresía cobrando.
 **Esfuerzo:** medio (mínimo viable) / alto (con gating).
+
+</details>
 
 ### Fase 8 — Motion pass + QA + SEO
 **Objetivo:** el nivel de acabado que piden las notas.

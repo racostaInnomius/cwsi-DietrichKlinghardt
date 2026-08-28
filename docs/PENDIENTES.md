@@ -4,7 +4,7 @@
 > **lo que nos deben** (insumos de terceros que no podemos producir nosotros) y
 > **lo que nos toca** (trabajo o decisiones nuestras).
 >
-> Actualizado: 2026-08-28, al cerrar F6.
+> Actualizado: 2026-08-28, al cerrar F7.
 > El detalle de cada fase está en `IMPLEMENTATION_PLAN.md`.
 
 ---
@@ -28,7 +28,7 @@ y qué se queda bloqueado mientras no llegue.
 | A10 | **Base legal de los datos de terapeutas** | Cliente / legal | F4 | 136 datos de contacto de terceros movidos de una GmbH alemana a un sitio de EE.UU. Consintieron aparecer en ink.ag, no necesariamente aquí |
 | A11 | **Página Akademie** | Vic | F9 | Ruta scaffolded; el cliente la trabaja aparte |
 | A12 | **Validación de diseño en móvil** | Noemi | F8 | El Figma no trae diseños mobile; el responsive es criterio propio |
-| A13 | **Decisión de membresía Weekly Talks** ($25/mes, trial 7d) | Cliente | F7 | Define si el CTA va a un Payment Link recurrente o a un flujo con gating |
+| A13 | **Decisión de membresía Weekly Talks** ($25/mes, trial 7d) | Cliente | F7 | Define si el CTA va a un Payment Link recurrente o a un flujo con gating. Hoy el CTA sale de la fila `weekly-talks-cta` y pasa por `checkoutHref`: **sin Payment Link live no aparece botón** |
 
 ---
 
@@ -53,6 +53,7 @@ y qué se queda bloqueado mientras no llegue.
 | B8 | **Decidir proveedor de tiles del mapa** | F4 | Carto ahora estampa "API KEY REQUIRED". Se usa OpenStreetMap, que funciona sin clave pero cuya política pide a los sitios de producción no apoyarse en ella. Cambiar `TILES` a MapTiler/Stadia son dos líneas |
 | B9 | **Prueba real end-to-end de donación** + verificar que sale el correo de recibo | F5 | ⚠️ El flujo MoR **nunca estuvo en producción**: con SistWorld solo hubo sandbox y no se integró. Dietrich sería el primero, así que hay que tratarlo como no probado |
 | B10 | **Revisar la fila Connect de SistWorld en prod** (`acct_1TotQd3…`, `charges_enabled=true`) | F5 | Viene de aquellas pruebas sandbox y hoy la expone el `site-context` **público de producción**. Misma clase de riesgo que el incidente Iconic; borrarla si no sirve |
+| B16 | **Portar el widget de chat en vivo** a este sitio | F7 | El API ya devuelve el token de invitado en cada poll y el widget existe en `cwsi-BistroRestaurant` (ADR-0004, cerrado y desplegado). No se hizo porque a esta sesión se le indicó no tocar código de livechat; hoy es solo un port pendiente de visto bueno |
 | B11 | **ADR-0002 tiene marcadores de conflicto de merge commiteados** (`<<<<<<< HEAD`) en `cwsf-beytrax/docs/adr/0002-cms-audit-log.md` | — | Viene de una sesión anterior; el documento está roto |
 
 ### B.3 Contenido que cargamos nosotros en el CMS
