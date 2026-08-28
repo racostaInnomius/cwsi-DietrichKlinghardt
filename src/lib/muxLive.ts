@@ -31,9 +31,7 @@ export interface PublicMuxLiveSession {
    * not conditioned on includePlayback) — a caller that renders chat must
    * connect the socket once and keep it alive, not reconnect per poll.
    *
-   * This site does NOT render chat yet: the widget exists in
-   * `cwsi-BistroRestaurant` and porting it was left out of F7 on purpose (see
-   * docs/PENDIENTES.md). The field is kept so the contract stays honest.
+   * Consumed by `components/live/LiveChatWidget`.
    */
   chat: { token: string; expiresIn: number } | null;
 }

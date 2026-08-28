@@ -16,6 +16,7 @@ import {
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
+import { LiveChatWidget } from "@/components/live/LiveChatWidget";
 
 /**
  * The live weekly talk.
@@ -25,8 +26,8 @@ import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
  * and re-polls as the broadcast moves through waiting → live → replay. A paid
  * talk with no token shows the purchase gate rather than a broken player.
  *
- * The API also returns a live-chat guest token on every poll. This page does
- * not render chat — see docs/PENDIENTES.md.
+ * The API returns a live-chat guest token on every poll, which the chat widget
+ * beside the player uses; it renders only while a broadcast is actually live.
  */
 export function LiveTalkPage() {
   const { eventId = "" } = useParams();
@@ -150,6 +151,7 @@ export function LiveTalkPage() {
           ) : null}
         </Reveal>
 
+        <div className="live-layout">
         <div className="live-stage" aria-live="polite">
           {session?.playbackId && session.tokens ? (
             <MuxPlayer
@@ -221,6 +223,9 @@ export function LiveTalkPage() {
           ) : (
             <LiveNotice eyebrow="One moment" title="Authorising the broadcast…" />
           )}
+        </div>
+        {/* Keyed by event so switching talks starts a clean room. */}
+        <LiveChatWidget key={eventId} chat={session?.chat ?? null} />
         </div>
 
         <footer className="live-footer">

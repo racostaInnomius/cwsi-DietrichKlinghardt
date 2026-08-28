@@ -1115,6 +1115,96 @@
   border-color: rgba(255, 255, 255, 0.5);
   color: var(--cream);
 }
+/* Player and chat side by side; the chat drops under the player on narrow
+   screens rather than squeezing both. */
+.live-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  gap: clamp(16px, 2vw, 26px);
+  align-items: start;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+.live-layout .live-stage {
+  margin-top: 0;
+}
+
+.live-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: clamp(320px, 42vw, 500px);
+  padding: clamp(18px, 2vw, 24px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+.live-chat .eyebrow {
+  margin: 0;
+}
+.live-chat__join {
+  display: grid;
+  gap: 10px;
+}
+.live-chat__note {
+  margin: 0;
+  color: var(--muted-2);
+  font-size: var(--fs-meta);
+}
+.live-chat__messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Long words and pasted URLs must not widen the column. */
+  overflow-wrap: anywhere;
+}
+.live-chat__empty {
+  margin: auto;
+  color: var(--muted-2);
+  font-size: var(--fs-sm);
+}
+.live-chat__message {
+  margin: 0;
+  display: grid;
+  gap: 1px;
+  font-size: var(--fs-sm);
+}
+.live-chat__message b {
+  color: var(--brand);
+  font-size: var(--fs-meta);
+}
+.live-chat__status {
+  margin: 0;
+  color: var(--error);
+  font-size: var(--fs-meta);
+}
+.live-chat__join input,
+.live-chat__send input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  outline: 0;
+}
+.live-chat__join input:focus,
+.live-chat__send input:focus {
+  border-color: var(--brand);
+}
+.live-chat__send {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+.live-chat__send .btn {
+  min-height: 42px;
+  padding: 0 16px;
+  font-size: 11px;
+}
+
 .live-footer {
   display: flex;
   flex-wrap: wrap;
@@ -2151,8 +2241,12 @@
   }
   .method,
   .course-card,
-  .directory-search {
+  .directory-search,
+  .live-layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .live-chat {
+    height: 380px;
   }
   .cart-line {
     grid-template-columns: 64px minmax(0, 1fr) auto;
