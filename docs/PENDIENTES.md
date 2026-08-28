@@ -4,7 +4,7 @@
 > **lo que nos deben** (insumos de terceros que no podemos producir nosotros) y
 > **lo que nos toca** (trabajo o decisiones nuestras).
 >
-> Actualizado: 2026-08-28, al cerrar F7.
+> Actualizado: 2026-08-28, al cerrar F8.
 > El detalle de cada fase está en `IMPLEMENTATION_PLAN.md`.
 
 ---
@@ -53,7 +53,7 @@ y qué se queda bloqueado mientras no llegue.
 | B8 | **Decidir proveedor de tiles del mapa** | F4 | Carto ahora estampa "API KEY REQUIRED". Se usa OpenStreetMap, que funciona sin clave pero cuya política pide a los sitios de producción no apoyarse en ella. Cambiar `TILES` a MapTiler/Stadia son dos líneas |
 | B9 | **Prueba real end-to-end de donación** + verificar que sale el correo de recibo | F5 | ⚠️ El flujo MoR **nunca estuvo en producción**: con SistWorld solo hubo sandbox y no se integró. Dietrich sería el primero, así que hay que tratarlo como no probado |
 | B10 | **Revisar la fila Connect de SistWorld en prod** (`acct_1TotQd3…`, `charges_enabled=true`) | F5 | Viene de aquellas pruebas sandbox y hoy la expone el `site-context` **público de producción**. Misma clase de riesgo que el incidente Iconic; borrarla si no sirve |
-| B16 | **Portar el widget de chat en vivo** a este sitio | F7 | El API ya devuelve el token de invitado en cada poll y el widget existe en `cwsi-BistroRestaurant` (ADR-0004, cerrado y desplegado). No se hizo porque a esta sesión se le indicó no tocar código de livechat; hoy es solo un port pendiente de visto bueno |
+| B17 | **QA cross-browser + Lighthouse** contra el sitio desplegado | F8 | No se puede hacer desde aquí. El contraste, el reduced-motion, los metadatos y el peso de bundles ya se auditaron y corrigieron |
 | B11 | **ADR-0002 tiene marcadores de conflicto de merge commiteados** (`<<<<<<< HEAD`) en `cwsf-beytrax/docs/adr/0002-cms-audit-log.md` | — | Viene de una sesión anterior; el documento está roto |
 
 ### B.3 Contenido que cargamos nosotros en el CMS
@@ -75,3 +75,5 @@ Se anotan para no volver a levantarlos.
 - ✅ **D2** (modelado de cursos) · **D4** (migrar el directorio) · **D5** (clonar donación) · **D6** (restricted key cifrada) · **D7** (mapa sin API key) · **D9** (físicos con shipping).
 - ✅ Migraciones aplicadas a prod: `20260828_030618` (training-paths), `20260828_040824` (practitioners), `20260828_133002` (campos de tienda), `040` (clave cifrada del tenant).
 - ✅ Contenido cargado: 5 training paths, 136 terapeutas.
+- ✅ **F8**: canonicals duplicados (cada página apuntaba a `/`), og de la landing en todas las páginas, tres fallos de contraste AA, reduced-motion incompleto y `app.js` de 384→67 KB gzip.
+- ✅ Chat en vivo portado (B16 cerrado): verificado que nada del lado del chat estaba incompleto antes de tocarlo.

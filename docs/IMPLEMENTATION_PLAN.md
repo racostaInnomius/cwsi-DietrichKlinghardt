@@ -470,6 +470,46 @@ fase separada post-launch (magic-link de miembro + archivo de replays filtrado).
 
 </details>
 
+### Fase 8 — Motion pass + QA + SEO ✅ (parcial: falta QA cross-browser y mobile)
+
+> **Implementada 2026-08-28**, commit `acc9094` en `cwsi-dietrich`.
+>
+> **SEO — se encontró un bug grave.** Cada página construida llevaba **dos
+> canonicals**, el segundo apuntando a `/`, más descripción duplicada y el
+> `og:title` del landing. Es decir: cada página le pedía a los buscadores que la
+> plegara con la home, y cualquier página compartida anunciaba *"Join the
+> Klinghardt Academy newsletter"*. `index.html` ahora solo tiene etiquetas
+> globales y el componente `Seo` emite lo específico de cada ruta, así que
+> canonical, `og:url` y la tarjeta social no pueden contradecirse. Una página
+> `noindex` no recibe canonical ni tarjeta. Auditadas las **37** páginas.
+>
+> **sitemap.xml** generado desde lo que el build realmente emitió, no desde la
+> tabla de rutas (la tabla lista patrones, `dist/` lista páginas reales).
+> Excluye las `noindex`. 28 URLs; `robots.txt` lo referencia.
+>
+> **Contraste — tres fallos reales de WCAG AA en texto pequeño**, medidos y no
+> estimados: eyebrows dorados a **2.58:1** y `--muted-2` a **2.76:1**. Ambos se
+> bajaron por el mismo tono hasta superar 4.5:1 sobre cream y sobre blanco
+> (`--gold-text: #876731`, `--muted-2: #746c60`). Los dorados de marca quedan
+> igual para uso decorativo y texto grande.
+>
+> **Reduced motion** ahora detiene todo globalmente en vez de enumerar efectos
+> (los hovers, zooms y gradientes viven en cuatro hojas y crecen con cada
+> página); se conservan los resets específicos, porque una transición detenida
+> congelaría el contenido en su estado invisible.
+>
+> **Performance:** `app.js` pesaba **384 KB gzip** porque el player de Mux,
+> Stripe Elements y socket.io se importaban estáticamente desde tres páginas y
+> se empaquetaban para todas. Separados: **67 KB**. El player de 1 MB ahora solo
+> carga en la página live.
+>
+> ⚠️ **Falta de F8:** QA cross-browser real · validación mobile con Noemi (A12) ·
+> imágenes optimizadas del Figma (no recibidas) · correr Lighthouse contra el
+> sitio ya desplegado.
+
+<details>
+<summary>Plan original de la fase</summary>
+
 ### Fase 8 — Motion pass + QA + SEO
 **Objetivo:** el nivel de acabado que piden las notas.
 **Tareas:** pasada de animaciones página por página contra las referencias (gradientes,
@@ -481,6 +521,8 @@ criterio propio responsive, validar con Noemi las 3-4 páginas clave).
 **Criterio:** checklist de notas de FIGMA_NOTES.md 100% cubierto o descartado por
 escrito; Lighthouse ≥90; revisión de Noemi aprobada.
 **Esfuerzo:** medio.
+
+</details>
 
 ### Fase 9 — Contenido + go-live
 **Objetivo:** reemplazo en producción sin romper lo vivo.
