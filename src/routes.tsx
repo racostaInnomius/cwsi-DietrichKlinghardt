@@ -21,6 +21,9 @@ import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
 import { CoursesPage } from "@/pages/courses/CoursesPage";
 import { TrainingPathPage } from "@/pages/courses/TrainingPathPage";
 import { CourseDatesPage } from "@/pages/courses/CourseDatesPage";
+import { loadPractitioners } from "@/lib/practitioners";
+import { loadTrainingPaths } from "@/lib/trainingPaths";
+import { DirectoryPage } from "@/pages/DirectoryPage";
 import { AcademyPage } from "@/pages/AcademyPage";
 import { ArtPage } from "@/pages/ArtPage";
 import { LegalPage } from "@/pages/LegalPage";
@@ -121,13 +124,10 @@ export const routes: RouteRecord[] = [
           { path: "academy/five-levels", element: <FiveLevelsPage /> },
           {
             path: "academy/therapists",
-            element: placeholder({
-              title: "Are You Looking For an A.R.T. Therapist?",
-              eyebrow: "Global practitioner directory",
-              intro: "Browse our directory to find practitioners near you.",
-              phase: "F4",
-              crumbs: [{ label: "Academy", href: "/academy" }, { label: "Find a therapist" }],
-            }),
+            element: <DirectoryPage />,
+            // Its own loader: see loadPractitioners for why this collection
+            // does not travel with the rest of the site content.
+            loader: loadPractitioners,
           },
           {
             path: "academy/publications",
@@ -149,18 +149,20 @@ export const routes: RouteRecord[] = [
               crumbs: [{ label: "Academy", href: "/academy" }, { label: "Klinghardt Akademie" }],
             }),
           },
-          { path: "courses", element: <CoursesPage /> },
+          { path: "courses", element: <CoursesPage />, loader: loadTrainingPaths },
           // One pre-rendered page per method, for both templates. The slugs
           // come from the same source the pages read, so a method added in the
           // CMS is built as soon as the next deploy runs.
           {
             path: "courses/:slug",
             element: <TrainingPathPage />,
+            loader: loadTrainingPaths,
             getStaticPaths: coursePaths,
           },
           {
             path: "courses/:slug/dates",
             element: <CourseDatesPage />,
+            loader: loadTrainingPaths,
             getStaticPaths: courseDatePaths,
           },
           {

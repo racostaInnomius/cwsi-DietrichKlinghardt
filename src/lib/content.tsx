@@ -40,9 +40,15 @@ const ContentContext = createContext<ContentMap>(demoContent);
  *
  * Collections are fetched concurrently and each one degrades on its own — a
  * collection the tenant has no capability for simply comes back empty.
+ *
+ * `practitioners` and `training-paths` are deliberately NOT here. They are the
+ * two collections big enough to matter (~120KB and ~12KB) and each is read by a
+ * handful of pages, so they load from those routes instead — otherwise every
+ * page of the site would ship a directory of third parties' contact details and
+ * a full course curriculum it never renders.
  */
 export async function loadSiteContent(): Promise<LoaderContent> {
-  const [pages, events, faqs, board, products, videos, music, legal, paths] =
+  const [pages, events, faqs, board, products, videos, music, legal] =
     await Promise.all([
       fetchPageContents(),
       fetchEvents(),
@@ -52,7 +58,6 @@ export async function loadSiteContent(): Promise<LoaderContent> {
       fetchCollection("video-embeds", { scopeToSite: false }),
       fetchMusicEmbeds(),
       fetchCollection("legal-pages"),
-      fetchCollection("training-paths"),
     ]);
   return {
     "page-contents": pages,
@@ -63,7 +68,6 @@ export async function loadSiteContent(): Promise<LoaderContent> {
     "video-embeds": videos,
     "music-embeds": music,
     "legal-pages": legal,
-    "training-paths": paths,
   };
 }
 

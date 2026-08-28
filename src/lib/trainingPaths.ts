@@ -1,5 +1,8 @@
-import { useCollection, text } from "./content";
-import { richTextBlocks } from "./cms";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData } from "react-router-dom";
+import { text } from "./content";
+import { fetchCollection, richTextBlocks } from "./cms";
+import { env } from "./env";
 import { trainingPaths as bundled, type TrainingPath } from "@/data/trainingPaths";
 import type { ContentDoc } from "@/data/demo";
 
@@ -79,18 +82,44 @@ function merge(base: TrainingPath, doc: ContentDoc): TrainingPath {
   };
 }
 
+/**
+ * Route loader for the three course templates.
+ *
+ * Loaded per-route rather than site-wide: the five paths carry their whole
+ * curriculum and seminar list (~12KB), and only these pages read them. In the
+ * shared loader that payload would be inlined into every page of the site.
+ */
+export async function loadTrainingPaths(): Promise<{ trainingPaths: ContentDoc[] }> {
+  return { trainingPaths: await fetchCollection("training-paths") };
+}
+
 export function useTrainingPaths(): TrainingPath[] {
-  const rows = useCollection("training-paths");
+  const loaded = useLoaderData() as { trainingPaths?: ContentDoc[] } | undefined;
+  const [rows, setRows] = useState<ContentDoc[]>(loaded?.trainingPaths ?? []);
 
-  const merged = bundled.map((base) => {
-    const doc = rows.find((row) => row.slug === base.slug);
-    return doc ? merge(base, doc) : base;
-  });
+  const shouldRefresh =
+    env.RUNTIME_CMS && Boolean(env.TENANT_ID) && Boolean(env.SITE_ID);
+  useEffect(() => {
+    if (!shouldRefresh) return;
+    let active = true;
+    void loadTrainingPaths().then((fresh) => {
+      if (active && fresh.trainingPaths.length) setRows(fresh.trainingPaths);
+    });
+    return () => {
+      active = false;
+    };
+  }, [shouldRefresh]);
 
-  // Paths the CMS adds that the bundle does not know about still show up —
-  // otherwise a sixth method would be invisible until someone shipped code.
-  const known = new Set(bundled.map((path) => path.slug));
-  const extra = rows
+  return useMemo(() => {
+    const merged = bundled.map((base) => {
+      const doc = rows.find((row) => row.slug === base.slug);
+      return doc ? merge(base, doc) : base;
+    });
+
+    // Paths the CMS adds that the bundle does not know about still show up —
+    // otherwise a sixth method would be invisible until someone shipped code.
+    const known = new Set(bundled.map((path) => path.slug));
+    const extra = rows
     .filter((row) => typeof row.slug === "string" && !known.has(row.slug))
     .map((row) =>
       merge(
@@ -116,9 +145,10 @@ export function useTrainingPaths(): TrainingPath[] {
         row,
       ),
     )
-    .filter((path) => path.title);
+      .filter((path) => path.title);
 
-  return [...merged, ...extra].sort((a, b) => a.order - b.order);
+    return [...merged, ...extra].sort((a, b) => a.order - b.order);
+  }, [rows]);
 }
 
 export function useTrainingPath(slug: string | undefined): TrainingPath | undefined {

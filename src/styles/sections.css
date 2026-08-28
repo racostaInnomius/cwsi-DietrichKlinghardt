@@ -1066,6 +1066,199 @@
   margin: clamp(28px, 3vw, 44px) auto 0;
 }
 
+/* ── Practitioner directory ───────────────────────────────────── */
+
+.directory-search {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) auto;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.directory-search__field {
+  display: block;
+}
+.directory-search input,
+.directory-search select {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  outline: 0;
+}
+.directory-search input::placeholder {
+  color: var(--muted-2);
+}
+.directory-search input:focus,
+.directory-search select:focus {
+  border-color: var(--brand);
+}
+.directory-search .btn {
+  min-height: 52px;
+}
+
+.directory-count {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: clamp(24px, 3vw, 36px);
+  color: var(--muted);
+  font-size: var(--fs-lead);
+}
+.directory-clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--brand);
+  cursor: pointer;
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  letter-spacing: var(--tracking-button);
+  text-transform: uppercase;
+}
+
+.directory-map {
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+.directory-map__canvas,
+.directory-map--loading {
+  height: clamp(320px, 38vw, 500px);
+  border-radius: var(--radius-lg);
+  background: var(--cream-2);
+  overflow: hidden;
+  /* Leaflet panes stack above the sticky header without this. */
+  z-index: 0;
+  isolation: isolate;
+}
+.directory-map__note {
+  margin: 12px 0 0;
+  color: var(--muted-2);
+  font-size: var(--fs-meta);
+}
+
+/* Leaflet's own chrome, retuned to the brand. */
+.leaflet-container {
+  font: inherit;
+  background: var(--cream-2);
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+}
+.map-pin span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 1px 5px rgba(28, 25, 22, 0.4);
+}
+.map-popup {
+  display: grid;
+  gap: 2px;
+}
+.map-popup strong {
+  font-size: var(--fs-sm);
+}
+.map-popup span {
+  color: var(--muted);
+  font-size: var(--fs-meta);
+}
+.map-popup a {
+  margin-top: 6px;
+  color: var(--brand);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.directory-heading {
+  margin-top: clamp(8px, 1vw, 16px);
+}
+
+.practitioner-grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: clamp(18px, 2.2vw, 28px);
+}
+.practitioner {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(22px, 2.4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  transition: border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.practitioner:hover {
+  border-color: var(--brand);
+  box-shadow: var(--shadow-card);
+}
+.practitioner h3 {
+  margin-bottom: 4px;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.practitioner__role {
+  margin-bottom: 10px;
+  color: var(--gold-deep);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.practitioner__place {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.practitioner__contact {
+  margin: 0 0 16px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  list-style: none;
+  font-size: var(--fs-sm);
+}
+.practitioner__contact li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 6px;
+}
+.practitioner__contact a {
+  color: var(--brand);
+  overflow-wrap: anywhere;
+}
+.practitioner__contact a:hover {
+  text-decoration: underline;
+}
+.practitioner__label {
+  margin-bottom: 6px;
+  color: var(--muted-2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+.practitioner__quals {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  list-style: none;
+  margin-top: auto;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
 /* ── Contact ──────────────────────────────────────────────────── */
 
 .contact-grid {
@@ -1504,7 +1697,8 @@
     position: static;
   }
   .method,
-  .course-card {
+  .course-card,
+  .directory-search {
     grid-template-columns: minmax(0, 1fr);
   }
   .method__actions {

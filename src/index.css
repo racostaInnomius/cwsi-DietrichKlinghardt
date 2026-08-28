@@ -3,6 +3,10 @@
    .woff2 files arrive (see public/fonts/README.md). */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Cormorant+Garamond:wght@400;500&display=swap');
 
+/* Leaflet's own stylesheet — required for the map panes to position at all.
+   Imported before ours so the directory rules can retune its chrome. */
+@import "leaflet/dist/leaflet.css";
+
 /* Layer order matters: tokens → base → shell → sections → motion. */
 @import "./styles/tokens.css";
 @import "./styles/base.css";
