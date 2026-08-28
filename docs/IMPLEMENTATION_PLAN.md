@@ -231,6 +231,47 @@ fulfillment ya probado; otros tenants NO ven la colección.
 
 </details>
 
+### Fase 4 — Directorio de terapeutas ✅
+
+> **Implementada y aplicada a PRODUCCIÓN (2026-08-27).** Sitio `09477cb`
+> (cwsi-dietrich) · CMS `d7ea1f0` (cwsf-beytrax) · API `80b6f50` (CWSB-Baytrax).
+>
+> **Fuente:** no hubo scraping. El directorio alemán llama a su propio endpoint
+> JSON — `https://www.ink.ag/apps/therapeuten?page=1&pageSize=250` — con todo
+> estructurado: **136 terapeutas, 127 ya con lat/lng**, contacto, dirección y
+> certificaciones. `scripts/import-practitioners.ts` lo consume, es idempotente
+> por `sourceId` (re-correrlo actualiza, no duplica) y tiene `DRY_RUN=1`.
+>
+> **CMS:** colección `practitioners` capability-gated + migración
+> `20260828_040824` (solo aditiva, 0 DROPs, drift verde) **aplicada a prod**;
+> capability concedida al tenant; los 136 registros cargados.
+>
+> **Sitio:** página 0:3616 completa — búsqueda sobre nombre/ciudad/CP/calle/país,
+> filtro por cualificación, mapa Leaflet con 127 pines y grid paginado. Los 136
+> están en el HTML estático (crawleable, funciona sin JS); el filtrado corre en
+> memoria, así que la página sigue siendo un archivo estático sin buscador detrás.
+>
+> **Decisiones de modelado:** las cualificaciones se guardan como *claves*
+> estables (`art`, `pk`…) y el sitio pone las etiquetas — re-escribir un rótulo
+> no puede vaciar un filtro en silencio. `professionalTitle` se conserva **en su
+> idioma original**: "Heilpraktiker" es una profesión regulada alemana sin
+> equivalente inglés, traducirla falsearía las credenciales de alguien.
+>
+> ⚠️ **Pendientes de F4:**
+> 1. **Proveedor de tiles** antes del go-live. Carto ahora estampa "API KEY
+>    REQUIRED" en cada tile; se usa OpenStreetMap, que funciona sin clave, pero
+>    su política pide a los sitios de producción no apoyarse en ella. Cambiar a
+>    MapTiler/Stadia (tier gratis con clave) son dos líneas en `TILES`.
+> 2. **Revisión de datos personales.** Son datos de contacto de 136 terceros
+>    movidos de una GmbH alemana a un sitio de EE.UU.; consintieron aparecer en
+>    ink.ag. Conviene que el cliente confirme la base legal, y las bajas deben
+>    hacerse poniendo la ficha en `hidden` aquí (borrarla en el origen no basta:
+>    el siguiente import la traería de vuelta).
+> 3. Los 9 sin coordenadas salen en el listado pero no en el mapa.
+
+<details>
+<summary>Plan original de la fase</summary>
+
 ### Fase 4 — Directorio de terapeutas
 **Objetivo:** el directorio completo con datos reales migrados (D4).
 **Tareas:**
@@ -244,6 +285,8 @@ fulfillment ya probado; otros tenants NO ven la colección.
 **Criterio:** todos los terapeutas del sitio europeo visibles y filtrables; mapa
 funcional sin API keys de pago (salvo decisión D7 distinta).
 **Esfuerzo:** medio-alto (el import es lo impredecible).
+
+</details>
 
 ### Fase 5 — Donaciones Foundation
 **Objetivo:** página de donación clonada de SistWorld, re-tematizada DK (D5).
