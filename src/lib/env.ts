@@ -8,6 +8,9 @@ export const env = {
   TENANT_ID: value("VITE_PUBLIC_TENANT_ID"),
   SITE_ID: value("VITE_PUBLIC_SITE_ID"),
   RUNTIME_CMS: value("VITE_PUBLIC_ENABLE_RUNTIME_CMS", "true") === "true",
+  // Beytrax's PLATFORM publishable key, not the tenant's: donations are taken
+  // by the platform and attributed to the tenant with `on_behalf_of`.
+  STRIPE_KEY: value("VITE_PUBLIC_STRIPE_PUBLISHABLE_KEY"),
   CONTACT_URL: value("VITE_PUBLIC_CONTACT_URL", "#newsletter"),
   VIMEO_URL: value("VITE_PUBLIC_VIMEO_URL", "#newsletter"),
   INSTAGRAM_URL: value("VITE_PUBLIC_INSTAGRAM_URL", "#newsletter"),

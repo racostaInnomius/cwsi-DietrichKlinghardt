@@ -13,6 +13,8 @@ import { ContactPage } from "@/pages/ContactPage";
 import { FiveLevelsPage } from "@/pages/FiveLevelsPage";
 import { MusicPage } from "@/pages/MusicPage";
 import { FoundationPage } from "@/pages/FoundationPage";
+import { DonatePage } from "@/pages/foundation/DonatePage";
+import { DonateReturnPage } from "@/pages/foundation/DonateReturnPage";
 import { WeeklyTalksPage } from "@/pages/WeeklyTalksPage";
 import { SophiaPage } from "@/pages/sophia/SophiaPage";
 import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
@@ -186,6 +188,8 @@ export const routes: RouteRecord[] = [
           { path: "music", element: <MusicPage /> },
           { path: "weekly-talks", element: <WeeklyTalksPage /> },
           { path: "foundation", element: <FoundationPage /> },
+          { path: "foundation/donate", element: <DonatePage /> },
+          { path: "foundation/donate/return", element: <DonateReturnPage /> },
           { path: "contact", element: <ContactPage /> },
           { path: "privacy", element: <LegalPage type="privacy" /> },
           { path: "terms", element: <LegalPage type="terms" /> },

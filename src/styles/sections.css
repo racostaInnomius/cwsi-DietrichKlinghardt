@@ -1066,6 +1066,207 @@
   margin: clamp(28px, 3vw, 44px) auto 0;
 }
 
+/* ── Foundation ───────────────────────────────────────────────── */
+
+/* The Foundation headline is three sentences, so it needs room the other
+   page heroes do not. */
+.foundation-title {
+  max-width: 24ch;
+}
+.foundation-actions {
+  margin-top: 28px;
+}
+
+.commitments {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(20px, 2.6vw, 36px);
+}
+.commitment {
+  padding: clamp(24px, 2.6vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+.commitment__number {
+  display: block;
+  margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+  color: var(--gold);
+}
+.commitment h3 {
+  margin-bottom: 10px;
+  font-size: var(--fs-display-sm);
+}
+.commitment p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+/* ── Donations ────────────────────────────────────────────────── */
+
+.donate-note {
+  color: var(--muted-2);
+  font-size: var(--fs-sm);
+}
+
+.donate-panel {
+  position: sticky;
+  top: 96px;
+  padding: clamp(24px, 2.6vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-card);
+}
+.donate-panel h2 {
+  margin-bottom: 12px;
+  font-size: var(--fs-display-sm);
+}
+.donate-panel__note {
+  margin-bottom: 20px;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.donate-panel__cta {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.donate-form {
+  display: grid;
+  gap: 18px;
+}
+.donate-form__label {
+  margin: 0;
+  color: var(--muted-2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.donate-freq {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--cream-2);
+}
+.donate-freq__option {
+  min-height: 40px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  letter-spacing: var(--tracking-button);
+  text-transform: uppercase;
+  transition: background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.donate-freq__option[aria-pressed="true"] {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.donate-amounts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: -8px;
+}
+.donate-amount {
+  min-height: 46px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 19px;
+  transition: border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+.donate-amount[aria-pressed="true"] {
+  border-color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  color: var(--brand);
+}
+.donate-amount--custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: text;
+  color: var(--muted);
+}
+.donate-amount--custom input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-display);
+  font-size: 19px;
+  color: var(--ink);
+  outline: 0;
+  text-align: center;
+  /* The spinner arrows fight the display face at this size. */
+  appearance: textfield;
+}
+.donate-amount--custom input::-webkit-outer-spin-button,
+.donate-amount--custom input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.donate-field {
+  display: grid;
+  gap: 6px;
+}
+.donate-field span {
+  color: var(--muted-2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+.donate-field input {
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  outline: 0;
+}
+.donate-field input:focus {
+  border-color: var(--brand);
+}
+
+.donate-payment {
+  padding-top: 4px;
+}
+.donate-error {
+  margin: 0;
+  color: var(--error);
+  font-size: var(--fs-sm);
+}
+
+.status-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
 /* ── Practitioner directory ───────────────────────────────────── */
 
 .directory-search {
@@ -1693,7 +1894,8 @@
   }
   .booking-panel,
   .form-panel,
-  .path-panel {
+  .path-panel,
+  .donate-panel {
     position: static;
   }
   .method,
