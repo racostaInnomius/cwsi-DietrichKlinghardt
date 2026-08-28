@@ -9,7 +9,13 @@ import {
 import { useLoaderData } from "react-router-dom";
 import { demoContent, type ContentDoc } from "@/data/demo";
 import { env } from "./env";
-import { fetchEvents, fetchPageContents, richText } from "./cms";
+import {
+  fetchCollection,
+  fetchEvents,
+  fetchMusicEmbeds,
+  fetchPageContents,
+  richText,
+} from "./cms";
 
 /**
  * Content store for the whole site: statically generated at build time by the
@@ -23,20 +29,37 @@ import { fetchEvents, fetchPageContents, richText } from "./cms";
 
 type ContentMap = Record<string, ContentDoc[]>;
 
-export interface LoaderContent {
-  pages?: ContentDoc[];
-  events?: ContentDoc[];
-}
+export type LoaderContent = Partial<Record<string, ContentDoc[]>>;
 
 const ContentContext = createContext<ContentMap>(demoContent);
 
-/** Loader shared by every route — one fetch pass feeds the whole tree. */
+/**
+ * Loader shared by every route: one pass fetches every collection the site
+ * reads, so a page never waits on its own request and the browser revalidates
+ * everything in a single pass on navigation.
+ *
+ * Collections are fetched concurrently and each one degrades on its own — a
+ * collection the tenant has no capability for simply comes back empty.
+ */
 export async function loadSiteContent(): Promise<LoaderContent> {
-  const [pages, events] = await Promise.all([
+  const [pages, events, faqs, board, products, videos, music] = await Promise.all([
     fetchPageContents(),
-    fetchEvents().catch(() => []),
+    fetchEvents(),
+    fetchCollection("faqs"),
+    fetchCollection("board-members"),
+    fetchCollection("digital-products"),
+    fetchCollection("video-embeds", { scopeToSite: false }),
+    fetchMusicEmbeds(),
   ]);
-  return { pages, events };
+  return {
+    "page-contents": pages,
+    events,
+    faqs,
+    "board-members": board,
+    "digital-products": products,
+    "video-embeds": videos,
+    "music-embeds": music,
+  };
 }
 
 /**
@@ -57,13 +80,12 @@ function mergePages(rows: ContentDoc[]): ContentDoc[] {
 }
 
 function buildContent(loaded: LoaderContent): ContentMap {
-  return {
-    ...demoContent,
-    "page-contents": loaded.pages?.length
-      ? mergePages(loaded.pages)
-      : (demoContent["page-contents"] ?? []),
-    events: loaded.events?.length ? loaded.events : (demoContent.events ?? []),
-  };
+  const content: ContentMap = { ...demoContent };
+  for (const [name, rows] of Object.entries(loaded)) {
+    if (!rows?.length) continue;
+    content[name] = name === "page-contents" ? mergePages(rows) : rows;
+  }
+  return content;
 }
 
 export function ContentProvider({ children }: { children: ReactNode }) {

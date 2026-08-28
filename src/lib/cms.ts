@@ -15,28 +15,6 @@ function relationshipId(value: unknown): string | undefined {
   return typeof id === "string" || typeof id === "number" ? String(id) : undefined;
 }
 
-async function fetchTenantMusic(): Promise<ContentDoc[]> {
-  const rows: ContentDoc[] = [];
-  let page = 1;
-  while (true) {
-    const params = new URLSearchParams({
-      "where[tenant][equals]": env.TENANT_ID,
-      "where[status][equals]": "active",
-      depth: "0",
-      limit: "100",
-      page: String(page),
-    });
-    const response = await fetch(`${env.CMS_URL}/api/music-embeds?${params}`, {
-      credentials: "omit",
-    });
-    if (!response.ok) return rows;
-    const result = (await response.json()) as PayloadPage<ContentDoc>;
-    rows.push(...(result.docs ?? []));
-    if (!result.hasNextPage && page >= (result.totalPages ?? 1)) return rows;
-    page = result.nextPage ?? page + 1;
-  }
-}
-
 /**
  * Reads any tenant-scoped collection in pages of 100 and concatenates every
  * row. Site-scoped collections take `site` too; the caller decides, because a
@@ -47,7 +25,16 @@ async function fetchTenantMusic(): Promise<ContentDoc[]> {
  */
 export async function fetchCollection<T extends ContentDoc>(
   collection: string,
-  { scopeToSite = true, where = {} }: { scopeToSite?: boolean; where?: Record<string, string> } = {},
+  {
+    scopeToSite = true,
+    depth = 2,
+    where = {},
+  }: {
+    scopeToSite?: boolean;
+    /** Relationship expansion. 0 where nothing needs expanding. */
+    depth?: number;
+    where?: Record<string, string>;
+  } = {},
 ): Promise<T[]> {
   if (!env.TENANT_ID) return [];
   if (scopeToSite && !env.SITE_ID) return [];
@@ -57,7 +44,7 @@ export async function fetchCollection<T extends ContentDoc>(
   while (true) {
     const params = new URLSearchParams({
       "where[tenant][equals]": env.TENANT_ID,
-      depth: "2",
+      depth: String(depth),
       limit: "100",
       page: String(page),
       ...where,
@@ -79,48 +66,38 @@ export async function fetchCollection<T extends ContentDoc>(
   }
 }
 
-/** Published events, newest first — the Home strip and the Events page. */
+/** Published events — the Home strip, the Events page and its detail pages. */
 export async function fetchEvents(): Promise<ContentDoc[]> {
   return fetchCollection("events", { where: { "where[status][equals]": "published" } });
 }
 
-export async function fetchPageContents(): Promise<ContentDoc[]> {
-  if (!env.TENANT_ID || !env.SITE_ID) return [];
-  const rows: ContentDoc[] = [];
-  let page = 1;
+/**
+ * Music embeds are tenant-wide, not per-site: one library of tracks shared by
+ * every site the tenant owns. Only active rows are published.
+ */
+export async function fetchMusicEmbeds(): Promise<ContentDoc[]> {
+  return fetchCollection("music-embeds", {
+    scopeToSite: false,
+    depth: 0,
+    where: { "where[status][equals]": "active" },
+  });
+}
 
-  while (true) {
-    const params = new URLSearchParams({
-      "where[tenant][equals]": env.TENANT_ID,
-      "where[site][equals]": env.SITE_ID,
-      depth: "2",
-      limit: "100",
-      page: String(page),
-    });
-    try {
-      const response = await fetch(`${env.CMS_URL}/api/page-contents?${params}`, {
-        credentials: "omit",
-      });
-      if (!response.ok) return rows;
-      const result = (await response.json()) as PayloadPage<ContentDoc>;
-      rows.push(...(result.docs ?? []));
-      if (!result.hasNextPage && page >= (result.totalPages ?? 1)) {
-        const music = await fetchTenantMusic().catch(() => []);
-        const musicById = new Map(
-          music.map((item) => [relationshipId(item.id), item]),
-        );
-        return rows.map((row) => {
-          const id = relationshipId(row.featuredMusic);
-          return id && musicById.has(id)
-            ? { ...row, featuredMusic: musicById.get(id) }
-            : row;
-        });
-      }
-      page = result.nextPage ?? page + 1;
-    } catch {
-      return rows;
-    }
-  }
+export async function fetchPageContents(): Promise<ContentDoc[]> {
+  const [rows, music] = await Promise.all([
+    fetchCollection("page-contents"),
+    fetchMusicEmbeds(),
+  ]);
+
+  // `featuredMusic` points at the tenant-wide library, which a site-scoped
+  // query cannot expand — so the relationship is resolved here by id.
+  const musicById = new Map(music.map((item) => [relationshipId(item.id), item]));
+  return rows.map((row) => {
+    const id = relationshipId(row.featuredMusic);
+    return id && musicById.has(id)
+      ? { ...row, featuredMusic: musicById.get(id) }
+      : row;
+  });
 }
 
 interface LexicalNode {
@@ -152,6 +129,83 @@ export function mediaUrl(media: unknown): string | undefined {
   const url = (media as { url?: unknown }).url;
   if (typeof url !== "string" || !url) return undefined;
   return url.startsWith("http") ? url : `${env.CMS_URL}${url}`;
+}
+
+/**
+ * Any URL that comes from the CMS and ends up in an `href`. Blocks
+ * `javascript:` and every other scheme an editor could paste in.
+ */
+export function externalUrl(value: unknown): string | undefined {
+  if (typeof value !== "string" || !value.trim()) return undefined;
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Google Maps embed URLs only — the one iframe host the design asks for. */
+export function mapEmbedUrl(value: unknown): string | undefined {
+  const href = externalUrl(value);
+  if (!href) return undefined;
+  const { hostname, pathname, protocol } = new URL(href);
+  const isGoogleMaps =
+    (hostname === "www.google.com" || hostname === "maps.google.com") &&
+    pathname.startsWith("/maps/embed");
+  return protocol === "https:" && isGoogleMaps ? href : undefined;
+}
+
+export type VideoEmbed = {
+  title: string;
+  caption?: string;
+  embedUrl: string;
+  aspectRatio: string;
+};
+
+/**
+ * Same defence as `musicEmbed`: public CMS data may only produce an iframe
+ * pointing at an allow-listed video host.
+ *
+ * Mux rows are deliberately not handled here. Mux playback is signed — the
+ * player needs a token minted by the API — so rendering one from an `embedUrl`
+ * is not possible, and guessing would put a broken frame on the page.
+ */
+const VIDEO_HOSTS = new Set([
+  "www.youtube.com",
+  "www.youtube-nocookie.com",
+  "player.vimeo.com",
+  "www.loom.com",
+]);
+
+export function videoEmbed(value: unknown): VideoEmbed | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const row = value as Record<string, unknown>;
+  if (
+    row.status !== "active" ||
+    typeof row.title !== "string" ||
+    typeof row.embedUrl !== "string"
+  ) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(row.embedUrl);
+    if (url.protocol !== "https:" || !VIDEO_HOSTS.has(url.hostname)) return undefined;
+  } catch {
+    return undefined;
+  }
+
+  return {
+    title: row.title,
+    embedUrl: row.embedUrl,
+    caption: typeof row.caption === "string" ? row.caption : undefined,
+    aspectRatio: row.aspectRatio === "9:16" || row.aspectRatio === "1:1"
+      ? row.aspectRatio
+      : "16:9",
+  };
 }
 
 export type MusicEmbed = {

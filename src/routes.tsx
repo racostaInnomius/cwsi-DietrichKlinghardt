@@ -7,14 +7,24 @@ import { SiteShell } from "@/components/shell/SiteShell";
 import { HomePage } from "@/pages/HomePage";
 import { EventsPage } from "@/pages/EventsPage";
 import { EventDetailPage } from "@/pages/EventDetailPage";
+import { AboutPage } from "@/pages/AboutPage";
+import { ContactPage } from "@/pages/ContactPage";
+import { FiveLevelsPage } from "@/pages/FiveLevelsPage";
+import { MusicPage } from "@/pages/MusicPage";
+import { FoundationPage } from "@/pages/FoundationPage";
+import { WeeklyTalksPage } from "@/pages/WeeklyTalksPage";
+import { SophiaPage } from "@/pages/sophia/SophiaPage";
+import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
+import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
+import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
 import { SubscriptionStatusPage } from "@/pages/SubscriptionStatusPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
 
 /**
  * Root: content + cart providers wrap everything, so any page (and the header's
- * cart badge) can read them. One loader feeds the whole tree — `page-contents`
- * and `events` are fetched once at build time and revalidated together in the
- * browser.
+ * cart badge) can read them. One loader feeds the whole tree: every collection
+ * the site reads is fetched once at build time and revalidated together in the
+ * browser, so no page issues a request of its own.
  */
 function Root() {
   return (
@@ -59,16 +69,7 @@ export const routes: RouteRecord[] = [
             element: <SubscriptionStatusPage success={false} />,
           },
 
-          {
-            path: "about",
-            element: placeholder({
-              title: "Dr. Dietrich Klinghardt",
-              eyebrow: "About",
-              intro:
-                "Physician, educator, author and internationally recognized voice in biological and integrative medicine.",
-              phase: "F2",
-            }),
-          },
+          { path: "about", element: <AboutPage /> },
           { path: "events", element: <EventsPage /> },
           {
             path: "events/:slug",
@@ -101,15 +102,7 @@ export const routes: RouteRecord[] = [
               crumbs: [{ label: "Academy", href: "/academy" }, { label: "A.R.T. Klinghardt" }],
             }),
           },
-          {
-            path: "academy/five-levels",
-            element: placeholder({
-              title: "The 5 Levels of Healing",
-              eyebrow: "A framework for wholeness",
-              phase: "F2",
-              crumbs: [{ label: "Academy", href: "/academy" }, { label: "The 5 Levels of Healing" }],
-            }),
-          },
+          { path: "academy/five-levels", element: <FiveLevelsPage /> },
           {
             path: "academy/therapists",
             element: placeholder({
@@ -164,39 +157,10 @@ export const routes: RouteRecord[] = [
               phase: "F6",
             }),
           },
-          {
-            path: "music",
-            element: placeholder({
-              title: "Music as Medicine",
-              eyebrow: "Sound and healing",
-              phase: "F2",
-            }),
-          },
-          {
-            path: "weekly-talks",
-            element: placeholder({
-              title: "Join My Weekly Talks",
-              eyebrow: "Exclusive membership",
-              intro: "Live answers, every week, directly from Dr. Klinghardt.",
-              phase: "F7",
-            }),
-          },
-          {
-            path: "foundation",
-            element: placeholder({
-              title: "Preserving Knowledge. Advancing Education.",
-              eyebrow: "Klinghardt Foundation",
-              phase: "F5",
-            }),
-          },
-          {
-            path: "contact",
-            element: placeholder({
-              title: "Contact Us",
-              eyebrow: "Get in touch",
-              phase: "F2",
-            }),
-          },
+          { path: "music", element: <MusicPage /> },
+          { path: "weekly-talks", element: <WeeklyTalksPage /> },
+          { path: "foundation", element: <FoundationPage /> },
+          { path: "contact", element: <ContactPage /> },
           {
             path: "privacy",
             element: placeholder({ title: "Privacy Policy", phase: "F2" }),
@@ -207,43 +171,10 @@ export const routes: RouteRecord[] = [
           },
 
           // ── Sophia Health Institute (teal theme, route-driven) ────
-          {
-            path: "sophia",
-            element: placeholder({
-              title: "Sophia Health Institute",
-              eyebrow: "By Dr. Klinghardt",
-              intro:
-                "A world-renowned healing center dedicated to restoring health on every level.",
-              phase: "F2",
-            }),
-          },
-          {
-            path: "sophia/team",
-            element: placeholder({
-              title: "Meet Our Team",
-              eyebrow: "Sophia Health Institute",
-              phase: "F2",
-              crumbs: [{ label: "Sophia", href: "/sophia" }, { label: "Our team" }],
-            }),
-          },
-          {
-            path: "sophia/new-patients",
-            element: placeholder({
-              title: "New Patient Information",
-              eyebrow: "Sophia Health Institute",
-              phase: "F2",
-              crumbs: [{ label: "Sophia", href: "/sophia" }, { label: "New patients" }],
-            }),
-          },
-          {
-            path: "sophia/accommodations",
-            element: placeholder({
-              title: "How to Find Us",
-              eyebrow: "Travel & accommodations",
-              phase: "F2",
-              crumbs: [{ label: "Sophia", href: "/sophia" }, { label: "Travel & accommodations" }],
-            }),
-          },
+          { path: "sophia", element: <SophiaPage /> },
+          { path: "sophia/team", element: <SophiaTeamPage /> },
+          { path: "sophia/new-patients", element: <NewPatientsPage /> },
+          { path: "sophia/accommodations", element: <AccommodationsPage /> },
         ],
       },
 

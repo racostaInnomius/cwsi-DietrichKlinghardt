@@ -17,6 +17,11 @@ import type { ContentDoc } from "@/data/demo";
 export const SECTION = {
   announcement: "announcement",
 
+  aboutTimeline: "about-timeline",
+  contactCards: "contact-cards",
+  fiveLevelsList: "five-levels-list",
+  musicLinks: "music-links",
+
   homeHero: "home-hero",
   homeIntro: "home-intro",
   homeEvents: "home-events",
@@ -69,4 +74,30 @@ export function useSection(
     image: mediaUrl(doc?.heroImage),
     raw: doc,
   };
+}
+
+/**
+ * A few blocks are lists of small records — the About timeline, the four
+ * contact cards, the five levels of the pyramid — and `page-contents` has no
+ * repeater field.
+ *
+ * Rather than inventing a collection for each (a shared CMS: every new
+ * collection is a migration everybody else's tenant carries), those rows keep
+ * one line per record with fields separated by a pipe:
+ *
+ *     1978 | Anesthesiology, Freiburg | Where the questions started.
+ *
+ * A pipe is used instead of a dash because the copy itself is full of dashes.
+ * Lines with too few fields are dropped rather than rendered half-empty.
+ */
+export function useRecords(
+  slug: string,
+  fields: number,
+  fallback: string[][] = [],
+): string[][] {
+  const { paragraphs } = useSection(slug);
+  const rows = paragraphs
+    .map((line) => line.split("|").map((cell) => cell.trim()))
+    .filter((cells) => cells.length >= fields && cells.every(Boolean));
+  return rows.length ? rows : fallback;
 }

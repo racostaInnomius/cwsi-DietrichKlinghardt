@@ -55,10 +55,13 @@ export function eventLocation(doc: ContentDoc | undefined): string {
 }
 
 /**
- * Prices come from the CMS in major units (the Events collection stores 249,
- * not 24900), so they are formatted as-is rather than divided.
+ * Prices are stored in MINOR units everywhere in the CMS — both `events.price`
+ * and `digital-products.price` are cents ("49000 = $490.00" in their own field
+ * descriptions). Formatting one as a major-unit amount turns $490 into $49,000.
+ * Whole amounts drop the decimals, which is how the design prints them.
  */
-export function money(amount: number, currency = "usd"): string {
+export function money(cents: number, currency = "usd"): string {
+  const amount = cents / 100;
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency.toUpperCase(),
