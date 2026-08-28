@@ -188,11 +188,25 @@ de double opt-in sigue aterrizando bien; Lighthouse ≥90 en las claves.
 > fila de `events` apuntando a su path. El pago, el fulfillment y la conciliación
 > son exactamente los que ya existen; no se construyó nada para cobrar un seminario.
 >
-> **Pendientes de F3:** header animado de Courses (`TeachersStrip` está listo pero
-> no renderiza sin la fila `courses-teachers`; faltan las fotos de Vic) · cargar
-> los 5 métodos en el CMS · aplicar la migración en prod (ver
-> `MIGRATIONS_OWNERSHIP.md`, imagen `-migrator`) · activar la capability
-> `training-paths` en el tenant Dietrich.
+> **Aplicado en PRODUCCIÓN (2026-08-27):** migración `20260828_030618` aplicada
+> (batch 31) **antes** del deploy, como manda la regla de orden · capabilities
+> `training-paths` **y `events`** otorgadas al tenant (no tenía `events`, sin la
+> cual no podía crear ninguna fecha de curso; ambas dentro de su plan Business) ·
+> los 5 métodos cargados con `scripts/seed-dietrich-training-paths.ts` ·
+> imágenes `citmadmin/cwsf-beytrax:1.1.121` (+ `-migrator`) publicadas.
+>
+> **Falta solo el reinicio del CMS en el servidor** (requiere SSH; la migración
+> ya está aplicada, así que `migrate` no tiene nada pendiente). Hasta entonces
+> `portal.beytrax.com/api/training-paths` responde 404 y el sitio usa el
+> contenido empaquetado.
+>
+> **Pendientes de contenido:** header animado de Courses (`TeachersStrip` está
+> listo pero no renderiza sin la fila `courses-teachers`; faltan las fotos de
+> Vic) · las fechas de curso como filas de `events` con su `trainingPath`.
+>
+> ⚠️ El tenant sigue **sin** `faqs`, `board-members` ni `legal-pages`, que F2 sí
+> usa (Weekly Talks/New Patients, Sophia Team, Privacy/Terms). Están dentro de
+> Business; se otorgan cuando se cargue ese contenido.
 
 <details>
 <summary>Plan original de la fase</summary>
