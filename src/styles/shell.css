@@ -38,13 +38,19 @@
 .site-shell > main::before {
   content: "";
   position: absolute;
-  inset: -4% -10%;
+  /* inset: 0 — the layer must NOT spill outside <main>.
+     A negative inset here is measured against main's own height, so on a
+     3557px page `-4%` reached 142px upward: past the header (71px) and the
+     announcement bar (58px), both of which it then washed out at 35% opacity.
+     That is what made the amber bar read paler than the Figma even though the
+     colour underneath was already the design's #e9a43f exactly. The movement
+     comes from background-size + position, which needs no overflow at all. */
+  inset: 0;
   z-index: -1;
   background: var(--grad-page-full);
-  /* Same reasoning as the cards: barely oversized and faint, so the sampled
-     page gradient underneath is the one that reads. An aggressive drift here
-     moves the white band, which is precisely what every text colour was
-     measured against. */
+  /* Barely oversized and faint, so the sampled page gradient underneath is the
+     one that reads. An aggressive drift moves the white band, which is
+     precisely what every text colour was measured against. */
   background-size: 120% 120%;
   opacity: 0.35;
   animation: gradient-drift 32s ease-in-out infinite alternate;
