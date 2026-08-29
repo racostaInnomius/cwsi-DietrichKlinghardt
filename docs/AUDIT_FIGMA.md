@@ -166,3 +166,30 @@ Para ser justos con lo ya construido:
   nuestro y necesita validación de Noemi (ya estaba anotado).
 - Los frames traen lorem ipsum en varios sitios; donde lo hay, no se puede
   juzgar el copy.
+
+---
+
+## 6. Segunda pasada de color (2026-08-28)
+
+Revisión pedida tras notar que la barra de anuncio se veía más clara que en el
+Figma. Método: muestreo de píxeles sobre los frames **renderizados** (`magick
+-format "%[pixel:p{x,y}]"`), más un censo de todos los rellenos sólidos del
+archivo. Conclusión: **los tokens base eran correctos** — `#1c1916`, `#6b6456`,
+`#023866`, `#ede8da` y `#bc8f44` son literalmente los colores más usados del
+diseño, y `--gold-bright` ya valía `#e9a43f`, idéntico a la barra. Las
+discrepancias reales eran otras tres:
+
+| # | Qué estaba mal | Qué dice el diseño |
+|---|---|---|
+| 1 | Barra de anuncio con **texto oscuro** | Fondo `#e9a43f` ✅ ya coincidía; el texto es **blanco**. Con tinta oscura la franja entera se lee lavada, que es lo que se notó |
+| 2 | Tarjeta del hero con gradiente **diagonal teal→verde→ámbar**, inventado | Es **vertical**: abre en el mismo `#023866` de la página, sube a azul pálido `#a9cad1` sobre el primer tercio —la banda donde va el titular— y sólo vira a ámbar `#cca256` al final |
+| 3 | La capa de movimiento **tapaba** el gradiente real | Estaba al 220% de tamaño y opacidad 1: a esa escala deja de ser una deriva y se convierte en otro gradiente, con las paradas donde no van. Bajada a 130%/0.45 en tarjetas y 120%/0.35 en la página |
+
+Efecto medido en el hero, que antes tenía el titular ilegible: h1 **6.77:1**,
+lead **7.68:1**, botones 6.67 y 4.55. Los dos que siguen por debajo de AA
+(barra de anuncio 2.13:1 y eyebrow del hero 1.81:1) **son del diseño**, no
+nuestros — quedan en D13 para que los decida el cliente.
+
+También se corrigió el contenido de la tarjeta: iba pegado abajo y ahora va
+centrado, que es donde el diseño lo pone — y no por estética, sino porque esa
+es la franja azul pálida sobre la que el texto oscuro funciona.

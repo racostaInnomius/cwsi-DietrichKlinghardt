@@ -17,26 +17,37 @@
   margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
 }
+/* Centred, not bottom-aligned: in the design the copy runs from about a quarter
+   to two thirds down the panel — which is exactly the pale-blue stretch of the
+   card gradient, and the reason dark type works on it. Pinned to the bottom it
+   would land on the amber tail instead. */
 .hero__inner {
   display: flex;
   min-height: min(64vh, 600px);
   flex-direction: column;
-  justify-content: flex-end;
-  padding-block: clamp(64px, 9vw, 128px) clamp(40px, 5vw, 72px);
+  justify-content: center;
+  padding-block: clamp(64px, 9vw, 128px);
 }
+/* #93661c is the exact gold the design uses for this eyebrow ("INFLUENTIAL
+   TEACHER"). ⚠️ On the blue stretch of the panel it measures ~1.9:1 — the
+   design's own choice, not a slip of ours, and the same call as the
+   announcement bar. Recorded as D13. */
 .hero__eyebrow {
-  color: var(--gold-text);
+  color: #93661c;
 }
 .hero h1 {
   max-width: 16ch;
   margin-bottom: 24px;
   color: var(--brand);
 }
+/* Ink, not muted: the panel is a mid blue here, where `--muted` falls to
+   2.57:1 while ink clears 6:1 — and dark type is what the design puts on this
+   band anyway. */
 .hero__lead {
   max-width: 52ch;
   margin-bottom: 34px;
   font-size: var(--fs-lead);
-  color: var(--muted);
+  color: var(--ink);
 }
 .hero__actions {
   display: flex;

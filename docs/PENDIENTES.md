@@ -111,3 +111,5 @@ el índice para seguimiento.
 | D10 | **Copy sustituido donde el diseño sí lo trae escrito**: About (*A Life Dedicated to Healing*), A.R.T., y las 4 etiquetas de Contact | Baja | Donde el diseño trae lorem, el copy propio es correcto y se queda |
 | D11 | **Libre Baskerville 700** no está declarada | Baja | 20 nodos reales del diseño: los ordinales de la pirámide de los 5 Niveles |
 | D12 | **Music**: falta el bloque *Discography* | Baja | |
+| D13 | **Dos contrastes por debajo de AA que vienen del propio diseño** — decisión del cliente | Media | Se aplicaron **fieles al Figma** y ambos fallan medidos: (a) **barra de anuncio**, texto blanco sobre `#e9a43f` = **2.13:1** (con tinta oscura daba ~7:1; si se quiere accesible sin perder el ámbar, la barra tiene que bajar a ~`#b8792a`, que lleva blanco a 4.5:1); (b) **eyebrow del hero**, el dorado `#93661c` del diseño sobre la franja azul de la tarjeta = **1.81:1**. No son deslices nuestros: el archivo los dibuja así. El resto del sitio sí pasa AA |
+| D14 | **Falta la foto del Dr. Klinghardt en la tarjeta del hero** | Media | El diseño la coloca a la derecha del panel. Depende del insumo A3 |

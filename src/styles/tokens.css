@@ -153,9 +153,32 @@
 
   /* Inset gradient CARDS — the only gradients the design paints inside a page:
      the home hero panel and the "Join My Weekly Talks" band. Both are rounded
-     boxes with margins, sitting on the page gradient, and both carry dark type. */
-  --grad-card: linear-gradient(135deg, #199b9f 0%, #7fc4c0 45%, #e9b45c 100%);
-  --grad-card-warm: linear-gradient(135deg, #2a9aa2 0%, #cfd9a8 55%, #e9b45c 100%);
+     boxes with margins sitting on the page gradient.
+
+     Sampled down the hero panel of the rendered Homepage frame (x=60), not
+     guessed: it runs VERTICALLY and opens on the same navy as the page behind
+     it, lifts to a pale blue about a third of the way down — which is the band
+     the heading sits on — settles back into blue, and only turns amber in the
+     last stretch. The earlier diagonal teal→green→amber was invented. */
+  --grad-card: linear-gradient(
+    180deg,
+    #023866 0%,
+    #467496 8%,
+    #9abbc9 28%,
+    #a9cad1 38%,
+    #85b9c7 58%,
+    #70a7b8 78%,
+    #90a28f 89%,
+    #cca256 100%
+  );
+  --grad-card-warm: linear-gradient(
+    180deg,
+    #1a6f8c 0%,
+    #7fb3c4 30%,
+    #a9cad1 50%,
+    #b9c49a 78%,
+    #e9b45c 100%
+  );
 }
 
 /* ── Brand: Sophia Health Institute ─────────────────────────────── */

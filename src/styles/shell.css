@@ -38,20 +38,32 @@
 .site-shell > main::before {
   content: "";
   position: absolute;
-  inset: -8% -20%;
+  inset: -4% -10%;
   z-index: -1;
   background: var(--grad-page-full);
-  background-size: 160% 160%;
-  opacity: 0.55;
+  /* Same reasoning as the cards: barely oversized and faint, so the sampled
+     page gradient underneath is the one that reads. An aggressive drift here
+     moves the white band, which is precisely what every text colour was
+     measured against. */
+  background-size: 120% 120%;
+  opacity: 0.35;
   animation: gradient-drift 32s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
 /* ── Announcement bar ─────────────────────────────────────────── */
 
+/* White on the amber, as the design draws it — the bar is the one place the
+   file puts light type on a light ground. Sampled from the rendered frame: the
+   band is #e9a43f (which `--gold-bright` already matched exactly) and the copy
+   on it is white.
+   ⚠️ That pairing measures 2.1:1, well under AA, and it is the design's choice
+   rather than ours — dark ink here reached ~7:1. Recorded as D13; if it has to
+   be made accessible without losing the amber, the bar has to go a few steps
+   deeper (around #b8792a carries white at 4.5:1). */
 .announcement {
   background: var(--gold-bright);
-  color: var(--ink);
+  color: var(--white);
   text-align: center;
 }
 .announcement p {
