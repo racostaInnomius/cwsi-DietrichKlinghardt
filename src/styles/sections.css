@@ -2559,10 +2559,18 @@
   align-items: center;
   gap: clamp(28px, 4vw, 64px);
 }
-.hero__aside img {
+ /* Capped at the asset's own width. The file the client delivered is 388px
+    wide — a 1x export — and a UI screenshot blown past its native size turns to
+    mush faster than a photograph does. Held at 1:1 it is sharp on ordinary
+    displays; on a 2x screen it is still soft, and only a larger export fixes
+    that (see PENDIENTES A15). */
+.hero__aside img,
+.talks-band__media img {
   display: block;
   width: 100%;
+  max-width: 388px;
   height: auto;
+  margin-inline: auto;
   border-radius: var(--radius-md, 14px);
   box-shadow: 0 18px 48px rgb(2 56 102 / 0.22);
 }
@@ -2827,13 +2835,6 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-.talks-band__media img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: var(--radius);
-  box-shadow: 0 18px 48px rgb(2 56 102 / 0.24);
 }
 .talks-band__body h3 {
   margin-bottom: 12px;
