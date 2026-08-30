@@ -13,6 +13,42 @@ import { Accordion } from "@/components/sections/Accordion";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
+ * The plan, as the frame states it: label, amount, period, terms.
+ *
+ * ⚠️ This price and the Stripe Payment Link behind the button are two separate
+ * pieces of content, and nothing checks that they agree. If the link is ever
+ * changed to charge something else, THIS is where the site would keep telling
+ * people the old number. Whoever sets the link should set this row in the same
+ * sitting. See PENDIENTES A13.
+ */
+const PLAN_FALLBACK = [["Membership", "$25", "/ month", "Billed monthly · cancel anytime"]];
+
+const BENEFITS_FALLBACK = [
+  ["Live weekly talks every Wednesday"],
+  ["Full recordings archive (all past sessions)"],
+  ["Live Q&A with Dr. Dietrich Klinghardt™"],
+  ["Priority access to special guest sessions"],
+];
+
+/**
+ * The five questions the frame lists. It draws them closed, with no answers
+ * written, so the answers are the client's (A13/A2) — until they arrive each row
+ * says so rather than opening onto nothing.
+ */
+const FAQ_FALLBACK = [
+  "When are the talks held?",
+  "What happens if I miss one?",
+  "Can I cancel anytime?",
+  "What language are the talks in?",
+  "How do I ask questions?",
+].map((question) => ({
+  id: question,
+  question,
+  answer:
+    "The team is preparing this answer. In the meantime, write to us through the contact page and we will answer it directly.",
+}));
+
+/**
  * Weekly Talks — the membership page.
  *
  * The live player and the member archive belong to a later phase; what this
@@ -48,6 +84,10 @@ export function WeeklyTalksPage() {
     url: `${env.SITE_URL}/weekly-talks`,
   });
 
+  const [planLabel, planAmount, planPeriod, planTerms] =
+    useRecords("weekly-talks-plan", 4, PLAN_FALLBACK)[0] ?? [];
+  const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
+
   const faqs = [...useCollection("faqs")]
     .sort((a, b) => number(a, "order") - number(b, "order"))
     .map((row, index) => ({
@@ -70,35 +110,28 @@ export function WeeklyTalksPage() {
           <Reveal>
             <p className="eyebrow hero__eyebrow">Exclusive membership</p>
             <h1 className="display-xl"><Marked text={page.title} /></h1>
+            {/* The frame sets this line in the display face, a size down from
+                the heading — a subtitle, not body copy. */}
+            <p className="hero__subtitle">
+              Live Answers, Every Week, Directly From Dr. Klinghardt.
+            </p>
             <p className="hero__lead">{page.lead}</p>
-            {nextLive ? (
-              <p className="hero__badge">
-                Next live session · {eventLongDate(nextLive)}
-              </p>
-            ) : null}
+            {/* The date and the calendar link live in their own band below, so
+                they are not repeated here. */}
             <div className="hero__actions">
               {joinHref ? (
                 <a className="btn btn-light" href={joinHref}>
                   {ctaLabel || "Join now"}
                 </a>
               ) : (
-                <a className="btn btn-light" href="#newsletter">
-                  Get notified
+                <a className="btn btn-light" href="#pricing">
+                  See the membership
                 </a>
               )}
               {nextLive ? (
                 <Link className="btn btn-ghost" to={`/weekly-talks/live/${String(nextLive.id)}`}>
                   Watch the live
                 </Link>
-              ) : null}
-              {addToCalendar ? (
-                <a
-                  className="btn btn-ghost"
-                  href={addToCalendar}
-                  download="weekly-talk.ics"
-                >
-                  Add to calendar
-                </a>
               ) : null}
             </div>
           </Reveal>
@@ -119,33 +152,72 @@ export function WeeklyTalksPage() {
         </div>
       </AnimatedGradient>
 
-      <section className="section wrap two-col">
+      {/* Next live session, on its own band as the frame places it. */}
+      {nextLive ? (
+        <section className="section wrap">
+          <Reveal className="next-live">
+            <p className="eyebrow">Next live talk</p>
+            <p className="next-live__when">{eventLongDate(nextLive)}</p>
+            {addToCalendar ? (
+              <a className="arrow-link" href={addToCalendar} download="weekly-talk.ics">
+                Add to calendar <span aria-hidden="true">↗</span>
+              </a>
+            ) : null}
+          </Reveal>
+        </section>
+      ) : null}
+
+      <section className="section wrap">
         <Reveal className="prose">
           {page.paragraphs.slice(1).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </Reveal>
+      </section>
 
-        <Reveal as="aside" className="form-panel" delay={100}>
-          <p className="eyebrow">What’s included</p>
-          <ul className="tick-list">
-            <li>The live session each week, with open Q&amp;A</li>
-            <li>The replay, if you cannot make the hour</li>
-            <li>The archive of previous sessions</li>
-            <li>Cancel whenever you like</li>
+      {/* ── Pricing ──────────────────────────────────────────────── */}
+      <section className="section wrap" id="pricing">
+        <Reveal className="section-heading section-heading--center">
+          <p className="eyebrow">Pricing</p>
+          <h2>Learn, Connect, Grow Together</h2>
+        </Reveal>
+
+        <Reveal className="plan" delay={90}>
+          <p className="eyebrow">{planLabel}</p>
+          <p className="plan__price">
+            <span className="plan__amount">{planAmount}</span>
+            <span className="plan__period">{planPeriod}</span>
+          </p>
+          <p className="plan__terms">{planTerms}</p>
+
+          <ul className="tick-list plan__benefits">
+            {benefits.map(([benefit]) => (
+              <li key={benefit}>{benefit}</li>
+            ))}
           </ul>
+
+          {joinHref ? (
+            <a className="btn btn-primary plan__cta" href={joinHref}>
+              {ctaLabel || "Join my talks"}
+            </a>
+          ) : (
+            /* No live Payment Link, so no button that cannot charge — the same
+               rule the rest of the site follows. */
+            <a className="btn btn-light plan__cta" href="#newsletter">
+              Get notified when it opens
+            </a>
+          )}
+          <p className="plan__note">Secure checkout · 7-day free trial</p>
         </Reveal>
       </section>
 
-      {faqs.length ? (
-        <section className="section wrap" id="faq">
-          <Reveal>
-            <p className="eyebrow">Questions</p>
-            <h2 className="section-title">Before you join</h2>
-          </Reveal>
-          <Accordion items={faqs} />
-        </section>
-      ) : null}
+      <section className="section wrap" id="faq">
+        <Reveal className="section-heading section-heading--center">
+          <p className="eyebrow">FAQ</p>
+          <h2>Frequently Asked Questions</h2>
+        </Reveal>
+        <Accordion items={faqs.length ? faqs : FAQ_FALLBACK} />
+      </section>
 
       <NewsletterSection />
     </>

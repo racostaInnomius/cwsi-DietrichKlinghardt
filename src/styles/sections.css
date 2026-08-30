@@ -2884,3 +2884,83 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ── Weekly Talks: next session + plan ────────────────────────────
+   The frame gives the next date its own band, set in the display face, and
+   puts the price in a single centred card rather than a comparison table —
+   there is only one membership, so there is nothing to compare it against. */
+.next-live {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px 20px;
+  text-align: center;
+}
+.next-live .eyebrow {
+  width: 100%;
+  margin-bottom: 4px;
+}
+.next-live__when {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-sm);
+  color: var(--on-surface);
+}
+
+.plan {
+  max-width: 520px;
+  margin-inline: auto;
+  padding: clamp(28px, 3.4vw, 46px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+.plan__price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 4px;
+}
+.plan__amount {
+  font-family: var(--font-serif);
+  font-size: clamp(42px, 4.4vw, 56px);
+  line-height: 1;
+  color: var(--brand);
+}
+.plan__period {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.plan__terms {
+  margin: 0 0 clamp(20px, 2.4vw, 30px);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.plan__benefits {
+  margin: 0 0 clamp(22px, 2.6vw, 32px);
+  text-align: left;
+}
+.plan__cta {
+  width: 100%;
+}
+.plan__note {
+  margin: 12px 0 0;
+  font-size: var(--fs-xs);
+  color: var(--muted-2);
+}
+
+/* Display-face subtitle under a hero heading (Weekly Talks). */
+.hero__subtitle {
+  max-width: 24ch;
+  margin: -8px 0 16px;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-sm);
+  line-height: 1.2;
+  color: var(--brand);
+}
