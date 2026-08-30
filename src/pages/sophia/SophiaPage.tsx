@@ -72,7 +72,17 @@ export function SophiaPage() {
 
       <AnimatedGradient variant="plain" intensity="soft" className="home-art">
         <div className="wrap home-art__inner" id="naturopathic-care">
-          <Reveal>
+          <Reveal className="home-art__media">
+            <img
+              src="/images/sophia-clinic.webp"
+              alt="The Sophia Health Institute, seen from the garden"
+              width={1024}
+              height={683}
+              loading="lazy"
+              decoding="async"
+            />
+          </Reveal>
+          <Reveal className="home-art__body">
             <p className="eyebrow">Naturopathic care</p>
             <h2>Medicine that treats the person</h2>
             <p className="home-art__copy">

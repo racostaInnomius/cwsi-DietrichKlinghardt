@@ -354,12 +354,19 @@
 /* Media left, copy right — the design's arrangement. The image keeps a fixed
    aspect so the two columns stay level, and the whole thing stacks below the
    breakpoint with the image first, as it reads in the frame. */
+/* One column by default, two only when the section actually has an image.
+   This block is reused by Sophia and the Foundation, which are copy-only —
+   forcing two columns there left an empty half that reads as a missing image,
+   the same trap the About bio avoids. */
 .home-art__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: clamp(28px, 5vw, 72px);
   padding-block: var(--section-y);
+}
+.home-art__inner:has(.home-art__media) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 .home-art__media img {
   display: block;
@@ -371,6 +378,18 @@
 }
 .home-art__accent {
   margin: -8px 0 18px;
+}
+
+.new-patients__photo {
+  margin-bottom: clamp(24px, 3vw, 40px);
+}
+.new-patients__photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius-md, 14px);
 }
 .home-art h2 {
   max-width: 18ch;
@@ -2306,7 +2325,7 @@
 @media (max-width: 900px) {
   .home-intro__grid,
   .home-teasers,
-  .home-art__inner,
+  .home-art__inner:has(.home-art__media),
   .event-detail,
   .two-col,
   .about-bio--portrait {

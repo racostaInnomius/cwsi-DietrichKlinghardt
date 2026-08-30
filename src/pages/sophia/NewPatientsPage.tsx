@@ -63,6 +63,20 @@ export function NewPatientsPage() {
         className={`section wrap two-col${body.length || faqs.length ? "" : " two-col--panel"}`}
       >
         <div>
+          {/* A picture of the consultation itself, which is what a prospective
+              patient is actually asking about. Leads the column rather than
+              sitting beside the form, so the form keeps its own half. */}
+          <Reveal className="new-patients__photo">
+            <img
+              src="/images/sophia-treatment.webp"
+              alt="Dr. Klinghardt with a patient at the Sophia Health Institute"
+              width={1024}
+              height={683}
+              loading="lazy"
+              decoding="async"
+            />
+          </Reveal>
+
           <Reveal className="prose">
             {body.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
