@@ -186,13 +186,17 @@
     #90a28f 89%,
     #cca256 100%
   );
+  /* The "Join My Weekly Talks" band, sampled across the rendered frame rather
+     than guessed: it runs diagonally from a deep teal at the top right, through
+     a pale middle, into the warm olive-amber it ends on. */
   --grad-card-warm: linear-gradient(
-    180deg,
-    #1a6f8c 0%,
-    #7fb3c4 30%,
-    #a9cad1 50%,
-    #b9c49a 78%,
-    #e9b45c 100%
+    200deg,
+    #1b6b88 0%,
+    #3a92a5 20%,
+    #a9cad1 45%,
+    #94c0c9 60%,
+    #92a079 88%,
+    #c4b88b 100%
   );
 }
 

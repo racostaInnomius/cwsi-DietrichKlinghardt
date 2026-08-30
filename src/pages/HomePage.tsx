@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { splitByTime } from "@/lib/format";
+import { featuredProducts, usedCategories, useStoreProducts } from "@/lib/store";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { LineQuote } from "@/components/motion/LineQuote";
 import { RotatingWord } from "@/components/motion/RotatingWord";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { EventRow } from "@/components/sections/EventRow";
+import { ProductCard } from "@/components/sections/ProductCard";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
@@ -61,6 +63,13 @@ export function HomePage() {
 
   const { upcoming } = splitByTime(useCollection("events"));
   const featured = upcoming.slice(0, 3);
+
+  // The shop strip shows the month's picks, the same ones the store leads with,
+  // and falls back to the whole catalogue when nothing is ranked yet.
+  const products = useStoreProducts();
+  const categories = usedCategories(products);
+  const picks = featuredProducts(products);
+  const shopPicks = (picks.length ? picks : products).slice(0, 5);
 
   return (
     <>
@@ -195,25 +204,120 @@ export function HomePage() {
         </div>
       </AnimatedGradient>
 
-      {/* ── Store + Weekly talks ─────────────────────────────────── */}
-      <section className="section wrap home-teasers">
-        <Reveal as="article" className="teaser">
-          <p className="eyebrow">Shop</p>
-          <h3>{shop.title}</h3>
-          <p>{shop.lead}</p>
-          <Link className="arrow-link" to="/store">
-            Visit the store <span aria-hidden="true">↗</span>
-          </Link>
+      {/* ── The clinic ───────────────────────────────────────────── */}
+      <section className="section wrap feature-row feature-row--right">
+        <Reveal className="feature-row__media">
+          <img
+            src="/images/sophia-clinic.webp"
+            alt="The Sophia Health Institute, seen from the garden"
+            width={1024}
+            height={683}
+            loading="lazy"
+            decoding="async"
+          />
+        </Reveal>
+        <Reveal className="feature-row__body" delay={90}>
+          <p className="eyebrow">Our clinic</p>
+          <h2>Sophia Health Institute by Dr. Dietrich Klinghardt™</h2>
+          <p className="feature-row__copy">
+            A world-renowned healing centre offering a truly individualised,
+            root-cause approach to complex chronic illness — one that looks
+            beyond symptoms to the deeper origins of disease, supporting each
+            person's journey toward optimal physical, emotional, mental and
+            spiritual well-being.
+          </p>
+          <div className="feature-row__actions">
+            <Link className="btn btn-light" to="/sophia">
+              Learn more
+            </Link>
+            <Link className="btn btn-ghost" to="/sophia/new-patients">
+              New patients
+            </Link>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ── Weekly talks ─────────────────────────────────────────── */}
+      <section className="section wrap">
+        <AnimatedGradient variant="card-warm" intensity="soft" className="talks-band">
+          <div className="talks-band__inner">
+            {/* The heading spans the full width above both columns, as in the
+                frame, where it is the largest type on the page. */}
+            <h2 className="talks-band__title">{talks.title}</h2>
+
+            <Reveal className="talks-band__media">
+              <img
+                src="/images/weekly-talks-live.webp"
+                alt="A live Weekly Talk session with Dr. Klinghardt"
+                width={388}
+                height={277}
+                loading="lazy"
+                decoding="async"
+              />
+            </Reveal>
+
+            <Reveal className="talks-band__body" delay={110}>
+              <p className="eyebrow">Exclusive material</p>
+              <h3 className="display-md">Join Now For Full Access</h3>
+              <p>{talks.lead}</p>
+              <Link className="btn btn-ghost" to="/weekly-talks">
+                Join my talks
+              </Link>
+            </Reveal>
+          </div>
+        </AnimatedGradient>
+      </section>
+
+      {/* ── Shop ─────────────────────────────────────────────────── */}
+      <section className="section wrap home-shop">
+        <Reveal className="section-heading section-heading--center">
+          <h2>{shop.title}</h2>
+          <p className="lead">{shop.lead}</p>
         </Reveal>
 
-        <Reveal as="article" className="teaser teaser--brand" delay={120}>
-          <p className="eyebrow">Weekly talks</p>
-          <h3>{talks.title}</h3>
-          <p>{talks.lead}</p>
-          <Link className="arrow-link" to="/weekly-talks">
-            Join the next session <span aria-hidden="true">↗</span>
-          </Link>
-        </Reveal>
+        {categories.length > 0 && (
+          <Reveal className="home-shop__filters" delay={80}>
+            <ul className="pill-list">
+              {/* Links rather than filters: the filtering itself lives on the
+                  store page, and duplicating that state here would give the
+                  same catalogue two places to disagree about what is selected. */}
+              <li>
+                <Link className="pill" to="/store">
+                  All
+                </Link>
+              </li>
+              {categories.map((item) => (
+                <li key={item.key}>
+                  <Link className="pill" to="/store">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link className="arrow-link" to="/store">
+              Shop all <span aria-hidden="true">↗</span>
+            </Link>
+          </Reveal>
+        )}
+
+        {shopPicks.length > 0 ? (
+          <ul className="product-strip">
+            {shopPicks.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                delay={index * 60}
+                featured={index === 0}
+              />
+            ))}
+          </ul>
+        ) : (
+          <Reveal className="section-actions">
+            <Link className="btn btn-light" to="/store">
+              Visit the store
+            </Link>
+          </Reveal>
+        )}
       </section>
 
       <NewsletterSection />

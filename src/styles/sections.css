@@ -2803,3 +2803,84 @@
 .page-hero__actions--center {
   justify-content: center;
 }
+
+/* ── Weekly Talks band (home) ─────────────────────────────────────
+   An inset gradient card with the largest type on the page across the top and
+   two columns beneath it: the live session on the left, the offer on the right.
+
+   The heading is MULTICOLOUR in the design, and not by tinting each word — the
+   text node carries a gradient fill (#ffb822 → #0b3d65 → #ffb822), which is why
+   it is painted here with background-clip rather than split into spans. */
+.talks-band__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 3.4vw, 56px);
+  padding: clamp(32px, 4.4vw, 72px);
+}
+.talks-band__title {
+  grid-column: 1 / -1;
+  margin: 0 0 clamp(10px, 1.6vw, 24px);
+  font-size: var(--fs-display-xl);
+  text-align: center;
+  background: linear-gradient(100deg, #ffb822 0%, #0b3d65 56%, #ffb822 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.talks-band__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: 0 18px 48px rgb(2 56 102 / 0.24);
+}
+.talks-band__body h3 {
+  margin-bottom: 12px;
+}
+.talks-band__body p {
+  max-width: 46ch;
+  margin-bottom: 22px;
+  color: var(--ink-soft);
+}
+
+/* ── Shop strip (home) ────────────────────────────────────────────
+   The store's own card, five across, with the month's pick leading. */
+.home-shop__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: clamp(28px, 3.4vw, 48px);
+}
+.home-shop__filters .pill-list {
+  justify-content: center;
+}
+.home-shop__filters li {
+  list-style: none;
+}
+.product-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 1180px) {
+  .product-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .talks-band__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .product-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

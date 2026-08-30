@@ -6,7 +6,6 @@ import {
   toCartItem,
   usedCategories,
   useStoreProducts,
-  type StoreProduct,
 } from "@/lib/store";
 import { useCart } from "@/lib/cart";
 import { useSection } from "@/lib/sections";
@@ -15,6 +14,7 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { ProductCard } from "@/components/sections/ProductCard";
 
 /**
  * The Klinghardt store: the month's picks, then the catalogue filtered by
@@ -118,60 +118,5 @@ export function StorePage() {
 
       <NewsletterSection />
     </>
-  );
-}
-
-function ProductCard({
-  product,
-  delay,
-  featured,
-}: {
-  product: StoreProduct;
-  delay: number;
-  featured?: boolean;
-}) {
-  const { add, items } = useCart();
-  const inCart = items.some((item) => item.sourceId === product.id);
-
-  return (
-    <Reveal
-      as="li"
-      className={`product${featured ? " product--featured" : ""}`}
-      delay={delay}
-      shift={14}
-    >
-      <div className="product__media">
-        {product.image ? <img src={product.image} alt="" loading="lazy" /> : null}
-        {product.isPhysical ? <span className="product__tag">Ships to you</span> : null}
-      </div>
-
-      <div className="product__body">
-        {product.categoryLabel ? (
-          <p className="eyebrow">{product.categoryLabel}</p>
-        ) : null}
-        <h3>
-          <Marked text={product.title} />
-        </h3>
-        {product.subtitle ? <p className="product__subtitle">{product.subtitle}</p> : null}
-
-        <div className="product__buy">
-          {product.price != null ? (
-            <span className="product__price">{money(product.price, product.currency)}</span>
-          ) : null}
-          <button
-            type="button"
-            className="btn btn-outline product__add"
-            onClick={() => add(toCartItem(product))}
-          >
-            {inCart ? "Add another" : "Add to cart"}
-          </button>
-        </div>
-        {inCart ? (
-          <Link className="product__incart" to="/cart">
-            In your cart →
-          </Link>
-        ) : null}
-      </div>
-    </Reveal>
   );
 }
