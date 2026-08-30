@@ -287,7 +287,7 @@ h3,
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--brand);
+  color: var(--brand-text);
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: var(--tracking-button);
@@ -324,6 +324,26 @@ h3,
 }
 .page-hero .eyebrow {
   color: var(--white);
+}
+/* Sophia's gradient lightens far faster than the DK one — it is already a pale
+   teal where the eyebrow lands, so white measures 2.98:1 there. Ink instead,
+   which is what the Sophia frames use on that ground anyway. */
+[data-theme="sophia"] .page-hero .eyebrow,
+[data-theme="sophia"] .page-hero .breadcrumbs ol,
+[data-theme="sophia"] .page-hero .breadcrumbs a,
+[data-theme="sophia"] .page-hero .breadcrumbs__sep,
+[data-theme="sophia"] .page-hero .breadcrumbs__arrow {
+  color: var(--ink);
+}
+[data-theme="sophia"] .page-hero .breadcrumbs a:hover {
+  color: var(--brand-text);
+}
+/* And it needs the opposite spacing to the DK pages. Sophia's gradient goes
+   from teal to pale in 140px, so its hero content has to sit LOWER to clear the
+   transition — at y=28 the ground is #3c8090, where neither ink (3.9:1) nor
+   white (3.4:1) reaches AA. Below ~90px ink clears 6:1. */
+[data-theme="sophia"] .page-hero__inner {
+  padding-block-start: clamp(72px, 7vw, 104px);
 }
 .page-hero h1 {
   max-width: 20ch;

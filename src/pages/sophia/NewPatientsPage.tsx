@@ -1,109 +1,204 @@
 import { Seo } from "@/components/Seo";
-import { useCollection, text, number } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { Accordion } from "@/components/sections/Accordion";
-import { ContactForm } from "@/components/sections/ContactForm";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
- * New Patient Information — FAQ plus the enquiry form.
+ * The five questions the frame numbers 01–05.
  *
- * The page copy is still with the client (Vic), so the fallback below says only
- * what is certainly true and does not invent clinical or billing claims. It is
- * written to be replaced wholesale by the `new-patients` CMS row.
+ * The design shows the questions closed, with no answers drawn — so the answers
+ * are the client's to write (A2). Until they arrive each row says so rather
+ * than opening onto nothing, which is why the copy below is a placeholder and
+ * reads as one.
+ */
+const QUESTIONS = [
+  "Will this work?",
+  "I've seen many specialists. How will you be any different?",
+  "Can I afford this treatment?",
+  "What can I expect as a patient?",
+  "What kind of results do you get for your patients?",
+];
+
+const APPROACH = [
+  {
+    title: "Root-Cause Medicine",
+    body: "We go beyond symptom management to identify and address the underlying drivers of chronic illness — including infections, toxins, structural imbalances, emotional trauma and environmental exposures.",
+  },
+  {
+    title: "Individualized Care",
+    body: "No two patients are the same. Every care plan is designed specifically for you, based on your history, your biology and your goals. We do not apply one-size-fits-all protocols.",
+  },
+  {
+    title: "Autonomic Response Testing®",
+    body: "Dr. Dietrich Klinghardt's A.R.T.® method gives our practitioners a sophisticated clinical tool to assess the body's own regulatory responses and identify hidden contributors to illness.",
+  },
+  {
+    title: "The 5 Levels of Healing™",
+    body: "Our model of care addresses the physical body, the energy field, the mental-emotional dimension, the intuitive body and the spiritual dimension — recognising that lasting healing often requires attention on more than one level.",
+  },
+];
+
+const FIRST_STEPS = [
+  {
+    title: "Reach Out",
+    body: "Contact our team to introduce yourself, ask questions, and learn whether Sophia Health Institute® is the right fit for where you are in your health journey.",
+  },
+  {
+    title: "Comprehensive Intake",
+    body: "New patients complete an in-depth review of health history, prior testing and current concerns — so that your first appointment can begin with real depth and context.",
+  },
+  {
+    title: "Individualized Care Plan",
+    body: "Your practitioners design a care plan specifically for you — not a template, not a protocol applied to everyone. Your biology, your history, your goals.",
+  },
+];
+
+/**
+ * New Patient Information.
+ *
+ * Rebuilt from the Figma frame `0:7475`. The page used to be a lead paragraph
+ * and a form; the frame is a full page — the welcome, the five questions, the
+ * four things that make the approach different, the three first steps, and the
+ * closing band. It was the second-furthest page from the design (D3).
  */
 export function NewPatientsPage() {
   const page = useSection(SECTION.newPatients, {
     title: "New Patient Information",
     paragraphs: [
-      "Becoming a patient starts with an enquiry, not a booking: we read what you send, and come back to you about whether the clinic is the right place for your situation and what a first visit would involve.",
+      "Thank you for your interest in becoming a patient. We are honoured you are exploring the option of having our team become your provider of treatment and healing.",
     ],
   });
-
-  // The first paragraph is already the hero lead.
-  const body = page.paragraphs.slice(1);
-
-  const faqs = [...useCollection("faqs")]
-    .sort((a, b) => number(a, "order") - number(b, "order"))
-    .map((row, index) => ({
-      id: String(row.id ?? index),
-      question: text(row, "question"),
-      answer: text(row, "answer"),
-    }))
-    .filter((item) => item.question && item.answer);
 
   return (
     <>
       <Seo
         title={"New Patient Information — Sophia Health Institute™"}
-        description="How to become a patient at the Sophia Health Institute: what to send, what to expect."
+        description="How to become a patient at the Sophia Health Institute: what to expect, what makes the approach different, and how to reach the team."
         path="/sophia/new-patients"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Sophia", href: "/sophia" }, { label: "New patients" }]}
           />
           <Reveal>
-            <p className="eyebrow">Sophia Health Institute™</p>
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
+            <div className="page-hero__actions page-hero__actions--center">
+              <a className="btn btn-light" href="#contact">
+                Contact us
+              </a>
+            </div>
           </Reveal>
         </div>
       </AnimatedGradient>
 
-      {/* The page copy is still with the client. Until it arrives there is
-          nothing to put in the left column, so the form takes the whole width
-          rather than sitting beside an empty half. */}
-      <section
-        className={`section wrap two-col${body.length || faqs.length ? "" : " two-col--panel"}`}
-      >
-        <div>
-          {/* A picture of the consultation itself, which is what a prospective
-              patient is actually asking about. Leads the column rather than
-              sitting beside the form, so the form keeps its own half. */}
-          <Reveal className="new-patients__photo">
-            <img
-              src="/images/sophia-treatment.webp"
-              alt="Dr. Klinghardt with a patient at the Sophia Health Institute"
-              width={1024}
-              height={683}
-              loading="lazy"
-              decoding="async"
-            />
-          </Reveal>
-
-          <Reveal className="prose">
-            {body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </Reveal>
-
-          {faqs.length ? (
-            <div id="faq">
-              <Reveal>
-                <p className="eyebrow">Frequently asked</p>
-                <h2 className="section-title">Before you write to us</h2>
-              </Reveal>
-              <Accordion items={faqs} />
-            </div>
-          ) : null}
-        </div>
-
-        <Reveal as="aside" className="form-panel" delay={120}>
-          <p className="eyebrow">Patient enquiry</p>
-          <h2>Tell us about your situation</h2>
-          <p className="form-panel__note">
-            Please don’t send medical records in this form — we’ll tell you where
-            to send them once we’ve read your message.
+      <section className="section wrap feature-row feature-row--right">
+        <Reveal className="feature-row__media">
+          <img
+            src="/images/sophia-treatment.webp"
+            alt="The Sophia Health Institute in Woodinville"
+            width={1024}
+            height={683}
+            loading="lazy"
+            decoding="async"
+          />
+        </Reveal>
+        <Reveal className="feature-row__body" delay={90}>
+          <p className="eyebrow">Welcome</p>
+          <h2>We Know You Have Been Through a Lot</h2>
+          <p className="feature-row__copy">
+            All of your questions are important, and it is our goal to answer them
+            and give you as much information as possible toward making a decision
+            that is right for you.
           </p>
-          <ContactForm subject="New patient enquiry" />
+          <p className="feature-row__copy">
+            We are honoured you are exploring the option of having the team at
+            Sophia Health Institute by Dr. Klinghardt™ become your provider of
+            treatment and healing.
+          </p>
+          <p className="feature-row__copy">
+            We understand that living with your illness has made your daily life a
+            struggle. It is our goal to provide you with a caring, individualised
+            approach — one that honours the complexity of your experience and the
+            depth of your determination to heal.
+          </p>
         </Reveal>
       </section>
+
+      <section className="section wrap">
+        <Reveal>
+          <p className="eyebrow">Frequently asked</p>
+          <h2 className="section-title">You May Be Wondering…</h2>
+          <p className="lead">
+            As you consider becoming a patient, you might have a lot of questions.
+            Here are the ones we hear most often.
+          </p>
+        </Reveal>
+        <Accordion
+          items={QUESTIONS.map((question, index) => ({
+            id: question,
+            question: `${String(index + 1).padStart(2, "0")} — ${question}`,
+            answer:
+              "The clinic is preparing this answer. In the meantime the team will answer it directly — write to us through the form below.",
+          }))}
+        />
+      </section>
+
+      <section className="section wrap">
+        <Reveal className="section-heading section-heading--center">
+          <p className="eyebrow">Our approach</p>
+          <h2>What Makes This Different</h2>
+          <p className="lead">
+            Four things shape every care plan we build.
+          </p>
+        </Reveal>
+        <ul className="card-grid card-grid--2">
+          {APPROACH.map((item, index) => (
+            <Reveal as="li" key={item.title} className="card" delay={index * 60} shift={12}>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </Reveal>
+          ))}
+        </ul>
+      </section>
+
+      <section className="section wrap">
+        <Reveal>
+          <p className="eyebrow">Your first steps</p>
+          <h2 className="section-title">What to Expect as a Patient</h2>
+        </Reveal>
+        <ul className="card-grid card-grid--3">
+          {FIRST_STEPS.map((step, index) => (
+            <Reveal as="li" key={step.title} className="card" delay={index * 70} shift={12}>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </Reveal>
+          ))}
+        </ul>
+      </section>
+
+      <div id="contact">
+        <CtaBand
+          title={
+            <>
+              Ready to
+              <br />
+              Take The Next Step
+            </>
+          }
+          body="Our friendly team is here to help. Fill out the form and we will review your message and respond as soon as possible during our regular business hours."
+          subject="New patient enquiry"
+        />
+      </div>
+
+      <NewsletterSection />
     </>
   );
 }

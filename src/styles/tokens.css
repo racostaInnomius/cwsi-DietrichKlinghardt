@@ -106,6 +106,10 @@
   --brand-soft: var(--cream);
   --brand-soft-2: var(--cream-2);
   --brand-contrast: var(--gold-bright);
+  /* Brand colour for SMALL text. Navy is dark enough to be used raw here; the
+     token exists so Sophia can substitute its darker teal without every
+     component knowing which theme it is in. Same idea as --gold-text. */
+  --brand-text: var(--brand);
 
   --surface: var(--cream);
   --surface-2: var(--white);
@@ -201,6 +205,9 @@
   --brand-soft: #e6f4f4;
   --brand-soft-2: #f0f9f9;
   --brand-contrast: var(--gold);
+  /* #0d858d measures 4.06:1 on white — under AA for anything below 24px. The
+     darker ramp step clears it, so small teal text uses that instead. */
+  --brand-text: var(--brand-3);
 
   --surface: var(--brand-soft-2);
   --surface-2: var(--white);
