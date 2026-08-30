@@ -65,7 +65,7 @@ export function WeeklyTalksPage() {
         path="/weekly-talks"
       />
 
-      <AnimatedGradient variant="card" intensity="strong" className="hero">
+      <AnimatedGradient variant="card" intensity="strong" className="hero hero--split">
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Exclusive membership</p>
@@ -101,6 +101,20 @@ export function WeeklyTalksPage() {
                 </a>
               ) : null}
             </div>
+          </Reveal>
+
+          {/* The live session as it actually looks, which is what the design
+              puts beside this copy — a membership is easier to picture than to
+              describe. */}
+          <Reveal className="hero__aside" delay={120}>
+            <img
+              src="/images/weekly-talks-live.webp"
+              alt="A live Weekly Talk session with Dr. Klinghardt"
+              width={388}
+              height={277}
+              loading="lazy"
+              decoding="async"
+            />
           </Reveal>
         </div>
       </AnimatedGradient>

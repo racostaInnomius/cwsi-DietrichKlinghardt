@@ -107,7 +107,7 @@ el índice para seguimiento.
 | D6 | **Weekly Talks**: faltan *Learn, Connect, Grow Together*, el bloque de **$25** y el **FAQ** | Media | |
 | D7 | **Store**: falta *Dr. Klinghardt's Top 5 Picks of the Month* + *August 2026* | Media | En el diseño abre la página |
 | D8 | **Accommodations**: faltan *Hotels in The Local Area* y *Ready to Take The Next Step* | Media | |
-| D9 | **Academy**: falta *Klinghardt Akademie*, sobra *Online Courses*, y el orden difiere | Media | |
+| D9 | **Academy**: falta *Klinghardt Akademie*, sobra *Online Courses*, y el orden difiere | Media | ✅ **Rehecha** (2026-08-29). Era una rejilla de 6 tarjetas pequeñas; el diseño son **6 filas a ancho completo que alternan imagen y texto**. Copy, eyebrows, líneas en Fraunces y etiquetas de botón transcritas del frame `0:3213`. Añadido *Klinghardt Akademie*, quitado *Online Courses* (que ahí no está) y respetado el orden del diseño. ⚠️ Faltan dos ilustraciones que el diseño sí trae: el **mapa de terapeutas** y la **pirámide de los 5 Niveles** — esas dos filas van a una columna hasta que existan. Las tarjetas de *Akademie* y *Foundation* se **dibujan en CSS** (son gradiente + wordmark), no esperan export |
 | D10 | **Copy sustituido donde el diseño sí lo trae escrito**: About (*A Life Dedicated to Healing*), A.R.T., y las 4 etiquetas de Contact | Baja | Donde el diseño trae lorem, el copy propio es correcto y se queda |
 | D11 | **Libre Baskerville 700** no está declarada | Baja | 20 nodos reales del diseño: los ordinales de la pirámide de los 5 Niveles |
 | D12 | **Music**: falta el bloque *Discography* | Baja | |

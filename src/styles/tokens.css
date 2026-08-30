@@ -137,15 +137,23 @@
      declared #199b9f teal actually renders as a desaturated blue on the way
      down. These are the colours the design really shows, measured at x=690 of
      the exported Directory frame, where it reaches near-white by 520px — which
-     is where the anchors below come from. */
+     is where the anchors below come from.
+
+     The anchors are pulled ~100px earlier than the measured curve because in
+     the design the gradient starts under the ANNOUNCEMENT BAR and runs behind
+     the header, while ours starts at the top of <main>. Measuring from the
+     frame and applying it from a lower origin left every internal page about
+     one header-height too dark: on Academy, whose heading sits higher than
+     most, the h1 landed on #264f76 at 2.83:1. Subtracting the bar and header
+     puts the curve back where the content meets it. */
   --grad-page-full: linear-gradient(
     180deg,
     #023866 0,
-    #295b7f 120px,
-    #4d819a 200px,
-    #c0dbde 360px,
-    #eef3f3 560px,
-    #ffffff 760px,
+    #295b7f 20px,
+    #4d819a 100px,
+    #c0dbde 260px,
+    #eef3f3 460px,
+    #ffffff 660px,
     #ffffff calc(100% - 520px),
     #eaaa58 calc(100% - 120px),
     #f79b09 100%
@@ -199,12 +207,13 @@
      teal at both ends, a pale band through the middle. Verbatim from the four
      Sophia frames (Homepage, team, new patients, accommodations). Note it never
      goes dark — Sophia pages carry dark type from top to bottom. */
+  /* Same ~100px shift as the DK theme, for the same reason. */
   --grad-page-full: linear-gradient(
     180deg,
     #146a7d 0,
-    #b7d0d2 240px,
-    #e6f4f4 560px,
-    #eef7f8 720px,
+    #b7d0d2 140px,
+    #e6f4f4 460px,
+    #eef7f8 620px,
     #eef7f8 calc(100% - 620px),
     #b7d0d2 calc(100% - 200px),
     #228c97 100%
