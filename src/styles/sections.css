@@ -2036,73 +2036,142 @@
 
 /* ── 5 Levels pyramid ─────────────────────────────────────────── */
 
-.levels__intro {
-  margin-bottom: clamp(32px, 4vw, 60px);
+/* ── The 5 Levels pyramid ─────────────────────────────────────────
+   The apex is drawn as a real triangle and the four levels below it as bands
+   that widen toward the base (387 → 480 → 574 → 667 of the design's 1440
+   canvas, expressed here as a percentage that grows by 14 points a step).
+
+   Each band is tinted from its own `--accent`, the colour the design gives
+   that level, and the paragraph beside it takes the same one — that pairing is
+   what lets a reader match band to text without counting positions. */
+.levels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
 }
+
 .pyramid {
+  position: relative;
+  padding-inline: clamp(38px, 5vw, 64px);
+}
+.pyramid__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  gap: 10px;
-  justify-items: center;
 }
 .pyramid__level {
-  width: 100%;
-  max-width: 880px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface-2);
-  overflow: hidden;
-  transition: border-color var(--dur-fast) var(--ease),
-    box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
-}
-/* Each level is narrower than the one below it — the pyramid is built out of
-   the widths, so it holds together as a list when styles are stripped. */
-.pyramid__level:nth-child(1) { max-width: 46%; }
-.pyramid__level:nth-child(2) { max-width: 58%; }
-.pyramid__level:nth-child(3) { max-width: 70%; }
-.pyramid__level:nth-child(4) { max-width: 82%; }
-.pyramid__level:nth-child(5) { max-width: 94%; }
-
-.pyramid__level button {
-  width: 100%;
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px 16px;
-  padding: clamp(16px, 1.8vw, 22px) clamp(18px, 2vw, 28px);
-  border: 0;
-  background: none;
-  cursor: pointer;
-  text-align: left;
+  align-items: center;
+  gap: 14px;
+  width: var(--band, 100%);
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent) 12%, var(--white));
+}
+/* The top level is the apex: a triangle, so it needs its own shape and its
+   label centred inside rather than run along a band. */
+.pyramid__level--apex {
+  width: min(56%, 260px);
+  justify-content: center;
+  flex-direction: column;
+  gap: 2px;
+  padding: 42px 20px 16px;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--accent) 16%, var(--white));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  text-align: center;
+}
+.pyramid__ordinal {
+  font-family: var(--font-ordinal);
+  font-size: clamp(18px, 1.8vw, 27px);
+  color: var(--accent);
+  /* Dark enough to read on its own tint: the accents are mid-tones, so they
+     are darkened against the band rather than used raw. */
+  color: color-mix(in srgb, var(--accent) 72%, var(--ink));
 }
 .pyramid__name {
-  color: var(--gold-text);
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
+  font-family: var(--font-ordinal);
+  font-size: clamp(14px, 1.4vw, 22px);
+  color: var(--ink);
 }
-.pyramid__label {
+.pyramid__level:not(.pyramid__level--apex) .pyramid__name {
+  border-left: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  padding-left: 14px;
+}
+.pyramid__glyph {
+  margin-left: auto;
+  color: color-mix(in srgb, var(--accent) 70%, var(--white));
+}
+.pyramid__level--apex .pyramid__glyph {
+  display: none;
+}
+
+/* The axis the pyramid runs along, climbing each side as in the frame. */
+.pyramid__axis {
+  position: absolute;
+  bottom: 34%;
+  font-size: var(--fs-meta);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+.pyramid__axis--left {
+  left: 0;
+  transform: rotate(-62deg);
+  transform-origin: left bottom;
+}
+.pyramid__axis--right {
+  right: 0;
+  transform: rotate(62deg);
+  transform-origin: right bottom;
+}
+
+.levels__legend {
+  display: grid;
+  gap: clamp(18px, 2.4vw, 30px);
+}
+.levels__item h2 {
+  margin-bottom: 6px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-lead);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* Same darkening as the ordinals — the raw accents sit at 2.5–3:1 on white. */
+  color: color-mix(in srgb, var(--accent) 68%, var(--ink));
+}
+.levels__item p {
+  max-width: 46ch;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.levels__quote {
+  margin: 0;
+}
+.levels__quote p {
+  max-width: 46ch;
   font-family: var(--font-display);
   font-size: var(--fs-display-sm);
+  line-height: 1.35;
+  color: var(--on-surface);
 }
-.pyramid__body {
-  max-width: 62ch;
-  margin: 0;
-  padding: 0 clamp(18px, 2vw, 28px) clamp(18px, 2vw, 24px);
-  color: var(--muted);
-  font-size: var(--fs-sm);
-}
-.pyramid__level.is-open {
-  border-color: var(--brand);
-  box-shadow: var(--shadow-lift);
-  transform: translateY(-2px);
-}
-.pyramid__level.is-open .pyramid__label {
+.levels__quote cite {
+  display: block;
+  margin-top: 14px;
+  font-style: normal;
+  font-size: var(--fs-display-sm);
+  font-family: var(--font-display);
   color: var(--brand);
 }
+
 
 /* ── Video ────────────────────────────────────────────────────── */
 
@@ -2328,6 +2397,7 @@
   .home-art__inner:has(.home-art__media),
   .feature-row:has(.feature-row__media),
   .hero--split .hero__inner,
+  .levels,
   .event-detail,
   .two-col,
   .about-bio--portrait {
@@ -2496,3 +2566,17 @@
   border-radius: var(--radius-md, 14px);
   box-shadow: 0 18px 48px rgb(2 56 102 / 0.22);
 }
+
+/* The 5 Levels frame centres its heading and lead over the full width, unlike
+   the left-aligned internal pages. */
+.page-hero--center .page-hero__inner {
+  text-align: center;
+}
+.page-hero--center h1,
+.page-hero--center .lead {
+  margin-inline: auto;
+}
+.page-hero--center .breadcrumbs ol {
+  justify-content: center;
+}
+

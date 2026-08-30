@@ -16,6 +16,7 @@ export function Reveal({
   shift,
   className = "",
   once = true,
+  style,
 }: {
   children: ReactNode;
   /** Element to render — use `section`/`li` to keep semantics intact. */
@@ -26,6 +27,8 @@ export function Reveal({
   shift?: number;
   className?: string;
   once?: boolean;
+  /** Merged with the reveal's own custom properties, never replacing them. */
+  style?: React.CSSProperties;
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -67,6 +70,7 @@ export function Reveal({
       className={`reveal${visible ? " is-visible" : ""}${className ? ` ${className}` : ""}`}
       style={
         {
+          ...style,
           ...(delay ? { "--reveal-delay": `${delay}ms` } : {}),
           ...(shift != null ? { "--reveal-shift": `${shift}px` } : {}),
         } as React.CSSProperties

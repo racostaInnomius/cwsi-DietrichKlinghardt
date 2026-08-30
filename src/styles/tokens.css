@@ -53,6 +53,9 @@
      design. It is a free Google face; swap this one token to --font-display if
      the client prefers Kalice everywhere. */
   --font-serif: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  /* Libre Baskerville: the ordinals of the 5 Levels pyramid (01st–05th) are
+     set in it in the design — 20 nodes, not a pasted mockup. */
+  --font-ordinal: "Libre Baskerville", Georgia, "Times New Roman", serif;
   --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 
   /* Fluid display scale (min → max mirror the Figma sizes) */
