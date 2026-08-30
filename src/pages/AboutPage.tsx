@@ -27,6 +27,9 @@ export function AboutPage() {
       "Trained in Germany and shaped by years of clinical work in India, he built a practice around a single question: not what disease a patient has, but why they became ill — and in what order the answer has to be addressed.",
       "That question became Autonomic Response Testing and the 5 Levels of Healing, taught today to practitioners in more than thirty countries and practised at the Sophia Health Institute.",
     ],
+    // Delivered by the client (was A2/A3). The bio was rendering in a single
+    // column for want of it; a portrait uploaded to the CMS still takes over.
+    image: "/images/klinghardt-portrait.webp",
   });
   const milestones = useRecords(SECTION.aboutTimeline, 3, TIMELINE_FALLBACK);
 

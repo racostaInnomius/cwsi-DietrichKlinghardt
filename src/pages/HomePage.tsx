@@ -72,6 +72,17 @@ export function HomePage() {
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <AnimatedGradient variant="card" intensity="strong" className="hero">
+        {/* Decorative: the headline already names the subject, so an alt text
+            here would only repeat it to a screen reader. */}
+        <img
+          className="hero__photo"
+          src="/images/hero-klinghardt.webp"
+          alt=""
+          width={1300}
+          height={600}
+          fetchPriority="high"
+          decoding="async"
+        />
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Dr. Dietrich Klinghardt™</p>
@@ -146,11 +157,27 @@ export function HomePage() {
       )}
 
       {/* ── A.R.T. ───────────────────────────────────────────────── */}
+      {/* Two columns with the image on the left, the way the design lays it
+          out. The design puts a video thumbnail here; until the film has a host
+          (D15) this is the still — the same frame its play control sits on. */}
       <AnimatedGradient variant="plain" intensity="soft" className="home-art">
         <div className="wrap home-art__inner">
-          <Reveal>
-            <p className="eyebrow">A.R.T. Klinghardt™</p>
+          <Reveal className="home-art__media">
+            <img
+              src="/images/art-klinghardt.webp"
+              alt="Dr. Klinghardt with a patient during an A.R.T. session"
+              width={558}
+              height={457}
+              loading="lazy"
+              decoding="async"
+            />
+          </Reveal>
+          <Reveal className="home-art__body">
+            <p className="eyebrow">Diagnostic method</p>
             <h2>{art.title}</h2>
+            <p className="accent home-art__accent">
+              Autonomic Response Testing<sup className="tm">®</sup>
+            </p>
             {art.paragraphs.map((paragraph) => (
               <p key={paragraph} className="home-art__copy">
                 {paragraph}
@@ -158,7 +185,7 @@ export function HomePage() {
             ))}
             <div className="home-art__actions">
               <Link className="btn btn-light" to="/academy/art">
-                Discover A.R.T.
+                About the course
               </Link>
               <Link className="btn btn-ghost" to="/academy/therapists">
                 Find a therapist

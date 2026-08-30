@@ -60,7 +60,13 @@ export interface Section {
  */
 export function useSection(
   slug: string,
-  fallback: { title?: string; paragraphs?: string[] } = {},
+  /**
+   * `image` takes the same role the other fallbacks do: a picture the client
+   * delivered and that ships with the build, used until the same slot is filled
+   * in the CMS. The CMS still wins when it has one, so uploading a portrait
+   * later replaces this without a code change.
+   */
+  fallback: { title?: string; paragraphs?: string[]; image?: string } = {},
 ): Section {
   const doc = useCollection("page-contents").find((item) => item.slug === slug);
   const paragraphs = doc ? richTextBlocks(doc.body) : [];
@@ -71,7 +77,7 @@ export function useSection(
       (typeof doc?.title === "string" && doc.title.trim()) || fallback.title || "",
     paragraphs: resolved,
     lead: resolved[0] ?? "",
-    image: mediaUrl(doc?.heroImage),
+    image: mediaUrl(doc?.heroImage) ?? fallback.image,
     raw: doc,
   };
 }

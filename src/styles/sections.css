@@ -17,6 +17,26 @@
   margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
 }
+
+/* The panel the client delivered is the design's hero exactly: the gradient
+   with Dr. Klinghardt already composited into the right-hand side.
+   It goes in as an <img> rather than a background because `.gradient-card`
+   sets the `background` shorthand and would reset it — and because a real
+   element can be marked as the LCP candidate and given dimensions.
+   `object-position: right` keeps the copy's half of the panel clear: on narrow
+   screens the portrait is what gets cropped, never the type. `--grad-card`
+   stays underneath, so the panel still has the right colours while the image
+   loads and wherever it cannot cover. */
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  pointer-events: none;
+}
 /* Centred, not bottom-aligned: in the design the copy runs from about a quarter
    to two thirds down the panel — which is exactly the pale-blue stretch of the
    card gradient, and the reason dark type works on it. Pinned to the bottom it
@@ -331,8 +351,26 @@
 .home-art {
   color: var(--on-surface);
 }
+/* Media left, copy right — the design's arrangement. The image keeps a fixed
+   aspect so the two columns stay level, and the whole thing stacks below the
+   breakpoint with the image first, as it reads in the frame. */
 .home-art__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 72px);
   padding-block: var(--section-y);
+}
+.home-art__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 558 / 457;
+  object-fit: cover;
+  border-radius: var(--radius-md, 14px);
+}
+.home-art__accent {
+  margin: -8px 0 18px;
 }
 .home-art h2 {
   max-width: 18ch;
@@ -2268,6 +2306,7 @@
 @media (max-width: 900px) {
   .home-intro__grid,
   .home-teasers,
+  .home-art__inner,
   .event-detail,
   .two-col,
   .about-bio--portrait {

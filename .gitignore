@@ -3,3 +3,9 @@ dist
 .env
 .DS_Store
 *.local
+
+# Masters de vídeo/audio: pesan gigas y no se sirven desde la repo.
+# El original vive aquí para trabajarlo; lo que se publica sale de Mux.
+media-source/
+*.mov
+*.mp4
