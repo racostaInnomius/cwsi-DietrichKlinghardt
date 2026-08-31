@@ -40,6 +40,12 @@
      used wherever gold carries small text (eyebrows, labels, meta). Measured,
      not eyeballed: 4.59 on cream, 5.23 on white. */
   --gold-text: #876731;
+  /* Gold for small text on a TINTED ground — the hero panel's pale blue, where
+     --gold-text only reaches 3.0:1. This is the lightest gold that still clears
+     4.5:1 where the hero eyebrow actually sits (4.64 on the #88acbe it lands
+     on). It reads browner than the brand gold — that is the price of AA on a
+     mid-tone blue, and no lighter gold clears it. */
+  --gold-on-tint: #4d3716;
 
   /* Feedback */
   --error: #ec221f;
@@ -157,7 +163,7 @@
     180deg,
     #023866 0,
     #295b7f 20px,
-    #4d819a 100px,
+    #3d6d85 100px,
     #c0dbde 260px,
     #eef3f3 460px,
     #ffffff 660px,
@@ -179,7 +185,7 @@
     180deg,
     #023866 0%,
     #467496 8%,
-    #9abbc9 28%,
+    #9abbc9 18%,
     #a9cad1 38%,
     #85b9c7 58%,
     #70a7b8 78%,
@@ -189,13 +195,17 @@
   /* The "Join My Weekly Talks" band, sampled across the rendered frame rather
      than guessed: it runs diagonally from a deep teal at the top right, through
      a pale middle, into the warm olive-amber it ends on. */
+  /* Lightened at the top compared with the sampled frame. The design sets its
+     display heading in a gradient over this band, and over the original deep
+     teal that heading measured 1.87:1 — under the 3:1 a display size needs.
+     Raising the first two stops gives the heading ground to sit on while the
+     band keeps its teal-to-warm journey. */
   --grad-card-warm: linear-gradient(
     200deg,
-    #1b6b88 0%,
-    #3a92a5 20%,
-    #a9cad1 45%,
-    #94c0c9 60%,
-    #92a079 88%,
+    #9fc2cd 0%,
+    #9dc3d1 22%,
+    #94c0c9 48%,
+    #a9bfa4 78%,
     #c4b88b 100%
   );
 }
