@@ -181,15 +181,19 @@
      it, lifts to a pale blue about a third of the way down — which is the band
      the heading sits on — settles back into blue, and only turns amber in the
      last stretch. The earlier diagonal teal→green→amber was invented. */
+  /* Same colours as the original sample, at later stops: the client's review
+     of the home hero wants the navy→blue run to hold for longer before the
+     panel warms up, so each transition is pushed back rather than replaced
+     with new hues. First pass, tuned by eye — expect another round. */
   --grad-card: linear-gradient(
     180deg,
     #023866 0%,
-    #467496 8%,
-    #9abbc9 18%,
-    #a9cad1 38%,
-    #85b9c7 58%,
-    #70a7b8 78%,
-    #90a28f 89%,
+    #467496 15%,
+    #9abbc9 30%,
+    #a9cad1 50%,
+    #85b9c7 68%,
+    #70a7b8 82%,
+    #90a28f 92%,
     #cca256 100%
   );
   /* The "Join My Weekly Talks" band, sampled across the rendered frame rather
