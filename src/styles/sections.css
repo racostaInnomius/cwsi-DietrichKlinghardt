@@ -19,12 +19,6 @@
   /* Less rounded than the shared .gradient-card default — the panel sits
      directly under the header, and the design keeps that corner subtle. */
   border-radius: var(--radius-sm);
-  /* Extends the panel's own background up behind the header (which turns
-     transparent there — see .site-header--transparent in shell.css), while
-     the added top padding pushes .hero__inner back down by the same amount
-     so its content lands exactly where it would without this trick. */
-  margin-top: calc(-1 * var(--header-h, 0px));
-  padding-top: var(--header-h, 0px);
 }
 
 /* The panel the client delivered is the design's hero exactly: the gradient
