@@ -2192,6 +2192,16 @@
 .video-frame[data-ratio="1:1"] .video-frame__media {
   aspect-ratio: 1 / 1;
 }
+/* The video fills the box the wrapper already reserved, exactly as the iframe
+   does. `object-fit: cover` keeps the poster framed while it is the only thing
+   painted; without it the poster letterboxes inside the 16:9 box. */
+.video-frame video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  background: var(--brand);
+}
 .video-frame iframe {
   width: 100%;
   height: 100%;

@@ -23,18 +23,28 @@ export function SelfHostedVideo({
 }) {
   return (
     <figure className="video-frame video-frame--self">
-      <video
-        className="video-frame__media"
-        controls
-        preload="none"
-        poster={poster}
-        playsInline
-        title={title}
-      >
-        <source src={src} type="video/mp4" />
-        Your browser cannot play this video.{" "}
-        <a href={src}>Download it instead</a>.
-      </video>
+      {/* The box is the WRAPPER's, not the video's.
+          A <video> is a replaced element: with no width of its own it falls
+          back to its intrinsic size — 300×150 until the metadata arrives, and
+          `preload="none"` means that is not until someone presses play. Putting
+          the aspect ratio on the video therefore only shrank it to 300×169, and
+          it jumped to full size mid-playback. The wrapper reserves the space
+          from first paint and the video simply fills it. */}
+      <div className="video-frame__media">
+        <video
+          controls
+          preload="none"
+          poster={poster}
+          playsInline
+          title={title}
+          width={1920}
+          height={1080}
+        >
+          <source src={src} type="video/mp4" />
+          Your browser cannot play this video.{" "}
+          <a href={src}>Download it instead</a>.
+        </video>
+      </div>
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );
