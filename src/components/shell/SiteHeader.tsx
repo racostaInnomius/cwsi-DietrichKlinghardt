@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, type NavItem } from "./navigation";
 import { CartButton } from "./CartButton";
@@ -37,6 +37,36 @@ export function SiteHeader() {
   const headerRef = useRef<HTMLElement | null>(null);
   const menuId = useId();
 
+  // Publishes the header's real rendered height as --header-h, which .hero
+  // (sections.css) reads to extend its own background up behind the header —
+  // measured rather than guessed because the nav wraps to a second line at
+  // some widths, changing the header's height.
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const publish = () => {
+      document.documentElement.style.setProperty("--header-h", `${el.offsetHeight}px`);
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // The home hero panel opens on the same navy as the header, so the header
+  // stays transparent until the page scrolls past it — everywhere else, and
+  // once scrolled, it keeps its normal solid background.
+  const isHome = pathname === "/";
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
+  const isTransparent = isHome && !isScrolled;
+
   // Any navigation closes everything — otherwise a dropdown survives the route
   // change and hangs over the new page.
   useEffect(() => {
@@ -67,7 +97,10 @@ export function SiteHeader() {
   }, [openMenu, mobileOpen]);
 
   return (
-    <header className="site-header" ref={headerRef}>
+    <header
+      className={`site-header${isTransparent ? " site-header--transparent" : ""}`}
+      ref={headerRef}
+    >
       <Link className="site-header__brand" to="/" aria-label="Dietrich Klinghardt, home">
         <span>Dietrich</span>
         <span>

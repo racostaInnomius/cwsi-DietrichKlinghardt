@@ -95,6 +95,13 @@
   padding: 14px var(--gutter);
   background: var(--brand);
   color: var(--brand-ink);
+  transition: background var(--dur-fast) var(--ease);
+}
+/* Home only, above the fold: the hero panel behind it opens on the same navy
+   (see .hero in sections.css, which extends its own background up under this
+   bar), so there is nothing this bar needs to paint until the page scrolls. */
+.site-header--transparent {
+  background: transparent;
 }
 
 .site-header__brand {
