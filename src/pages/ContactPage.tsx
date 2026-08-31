@@ -6,11 +6,18 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 
 /** label | email | what this address is for */
+/**
+ * The four contact routes, transcribed from the Figma frame `0:5829`.
+ *
+ * The labels AND the addresses are the design's. Both had been invented here —
+ * which matters more for the addresses than for the wording: mail sent to an
+ * address nobody owns simply disappears.
+ */
 const CARDS_FALLBACK: string[][] = [
-  ["General enquiries", "info@dietrich-klinghardt.com", "Questions about the site, the newsletter and everything that has no better home."],
-  ["Seminars & academy", "academy@dietrich-klinghardt.com", "Registration, certification and questions about the training path."],
-  ["Sophia Health Institute", "patients@sophiahi.com", "Appointments, patient coordination and travel questions."],
-  ["Press & speaking", "press@dietrich-klinghardt.com", "Interviews, conference invitations and media requests."],
+  ["General Inquiries", "hello@dietrich-klinghardt.com", "Questions about Dr. Klinghardt's work, website, publications, or educational resources."],
+  ["Media & Press", "media@dietrich-klinghardt.com", "Interviews, press inquiries, podcasts, documentaries, and media opportunities."],
+  ["Speaking & Events", "speaking@dietrich-klinghardt.com", "Conference invitations, lectures, professional seminars, and educational appearances."],
+  ["Dr. Klinghardt Foundation", "foundation@dietrich-klinghardt.com", "Educational initiatives, archival projects, partnerships, and future programs."],
 ];
 
 /**
@@ -66,6 +73,17 @@ export function ContactPage() {
             </Reveal>
           ))}
         </ul>
+
+        {/* The frame carries this warning under the four cards, and it is the
+            kind of line a medical site cannot quietly drop. */}
+        <Reveal className="contact-note" delay={220}>
+          <p>
+            <strong>Please note:</strong> do not send private medical records,
+            test results or urgent healthcare requests through these email
+            addresses. This website does not provide individualised medical
+            advice, and messages are not monitored for medical emergencies.
+          </p>
+        </Reveal>
       </section>
 
       {active ? <ContactDialog card={active} onClose={() => setActive(null)} /> : null}

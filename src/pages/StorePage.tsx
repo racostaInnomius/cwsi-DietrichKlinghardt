@@ -8,7 +8,7 @@ import {
   useStoreProducts,
 } from "@/lib/store";
 import { useCart } from "@/lib/cart";
-import { useSection } from "@/lib/sections";
+import { useSection, useRecords } from "@/lib/sections";
 import { money } from "@/lib/format";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -32,6 +32,7 @@ export function StorePage() {
   const featured = useMemo(() => featuredProducts(products), [products]);
   const categories = useMemo(() => usedCategories(products), [products]);
   const [category, setCategory] = useState("");
+  const month = useRecords("store-picks-month", 1, [])[0]?.[0] ?? "";
 
   const visible = category
     ? products.filter((product) => product.categoryKey === category)

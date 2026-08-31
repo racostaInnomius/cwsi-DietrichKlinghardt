@@ -3014,3 +3014,70 @@
     gap: 6px;
   }
 }
+
+/* The medical warning under the contact cards. Set apart rather than styled as
+   body copy: it limits what these addresses are for, and a reader skimming the
+   four cards has to meet it. */
+.contact-note {
+  max-width: 78ch;
+  margin: clamp(28px, 3.4vw, 44px) auto 0;
+  padding: clamp(16px, 2vw, 22px) clamp(18px, 2.2vw, 26px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+}
+.contact-note p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+
+/* The month beneath the picks heading. */
+.store-month {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-sm);
+  color: var(--brand);
+}
+.store__lead {
+  margin-top: 12px;
+}
+
+/* Discography listed rather than sold, while the CMS has no products for it. */
+.record-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.record-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: clamp(16px, 2vw, 24px);
+  border-bottom: 1px solid var(--line);
+}
+.record-line:last-child {
+  border-bottom: 0;
+}
+.record-line h3 {
+  margin-bottom: 4px;
+  font-size: var(--fs-lead);
+  font-family: var(--font-serif);
+  color: var(--on-surface);
+}
+.record-line__credits {
+  margin: 0;
+  max-width: 64ch;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.record-line__format {
+  flex: none;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}

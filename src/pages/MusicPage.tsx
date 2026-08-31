@@ -11,6 +11,21 @@ import { MusicPlayer } from "@/components/MusicPlayer";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /** label | url */
+/**
+ * The three albums the frame lists, with the credits it gives each one.
+ *
+ * They stand in only while the CMS has no `digital-products` for them. Note
+ * what is deliberately NOT carried over: the frame shows a price and an "Add"
+ * button beside each, and printing a price next to nothing that can take money
+ * would be a promise the site cannot keep. Title, format and credits are the
+ * parts that are true today. `title | format | credits`
+ */
+const DISCOGRAPHY_FALLBACK: string[][] = [
+  ["Just the way I am", "CD", "Guitar: Jürgen Schröder · Djembe: Stefan Bretscher · Choir: PK IV, Wildhaus/Schweiz"],
+  ["Depths and Heights", "CD", "Dietrich Klinghardt & Jürgen Schröder — live mit den ART-Artists & Melanie"],
+  ["Unplugged", "CD", "Guitar: Jürgen Schröder · Percussion: Jürgen Bayer · Choir: PK IV, St. Oswald 2010"],
+];
+
 const LINKS_FALLBACK: string[][] = [
   ["SoundCloud", "https://soundcloud.com/dr-dietrich-klinghardt"],
 ];
@@ -41,6 +56,8 @@ export function MusicPage() {
 
   // Recordings sold as digital products — the discography. F6 moves these into
   // the cart; until then each one links straight to its own Stripe link.
+  const albums = useRecords("music-discography", 3, DISCOGRAPHY_FALLBACK);
+
   const records = useCollection("digital-products").filter(
     (product) => product.status === "active" && Boolean(product.accessTrack),
   );
@@ -89,12 +106,18 @@ export function MusicPage() {
         </section>
       )}
 
-      {records.length ? (
-        <section className="section wrap">
-          <Reveal>
-            <p className="eyebrow">Discography</p>
-            <h2 className="section-title">Take the recordings with you</h2>
-          </Reveal>
+      <section className="section wrap">
+        <Reveal>
+          <p className="eyebrow">Recordings</p>
+          <h2 className="section-title">Discography</h2>
+          <p className="lead">
+            All recordings are available as high-quality digital downloads.
+            Proceeds support the ongoing research work of the Klinghardt
+            Foundation.
+          </p>
+        </Reveal>
+
+        {records.length ? (
           <ul className="record-grid">
             {records.map((record, index) => {
               const href = checkoutHref(record.checkoutUrl);
@@ -126,8 +149,23 @@ export function MusicPage() {
               );
             })}
           </ul>
-        </section>
-      ) : null}
+        ) : (
+          /* No products in the CMS yet, so the albums are listed as the frame
+             names them — without the price and the Add button, which would
+             otherwise offer something the site cannot sell. */
+          <ul className="record-list">
+            {albums.map(([title, format, credits], index) => (
+              <Reveal as="li" key={title} className="record-line" delay={index * 70}>
+                <div>
+                  <h3>{title}</h3>
+                  <p className="record-line__credits">{credits}</p>
+                </div>
+                <span className="record-line__format">{format}</span>
+              </Reveal>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <NewsletterSection />
     </>
