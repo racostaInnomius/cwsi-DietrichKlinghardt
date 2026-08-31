@@ -2,6 +2,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, type NavItem } from "./navigation";
 import { CartButton } from "./CartButton";
+import { FacebookIcon, InstagramIcon, TelegramIcon } from "@/components/Icons";
+import { env } from "@/lib/env";
 
 // Hash-anchor children (e.g. "/sophia#chronic-illness") share a pathname with
 // their parent page and several siblings, so pathname alone can't tell which
@@ -144,6 +146,17 @@ export function SiteHeader() {
         <Link className="btn btn-light site-header__cta" to="/contact">
           Contact us
         </Link>
+        <div className="site-header__social">
+          <a href={env.INSTAGRAM_URL} aria-label="Instagram">
+            <InstagramIcon />
+          </a>
+          <a href={env.FACEBOOK_URL} aria-label="Facebook">
+            <FacebookIcon />
+          </a>
+          <a href={env.TELEGRAM_URL} aria-label="Telegram">
+            <TelegramIcon />
+          </a>
+        </div>
         <CartButton />
         <button
           type="button"

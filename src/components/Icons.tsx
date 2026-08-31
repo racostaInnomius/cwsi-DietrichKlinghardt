@@ -6,6 +6,14 @@ export function InstagramIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle className="fill" cx="17.5" cy="6.8" r="1" /></svg>;
 }
 
+export function FacebookIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M13.5 21v-7h2.2l.3-2.6h-2.5V9.7c0-.8.2-1.3 1.3-1.3h1.4V6.1C15.9 6 15 6 14 6c-2.1 0-3.5 1.3-3.5 3.6v2h-2.3v2.6h2.3V21" /></svg>;
+}
+
+export function TelegramIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2Z" /></svg>;
+}
+
 export function MenuIcon() {
   return <svg viewBox="0 0 28 18" aria-hidden="true"><path d="M1 1h26M1 9h26M1 17h26" /></svg>;
 }

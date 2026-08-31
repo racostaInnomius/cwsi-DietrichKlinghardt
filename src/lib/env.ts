@@ -28,4 +28,7 @@ export const env = {
   CONTACT_URL: value("VITE_PUBLIC_CONTACT_URL", "#newsletter"),
   VIMEO_URL: value("VITE_PUBLIC_VIMEO_URL", "#newsletter"),
   INSTAGRAM_URL: value("VITE_PUBLIC_INSTAGRAM_URL", "#newsletter"),
+  // No profile yet — placeholders until the client shares the real links.
+  FACEBOOK_URL: value("VITE_PUBLIC_FACEBOOK_URL", "#newsletter"),
+  TELEGRAM_URL: value("VITE_PUBLIC_TELEGRAM_URL", "#newsletter"),
 };

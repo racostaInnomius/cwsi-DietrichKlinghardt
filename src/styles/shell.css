@@ -224,6 +224,31 @@
   font-size: 11px;
 }
 
+.site-header__social {
+  display: flex;
+  gap: 8px;
+}
+.site-header__social a {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  transition: background var(--dur-fast) var(--ease);
+}
+.site-header__social a:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.site-header__social svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
 .cart-button {
   position: relative;
   display: grid;
