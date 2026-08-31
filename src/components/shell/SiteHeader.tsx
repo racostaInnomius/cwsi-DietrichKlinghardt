@@ -101,6 +101,9 @@ export function SiteHeader() {
                     aria-current={isCurrent ? "page" : undefined}
                   >
                     <Label item={item} />
+                    {item.sublabel ? (
+                      <span className="site-nav__sublabel">{item.sublabel}</span>
+                    ) : null}
                   </Link>
                   {hasChildren ? (
                     <button

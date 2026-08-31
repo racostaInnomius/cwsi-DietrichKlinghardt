@@ -61,7 +61,7 @@
 .hero h1 {
   max-width: 16ch;
   margin-bottom: 24px;
-  color: var(--brand);
+  color: var(--ink);
 }
 /* Ink, not muted: the panel is a mid blue here, where `--muted` falls to
    2.57:1 while ink clears 6:1 — and dark type is what the design puts on this

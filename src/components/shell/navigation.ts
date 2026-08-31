@@ -15,6 +15,8 @@ export interface NavItem {
   href: string;
   /** Present on trademarked names so the shell can render the mark small+raised. */
   mark?: "™" | "®";
+  /** Small second line under the label — only the Sophia item carries one. */
+  sublabel?: string;
   children?: NavItem[];
   theme?: Brand;
 }
@@ -23,6 +25,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "About", href: "/about" },
   {
     label: "Sophia Health Institute",
+    sublabel: "by Dr. Klinghardt™",
     href: "/sophia",
     mark: "™",
     theme: "sophia",

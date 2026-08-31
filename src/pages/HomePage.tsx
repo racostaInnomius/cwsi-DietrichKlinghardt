@@ -23,12 +23,6 @@ import { NewsletterSection } from "@/components/sections/NewsletterSection";
  * none rather than showing an empty shelf.
  */
 export function HomePage() {
-  const hero = useSection(SECTION.homeHero, {
-    title: "Healing Beyond Symptoms",
-    paragraphs: [
-      "For over forty years, Dr. Dietrich Klinghardt has asked the question most medicine skips: not what disease you have, but why you became ill.",
-    ],
-  });
   const intro = useSection(SECTION.homeIntro, {
     title: "An Innovator in Medicine",
     paragraphs: [
@@ -101,7 +95,6 @@ export function HomePage() {
               Healing Beyond{" "}
               <RotatingWord words={["Symptoms", "Diagnosis", "Labels"]} />
             </h1>
-            <p className="hero__lead">{hero.lead}</p>
             <div className="hero__actions">
               <Link className="btn btn-light" to="/about">
                 Learn more

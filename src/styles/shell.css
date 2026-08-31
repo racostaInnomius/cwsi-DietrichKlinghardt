@@ -149,6 +149,13 @@
 .site-nav__link[aria-current="page"] {
   box-shadow: inset 0 -1px 0 currentColor;
 }
+.site-nav__sublabel {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
 
 .site-nav__toggle {
   display: grid;
