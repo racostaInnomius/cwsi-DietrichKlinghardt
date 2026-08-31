@@ -82,7 +82,7 @@ export function NewPatientsPage() {
         path="/sophia/new-patients"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Sophia", href: "/sophia" }, { label: "New patients" }]}
@@ -90,7 +90,7 @@ export function NewPatientsPage() {
           <Reveal>
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
-            <div className="page-hero__actions page-hero__actions--center">
+            <div className="page-hero__actions">
               <a className="btn btn-light" href="#contact">
                 Contact us
               </a>
