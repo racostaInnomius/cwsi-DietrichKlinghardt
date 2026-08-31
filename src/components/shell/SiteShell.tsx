@@ -56,7 +56,9 @@ export function SiteShell({
 
       <SiteHeader />
 
-      <main id="main-content">{children}</main>
+      <main id="main-content" className={pathname === "/" ? "main-home" : undefined}>
+        {children}
+      </main>
 
       <SiteFooter />
     </div>

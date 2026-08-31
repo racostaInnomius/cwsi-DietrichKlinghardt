@@ -30,6 +30,13 @@
   isolation: isolate;
   background: var(--grad-page-full);
 }
+/* Home only — see --grad-page-home in tokens.css for why. */
+.site-shell > main.main-home {
+  background: var(--grad-page-home, var(--grad-page-full));
+}
+.site-shell > main.main-home::before {
+  background: var(--grad-page-home, var(--grad-page-full));
+}
 
 /* The designer asked for a background that moves (ref. newgenre.studio). It
    drifts once, for the page, instead of once per section: an oversized copy of

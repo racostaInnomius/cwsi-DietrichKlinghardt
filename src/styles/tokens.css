@@ -172,6 +172,26 @@
     #f79b09 100%
   );
 
+  /* Home only. Same colours and the same 260px+ anchors as --grad-page-full
+     (so the white body band that D13's contrast fixes depend on doesn't
+     move); only the first two stops are
+     pushed later, because the header paints flat for ~93px and then this
+     curve was already a third of the way through its navy→blue journey by
+     the time it reappears beside the hero — that mismatched pace is the
+     "jump" flagged against the live site, not a wrong colour. */
+  --grad-page-home: linear-gradient(
+    180deg,
+    #023866 0,
+    #295b7f 70px,
+    #3d6d85 180px,
+    #c0dbde 260px,
+    #eef3f3 460px,
+    #ffffff 660px,
+    #ffffff calc(100% - 520px),
+    #eaaa58 calc(100% - 120px),
+    #f79b09 100%
+  );
+
   /* Inset gradient CARDS — the only gradients the design paints inside a page:
      the home hero panel and the "Join My Weekly Talks" band. Both are rounded
      boxes with margins sitting on the page gradient.
