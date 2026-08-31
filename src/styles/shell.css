@@ -200,7 +200,8 @@
   font-size: var(--fs-xs);
   transition: background var(--dur-fast) var(--ease);
 }
-.site-nav__menu a:hover {
+.site-nav__menu a:hover,
+.site-nav__menu a[aria-current="page"] {
   background: var(--cream-2);
 }
 
@@ -474,7 +475,8 @@
     color: var(--brand-ink);
     opacity: 0.86;
   }
-  .site-nav__menu a:hover {
+  .site-nav__menu a:hover,
+  .site-nav__menu a[aria-current="page"] {
     background: rgba(255, 255, 255, 0.1);
   }
 

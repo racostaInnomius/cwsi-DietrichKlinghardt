@@ -3,6 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, type NavItem } from "./navigation";
 import { CartButton } from "./CartButton";
 
+// Hash-anchor children (e.g. "/sophia#chronic-illness") share a pathname with
+// their parent page and several siblings, so pathname alone can't tell which
+// section is "current" — only real routed children get the highlight.
+function isChildCurrent(pathname: string, href: string): boolean {
+  if (href.includes("#")) return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 /** Trademark marks render small and raised everywhere in the brand. */
 function Label({ item }: { item: NavItem }) {
   return (
@@ -113,7 +121,10 @@ export function SiteHeader() {
                   <ul className={`site-nav__menu${isOpen ? " is-open" : ""}`}>
                     {item.children!.map((child) => (
                       <li key={child.href}>
-                        <Link to={child.href}>
+                        <Link
+                          to={child.href}
+                          aria-current={isChildCurrent(pathname, child.href) ? "page" : undefined}
+                        >
                           <Label item={child} />
                         </Link>
                       </li>
