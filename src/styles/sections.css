@@ -2965,3 +2965,52 @@
   line-height: 1.2;
   color: var(--brand);
 }
+
+/* ── About: labelled chapters + the four-field timeline ───────────
+   The frame states the biography as four short chapters with a label beside
+   each, rather than as running prose, and gives every timeline entry an era, a
+   context line and a title before the body. */
+.chapters {
+  display: grid;
+  gap: clamp(22px, 2.6vw, 34px);
+}
+.chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 140px) minmax(0, 1fr);
+  gap: clamp(14px, 2vw, 28px);
+  align-items: start;
+}
+.chapter__label {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-lead);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--brand-text);
+}
+.chapter p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.timeline__era {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.timeline__context {
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.about__lead {
+  margin-top: 18px;
+}
+
+@media (max-width: 720px) {
+  .chapter {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+}

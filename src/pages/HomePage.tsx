@@ -43,13 +43,15 @@ export function HomePage() {
     ],
   });
   const art = useSection(SECTION.homeArt, {
-    title: "Autonomic Response Testing",
+    // The frame's own heading. "Autonomic Response Testing" is the line the
+    // design sets underneath it, in Fraunces — not the heading itself.
+    title: "A.R.T. Klinghardt™",
     paragraphs: [
       "A.R.T. is a diagnostic method that reads the body's own regulation to find what is driving illness — infections, toxicity, unresolved trauma — and in which order it must be addressed.",
     ],
   });
   const shop = useSection(SECTION.homeShop, {
-    title: "Explore the Klinghardt Store",
+    title: "Explore the Shop",
     paragraphs: [
       "Books, work materials, testing kits and professional resources, curated by Dr. Klinghardt.",
     ],

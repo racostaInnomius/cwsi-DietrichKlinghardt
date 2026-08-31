@@ -1,4 +1,5 @@
 import { Seo } from "@/components/Seo";
+import { Link } from "react-router-dom";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { mediaUrl } from "@/lib/cms";
@@ -6,6 +7,7 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
+import { CtaBand } from "@/components/sections/CtaBand";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
@@ -78,6 +80,21 @@ export function SophiaTeamPage() {
           </p>
         )}
       </section>
+
+      <CtaBand
+        title={
+          <>
+            Stop Wondering.
+            <br />
+            Start Finding Answers.
+          </>
+        }
+        body="The Sophia Health Institute by Dr. Klinghardt™ team is ready to help you. Before you become a patient, it is natural to have questions — our patient coordinator would be happy to answer them."
+      >
+        <Link className="btn btn-light" to="/sophia/new-patients">
+          Become a new patient
+        </Link>
+      </CtaBand>
 
       <NewsletterSection />
     </>

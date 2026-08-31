@@ -17,6 +17,7 @@ import type { ContentDoc } from "@/data/demo";
 export const SECTION = {
   announcement: "announcement",
 
+  aboutChapters: "about-chapters",
   aboutTimeline: "about-timeline",
   contactCards: "contact-cards",
   fiveLevelsList: "five-levels-list",
