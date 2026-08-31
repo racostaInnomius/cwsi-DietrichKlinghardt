@@ -16,6 +16,9 @@
 .hero {
   margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
+  /* Less rounded than the shared .gradient-card default — the panel sits
+     directly under the header, and the design keeps that corner subtle. */
+  border-radius: var(--radius-sm);
 }
 
 /* The panel the client delivered is the design's hero exactly: the gradient
