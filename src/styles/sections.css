@@ -2711,9 +2711,8 @@
 }
 .stat {
   padding: clamp(18px, 2.2vw, 28px);
-  border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  background: var(--brand-soft);
 }
 .stat__value {
   margin: 0 0 6px;
