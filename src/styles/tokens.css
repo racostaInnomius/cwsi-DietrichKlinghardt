@@ -116,6 +116,10 @@
      token exists so Sophia can substitute its darker teal without every
      component knowing which theme it is in. Same idea as --gold-text. */
   --brand-text: var(--brand);
+  /* The header's own background, tuned by the client directly in devtools
+     (2026-08-31) so it eases toward the page gradient below it instead of
+     cutting to a flat colour. */
+  --grad-header: linear-gradient(180deg, #023866 0%, #4f7896 100%);
 
   --surface: var(--cream);
   --surface-2: var(--white);
@@ -246,6 +250,9 @@
   /* #0d858d measures 4.06:1 on white — under AA for anything below 24px. The
      darker ramp step clears it, so small teal text uses that instead. */
   --brand-text: var(--brand-3);
+  /* Same lightening step as the DK header gradient (+77/+64/+48 per
+     channel), applied to Sophia's teal instead of hardcoding DK's navy. */
+  --grad-header: linear-gradient(180deg, #0d858d 0%, #5ac5bd 100%);
 
   --surface: var(--brand-soft-2);
   --surface-2: var(--white);
