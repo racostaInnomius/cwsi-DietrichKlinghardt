@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
@@ -24,10 +25,9 @@ import { NewsletterSection } from "@/components/sections/NewsletterSection";
  */
 export function HomePage() {
   const intro = useSection(SECTION.homeIntro, {
-    title: "An Innovator in Medicine",
+    title: "Dr. Klinghardt Academy™",
     paragraphs: [
-      "Physician, teacher and researcher, Dr. Klinghardt has spent his career at the meeting point of neurobiology, toxicology and the psychology of illness — building a body of work that treats the person, not the diagnosis.",
-      "His Autonomic Response Testing (A.R.T.) and the 5 Levels of Healing are taught today by practitioners in more than thirty countries.",
+      "Training programmes and certifications for practitioners who want to bring Autonomic Response Testing and the 5 Levels of Healing into their own practice — taught by Dr. Klinghardt and the team he has trained worldwide.",
     ],
   });
   const eventsCopy = useSection(SECTION.homeEvents, {
@@ -57,8 +57,9 @@ export function HomePage() {
     ],
   });
 
-  const { upcoming } = splitByTime(useCollection("events"));
-  const featured = upcoming.slice(0, 3);
+  const { upcoming, past } = splitByTime(useCollection("events"));
+  const [eventsTab, setEventsTab] = useState<"upcoming" | "past">("upcoming");
+  const featured = (eventsTab === "upcoming" ? upcoming : past).slice(0, 3);
 
   // The shop strip shows the month's picks, the same ones the store leads with,
   // and falls back to the whole catalogue when nothing is ranked yet.
@@ -107,23 +108,22 @@ export function HomePage() {
         </div>
       </AnimatedGradient>
 
-      {/* ── Intro ────────────────────────────────────────────────── */}
-      <section className="section wrap home-intro">
-        <Reveal className="home-intro__grid">
-          <div>
-            <p className="eyebrow">About</p>
+      {/* ── Academy teaser ───────────────────────────────────────── */}
+      <AnimatedGradient variant="plain" className="home-academy">
+        <div className="wrap home-academy__inner">
+          <Reveal>
             <h2>{intro.title}</h2>
-          </div>
-          <div className="prose">
             {intro.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+              <p key={paragraph} className="home-academy__copy">
+                {paragraph}
+              </p>
             ))}
-            <Link className="arrow-link" to="/about">
-              Read his story <span aria-hidden="true">↗</span>
+            <Link className="btn btn-ghost" to="/academy">
+              Learn more
             </Link>
-          </div>
-        </Reveal>
-      </section>
+          </Reveal>
+        </div>
+      </AnimatedGradient>
 
       {/* ── Quote ────────────────────────────────────────────────── */}
       <section className="section home-quote">
@@ -140,7 +140,7 @@ export function HomePage() {
       </section>
 
       {/* ── Upcoming events ──────────────────────────────────────── */}
-      {featured.length > 0 && (
+      {(upcoming.length > 0 || past.length > 0) && (
         <section className="section wrap home-events">
           <SectionHeading
             eyebrow="Events & webinars"
@@ -148,15 +148,45 @@ export function HomePage() {
             lead={eventsCopy.lead}
             link={{ label: "All events", to: "/events" }}
           />
-          <ul className="event-list">
-            {featured.map((event, index) => (
-              <EventRow
-                key={String(event.id ?? index)}
-                event={event}
-                delay={index * 90}
-              />
-            ))}
-          </ul>
+
+          <div className="tabs" role="tablist" aria-label="Event dates">
+            <button
+              type="button"
+              role="tab"
+              className="tab"
+              aria-selected={eventsTab === "upcoming"}
+              onClick={() => setEventsTab("upcoming")}
+            >
+              Upcoming <span>{upcoming.length}</span>
+            </button>
+            <button
+              type="button"
+              role="tab"
+              className="tab"
+              aria-selected={eventsTab === "past"}
+              onClick={() => setEventsTab("past")}
+            >
+              Past <span>{past.length}</span>
+            </button>
+          </div>
+
+          {featured.length ? (
+            <ul className="event-list">
+              {featured.map((event, index) => (
+                <EventRow
+                  key={String(event.id ?? index)}
+                  event={event}
+                  delay={index * 90}
+                />
+              ))}
+            </ul>
+          ) : (
+            <p className="empty-note">
+              {eventsTab === "upcoming"
+                ? "New dates are being confirmed. Join the newsletter below and you’ll hear first."
+                : "No past events are archived yet."}
+            </p>
+          )}
         </section>
       )}
 
@@ -200,7 +230,7 @@ export function HomePage() {
       </AnimatedGradient>
 
       {/* ── The clinic ───────────────────────────────────────────── */}
-      <section className="section wrap feature-row feature-row--right">
+      <section className="section wrap feature-row feature-row--right" id="our-clinic">
         <Reveal className="feature-row__media">
           <img
             src="/images/sophia-clinic.webp"
@@ -222,11 +252,11 @@ export function HomePage() {
             spiritual well-being.
           </p>
           <div className="feature-row__actions">
-            <Link className="btn btn-light" to="/sophia">
+            <Link className="btn btn-ghost" to="/sophia">
               Learn more
             </Link>
-            <Link className="btn btn-ghost" to="/sophia/new-patients">
-              New patients
+            <Link className="btn btn-primary" to="/sophia/new-patients">
+              New patients <span aria-hidden="true">→</span>
             </Link>
           </div>
         </Reveal>
