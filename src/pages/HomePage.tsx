@@ -118,7 +118,7 @@ export function HomePage() {
                 {paragraph}
               </p>
             ))}
-            <Link className="btn btn-ghost" to="/academy">
+            <Link className="btn btn-outline" to="/academy">
               Learn more
             </Link>
           </Reveal>

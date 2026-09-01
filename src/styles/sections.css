@@ -114,36 +114,31 @@
   margin-top: 6px;
 }
 
-/* Dark card teasing the Academy, replacing the old bio intro on this slot —
-   same margin/radius as .hero, but its own flat two-stop navy gradient
-   rather than --grad-card: that token's stops are percentages, so on a
-   short card the full navy→amber journey compresses into a visible amber
-   band at the bottom instead of the gentle drift it gives the tall hero. */
-.home-academy {
-  margin: 0 clamp(12px, 2.2vw, 34px);
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, #023866 0%, #18476f 100%);
-}
+/* Academy teaser, replacing the old bio intro on this slot. No card, no
+   background of its own — plain like every other section on the page, on
+   the shared page gradient (already near-white by the time it clears the
+   hero). Title and paragraph share one serif, body-weight treatment so they
+   read as one flowing block of text rather than a heading over a
+   paragraph, matching the reference. */
 .home-academy__inner {
   max-width: 640px;
   margin-inline: auto;
-  padding-block: clamp(56px, 8vw, 96px);
+  padding-block: clamp(48px, 7vw, 88px);
   text-align: center;
-  color: var(--white);
+}
+.home-academy h2,
+.home-academy__copy {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--ink);
 }
 .home-academy h2 {
-  color: var(--white);
+  margin: 0;
 }
 .home-academy__copy {
-  margin: 18px 0 28px;
-  color: rgba(255, 255, 255, 0.85);
-}
-.home-academy .btn-ghost {
-  border-color: rgba(255, 255, 255, 0.7);
-  color: var(--white);
-}
-.home-academy .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.14);
+  margin: 0 0 28px;
 }
 
 .home-quote {
