@@ -2743,6 +2743,12 @@
   border-radius: var(--radius);
   background: var(--surface-2);
 }
+/* .card only exists on the Sophia pages today, so this covers every usage
+   (Six Pillars, therapies, New Patients' approach/steps, etc.) — same border
+   tone as .pill rather than the neutral --line default above. */
+[data-theme="sophia"] .card {
+  border-color: color-mix(in srgb, var(--brand-text) 40%, transparent);
+}
 /* Optional — only the Sophia pillar/therapy cards use it. Absent elsewhere,
    .card h3's own margin-bottom is all the spacing a plain card needs. */
 .card__icon {
