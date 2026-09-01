@@ -2652,13 +2652,13 @@
   background:
     linear-gradient(
       0deg,
-      color-mix(in srgb, var(--brand-3) 55%, transparent) 0%,
-      transparent 40%
+      color-mix(in srgb, var(--brand-3) 72%, transparent) 0%,
+      transparent 45%
     ),
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--brand-3) 70%, transparent) 0%,
-      color-mix(in srgb, #1cb0b5 62%, transparent) 100%
+      color-mix(in srgb, var(--brand-3) 88%, transparent) 0%,
+      color-mix(in srgb, #1cb0b5 82%, transparent) 100%
     );
 }
 .sophia-hero__inner {
