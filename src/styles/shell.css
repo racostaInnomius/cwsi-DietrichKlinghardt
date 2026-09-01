@@ -103,6 +103,12 @@
   background: var(--grad-header);
   color: var(--brand-ink);
 }
+/* Home and the Sophia pages keep the flat brand colour — the gradient
+   header is only for the rest of the site. */
+.site-header--home,
+[data-theme="sophia"] .site-header {
+  background: var(--brand);
+}
 
 .site-header__brand {
   display: inline-flex;

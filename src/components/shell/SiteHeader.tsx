@@ -69,7 +69,10 @@ export function SiteHeader() {
   }, [openMenu, mobileOpen]);
 
   return (
-    <header className="site-header" ref={headerRef}>
+    <header
+      className={`site-header${pathname === "/" ? " site-header--home" : ""}`}
+      ref={headerRef}
+    >
       <Link className="site-header__brand" to="/" aria-label="Dietrich Klinghardt, home">
         <span>Dietrich</span>
         <span>
