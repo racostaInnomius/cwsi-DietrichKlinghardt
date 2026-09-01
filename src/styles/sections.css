@@ -120,10 +120,11 @@
    hero). Title and paragraph share one serif, body-weight treatment so they
    read as one flowing block of text rather than a heading over a
    paragraph, matching the reference. */
-/* Same horizontal margin as .hero (not .wrap's narrower, centred gutter) so
-   this section's left edge lines up with the hero panel above it. */
+/* Pull this text block farther in than the hero, matching the wide inset in
+   the reference. The shared gutter reaches 96px on desktop and contracts on
+   smaller screens instead of locking the section to a fixed 105px margin. */
 .home-academy__inner {
-  margin: 0 clamp(12px, 2.2vw, 34px);
+  margin: 0 var(--gutter);
   padding-block: clamp(48px, 7vw, 88px);
 }
 .home-academy h2,
@@ -142,7 +143,7 @@
   margin: 0 0 28px;
 }
 .home-academy .btn {
-  display: block;
+  display: flex;
   width: fit-content;
   margin-inline: auto;
 }
@@ -448,8 +449,8 @@
 .home-art__actions .btn {
   align-items: center;
   justify-content: center;
-  min-height: 38px;
-  padding: 0 18px;
+  min-height: 50px;
+  padding: 0 25px;
   line-height: 1;
 }
 
