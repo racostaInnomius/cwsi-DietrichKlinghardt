@@ -2623,7 +2623,9 @@
   overflow: hidden;
   margin: 0 clamp(12px, 2.2vw, 34px);
   border-radius: var(--radius-sm);
-  min-height: min(42vh, 400px);
+  /* Same figure as the home hero's .hero__inner, for size parity between
+     the two photographed heroes on the site. */
+  min-height: min(64vh, 600px);
   display: flex;
 }
 .sophia-hero__photo {
@@ -2650,7 +2652,9 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding-block: clamp(32px, 5vw, 56px);
+  /* Matches .hero__inner (home) for the same reason as .sophia-hero's
+     min-height above. */
+  padding-block: clamp(64px, 9vw, 128px);
   text-align: center;
 }
 .sophia-hero__content {
