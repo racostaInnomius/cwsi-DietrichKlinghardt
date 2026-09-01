@@ -87,7 +87,6 @@ export function AboutPage() {
     paragraphs: [
       "Dietrich Klinghardt MD PhD™ is a physician, educator, author and internationally recognised voice in biological and integrative medicine. For more than four decades his clinical work has focused on understanding the complex relationships among the nervous system, immune system, environmental influences, chronic infections, unresolved trauma and human health.",
     ],
-    image: "/images/klinghardt-portrait.webp",
   });
 
   const chapters = useRecords(SECTION.aboutChapters, 2, CHAPTERS_FALLBACK);
