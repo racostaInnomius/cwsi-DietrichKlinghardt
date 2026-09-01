@@ -126,11 +126,6 @@
   margin: 0 clamp(12px, 2.2vw, 34px);
   padding-block: clamp(48px, 7vw, 88px);
 }
-.home-academy__block {
-  max-width: 62ch;
-  margin-left: auto;
-  text-align: right;
-}
 .home-academy h2,
 .home-academy__copy {
   font-family: var(--font-serif);
@@ -138,12 +133,18 @@
   font-size: var(--fs-display-sm);
   line-height: 1.4;
   color: var(--ink);
+  text-align: justify;
 }
 .home-academy h2 {
   margin: 0;
 }
 .home-academy__copy {
   margin: 0 0 28px;
+}
+.home-academy .btn {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
 }
 
 .home-quote {

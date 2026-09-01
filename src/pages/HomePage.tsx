@@ -7,7 +7,6 @@ import { splitByTime } from "@/lib/format";
 import { featuredProducts, usedCategories, useStoreProducts } from "@/lib/store";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
-import { LineQuote } from "@/components/motion/LineQuote";
 import { RotatingWord } from "@/components/motion/RotatingWord";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { EventRow } from "@/components/sections/EventRow";
@@ -125,20 +124,6 @@ export function HomePage() {
         </div>
       </AnimatedGradient>
 
-      {/* ── Quote ────────────────────────────────────────────────── */}
-      <section className="section home-quote">
-        <div className="wrap">
-          <LineQuote
-            lines={[
-              "The question is never",
-              "what disease you have,",
-              "but why you became ill.",
-            ]}
-            cite="— Dr. Dietrich Klinghardt™"
-          />
-        </div>
-      </section>
-
       {/* ── Upcoming events ──────────────────────────────────────── */}
       {(upcoming.length > 0 || past.length > 0) && (
         <section className="section wrap home-events">
@@ -218,11 +203,11 @@ export function HomePage() {
               </p>
             ))}
             <div className="home-art__actions">
-              <Link className="btn btn-light" to="/academy/art">
+              <Link className="btn btn-outline" to="/academy/art">
                 About the course
               </Link>
-              <Link className="btn btn-ghost" to="/academy/therapists">
-                Find a therapist
+              <Link className="btn btn-primary" to="/academy/therapists">
+                Find a therapist <span aria-hidden="true">→</span>
               </Link>
             </div>
           </Reveal>
