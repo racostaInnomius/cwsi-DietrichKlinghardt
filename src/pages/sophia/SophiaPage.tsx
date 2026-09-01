@@ -1,11 +1,22 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection, SECTION } from "@/lib/sections";
-import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import {
+  ShieldIcon,
+  TargetIcon,
+  LayersIcon,
+  SproutIcon,
+  BoltIcon,
+  HeartIcon,
+  DropletIcon,
+  JointIcon,
+  LeafIcon,
+  ClipboardCheckIcon,
+} from "@/components/Icons";
 
 /** The four figures the frame sets in Fraunces at 62px. */
 const STATS = [
@@ -17,26 +28,32 @@ const STATS = [
 
 const PILLARS = [
   {
+    icon: <ShieldIcon />,
     title: "World-Class Leadership",
     body: "Care led by Dr. Dietrich Klinghardt, a globally recognised pioneer in the treatment of chronic illness, chronic infections, environmental toxicity and unresolved trauma.",
   },
   {
+    icon: <TargetIcon />,
     title: "Precision Diagnostics — A.R.T Klinghardt™",
     body: "Autonomic Response Testing uncovers the hidden causes of illness. Every practitioner on our team is certified in A.R.T Klinghardt™.",
   },
   {
+    icon: <LayersIcon />,
     title: "The 5 Levels of Healing™",
     body: "Dr. Klinghardt's signature framework addresses the physical, energetic, emotional, mental and spiritual dimensions of health, treating the whole person.",
   },
   {
+    icon: <SproutIcon />,
     title: "Root-Cause Resolution",
     body: "We look at your entire system to understand why you haven't made progress before — not just managing Lyme, mould, heavy metals or trauma in isolation.",
   },
   {
+    icon: <BoltIcon />,
     title: "A Hub of Research & Innovation",
     body: "Practitioners travel from around the world to learn from Dr. Klinghardt, and techniques created here have revolutionised how chronic illness is treated globally.",
   },
   {
+    icon: <HeartIcon />,
     title: "Warm, Personalised Care",
     body: "Every case of chronic illness is unique. You'll receive dedicated attention from a team that listens, empathises and understands how you feel.",
   },
@@ -67,18 +84,22 @@ const STEPS = [
 
 const THERAPIES = [
   {
+    icon: <DropletIcon />,
     title: "IV Therapies",
     body: "Biological intravenous therapies including ozone, intravascular laser therapy and intravenous nutrition.",
   },
   {
+    icon: <JointIcon />,
     title: "Joint & Back Problems",
     body: "A unique approach, without opiates or other addictive substances.",
   },
   {
+    icon: <LeafIcon />,
     title: "Traditional Therapies",
     body: "Homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, pulsed magnetic fields and microcurrent.",
   },
   {
+    icon: <ClipboardCheckIcon />,
     title: "Comprehensive Assessment",
     body: "Physical, nutritional, hormonal and biodental evaluation at every visit, with individualised interpretation of your labs, history and imaging.",
   },
@@ -120,15 +141,30 @@ export function SophiaPage() {
         path="/sophia"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
-        <div className="wrap page-hero__inner">
-          <Reveal>
-            <p className="eyebrow">Sophia Health Institute by Dr. Klinghardt™</p>
-            <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
-            <div className="page-hero__actions">
+      {/* A brand lockup over the campus photo — the marketing headline lives
+          in the section below instead, next to the same photo the design
+          repeats there. */}
+      <section className="sophia-hero">
+        <img
+          className="sophia-hero__photo"
+          src="/images/sophia-clinic.webp"
+          alt="Sophia Health Institute campus"
+          width={1024}
+          height={683}
+          fetchPriority="high"
+          decoding="async"
+        />
+        <div className="wrap sophia-hero__inner">
+          <Reveal className="sophia-hero__card">
+            <p className="sophia-hero__title">
+              Sophia
+              <br />
+              Health Institute
+            </p>
+            <p className="sophia-hero__subtitle">by Dr. Klinghardt™</p>
+            <div className="sophia-hero__actions">
               <Link className="btn btn-light" to="/sophia/new-patients">
-                New patients
+                Become a new patient
               </Link>
               <Link className="btn btn-ghost" to="/sophia/accommodations">
                 Travel & accommodation
@@ -136,28 +172,25 @@ export function SophiaPage() {
             </div>
           </Reveal>
         </div>
-      </AnimatedGradient>
+      </section>
 
-      {/* Who we are — figures on the left, the claim on the right. */}
+      {/* Who we are — the campus photo again, the claim and the copy. */}
       <section className="section wrap feature-row feature-row--right" id="chronic-illness">
-        <Reveal className="feature-row__media stat-grid">
-          {STATS.map((stat) => (
-            <div key={stat.value} className="stat">
-              <p className="stat__value">{stat.value}</p>
-              <p className="stat__label">{stat.label}</p>
-            </div>
-          ))}
+        <Reveal className="feature-row__media">
+          <img
+            src="/images/sophia-clinic.webp"
+            alt="Sophia Health Institute campus"
+            width={1024}
+            height={683}
+            loading="lazy"
+            decoding="async"
+          />
         </Reveal>
 
         <Reveal className="feature-row__body" delay={90}>
-          <p className="eyebrow">Who we are</p>
-          <h2>A Different Kind of Medicine, Built Around You.</h2>
-          <p className="feature-row__copy">
-            At Sophia Health Institute®, we believe real healing goes deeper than
-            managing symptoms. Our mission is simple: to provide comprehensive,
-            compassionate care that supports each person's journey toward optimal
-            physical, emotional, mental and spiritual well-being.
-          </p>
+          <p className="eyebrow">Sophia Health Institute by Dr. Klinghardt™</p>
+          <h2><Marked text={page.title} /></h2>
+          {page.lead ? <p className="feature-row__copy">{page.lead}</p> : null}
           <p className="feature-row__copy">
             We are a centre for true healing, where advanced medicine meets deep,
             individualised support. People come to us from all over the world
@@ -165,8 +198,20 @@ export function SophiaPage() {
             with cutting-edge science, genuine care and a commitment to
             understanding the whole person.
           </p>
+          <Link className="btn btn-light" to="/sophia/new-patients">
+            New patients <span aria-hidden="true">→</span>
+          </Link>
         </Reveal>
       </section>
+
+      <Reveal className="section wrap stat-grid stat-grid--row">
+        {STATS.map((stat) => (
+          <div key={stat.value} className="stat">
+            <p className="stat__value">{stat.value}</p>
+            <p className="stat__label">{stat.label}</p>
+          </div>
+        ))}
+      </Reveal>
 
       <section className="section wrap">
         <Reveal className="section-heading section-heading--center">
@@ -176,6 +221,7 @@ export function SophiaPage() {
         <ul className="card-grid card-grid--3">
           {PILLARS.map((pillar, index) => (
             <Reveal as="li" key={pillar.title} className="card" delay={index * 60} shift={12}>
+              <div className="card__icon">{pillar.icon}</div>
               <h3>{pillar.title}</h3>
               <p>{pillar.body}</p>
             </Reveal>
@@ -230,6 +276,7 @@ export function SophiaPage() {
         <ul className="card-grid card-grid--4">
           {THERAPIES.map((therapy, index) => (
             <Reveal as="li" key={therapy.title} className="card" delay={index * 60} shift={12}>
+              <div className="card__icon">{therapy.icon}</div>
               <h3>{therapy.title}</h3>
               <p>{therapy.body}</p>
             </Reveal>
