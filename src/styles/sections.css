@@ -120,18 +120,23 @@
    hero). Title and paragraph share one serif, body-weight treatment so they
    read as one flowing block of text rather than a heading over a
    paragraph, matching the reference. */
+/* Same horizontal margin as .hero (not .wrap's narrower, centred gutter) so
+   this section's left edge lines up with the hero panel above it. */
 .home-academy__inner {
-  max-width: 640px;
-  margin-inline: auto;
+  margin: 0 clamp(12px, 2.2vw, 34px);
   padding-block: clamp(48px, 7vw, 88px);
-  text-align: center;
+}
+.home-academy__block {
+  max-width: 62ch;
+  margin-left: auto;
+  text-align: right;
 }
 .home-academy h2,
 .home-academy__copy {
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: var(--fs-lead);
-  line-height: 1.5;
+  font-size: var(--fs-display-sm);
+  line-height: 1.4;
   color: var(--ink);
 }
 .home-academy h2 {

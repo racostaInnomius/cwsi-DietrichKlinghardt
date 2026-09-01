@@ -110,8 +110,8 @@ export function HomePage() {
 
       {/* ── Academy teaser ───────────────────────────────────────── */}
       <AnimatedGradient variant="plain" className="home-academy">
-        <div className="wrap home-academy__inner">
-          <Reveal>
+        <div className="home-academy__inner">
+          <Reveal className="home-academy__block">
             <h2>{intro.title}</h2>
             {intro.paragraphs.map((paragraph) => (
               <p key={paragraph} className="home-academy__copy">
