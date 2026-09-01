@@ -44,6 +44,33 @@ export function eventLongDate(doc: ContentDoc | undefined): string {
   }).format(date);
 }
 
+/** "9:00 AM – 12:00 PM PDT" in the event's declared timezone. */
+export function eventTimeLabel(doc: ContentDoc | undefined): string {
+  const start = dateOf(doc);
+  if (!start) return "";
+
+  const timeZone = tzOf(doc);
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone,
+  });
+  const zone = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    timeZoneName: "short",
+  })
+    .formatToParts(start)
+    .find((part) => part.type === "timeZoneName")?.value;
+
+  const rawEnd = doc?.endDateTime;
+  const end = typeof rawEnd === "string" ? new Date(rawEnd) : null;
+  const range = end && !Number.isNaN(end.getTime())
+    ? `${time.format(start)} – ${time.format(end)}`
+    : time.format(start);
+
+  return zone ? `${range} ${zone}` : range;
+}
+
 /** "SEATTLE, WA" — location line, falling back to the online platform. */
 export function eventLocation(doc: ContentDoc | undefined): string {
   const parts = [doc?.city, doc?.country].filter(

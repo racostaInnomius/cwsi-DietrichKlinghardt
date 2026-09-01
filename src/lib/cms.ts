@@ -8,6 +8,15 @@ interface PayloadPage<T> {
   nextPage?: number | null;
 }
 
+/**
+ * Browser requests in local development go through Vite's same-origin proxy;
+ * Payload's production CORS allow-list deliberately does not include arbitrary
+ * localhost ports. Builds and deployed browsers continue to use the CMS URL.
+ */
+function cmsBaseUrl(): string {
+  return import.meta.env.DEV && typeof window !== "undefined" ? "/__cms" : env.CMS_URL;
+}
+
 function relationshipId(value: unknown): string | undefined {
   if (typeof value === "string" || typeof value === "number") return String(value);
   if (!value || typeof value !== "object") return undefined;
@@ -52,7 +61,7 @@ export async function fetchCollection<T extends ContentDoc>(
     if (scopeToSite) params.set("where[site][equals]", env.SITE_ID);
 
     try {
-      const response = await fetch(`${env.CMS_URL}/api/${collection}?${params}`, {
+      const response = await fetch(`${cmsBaseUrl()}/api/${collection}?${params}`, {
         credentials: "omit",
       });
       if (!response.ok) return rows;
@@ -66,9 +75,11 @@ export async function fetchCollection<T extends ContentDoc>(
   }
 }
 
-/** Published events — the Home strip, the Events page and its detail pages. */
+/** Public events — the CMS exposes both published and sold-out dates. */
 export async function fetchEvents(): Promise<ContentDoc[]> {
-  return fetchCollection("events", { where: { "where[status][equals]": "published" } });
+  return fetchCollection("events", {
+    where: { "where[status][in]": "published,sold_out" },
+  });
 }
 
 /**
@@ -128,7 +139,7 @@ export function mediaUrl(media: unknown): string | undefined {
   if (!media || typeof media !== "object") return undefined;
   const url = (media as { url?: unknown }).url;
   if (typeof url !== "string" || !url) return undefined;
-  return url.startsWith("http") ? url : `${env.CMS_URL}${url}`;
+  return url.startsWith("http") ? url : `${cmsBaseUrl()}${url}`;
 }
 
 /**

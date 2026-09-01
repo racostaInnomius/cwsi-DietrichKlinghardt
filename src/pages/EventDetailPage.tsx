@@ -1,7 +1,7 @@
 import { Seo } from "@/components/Seo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number } from "@/lib/content";
-import { mediaUrl, richTextBlocks } from "@/lib/cms";
+import { externalUrl, mediaUrl, richTextBlocks } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { eventLocation, eventLongDate, money } from "@/lib/format";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -51,8 +51,11 @@ export function EventDetailPage() {
   const date = eventLongDate(event);
   const capacity = number(event, "capacity");
   const price = typeof event.price === "number" ? event.price : undefined;
-  const href = checkoutHref(event.checkoutUrl);
-  const soldOut = event.soldOut === true;
+  const registrationType = text(event, "registrationType", "open");
+  const checkoutUrl = checkoutHref(event.checkoutUrl);
+  const learnMoreUrl = externalUrl(event.learnMoreUrl);
+  const registrationUrl = registrationType === "paid" ? checkoutUrl : learnMoreUrl;
+  const soldOut = event.status === "sold_out" || event.soldOut === true;
   const mapUrl = text(event, "mapUrl");
 
   return (
@@ -121,8 +124,8 @@ export function EventDetailPage() {
             ) : null}
             {capacity > 0 ? (
               <div>
-                <dt>Seats</dt>
-                <dd>{capacity} available</dd>
+                <dt>Capacity</dt>
+                <dd>{capacity} seats</dd>
               </div>
             ) : null}
             {price != null ? (
@@ -139,9 +142,9 @@ export function EventDetailPage() {
             <p className="booking-panel__note">
               {text(event, "soldOutMessage", "This date is fully booked.")}
             </p>
-          ) : href ? (
-            <a className="btn btn-primary booking-panel__cta" href={href}>
-              Book now
+          ) : registrationUrl ? (
+            <a className="btn btn-primary booking-panel__cta" href={registrationUrl}>
+              {registrationType === "paid" ? "Book now" : "Register / learn more"}
             </a>
           ) : (
             <p className="booking-panel__note">

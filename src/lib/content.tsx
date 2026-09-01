@@ -88,8 +88,11 @@ function mergePages(rows: ContentDoc[]): ContentDoc[] {
   return [...merged, ...fallbacks.filter((row) => !seen.has(row.slug))];
 }
 
-function buildContent(loaded: LoaderContent): ContentMap {
-  const content: ContentMap = { ...demoContent };
+function buildContent(
+  loaded: LoaderContent,
+  fallback: ContentMap = demoContent,
+): ContentMap {
+  const content: ContentMap = { ...fallback };
   for (const [name, rows] of Object.entries(loaded)) {
     if (!rows?.length) continue;
     content[name] = name === "page-contents" ? mergePages(rows) : rows;
@@ -109,7 +112,10 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     if (!shouldRefresh) return;
     let active = true;
     void loadSiteContent().then((fresh) => {
-      if (active) setContent(buildContent(fresh));
+      // A transient empty/failed collection keeps the last valid loader or
+      // runtime result. Rebuilding from demoContent here used to erase events
+      // that were already present in the statically rendered page.
+      if (active) setContent((current) => buildContent(fresh, current));
     });
     return () => {
       active = false;

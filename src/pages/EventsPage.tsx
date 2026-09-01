@@ -6,20 +6,20 @@ import { splitByTime } from "@/lib/format";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
-import { EventRow } from "@/components/sections/EventRow";
+import { EventCard } from "@/components/sections/EventRow";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
  * Events listing — upcoming and past, split on `startDateTime`.
  *
- * Both lists render in the static HTML (the tab only toggles which one is
- * shown), so every event is crawlable and linkable regardless of JS.
+ * The selected date group is presented as the three-column card grid from the
+ * design. Every event detail route is still emitted by getStaticPaths.
  */
 export function EventsPage() {
   const copy = useSection(SECTION.homeEvents, {
     title: "Learn Directly from Dr. Klinghardt",
     paragraphs: [
-      "Workshops, seminars and live webinars — in person and online. Seats are limited and released as each date is confirmed.",
+      "Browse upcoming workshops, webinars, and live sessions with Dr. Dietrich Klinghardt™.",
     ],
   });
 
@@ -35,42 +35,58 @@ export function EventsPage() {
         path="/events"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
-        <div className="wrap page-hero__inner">
-          <Reveal>
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero events-page__hero">
+        <div className="wrap page-hero__inner events-page__hero-inner">
+          <Reveal className="events-page__intro">
             <p className="eyebrow">Events & webinars</p>
-            <h1><Marked text={copy.title} /></h1>
+            {copy.title === "Learn Directly from Dr. Klinghardt" ? (
+              <h1>
+                <span>Learn Directly</span>
+                <span><Marked text="from Dr. Klinghardt™" /></span>
+              </h1>
+            ) : (
+              <h1><Marked text={copy.title} /></h1>
+            )}
             {copy.lead ? <p className="lead">{copy.lead}</p> : null}
           </Reveal>
-        </div>
-      </AnimatedGradient>
 
-      <section className="section wrap">
-        <div className="tabs" role="tablist" aria-label="Event dates">
+          <div className="tabs events-page__tabs" role="tablist" aria-label="Event dates">
           <button
             type="button"
             role="tab"
             className="tab"
+            id="events-tab-upcoming"
+            aria-controls="events-panel"
             aria-selected={tab === "upcoming"}
             onClick={() => setTab("upcoming")}
           >
-            Upcoming <span>{upcoming.length}</span>
+            Upcoming events
           </button>
           <button
             type="button"
             role="tab"
             className="tab"
+            id="events-tab-past"
+            aria-controls="events-panel"
             aria-selected={tab === "past"}
             onClick={() => setTab("past")}
           >
-            Past <span>{past.length}</span>
+            Past events
           </button>
         </div>
+        </div>
+      </AnimatedGradient>
 
+      <section
+        className="wrap events-page__listing"
+        id="events-panel"
+        role="tabpanel"
+        aria-labelledby={`events-tab-${tab}`}
+      >
         {rows.length ? (
-          <ul className="event-list">
+          <ul className="events-grid">
             {rows.map((event, index) => (
-              <EventRow
+              <EventCard
                 key={String(event.id ?? index)}
                 event={event}
                 delay={index * 70}
