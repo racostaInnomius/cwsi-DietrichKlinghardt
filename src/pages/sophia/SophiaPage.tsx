@@ -173,8 +173,8 @@ export function SophiaPage() {
         </div>
       </section>
 
-      {/* Who we are — the campus photo again, the claim and the copy. */}
-      <section className="section wrap feature-row feature-row--right" id="chronic-illness">
+      {/* Who we are — the campus photo, the claim and the copy. */}
+      <section className="section wrap feature-row feature-row--right">
         <Reveal className="feature-row__media">
           <img
             src="/images/sophia-clinic.webp"
@@ -196,14 +196,35 @@ export function SophiaPage() {
         </Reveal>
       </section>
 
-      <Reveal className="section wrap stat-grid stat-grid--row">
-        {STATS.map((stat) => (
-          <div key={stat.value} className="stat">
-            <p className="stat__value">{stat.value}</p>
-            <p className="stat__label">{stat.label}</p>
-          </div>
-        ))}
-      </Reveal>
+      {/* The figures on the left, the mission statement on the right. */}
+      <section className="section wrap feature-row" id="chronic-illness">
+        <Reveal className="feature-row__media stat-grid">
+          {STATS.map((stat) => (
+            <div key={stat.value} className="stat">
+              <p className="stat__value">{stat.value}</p>
+              <p className="stat__label">{stat.label}</p>
+            </div>
+          ))}
+        </Reveal>
+
+        <Reveal className="feature-row__body" delay={90}>
+          <p className="eyebrow">Who we are</p>
+          <h2>A Different Kind of Medicine, Built Around You.</h2>
+          <p className="feature-row__copy">
+            At Sophia Health Institute®, we believe real healing goes deeper than
+            managing symptoms. Our mission is simple: to provide comprehensive,
+            compassionate care that supports each person's journey toward optimal
+            physical, emotional, mental and spiritual well-being.
+          </p>
+          <p className="feature-row__copy">
+            We are a centre for true healing, where advanced medicine meets deep,
+            individualised support. People come to us from all over the world
+            seeking answers to why they have been struggling, and we meet them
+            with cutting-edge science, genuine care and a commitment to
+            understanding the whole person.
+          </p>
+        </Reveal>
+      </section>
 
       <section className="section wrap">
         <Reveal className="section-heading section-heading--center">

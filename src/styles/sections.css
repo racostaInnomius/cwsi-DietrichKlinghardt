@@ -2709,11 +2709,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(18px, 2.6vw, 34px);
 }
-/* Sophia home repeats the same figures as a single row beneath the
-   "who we are" feature row instead of stacked beside it. */
-.stat-grid--row {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
 .stat {
   padding: clamp(18px, 2.2vw, 28px);
   border: 1px solid var(--line);
@@ -2911,8 +2906,7 @@
    room. Dropping 3→1 in a single step left very long single-column runs. */
 @media (max-width: 1080px) {
   .card-grid--3,
-  .card-grid--4,
-  .stat-grid--row {
+  .card-grid--4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
