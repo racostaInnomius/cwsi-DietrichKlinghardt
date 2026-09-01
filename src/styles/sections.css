@@ -2911,7 +2911,7 @@
    equal-specificity selector here would lose the cascade on file order alone. */
 .gradient-card.cta-band--dark,
 .gradient-card.cta-band--dark::before {
-  background: linear-gradient(135deg, #0d858d 0%, #146a7d 100%);
+  background: linear-gradient(100deg, #0c4a54 0%, #1cb0b5 100%);
 }
 .cta-band--dark .cta-band__eyebrow {
   color: var(--gold-bright);
@@ -2922,6 +2922,12 @@
 }
 .cta-band--dark .cta-band__body {
   opacity: 0.9;
+}
+/* The button on this band is a light-teal fill, not the cream .btn-light
+   everywhere else uses on a dark ground — matches the reference exactly. */
+.cta-band--dark .cta-band__actions .btn {
+  background: color-mix(in srgb, var(--white) 55%, var(--brand));
+  color: var(--brand-3);
 }
 
 /* Card grids step down rather than collapsing straight to one column: three or
