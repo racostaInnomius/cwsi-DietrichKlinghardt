@@ -19,6 +19,7 @@ export function CtaBand({
   body,
   subject,
   children,
+  className,
 }: {
   eyebrow?: string;
   /** Rendered as given — the design breaks these headings over two lines. */
@@ -28,10 +29,16 @@ export function CtaBand({
   subject?: string;
   /** A button, for the frames that close with one instead of the form. */
   children?: ReactNode;
+  /** Extra modifier class, for one-off variants (e.g. Sophia home's dark band). */
+  className?: string;
 }) {
   return (
     <section className="section wrap">
-      <AnimatedGradient variant="card" intensity="soft" className="cta-band">
+      <AnimatedGradient
+        variant="card"
+        intensity="soft"
+        className={`cta-band${className ? ` ${className}` : ""}`}
+      >
         <div className="cta-band__inner">
           <Reveal>
             <p className="eyebrow cta-band__eyebrow">{eyebrow}</p>

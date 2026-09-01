@@ -14,15 +14,16 @@ function Label({ item }: { item: NavItem }) {
 
 /**
  * Four-column footer with the oversized "Dr. Dietrich Klinghardt" watermark,
- * repeated on every frame of the design. Always navy, in both themes — in the
- * Sophia frames the footer keeps the DK brand because it closes the whole site,
- * not the sub-brand.
+ * repeated on every frame of the design. Follows the page's own theme —
+ * navy on DK pages, teal on /sophia/* — per the client's 2026-09-01 request;
+ * it used to stay navy everywhere (the footer closing the whole site, not
+ * the sub-brand), but Sophia now gets its own colour here too.
  */
-export function SiteFooter() {
+export function SiteFooter({ theme }: { theme: "dk" | "sophia" }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="site-footer" data-theme="dk">
+    <footer className="site-footer" data-theme={theme}>
       <div className="site-footer__inner wrap">
         <div className="site-footer__brand">
           <Link to="/" aria-label="Dietrich Klinghardt, home">

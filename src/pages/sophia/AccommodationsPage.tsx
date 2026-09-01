@@ -6,7 +6,6 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 type Hotel = {
   name: string;
@@ -197,8 +196,6 @@ export function AccommodationsPage() {
         body="Our friendly team is here to help. Fill out the form and we will review your message and respond as soon as possible during our regular business hours."
         subject="Travel and accommodation enquiry"
       />
-
-      <NewsletterSection />
     </>
   );
 }

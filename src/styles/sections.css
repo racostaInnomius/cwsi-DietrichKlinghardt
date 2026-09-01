@@ -2843,7 +2843,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  border: 1px solid var(--line);
+  border: 1px solid color-mix(in srgb, var(--brand-text) 40%, transparent);
   border-radius: var(--radius-pill);
   background: var(--surface-2);
   font-size: var(--fs-sm);
@@ -2898,6 +2898,30 @@
   display: flex;
   justify-content: center;
   margin-top: clamp(24px, 3vw, 38px);
+}
+
+/* Sophia home's closing band, per the client's Figma: a solid teal gradient
+   instead of the shared card's pale-fading one, with light type — the
+   opposite of every other .cta-band, which stays on the light half of the
+   palette on purpose. Scoped to this one instance (not the whole Sophia
+   theme) since New Patients/Accommodations/Team still carry the contact
+   form here, tuned for the light version. */
+/* .gradient-card.cta-band--dark (two classes), not .cta-band--dark alone —
+   motion.css's .gradient-card background rule loads after this file, so an
+   equal-specificity selector here would lose the cascade on file order alone. */
+.gradient-card.cta-band--dark,
+.gradient-card.cta-band--dark::before {
+  background: linear-gradient(135deg, #0d858d 0%, #146a7d 100%);
+}
+.cta-band--dark .cta-band__eyebrow {
+  color: var(--gold-bright);
+}
+.cta-band--dark .cta-band__title,
+.cta-band--dark .cta-band__body {
+  color: var(--white);
+}
+.cta-band--dark .cta-band__body {
+  opacity: 0.9;
 }
 
 /* Card grids step down rather than collapsing straight to one column: three or

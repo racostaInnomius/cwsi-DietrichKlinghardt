@@ -4,7 +4,6 @@ import { useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { CtaBand } from "@/components/sections/CtaBand";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import {
   ShieldIcon,
   TargetIcon,
@@ -241,7 +240,7 @@ export function SophiaPage() {
           ))}
         </ul>
         <Reveal className="section-actions" delay={120}>
-          <Link className="btn btn-light" to="/sophia/new-patients">
+          <Link className="btn btn-primary" to="/sophia/new-patients">
             New patients
           </Link>
         </Reveal>
@@ -296,7 +295,7 @@ export function SophiaPage() {
           ))}
         </ul>
         <Reveal className="section-actions" delay={120}>
-          <Link className="btn btn-light" to="/sophia/new-patients">
+          <Link className="btn btn-primary" to="/sophia/new-patients">
             Become a new patient
           </Link>
         </Reveal>
@@ -317,6 +316,7 @@ export function SophiaPage() {
       </section>
 
       <CtaBand
+        className="cta-band--dark"
         title={
           <>
             Stop Wondering.
@@ -330,8 +330,6 @@ export function SophiaPage() {
           Become a new patient
         </Link>
       </CtaBand>
-
-      <NewsletterSection />
     </>
   );
 }

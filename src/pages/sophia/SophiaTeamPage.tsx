@@ -8,7 +8,6 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
  * Meet Our Team, from the `board-members` collection — the CMS's people
@@ -95,8 +94,6 @@ export function SophiaTeamPage() {
           Become a new patient
         </Link>
       </CtaBand>
-
-      <NewsletterSection />
     </>
   );
 }

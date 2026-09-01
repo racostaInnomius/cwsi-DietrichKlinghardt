@@ -6,7 +6,6 @@ import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { Accordion } from "@/components/sections/Accordion";
 import { CtaBand } from "@/components/sections/CtaBand";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
  * The five questions the frame numbers 01–05.
@@ -197,8 +196,6 @@ export function NewPatientsPage() {
           subject="New patient enquiry"
         />
       </div>
-
-      <NewsletterSection />
     </>
   );
 }

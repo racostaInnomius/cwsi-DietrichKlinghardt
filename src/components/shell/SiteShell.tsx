@@ -60,7 +60,7 @@ export function SiteShell({
         {children}
       </main>
 
-      <SiteFooter />
+      <SiteFooter theme={resolvedTheme} />
     </div>
   );
 }
