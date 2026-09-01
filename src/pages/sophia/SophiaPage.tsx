@@ -197,7 +197,7 @@ export function SophiaPage() {
             with cutting-edge science, genuine care and a commitment to
             understanding the whole person.
           </p>
-          <Link className="btn btn-light" to="/sophia/new-patients">
+          <Link className="btn btn-primary" to="/sophia/new-patients">
             New patients <span aria-hidden="true">→</span>
           </Link>
         </Reveal>

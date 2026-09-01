@@ -2519,6 +2519,16 @@
   object-fit: cover;
   border-radius: var(--radius-md, 14px);
 }
+/* Sophia's "who we are" row crops the campus photo much wider/shorter than
+   every other feature-row's default portrait-ish ratio, per the Figma.
+   height: auto is required, not decorative — the <img> carries width/height
+   HTML attributes (1024/683) for CLS, and those act as a presentational
+   height hint that otherwise wins over aspect-ratio, which only drives an
+   auto height. */
+#chronic-illness .feature-row__media img {
+  aspect-ratio: 2 / 1;
+  height: auto;
+}
 .feature-row__copy {
   max-width: 62ch;
   margin: 0 0 22px;
