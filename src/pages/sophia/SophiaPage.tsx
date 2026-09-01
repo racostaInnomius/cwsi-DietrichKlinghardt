@@ -190,13 +190,6 @@ export function SophiaPage() {
           <p className="eyebrow">Sophia Health Institute by Dr. Klinghardt™</p>
           <h2><Marked text={page.title} /></h2>
           {page.lead ? <p className="feature-row__copy">{page.lead}</p> : null}
-          <p className="feature-row__copy">
-            We are a centre for true healing, where advanced medicine meets deep,
-            individualised support. People come to us from all over the world
-            seeking answers to why they have been struggling, and we meet them
-            with cutting-edge science, genuine care and a commitment to
-            understanding the whole person.
-          </p>
           <Link className="btn btn-primary" to="/sophia/new-patients">
             New patients <span aria-hidden="true">→</span>
           </Link>
