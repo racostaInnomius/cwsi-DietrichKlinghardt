@@ -443,6 +443,15 @@
   gap: 14px;
   margin-top: 16px;
 }
+/* Tighter than the shared .btn default (48px min-height, 26px padding) —
+   scoped here rather than changing .btn everywhere else on the site. */
+.home-art__actions .btn {
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 18px;
+  line-height: 1;
+}
 
 .home-teasers {
   display: grid;
