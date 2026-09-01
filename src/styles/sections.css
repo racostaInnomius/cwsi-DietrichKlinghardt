@@ -2641,16 +2641,25 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  /* Dark teal at top easing to a brighter cyan-teal at the bottom, and more
-     opaque overall than the first pass — the reference reads as a painted
-     teal surface, not a lightly tinted photo (the greenery in particular
-     should barely register as green). #1cb0b5 matches the bright end of the
-     Sophia home CTA band's gradient, for the same accent across the page. */
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--brand-3) 70%, transparent) 0%,
-    color-mix(in srgb, #1cb0b5 62%, transparent) 100%
-  );
+  /* Two layers: a second dark fade rising from the bottom edge (first, so it
+     paints on top), plus the main top-to-bottom tint underneath — dark teal
+     at top easing to a brighter cyan-teal at the bottom, and more opaque
+     overall than the first pass. The reference reads as a painted teal
+     surface, not a lightly tinted photo (the greenery in particular should
+     barely register as green), and grounds the bottom edge the way a vignette
+     would. #1cb0b5 matches the bright end of the Sophia home CTA band's
+     gradient, for the same accent across the page. */
+  background:
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--brand-3) 55%, transparent) 0%,
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--brand-3) 70%, transparent) 0%,
+      color-mix(in srgb, #1cb0b5 62%, transparent) 100%
+    );
 }
 .sophia-hero__inner {
   display: flex;
