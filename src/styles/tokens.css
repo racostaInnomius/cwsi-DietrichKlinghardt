@@ -262,10 +262,19 @@
      teal at both ends, a pale band through the middle. Verbatim from the four
      Sophia frames (Homepage, team, new patients, accommodations). Note it never
      goes dark — Sophia pages carry dark type from top to bottom. */
-  /* Same ~100px shift as the DK theme, for the same reason. */
+  /* Same ~100px shift as the DK theme, for the same reason.
+     0% is --brand itself (#0d858d), not the darker #146a7d this used to
+     open on — that mismatch, not the pace, was what made the flat header
+     read as a hard seam against this gradient (2026-08-31): the header
+     paints flat at the brand colour for its whole height, so the gradient
+     underneath has to *start* at that same colour or the join is a colour
+     change, not just a lightening. The 140/460/620px anchors are
+     untouched — that is where the ink-coloured eyebrow/breadcrumb on
+     Sophia's page-hero is tuned to already be light (see base.css). */
   --grad-page-full: linear-gradient(
     180deg,
-    #146a7d 0,
+    #0d858d 0,
+    #3d9298 50px,
     #b7d0d2 140px,
     #e6f4f4 460px,
     #eef7f8 620px,
