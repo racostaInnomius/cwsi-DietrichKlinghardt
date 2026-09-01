@@ -155,11 +155,10 @@ export function SophiaPage() {
           decoding="async"
         />
         <div className="wrap sophia-hero__inner">
-          <Reveal className="sophia-hero__card">
+          <Reveal className="sophia-hero__content">
             <p className="sophia-hero__title">
-              Sophia
-              <br />
-              Health Institute
+              <span className="sophia-hero__title-main">Sophia</span>
+              <span className="sophia-hero__title-sub">Health Institute</span>
             </p>
             <p className="sophia-hero__subtitle">by Dr. Klinghardt™</p>
             <div className="sophia-hero__actions">

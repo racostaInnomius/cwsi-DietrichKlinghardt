@@ -2603,16 +2603,17 @@
 
 
 /* ── Sophia home hero ─────────────────────────────────────────────
-   A brand lockup in a glass card over the campus photo — unlike every
-   other inner page, which sets its heading directly on the page gradient.
-   Sophia home is the one frame the design gives its own photographed hero. */
+   The brand lockup sits directly on the campus photo — no card, no blur —
+   unlike every other inner page, which sets its heading on the page
+   gradient. Sophia home is the one frame the design gives a photographed
+   hero, and the design floats type straight on the tinted photo. */
 .sophia-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   margin: 0 clamp(12px, 2.2vw, 34px);
   border-radius: var(--radius-sm);
-  min-height: min(60vh, 560px);
+  min-height: min(42vh, 400px);
   display: flex;
 }
 .sophia-hero__photo {
@@ -2630,8 +2631,8 @@
   z-index: -1;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--brand) 70%, transparent) 0%,
-    color-mix(in srgb, var(--brand-3) 55%, transparent) 100%
+    color-mix(in srgb, var(--brand) 38%, transparent) 0%,
+    color-mix(in srgb, var(--brand-3) 48%, transparent) 100%
   );
 }
 .sophia-hero__inner {
@@ -2639,31 +2640,35 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding-block: clamp(48px, 8vw, 96px);
-}
-.sophia-hero__card {
-  max-width: 560px;
-  padding: clamp(28px, 4vw, 48px);
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  padding-block: clamp(32px, 5vw, 56px);
   text-align: center;
+}
+.sophia-hero__content {
+  max-width: 560px;
   color: var(--white);
 }
 .sophia-hero__title {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: clamp(26px, 4vw, 42px);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   line-height: 1.15;
 }
+.sophia-hero__title-main {
+  display: block;
+  font-size: clamp(30px, 5vw, 52px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sophia-hero__title-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(15px, 1.8vw, 20px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 .sophia-hero__subtitle {
-  margin: 0 0 26px;
-  font-family: var(--font-serif);
+  margin: 8px 0 24px;
+  font-family: var(--font-display);
   font-style: italic;
   font-size: var(--fs-lead);
 }
@@ -2671,7 +2676,17 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 14px;
+  gap: 12px;
+}
+/* The default .btn-ghost reads brand-teal text — invisible on this dark
+   photo. Only here it flips to white, same pattern as .site-header__cta
+   already does against the header's own dark background. */
+.sophia-hero .btn-ghost {
+  border-color: rgba(255, 255, 255, 0.7);
+  color: var(--white);
+}
+.sophia-hero .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 /* ── Shared blocks for the Sophia pages ───────────────────────────
