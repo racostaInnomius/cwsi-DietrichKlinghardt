@@ -5,10 +5,6 @@ import {
   usedCategories,
   useStoreProducts,
 } from "@/lib/store";
-import { useSection } from "@/lib/sections";
-import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
-import { Reveal } from "@/components/motion/Reveal";
-import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { ProductCard } from "@/components/sections/ProductCard";
 import { TopPicksSection } from "@/components/sections/TopPicksSection";
@@ -16,15 +12,10 @@ import { TopPicksSection } from "@/components/sections/TopPicksSection";
 /**
  * The Klinghardt store: the month's picks, then the catalogue filtered by
  * category. Adding to the cart is local; paying is the cart's job.
+ *
+ * No plain-text page-hero here — the Top Picks panel is the page's header.
  */
 export function StorePage() {
-  const page = useSection("store", {
-    title: "Explore the Klinghardt Store",
-    paragraphs: [
-      "Books, work materials, testing kits and professional resources, curated by Dr. Klinghardt.",
-    ],
-  });
-
   const products = useStoreProducts();
   const featured = useMemo(() => featuredProducts(products), [products]);
   const categories = useMemo(() => usedCategories(products), [products]);
@@ -42,17 +33,10 @@ export function StorePage() {
         path="/store"
       />
 
-      {/* The designer marks Shop as one of the two places the gradient should
-          move most. */}
-      <AnimatedGradient variant="plain" intensity="strong" className="page-hero">
-        <div className="wrap page-hero__inner">
-          <Reveal>
-            <p className="eyebrow">Shop</p>
-            <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
-          </Reveal>
-        </div>
-      </AnimatedGradient>
+      {/* No visible page-hero on this page — the Top Picks panel below is
+          the header. Kept for the document outline / screen readers, since
+          that panel doesn't render at all without a featured product. */}
+      <h1 className="sr-only">Explore the Klinghardt Store</h1>
 
       <TopPicksSection products={featured} />
 

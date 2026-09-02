@@ -1822,19 +1822,22 @@
   list-style: none;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
-}
-.top-pick-card {
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
   border-radius: var(--radius);
   background: var(--surface-2);
   box-shadow: var(--shadow-card);
 }
+.top-pick-card {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line);
+}
+.top-pick-card:first-child {
+  border-left: none;
+}
 .top-pick-card__media {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   background: var(--cream-2);
 }
 .top-pick-card__media img {
@@ -1844,34 +1847,34 @@
 }
 .top-pick-card__number {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--brand);
   color: var(--brand-ink);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
 }
 .top-pick-card__body {
-  padding: 14px 16px 16px;
+  padding: 10px 12px 12px;
 }
 .top-pick-card__category {
-  margin: 0 0 4px;
+  margin: 0 0 3px;
   color: var(--muted-2);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
 .top-pick-card__body h3 {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.3;
   color: var(--ink);
@@ -1880,18 +1883,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
 }
 .top-pick-card__price {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 15px;
   color: var(--ink);
 }
 .top-pick-card__arrow {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   flex: none;
   border: none;
   border-radius: 50%;
@@ -1904,8 +1907,8 @@
   background: var(--brand-2);
 }
 .top-pick-card__arrow svg {
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.6;
@@ -1916,15 +1919,36 @@
   .top-picks__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .top-pick-card:nth-child(3n + 1) {
+    border-left: none;
+  }
+  .top-pick-card:nth-child(n + 4) {
+    border-top: 1px solid var(--line);
+  }
 }
 @media (max-width: 700px) {
   .top-picks__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .top-pick-card:nth-child(3n + 1) {
+    border-left: 1px solid var(--line);
+  }
+  .top-pick-card:nth-child(odd) {
+    border-left: none;
+  }
+  .top-pick-card:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
 }
 @media (max-width: 420px) {
   .top-picks__grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .top-pick-card {
+    border-left: none;
+  }
+  .top-pick-card:not(:first-child) {
+    border-top: 1px solid var(--line);
   }
 }
 
