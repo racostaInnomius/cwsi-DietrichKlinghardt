@@ -1215,18 +1215,24 @@
 
 /* ── Courses: header, method grid ─────────────────────────────── */
 
+/* Inset gradient panel, like the home hero — the design's frame, not the
+   plain page-gradient this section used to sit on directly. */
 .courses-hero {
+  margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
 }
 .courses-hero__inner {
-  padding-block: clamp(48px, 6vw, 96px) 0;
+  padding-block: clamp(48px, 6vw, 96px);
 }
+/* Same call as the home hero's eyebrow (D13): this gold measures ~1.9:1 on
+   the panel's blue stretch, but it's the design's own choice for gold-on-
+   gradient, not a slip. */
 .courses-hero .eyebrow {
-  color: var(--gold-text);
+  color: var(--gold-on-tint);
 }
 .courses-hero h1 {
   max-width: 18ch;
-  color: var(--brand);
+  color: var(--ink);
 }
 .courses-hero .lead {
   margin-top: 18px;
@@ -1274,35 +1280,95 @@
   }
 }
 
-.method-list {
+/* Three-up grid of training-path cards, replacing the old row list. Every
+   card shares the navy badge/CTA treatment except ANK — the top training
+   tier — which the design calls out in gold instead. */
+.course-path-grid {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--line);
-}
-.method {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(20px, 3vw, 56px);
-  padding-block: clamp(26px, 3vw, 44px);
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 32px);
 }
-.method h2 {
+.course-path-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  transition: box-shadow var(--dur) var(--ease);
+}
+.course-path-card:hover {
+  box-shadow: var(--shadow-card);
+}
+.course-path-card__body {
+  flex: 1;
+  padding: clamp(22px, 2.4vw, 28px);
+}
+.course-path-card__badge {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+}
+.course-path-card--ank .course-path-card__badge {
+  background: var(--gold);
+}
+.course-path-card h2 {
   margin-bottom: 12px;
   font-size: var(--fs-display-sm);
+  line-height: 1.2;
 }
-.method__body p {
-  max-width: 72ch;
+.course-path-card__body p {
   margin-bottom: 16px;
   color: var(--muted);
   font-size: var(--fs-sm);
 }
-.method__actions {
+.course-path-card__footer {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 210px;
+}
+.course-path-card__cta {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  padding: 0 14px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.course-path-card__cta--primary {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+.course-path-card--ank .course-path-card__cta--primary {
+  background: var(--gold);
+}
+.course-path-card__cta--secondary {
+  background: var(--cream);
+  color: var(--brand);
+}
+@media (max-width: 980px) {
+  .course-path-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .course-path-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .chips {
@@ -2808,7 +2874,6 @@
   .donate-panel {
     position: static;
   }
-  .method,
   .course-card,
   .directory-search,
   .live-layout {
@@ -2823,10 +2888,6 @@
   }
   .cart-line__qty {
     grid-column: 2;
-  }
-  .method__actions {
-    flex-direction: row;
-    flex-wrap: wrap;
   }
   .course-card__buy {
     justify-items: start;

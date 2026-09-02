@@ -32,7 +32,7 @@ export function CoursesPage() {
         path="/courses"
       />
 
-      <AnimatedGradient variant="plain" intensity="normal" className="courses-hero">
+      <AnimatedGradient variant="card" intensity="normal" className="courses-hero">
         <div className="wrap courses-hero__inner">
           <Reveal>
             <p className="eyebrow">Online courses</p>
@@ -44,16 +44,17 @@ export function CoursesPage() {
       </AnimatedGradient>
 
       <section className="section wrap">
-        <ul className="method-list">
+        <ul className="course-path-grid">
           {paths.map((path, index) => (
             <Reveal
               as="li"
               key={path.slug}
-              className="method"
+              className={`course-path-card${path.slug === "ank" ? " course-path-card--ank" : ""}`}
               delay={index * 70}
               shift={16}
             >
-              <div className="method__body">
+              <div className="course-path-card__body">
+                <span className="course-path-card__badge">{path.slug.toUpperCase()}</span>
                 <h2>
                   <Marked text={path.title} />
                 </h2>
@@ -69,12 +70,18 @@ export function CoursesPage() {
                 ) : null}
               </div>
 
-              <div className="method__actions">
-                <Link className="btn btn-outline" to={`/courses/${path.slug}`}>
-                  View training path
+              <div className="course-path-card__footer">
+                <Link
+                  className="course-path-card__cta course-path-card__cta--primary"
+                  to={`/courses/${path.slug}`}
+                >
+                  View training path <span aria-hidden="true">↗</span>
                 </Link>
-                <Link className="btn btn-primary" to={`/courses/${path.slug}/dates`}>
-                  Next courses
+                <Link
+                  className="course-path-card__cta course-path-card__cta--secondary"
+                  to={`/courses/${path.slug}/dates`}
+                >
+                  Next courses <span aria-hidden="true">↗</span>
                 </Link>
               </div>
             </Reveal>
