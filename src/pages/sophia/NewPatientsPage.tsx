@@ -143,7 +143,8 @@ export function NewPatientsPage() {
         <Accordion
           items={QUESTIONS.map((question, index) => ({
             id: question,
-            question: `${String(index + 1).padStart(2, "0")} — ${question}`,
+            number: String(index + 1).padStart(2, "0"),
+            question,
             answer:
               "The clinic is preparing this answer. In the meantime the team will answer it directly — write to us through the form below.",
           }))}

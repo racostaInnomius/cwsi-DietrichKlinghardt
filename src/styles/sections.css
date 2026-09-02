@@ -2630,49 +2630,72 @@
 /* ── Accordion ────────────────────────────────────────────────── */
 
 .accordion {
-  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .accordion__item {
-  border-bottom: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-card);
 }
 .accordion__item summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding-block: clamp(16px, 1.8vw, 24px);
+  padding: 16px 20px;
   cursor: pointer;
   list-style: none;
   font-family: var(--font-display);
-  font-size: var(--fs-display-sm);
-  line-height: 1.25;
+  font-size: var(--fs-body);
+  line-height: 1.3;
 }
 .accordion__item summary::-webkit-details-marker {
   display: none;
 }
+.accordion__question {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.accordion__number {
+  flex: 0 0 auto;
+  color: var(--muted-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
 .accordion__mark {
   position: relative;
+  display: grid;
+  place-items: center;
   flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--cream-2);
 }
 .accordion__mark::before,
 .accordion__mark::after {
   content: "";
   position: absolute;
-  inset: 50% 0 auto 0;
+  top: 50%;
+  left: 50%;
+  width: 10px;
   height: 1.5px;
   background: var(--brand);
+  transform: translate(-50%, -50%);
   transition: transform var(--dur-fast) var(--ease);
 }
 .accordion__mark::after {
-  transform: rotate(90deg);
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 .accordion__item[open] .accordion__mark::after {
-  transform: rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 .accordion__answer {
-  padding-bottom: clamp(16px, 1.8vw, 24px);
+  padding: 0 20px clamp(16px, 1.8vw, 24px);
 }
 .accordion__answer p {
   max-width: 68ch;

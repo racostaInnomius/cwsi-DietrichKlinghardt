@@ -9,6 +9,8 @@ import { Reveal } from "@/components/motion/Reveal";
  */
 export interface AccordionItem {
   id: string;
+  /** Shown ahead of the question in its own muted column, e.g. "01". */
+  number?: string;
   question: string;
   answer: string;
 }
@@ -22,7 +24,12 @@ export function Accordion({ items }: { items: AccordionItem[] }) {
         <Reveal key={item.id} delay={index * 60} shift={12}>
           <details className="accordion__item">
             <summary>
-              <span>{item.question}</span>
+              <span className="accordion__question">
+                {item.number ? (
+                  <span className="accordion__number">{item.number}</span>
+                ) : null}
+                <span>{item.question}</span>
+              </span>
               <span className="accordion__mark" aria-hidden="true" />
             </summary>
             <div className="accordion__answer">
