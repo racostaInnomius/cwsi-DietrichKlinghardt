@@ -2684,7 +2684,7 @@
   left: 50%;
   width: 10px;
   height: 1.5px;
-  background: var(--brand);
+  background: var(--ink);
   transform: translate(-50%, -50%);
   transition: transform var(--dur-fast) var(--ease);
 }
