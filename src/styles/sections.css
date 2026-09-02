@@ -1916,26 +1916,17 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-@media (max-width: 1100px) {
-  .top-picks__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .top-pick-card:nth-child(3n + 1) {
-    border-left: none;
-  }
-  .top-pick-card:nth-child(n + 4) {
-    border-top: 1px solid var(--line);
-  }
-}
-@media (max-width: 700px) {
+/* Stays five-across as long as it reasonably can — the client wants the
+   strip on one line, not wrapping to 3+2, down to tablet widths. */
+@media (max-width: 640px) {
   .top-picks__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .top-pick-card:nth-child(3n + 1) {
-    border-left: 1px solid var(--line);
-  }
   .top-pick-card:nth-child(odd) {
     border-left: none;
+  }
+  .top-pick-card:nth-child(even) {
+    border-left: 1px solid var(--line);
   }
   .top-pick-card:nth-child(n + 3) {
     border-top: 1px solid var(--line);
