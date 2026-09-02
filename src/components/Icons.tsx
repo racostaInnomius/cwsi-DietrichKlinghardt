@@ -95,3 +95,11 @@ export function EventMetaIcon({ kind }: { kind: EventMetaIconKind }) {
   }
   return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.25" /><path d="M2.9 8h10.2M8 2.75c1.6 1.5 2.3 3.2 2.3 5.25S9.6 11.8 8 13.25C6.4 11.8 5.7 10 5.7 8S6.4 4.2 8 2.75Z" /></svg>;
 }
+
+export function StarIcon() {
+  return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.3 9.7 6l4 .4-3 2.7.9 3.9L8 11l-3.6 2 .9-3.9-3-2.7 4-.4Z" /></svg>;
+}
+
+export function ArrowIcon() {
+  return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>;
+}

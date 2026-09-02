@@ -1,20 +1,17 @@
 import { useMemo, useState } from "react";
 import { Seo } from "@/components/Seo";
-import { Link } from "react-router-dom";
 import {
   featuredProducts,
-  toCartItem,
   usedCategories,
   useStoreProducts,
 } from "@/lib/store";
-import { useCart } from "@/lib/cart";
-import { useSection, useRecords } from "@/lib/sections";
-import { money } from "@/lib/format";
+import { useSection } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { ProductCard } from "@/components/sections/ProductCard";
+import { TopPicksSection } from "@/components/sections/TopPicksSection";
 
 /**
  * The Klinghardt store: the month's picks, then the catalogue filtered by
@@ -32,7 +29,6 @@ export function StorePage() {
   const featured = useMemo(() => featuredProducts(products), [products]);
   const categories = useMemo(() => usedCategories(products), [products]);
   const [category, setCategory] = useState("");
-  const month = useRecords("store-picks-month", 1, [])[0]?.[0] ?? "";
 
   const visible = category
     ? products.filter((product) => product.categoryKey === category)
@@ -58,19 +54,7 @@ export function StorePage() {
         </div>
       </AnimatedGradient>
 
-      {featured.length ? (
-        <section className="section wrap">
-          <Reveal>
-            <p className="eyebrow">Klinghardt’s picks</p>
-            <h2 className="section-title">Top picks of the month</h2>
-          </Reveal>
-          <ul className="product-grid product-grid--featured">
-            {featured.map((product, index) => (
-              <ProductCard key={product.id} product={product} delay={index * 60} featured />
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      <TopPicksSection products={featured} />
 
       <section className="section wrap">
         {categories.length ? (
