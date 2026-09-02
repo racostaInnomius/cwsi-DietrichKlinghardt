@@ -3143,6 +3143,12 @@
   align-items: center;
   gap: clamp(28px, 5vw, 72px);
 }
+/* New Patients: the welcome row follows the hero immediately, and the
+   section's usual top padding on top of the hero's own bottom padding read
+   as two sections that had drifted apart rather than one flow. */
+.feature-row.feature-row--tight-top {
+  padding-top: clamp(20px, 2.6vw, 40px);
+}
 .feature-row:has(.feature-row__media) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }

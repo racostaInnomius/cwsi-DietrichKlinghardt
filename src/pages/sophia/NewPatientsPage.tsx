@@ -89,7 +89,7 @@ export function NewPatientsPage() {
           <Reveal>
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
-            <div className="page-hero__actions">
+            <div className="page-hero__actions page-hero__actions--center">
               <a className="btn btn-light" href="#contact">
                 Contact us
               </a>
@@ -98,7 +98,7 @@ export function NewPatientsPage() {
         </div>
       </AnimatedGradient>
 
-      <section className="section wrap feature-row feature-row--right">
+      <section className="section wrap feature-row feature-row--right feature-row--tight-top">
         <Reveal className="feature-row__media">
           <img
             src="/images/sophia-treatment.webp"
