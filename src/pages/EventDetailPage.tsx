@@ -89,16 +89,17 @@ export function EventDetailPage() {
 
         <div className="event-detail">
           <Reveal as="aside" className="event-panel">
-            <p className="eyebrow">Event details</p>
-
             <div className="event-panel__card">
               <div className="event-panel__date">
-                <b>{day}</b>
-                <span>
-                  {month}
-                  <br />
-                  {year}
-                </span>
+                <p className="event-panel__date-label">Event details</p>
+                <div className="event-panel__date-row">
+                  <b>{day}</b>
+                  <span>
+                    {month}
+                    <br />
+                    {year}
+                  </span>
+                </div>
               </div>
 
               <dl className="event-panel__facts">

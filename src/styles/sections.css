@@ -520,6 +520,17 @@
 .event-detail-page .breadcrumbs {
   margin-bottom: clamp(20px, 2.6vw, 34px);
 }
+/* The current page's crumb (the event name) reads as plain body copy, not
+   the muted trail colour the rest of the breadcrumb uses. */
+.event-detail-page .breadcrumbs span[aria-current="page"] {
+  color: var(--ink);
+}
+/* Sits on the still-blue top of the page gradient, same band the shared
+   .page-hero eyebrow is white on — this page skips that wrapper but needs
+   the same treatment for the eyebrow to stay legible there. */
+.event-detail-page .eyebrow {
+  color: var(--white);
+}
 
 .event-detail {
   display: grid;
@@ -542,12 +553,25 @@
 }
 .event-panel__date {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
   gap: 10px;
   padding: 22px clamp(20px, 2.4vw, 30px);
   background: var(--brand);
   color: var(--brand-ink);
   font-family: var(--font-display);
+}
+.event-panel__date-label {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+.event-panel__date-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 .event-panel__date b {
   font-size: 44px;
