@@ -149,3 +149,14 @@ export function number(doc: ContentDoc | undefined, key: string, fallback = 0): 
   const value = doc?.[key];
   return typeof value === "number" ? value : fallback;
 }
+
+/** Reads an array field of `{ text }` rows (requirements, tags) as plain strings. */
+export function textList(doc: ContentDoc | undefined, key: string): string[] {
+  const value = doc?.[key];
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((row) =>
+      row && typeof row === "object" ? (row as Record<string, unknown>).text : undefined,
+    )
+    .filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+}

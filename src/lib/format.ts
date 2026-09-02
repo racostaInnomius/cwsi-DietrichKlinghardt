@@ -31,6 +31,20 @@ export function eventDateParts(doc: ContentDoc | undefined): { day: string; mont
   };
 }
 
+/** "14" / "August" / "2026" — the day block on the event detail panel. */
+export function eventDateBlock(
+  doc: ContentDoc | undefined,
+): { day: string; month: string; year: string } {
+  const date = dateOf(doc);
+  if (!date) return { day: "—", month: "", year: "" };
+  const timeZone = tzOf(doc);
+  return {
+    day: new Intl.DateTimeFormat("en-US", { day: "2-digit", timeZone }).format(date),
+    month: new Intl.DateTimeFormat("en-US", { month: "long", timeZone }).format(date),
+    year: new Intl.DateTimeFormat("en-US", { year: "numeric", timeZone }).format(date),
+  };
+}
+
 /** "Friday, August 14, 2026" */
 export function eventLongDate(doc: ContentDoc | undefined): string {
   const date = dateOf(doc);

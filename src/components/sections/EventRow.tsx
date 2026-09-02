@@ -4,6 +4,7 @@ import { text } from "@/lib/content";
 import { eventDateParts, eventLocation, eventTimeLabel, money } from "@/lib/format";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { EventMetaIcon } from "@/components/Icons";
 
 /**
  * One line of the events listing: stacked date block, location eyebrow, title
@@ -55,19 +56,6 @@ export function EventRow({ event, delay = 0 }: { event: ContentDoc; delay?: numb
   );
 }
 
-function EventMetaIcon({ kind }: { kind: "person" | "time" | "format" | "language" }) {
-  if (kind === "person") {
-    return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5" r="2.25" /><path d="M4.5 13c.3-2.2 1.5-3.4 3.5-3.4s3.2 1.2 3.5 3.4" /></svg>;
-  }
-  if (kind === "time") {
-    return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.25" /><path d="M8 4.7V8l2.2 1.5" /></svg>;
-  }
-  if (kind === "format") {
-    return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14s4-3.6 4-7A4 4 0 0 0 4 7c0 3.4 4 7 4 7Z" /><circle cx="8" cy="7" r="1.35" /></svg>;
-  }
-  return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.25" /><path d="M2.9 8h10.2M8 2.75c1.6 1.5 2.3 3.2 2.3 5.25S9.6 11.8 8 13.25C6.4 11.8 5.7 10 5.7 8S6.4 4.2 8 2.75Z" /></svg>;
-}
-
 /** Three-column card used by the Events page. */
 export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: number }) {
   const { day, month } = eventDateParts(event);
@@ -104,7 +92,7 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
           <ul className="event-card__details">
             <li><EventMetaIcon kind="person" /><span>{instructor}</span></li>
             {time ? <li><EventMetaIcon kind="time" /><span>{time}</span></li> : null}
-            <li><EventMetaIcon kind="format" /><span>{formatLabel}</span></li>
+            <li><EventMetaIcon kind="pin" /><span>{formatLabel}</span></li>
             <li><EventMetaIcon kind="language" /><span>{language}</span></li>
           </ul>
         </div>

@@ -59,3 +59,39 @@ export function LeafIcon() {
 export function ClipboardCheckIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 3.5h6v2H9z" /><path d="M8.5 13l2.2 2.2L15.5 11" /></svg>;
 }
+
+/* ── Event meta icons: person, time, calendar, tag, pin, language, seats ──
+   16x16 viewBox, stroke-only, matching the treatment `.event-card__details
+   svg` and `.event-panel__fact svg` apply (fill: none, stroke: currentColor
+   or var(--brand)). Shared by the events listing cards and the event detail
+   panel so both read from one set of shapes. */
+export type EventMetaIconKind =
+  | "person"
+  | "time"
+  | "calendar"
+  | "tag"
+  | "pin"
+  | "language"
+  | "seats";
+
+export function EventMetaIcon({ kind }: { kind: EventMetaIconKind }) {
+  if (kind === "person") {
+    return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5" r="2.25" /><path d="M4.5 13c.3-2.2 1.5-3.4 3.5-3.4s3.2 1.2 3.5 3.4" /></svg>;
+  }
+  if (kind === "time") {
+    return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.25" /><path d="M8 4.7V8l2.2 1.5" /></svg>;
+  }
+  if (kind === "calendar") {
+    return <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10" rx="1.3" /><path d="M2.5 6.7h11" /><path d="M5.5 2v3M10.5 2v3" /></svg>;
+  }
+  if (kind === "tag") {
+    return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.7 8.3 8.3 2.7h5v5L7.7 13.3a1 1 0 0 1-1.4 0L2.7 9.7a1 1 0 0 1 0-1.4Z" /><circle className="fill" cx="11" cy="5" r="0.9" /></svg>;
+  }
+  if (kind === "pin") {
+    return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14s4-3.6 4-7A4 4 0 0 0 4 7c0 3.4 4 7 4 7Z" /><circle cx="8" cy="7" r="1.35" /></svg>;
+  }
+  if (kind === "seats") {
+    return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.8" cy="6" r="2" /><circle cx="11.3" cy="6.5" r="1.6" /><path d="M2.3 13c.3-2 1.5-3.1 3.7-3.1s3.4 1.1 3.7 3.1" /><path d="M9.8 10.1c1.8.1 2.7 1.1 3 2.9" /></svg>;
+  }
+  return <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.25" /><path d="M2.9 8h10.2M8 2.75c1.6 1.5 2.3 3.2 2.3 5.25S9.6 11.8 8 13.25C6.4 11.8 5.7 10 5.7 8S6.4 4.2 8 2.75Z" /></svg>;
+}
