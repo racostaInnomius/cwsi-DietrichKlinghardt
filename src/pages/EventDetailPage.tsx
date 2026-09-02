@@ -184,15 +184,13 @@ export function EventDetailPage() {
 
               {soldOut ? (
                 <p className="event-panel__note">{noteText}</p>
-              ) : registrationUrl ? (
-                <a className="btn btn-primary event-panel__cta" href={registrationUrl}>
+              ) : (
+                <a
+                  className="btn btn-primary event-panel__cta"
+                  href={registrationUrl || "#newsletter"}
+                >
                   {ctaLabel}
                 </a>
-              ) : (
-                <p className="event-panel__note">
-                  Registration for this date is not open yet. Join the newsletter
-                  and you’ll hear as soon as it is.
-                </p>
               )}
 
               {mapUrl ? (
@@ -240,19 +238,15 @@ export function EventDetailPage() {
             <div className="event-copy__footer">
               {soldOut ? (
                 <span className="event-copy__note">{noteText}</span>
-              ) : registrationUrl ? (
+              ) : (
                 <>
-                  <a className="btn btn-primary" href={registrationUrl}>
+                  <a className="btn btn-primary" href={registrationUrl || "#newsletter"}>
                     {ctaLabel}
                   </a>
                   {capacity > 0 ? (
                     <span className="event-copy__note">{capacity} seats remaining</span>
                   ) : null}
                 </>
-              ) : (
-                <span className="event-copy__note">
-                  Registration for this date is not open yet.
-                </span>
               )}
             </div>
           </Reveal>

@@ -604,9 +604,8 @@
 }
 
 .event-panel__price {
-  margin-top: 18px;
   padding: clamp(20px, 2.4vw, 28px);
-  background: var(--brand-soft);
+  background: #d8eaea;
 }
 .event-panel__price-value {
   margin: 0 0 14px;
