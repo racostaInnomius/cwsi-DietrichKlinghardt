@@ -98,7 +98,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(16px, 3vw, 48px);
+  gap: clamp(16px, 2.4vw, 40px);
   padding: 14px var(--gutter);
   background: var(--grad-header);
   color: var(--brand-ink);
@@ -127,7 +127,7 @@
 .site-nav__list {
   display: flex;
   align-items: center;
-  gap: clamp(12px, 1.6vw, 26px);
+  gap: clamp(14px, 2vw, 32px);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -146,12 +146,12 @@
 .site-nav__link {
   display: inline-block;
   padding: 6px 0;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.08em;
   line-height: 1.25;
   text-transform: uppercase;
-  max-width: 15ch;
+  max-width: 17ch;
   opacity: 0.92;
   transition: opacity var(--dur-fast) var(--ease);
 }
@@ -164,9 +164,9 @@
 }
 .site-nav__sublabel {
   display: block;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   opacity: 0.75;
 }
 
@@ -232,9 +232,9 @@
   flex-shrink: 0;
 }
 .site-header__cta {
-  min-height: 38px;
-  padding: 0 18px;
-  font-size: 11px;
+  min-height: 42px;
+  padding: 0 22px;
+  font-size: 12px;
 }
 
 .site-header__social {
@@ -244,8 +244,8 @@
 .site-header__social a {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: var(--radius-sm);
   color: inherit;
@@ -255,8 +255,8 @@
   background: rgba(255, 255, 255, 0.14);
 }
 .site-header__social svg {
-  width: 15px;
-  height: 15px;
+  width: 17px;
+  height: 17px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.5;
@@ -266,8 +266,8 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: var(--radius-pill);
   color: var(--brand-ink);
   transition: background var(--dur-fast) var(--ease);
@@ -276,7 +276,7 @@
   background: rgba(255, 255, 255, 0.14);
 }
 .cart-button svg {
-  width: 21px;
+  width: 23px;
 }
 .cart-button__count {
   position: absolute;
@@ -449,7 +449,7 @@
 
 /* ── Responsive ───────────────────────────────────────────────── */
 
-@media (max-width: 1180px) {
+@media (max-width: 1320px) {
   .site-header__cta {
     display: none;
   }
@@ -457,6 +457,7 @@
     gap: 12px;
   }
   .site-nav__link {
+    max-width: 15ch;
     font-size: 10px;
   }
 }
