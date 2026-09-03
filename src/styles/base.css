@@ -145,7 +145,10 @@ h3,
   margin-bottom: 10px;
   color: var(--gold-text);
   font-family: var(--font-sans);
-  font-size: var(--fs-eyebrow);
+  /* Deliberately its own literal, not var(--fs-eyebrow) — that token is
+     shared with .chip, .tag and several other small-label elements
+     (footer titles, chips, date labels…) that must stay at 12px. */
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
