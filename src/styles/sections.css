@@ -3250,18 +3250,42 @@
 /* Hero with a companion image beside the copy (Weekly Talks). Only this
    variant splits: the home hero has the portrait baked into its own panel and
    must stay a single column. */
+.hero--split {
+  position: relative;
+}
 .hero--split .hero__inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   align-items: center;
   gap: clamp(28px, 4vw, 64px);
 }
- /* Capped at the asset's own width. The file the client delivered is 388px
-    wide — a 1x export — and a UI screenshot blown past its native size turns to
-    mush faster than a photograph does. Held at 1:1 it is sharp on ordinary
-    displays; on a 2x screen it is still soft, and only a larger export fixes
-    that (see PENDIENTES A15). */
-.hero__aside img,
+/* Oversized ghost of the page's own name, bleeding off the top-right corner
+   behind the heading — same device as the footer's watermark, sized and
+   positioned for this panel instead of the page width. */
+.hero--split__watermark {
+  position: absolute;
+  z-index: 0;
+  inset: clamp(8px, 3vw, 40px) 0 auto 0;
+  overflow: hidden;
+  text-align: right;
+  padding-right: clamp(24px, 6vw, 110px);
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 140px);
+  line-height: 1;
+  color: rgba(28, 25, 22, 0.06);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+/* Smaller than the default .btn — the frame's single hero CTA reads as
+   compact, not the full-size button every other page uses. */
+.hero--split .hero__actions .btn {
+  min-height: 42px;
+  padding: 0 22px;
+  font-size: 11px;
+}
 .talks-band__media img {
   display: block;
   width: 100%;
@@ -3270,6 +3294,145 @@
   margin-inline: auto;
   border-radius: var(--radius-md, 14px);
   box-shadow: 0 18px 48px rgb(2 56 102 / 0.22);
+}
+
+/* ── Weekly Talks hero: the "live call" mockup ──────────────────
+   Drawn entirely in CSS — the frame's own version is a generic dark UI with
+   a monogram avatar, not a photo, so there is no asset to short of. */
+.live-mock {
+  width: 100%;
+  max-width: 340px;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: var(--radius-md, 14px);
+  background: #0a1c2e;
+  box-shadow: 0 18px 48px rgb(2 56 102 / 0.28);
+}
+.live-mock__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.live-mock__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+.live-mock__dot--red { background: #e5544a; }
+.live-mock__dot--yellow { background: #e0aa3e; }
+.live-mock__dot--green { background: #4fae6e; }
+.live-mock__url {
+  margin-left: 8px;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.live-mock__screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 388 / 240;
+  padding: 14px;
+  background: radial-gradient(120% 140% at 30% 20%, #16344f 0%, #0a1c2e 70%);
+}
+.live-mock__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.live-mock__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: #d8433a;
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.live-mock__live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--white);
+}
+.live-mock__watching {
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 10px;
+}
+.live-mock__body {
+  display: grid;
+  flex: 1;
+  place-content: center;
+  justify-items: center;
+  gap: 6px;
+}
+.live-mock__avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(13, 133, 141, 0.35);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+.live-mock__name {
+  margin: 0;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+}
+.live-mock__status {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.live-mock__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.live-mock__play {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  background: var(--white);
+}
+.live-mock__track {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.2);
+}
+.live-mock__progress {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 62%;
+  border-radius: var(--radius-pill);
+  background: #3ec2c9;
+}
+.live-mock__time {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
 }
 
 /* The 5 Levels frame centres its heading and lead over the full width, unlike
@@ -3829,36 +3992,54 @@
    The frame gives the next date its own band, set in the display face, and
    puts the price in a single centred card rather than a comparison table —
    there is only one membership, so there is nothing to compare it against. */
-/* Pulls the band up onto the hero's own rounded bottom edge, so the date
-   reads as a card floating on the seam rather than plain text further down
-   the page. */
+/* Flush against the hero's own bottom edge — the frame draws this as the
+   navy floor of the same panel, not a separate card below it, so it shares
+   the hero's inset margin and picks up its rounded corners on the bottom. */
 .next-live-band {
-  padding-top: 0;
-  margin-top: -30px;
+  margin: 0 clamp(12px, 2.2vw, 34px);
+  padding: 0;
 }
 .next-live {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: 8px 20px;
-  max-width: fit-content;
-  margin-inline: auto;
-  padding: 16px clamp(24px, 3vw, 36px);
-  border-radius: var(--radius-pill);
-  background: var(--surface-2);
-  box-shadow: var(--shadow-lift);
-  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  padding: 18px clamp(20px, 3vw, 40px);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--brand);
+  color: var(--brand-ink);
 }
-.next-live .eyebrow {
-  width: 100%;
-  margin-bottom: 4px;
+.next-live__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.14);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+.next-live__chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e5544a;
 }
 .next-live__when {
-  margin: 0;
+  margin: 0 auto 0 0;
   font-family: var(--font-display);
   font-size: var(--fs-display-sm);
-  color: var(--on-surface);
+}
+.next-live__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+.next-live__links .arrow-link {
+  color: var(--brand-ink);
 }
 
 .plan {
@@ -3913,9 +4094,10 @@
   max-width: 24ch;
   margin: -8px 0 16px;
   font-family: var(--font-display);
+  font-style: italic;
   font-size: var(--fs-display-sm);
   line-height: 1.2;
-  color: var(--brand);
+  color: var(--muted);
 }
 
 /* ── About: labelled chapters + the four-field timeline ───────────

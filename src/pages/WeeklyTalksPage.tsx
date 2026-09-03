@@ -105,7 +105,8 @@ export function WeeklyTalksPage() {
         path="/weekly-talks"
       />
 
-      <AnimatedGradient variant="card" intensity="strong" className="hero hero--split">
+      <AnimatedGradient variant="card" intensity="normal" className="hero hero--split">
+        <p className="hero--split__watermark" aria-hidden="true">Weekly Talks</p>
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Exclusive membership</p>
@@ -132,37 +133,62 @@ export function WeeklyTalksPage() {
             </div>
           </Reveal>
 
-          {/* The live session as it actually looks, which is what the design
-              puts beside this copy — a membership is easier to picture than to
-              describe. */}
+          {/* A generic "live call" mockup, drawn in CSS rather than a
+              screenshot — the frame's own version isn't a real photo either,
+              just a dark UI with a monogram avatar (see D-note below). */}
           <Reveal className="hero__aside" delay={120}>
-            <img
-              src="/images/weekly-talks-live.webp"
-              alt="A live Weekly Talk session with Dr. Klinghardt"
-              width={388}
-              height={277}
-              loading="lazy"
-              decoding="async"
-            />
+            <div className="live-mock" aria-hidden="true">
+              <div className="live-mock__bar">
+                <span className="live-mock__dot live-mock__dot--red" />
+                <span className="live-mock__dot live-mock__dot--yellow" />
+                <span className="live-mock__dot live-mock__dot--green" />
+                <span className="live-mock__url">weekly-talks.klinghardt-academy.com</span>
+              </div>
+              <div className="live-mock__screen">
+                <div className="live-mock__top">
+                  <span className="live-mock__live">
+                    <span className="live-mock__live-dot" /> Live
+                  </span>
+                  <span className="live-mock__watching">247 watching</span>
+                </div>
+                <div className="live-mock__body">
+                  <span className="live-mock__avatar">K</span>
+                  <p className="live-mock__name">Dr. Dietrich Klinghardt</p>
+                  <p className="live-mock__status">Live now</p>
+                </div>
+                <div className="live-mock__controls">
+                  <span className="live-mock__play" />
+                  <span className="live-mock__track">
+                    <span className="live-mock__progress" />
+                  </span>
+                  <span className="live-mock__time">42:18</span>
+                </div>
+              </div>
+            </div>
           </Reveal>
         </div>
       </AnimatedGradient>
 
-      {/* Next live session, floating on the hero's own bottom edge as the
-          frame places it — a card, not plain text on the page. */}
+      {/* Next live session, its own navy band flush against the hero's
+          bottom edge — the frame draws it as part of the same panel, not a
+          floating card below it. */}
       {nextLive ? (
         <section className="section wrap next-live-band">
           <Reveal className="next-live">
-            <p className="eyebrow">Next live talk</p>
+            <span className="next-live__chip">
+              <span className="next-live__chip-dot" aria-hidden="true" /> Next live talk
+            </span>
             <p className="next-live__when">{eventLongDate(nextLive)}</p>
-            {addToCalendar ? (
-              <a className="arrow-link" href={addToCalendar} download="weekly-talk.ics">
-                Add to calendar <span aria-hidden="true">↗</span>
-              </a>
-            ) : null}
-            <Link className="arrow-link" to={`/weekly-talks/live/${String(nextLive.id)}`}>
-              Watch live <span aria-hidden="true">↗</span>
-            </Link>
+            <div className="next-live__links">
+              {addToCalendar ? (
+                <a className="arrow-link" href={addToCalendar} download="weekly-talk.ics">
+                  Add to calendar <span aria-hidden="true">↗</span>
+                </a>
+              ) : null}
+              <Link className="arrow-link" to={`/weekly-talks/live/${String(nextLive.id)}`}>
+                Watch live <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
           </Reveal>
         </section>
       ) : null}
