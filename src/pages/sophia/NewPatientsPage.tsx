@@ -167,6 +167,11 @@ export function NewPatientsPage() {
             </Reveal>
           ))}
         </ul>
+        <div className="section-actions">
+          <a className="btn btn-primary" href="#contact">
+            Contact us <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </section>
 
       <section className="section wrap">
