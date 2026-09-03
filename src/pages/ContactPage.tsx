@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -47,7 +48,7 @@ export function ContactPage() {
         path="/contact"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Get in touch</p>
@@ -57,8 +58,8 @@ export function ContactPage() {
         </div>
       </AnimatedGradient>
 
-      <section className="section wrap">
-        <ul className="contact-grid">
+      <section className="section wrap section--tight-top">
+        <ul className="contact-grid contact-grid--joined">
           {cards.map(([label, email, description], index) => (
             <Reveal as="li" key={email} className="contact-card" delay={index * 80}>
               <h2>{label}</h2>
@@ -83,6 +84,9 @@ export function ContactPage() {
             addresses. This website does not provide individualised medical
             advice, and messages are not monitored for medical emergencies.
           </p>
+          <Link className="btn btn-primary contact-note__cta" to="/sophia/accommodations">
+            Contact for Dietrich Klinghardt Health Institute™
+          </Link>
         </Reveal>
       </section>
 

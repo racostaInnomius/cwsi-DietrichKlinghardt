@@ -2573,6 +2573,37 @@
 .contact-card .btn {
   margin-top: auto;
 }
+/* The four cards as one bordered grid with dividers, not four separate
+   cards with a gap between them. */
+.contact-grid--joined {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.contact-grid--joined .contact-card {
+  border: none;
+  border-radius: 0;
+}
+.contact-grid--joined .contact-card:nth-child(even) {
+  border-left: 1px solid var(--line);
+}
+.contact-grid--joined .contact-card:nth-child(n + 3) {
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 640px) {
+  .contact-grid--joined {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .contact-grid--joined .contact-card {
+    border-left: none;
+  }
+  .contact-grid--joined .contact-card:nth-child(n + 2) {
+    border-top: 1px solid var(--line);
+  }
+}
 .contact-dialog__actions {
   display: flex;
   flex-wrap: wrap;
@@ -4233,17 +4264,21 @@
    body copy: it limits what these addresses are for, and a reader skimming the
    four cards has to meet it. */
 .contact-note {
-  max-width: 78ch;
-  margin: clamp(28px, 3.4vw, 44px) auto 0;
-  padding: clamp(16px, 2vw, 22px) clamp(18px, 2.2vw, 26px);
+  margin: clamp(16px, 2vw, 24px) 0 0;
+  padding: clamp(18px, 2.2vw, 26px);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  background: var(--cream-2);
+  text-align: center;
 }
 .contact-note p {
-  margin: 0;
+  max-width: 78ch;
+  margin: 0 auto clamp(16px, 2vw, 22px);
   font-size: var(--fs-sm);
   color: var(--ink-soft);
+}
+.contact-note__cta {
+  border-radius: 10px;
 }
 
 /* The month beneath the picks heading. */

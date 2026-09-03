@@ -183,6 +183,12 @@ h3,
 .section {
   padding-block: var(--section-y);
 }
+/* Sits directly under a page-hero with nothing between them — the full
+   --section-y top padding on top of the hero's own bottom padding reads as
+   two disconnected blocks (e.g. Contact's cards under its centred hero). */
+.section--tight-top {
+  padding-top: clamp(20px, 2.4vw, 36px);
+}
 
 .section-title {
   margin-bottom: clamp(28px, 3vw, 48px);
