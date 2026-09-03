@@ -2702,6 +2702,51 @@
   margin-bottom: 0.9em;
   color: var(--muted);
 }
+.accordion__chevron {
+  display: none;
+}
+
+/* Weekly Talks: flat rows divided by hairlines, with a solid navy chevron —
+   New Patients keeps the stacked-card look above; this is a second skin on
+   the same markup, not a fork of the component. */
+.accordion--flat {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+.accordion--flat .accordion__item {
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.accordion--flat .accordion__item summary {
+  padding: 18px 4px;
+  font-size: var(--fs-lead);
+}
+.accordion--flat .accordion__answer {
+  padding: 0 4px clamp(16px, 1.8vw, 24px);
+}
+.accordion--flat .accordion__mark {
+  background: var(--brand);
+}
+.accordion--flat .accordion__mark::before,
+.accordion--flat .accordion__mark::after {
+  display: none;
+}
+.accordion--flat .accordion__chevron {
+  display: block;
+  width: 12px;
+  height: 8px;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.accordion--flat .accordion__item[open] .accordion__chevron {
+  transform: rotate(180deg);
+}
 
 /* ── 5 Levels pyramid ─────────────────────────────────────────── */
 

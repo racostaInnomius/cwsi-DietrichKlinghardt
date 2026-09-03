@@ -229,7 +229,7 @@ export function WeeklyTalksPage() {
           <p className="eyebrow">FAQ</p>
           <h2>Frequently Asked Questions</h2>
         </Reveal>
-        <Accordion items={faqs.length ? faqs : FAQ_FALLBACK} />
+        <Accordion items={faqs.length ? faqs : FAQ_FALLBACK} className="accordion--flat" />
       </section>
 
       <NewsletterSection />
