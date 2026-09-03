@@ -8,7 +8,7 @@ import { env } from "@/lib/env";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
-import { Link } from "react-router-dom";
+import { EventMetaIcon } from "@/components/Icons";
 import { Accordion } from "@/components/sections/Accordion";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
@@ -173,33 +173,20 @@ export function WeeklyTalksPage() {
           bottom edge — the frame draws it as part of the same panel, not a
           floating card below it. */}
       {nextLive ? (
-        <section className="section wrap next-live-band">
+        <section className="section next-live-band">
           <Reveal className="next-live">
             <span className="next-live__chip">
               <span className="next-live__chip-dot" aria-hidden="true" /> Next live talk
             </span>
             <p className="next-live__when">{eventLongDate(nextLive)}</p>
-            <div className="next-live__links">
-              {addToCalendar ? (
-                <a className="arrow-link" href={addToCalendar} download="weekly-talk.ics">
-                  Add to calendar <span aria-hidden="true">↗</span>
-                </a>
-              ) : null}
-              <Link className="arrow-link" to={`/weekly-talks/live/${String(nextLive.id)}`}>
-                Watch live <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
+            {addToCalendar ? (
+              <a className="next-live__calendar" href={addToCalendar} download="weekly-talk.ics">
+                <EventMetaIcon kind="calendar" /> Add to calendar
+              </a>
+            ) : null}
           </Reveal>
         </section>
       ) : null}
-
-      <section className="section wrap section--tight">
-        <Reveal className="prose">
-          {page.paragraphs.slice(1).map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </Reveal>
-      </section>
 
       {/* ── Pricing ──────────────────────────────────────────────── */}
       <section className="section wrap" id="pricing">
