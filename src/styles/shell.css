@@ -129,10 +129,17 @@
   vertical-align: 0.9em;
 }
 
+/* Pushes the whole nav (and, via normal flow, the actions right after it)
+   flush against the header's right edge instead of `space-between` reading
+   as centred between the brand and the Contact Us button. */
+.site-nav {
+  margin-left: auto;
+}
+
 .site-nav__list {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 2vw, 32px);
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -151,12 +158,13 @@
 .site-nav__link {
   display: inline-block;
   padding: 6px 0;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   line-height: 1.25;
   text-transform: uppercase;
-  max-width: 17ch;
+  max-width: none;
+  white-space: nowrap;
   opacity: 0.92;
   transition: opacity var(--dur-fast) var(--ease);
 }
@@ -434,7 +442,9 @@
 
 /* ── Responsive ───────────────────────────────────────────────── */
 
-@media (max-width: 1320px) {
+/* Raised from 1320px: the desktop nav's larger 16px links push the fit point
+   for one unbroken row (brand + nav + Contact Us + cart) out to ~1350px. */
+@media (max-width: 1360px) {
   .site-header__cta {
     display: none;
   }
@@ -444,6 +454,7 @@
   .site-nav__link {
     max-width: 15ch;
     font-size: 10px;
+    letter-spacing: 0.08em;
   }
 }
 
