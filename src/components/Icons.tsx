@@ -103,3 +103,13 @@ export function StarIcon() {
 export function ArrowIcon() {
   return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>;
 }
+
+/** Paper plane — the dark contact-form band's "Send message" button. */
+export function SendIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 8.4 13.5 3l-4.3 11-1.7-4.3L2 8.4Z" strokeLinejoin="round" />
+      <path d="M7.5 9.7 13.5 3" />
+    </svg>
+  );
+}

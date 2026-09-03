@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { env } from "@/lib/env";
+import { SendIcon } from "@/components/Icons";
 
 type Status = "idle" | "sending" | "done" | "error";
 
@@ -11,7 +12,15 @@ type Status = "idle" | "sending" | "done" | "error";
  * `subject` carries which page the message came from, so the clinic can tell a
  * new-patient enquiry from a general one without reading the body first.
  */
-export function ContactForm({ subject }: { subject: string }) {
+export function ContactForm({
+  subject,
+  splitName = false,
+}: {
+  subject: string;
+  /** Accommodations' Figma frame splits the name field into first/last —
+      still posted as one "name" string, so the API contract doesn't change. */
+  splitName?: boolean;
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
 
@@ -30,6 +39,13 @@ export function ContactForm({ subject }: { subject: string }) {
       return;
     }
 
+    const name = splitName
+      ? [values.get("firstName"), values.get("lastName")]
+          .map((part) => String(part ?? "").trim())
+          .filter(Boolean)
+          .join(" ")
+      : String(values.get("name") ?? "").trim();
+
     setStatus("sending");
     setMessage("");
     try {
@@ -40,7 +56,7 @@ export function ContactForm({ subject }: { subject: string }) {
           tenantId: env.TENANT_ID,
           siteId: env.SITE_ID,
           subject,
-          name: String(values.get("name") ?? "").trim(),
+          name,
           email: String(values.get("email") ?? "").trim(),
           message: String(values.get("message") ?? "").trim(),
         }),
@@ -77,17 +93,41 @@ export function ContactForm({ subject }: { subject: string }) {
 
   return (
     <form className="contact-form" onSubmit={submit}>
+      {splitName ? (
+        <div className="contact-form__row">
+          <label>
+            <span>First name</span>
+            <input name="firstName" autoComplete="given-name" placeholder="Jane" required />
+          </label>
+          <label>
+            <span>Last name</span>
+            <input name="lastName" autoComplete="family-name" placeholder="Doe" required />
+          </label>
+        </div>
+      ) : (
+        <label>
+          <span>Your name</span>
+          <input name="name" autoComplete="name" required />
+        </label>
+      )}
       <label>
-        <span>Your name</span>
-        <input name="name" autoComplete="name" required />
+        <span>{splitName ? "Email" : "Email address"}</span>
+        <input
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder={splitName ? "jane@example.com" : undefined}
+          required
+        />
       </label>
       <label>
-        <span>Email address</span>
-        <input name="email" type="email" autoComplete="email" required />
-      </label>
-      <label>
-        <span>How can we help?</span>
-        <textarea name="message" rows={6} required />
+        <span>{splitName ? "Message" : "How can we help?"}</span>
+        <textarea
+          name="message"
+          rows={6}
+          placeholder={splitName ? "Tell us how we can help…" : undefined}
+          required
+        />
       </label>
       <label className="newsletter__honeypot" aria-hidden="true">
         Website
@@ -95,7 +135,16 @@ export function ContactForm({ subject }: { subject: string }) {
       </label>
       {status === "error" ? <p className="contact-form__error">{message}</p> : null}
       <button className="btn btn-primary" disabled={status === "sending"}>
-        {status === "sending" ? "Sending…" : "Send message"}
+        {splitName ? (
+          <>
+            {status === "sending" ? "Sending…" : "Send message"}
+            <SendIcon />
+          </>
+        ) : status === "sending" ? (
+          "Sending…"
+        ) : (
+          "Send message"
+        )}
       </button>
     </form>
   );

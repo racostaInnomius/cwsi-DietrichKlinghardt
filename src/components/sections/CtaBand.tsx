@@ -18,6 +18,7 @@ export function CtaBand({
   title,
   body,
   subject,
+  formSplitName,
   children,
   className,
 }: {
@@ -27,6 +28,9 @@ export function CtaBand({
   body: string;
   /** When set, the band carries the contact form and this labels the enquiry. */
   subject?: string;
+  /** Accommodations' dark band splits the name field into first/last, per its
+      own Figma frame — every other band keeps the single "Your name" field. */
+  formSplitName?: boolean;
   /** A button, for the frames that close with one instead of the form. */
   children?: ReactNode;
   /** Extra modifier class, for one-off variants (e.g. Sophia home's dark band). */
@@ -48,7 +52,7 @@ export function CtaBand({
 
           {subject ? (
             <Reveal className="cta-band__form" delay={110}>
-              <ContactForm subject={subject} />
+              <ContactForm subject={subject} splitName={formSplitName} />
             </Reveal>
           ) : null}
 

@@ -189,6 +189,7 @@ export function AccommodationsPage() {
       </section>
 
       <CtaBand
+        className="cta-band--dark"
         title={
           <>
             Ready to
@@ -198,6 +199,7 @@ export function AccommodationsPage() {
         }
         body="Our friendly team is here to help. Fill out the form and we will review your message and respond as soon as possible during our regular business hours."
         subject="Travel and accommodation enquiry"
+        formSplitName
       />
     </>
   );

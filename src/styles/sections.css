@@ -3901,12 +3901,13 @@
   margin-top: clamp(24px, 3vw, 38px);
 }
 
-/* Sophia home's closing band, per the client's Figma: a solid teal gradient
+/* The dark closing band, per the client's Figma: a solid teal gradient
    instead of the shared card's pale-fading one, with light type — the
    opposite of every other .cta-band, which stays on the light half of the
-   palette on purpose. Scoped to this one instance (not the whole Sophia
-   theme) since New Patients/Accommodations/Team still carry the contact
-   form here, tuned for the light version. */
+   palette on purpose. Started on Sophia home (a single button, no form);
+   Accommodations reuses it with the contact form, so the form itself needs
+   its own dark-ground styles below. New Patients/Team still carry the
+   form on the light version. */
 /* .gradient-card.cta-band--dark (two classes), not .cta-band--dark alone —
    motion.css's .gradient-card background rule loads after this file, so an
    equal-specificity selector here would lose the cascade on file order alone. */
@@ -3929,6 +3930,66 @@
 .cta-band--dark .cta-band__actions .btn {
   background: color-mix(in srgb, var(--white) 55%, var(--brand));
   color: var(--brand-3);
+}
+
+/* Accommodations' contact form on the dark band: underlined fields instead of
+   the light band's white boxes, gold labels matching the eyebrow above, and
+   an outlined (not filled) submit button — a filled teal button would all
+   but disappear against this same-toned gradient. */
+.cta-band--dark .contact-form label {
+  color: var(--gold-bright);
+}
+.cta-band--dark .contact-form input,
+.cta-band--dark .contact-form textarea {
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--white) 40%, transparent);
+  border-radius: 0;
+  padding: 8px 2px;
+  background: transparent;
+  color: var(--white);
+}
+.cta-band--dark .contact-form input::placeholder,
+.cta-band--dark .contact-form textarea::placeholder {
+  color: color-mix(in srgb, var(--white) 55%, transparent);
+}
+.cta-band--dark .contact-form input:focus,
+.cta-band--dark .contact-form textarea:focus {
+  border-color: var(--white);
+}
+.cta-band--dark .contact-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-self: center;
+  gap: 10px;
+  background: transparent;
+  border-color: var(--white);
+  color: var(--white);
+}
+.cta-band--dark .contact-form button:hover {
+  background: color-mix(in srgb, var(--white) 12%, transparent);
+}
+.cta-band--dark .contact-form button svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.cta-band--dark .contact-form__error {
+  color: var(--gold-bright);
+}
+
+/* Two-up name row — first/last side by side on desktop, stacked on mobile. */
+.contact-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 560px) {
+  .contact-form__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* Card grids step down rather than collapsing straight to one column: three or
