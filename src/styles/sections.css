@@ -3967,6 +3967,39 @@
 /* Hotels: the same card, with the contact details a reader actually needs to
    act on — the phone dials, the site opens, and the discount note is set apart
    because it is the reason the list exists. */
+.hotel__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+/* .card__icon is the stacked 40px square used above a heading (Six Pillars,
+   therapies) — this one sits inline beside the hotel name instead, so it
+   gets its own small circular treatment rather than reusing that class. */
+.hotel__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand-text);
+}
+.hotel__icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+/* .card h3 defaults to --brand-text (teal) — the hotel name reads as
+   ordinary ink instead, per the Figma reference, now that the icon carries
+   the brand colour. */
+.hotel h3 {
+  margin-bottom: 0;
+  color: var(--ink);
+}
 .hotel address {
   margin-bottom: 10px;
   font-style: normal;
@@ -3978,16 +4011,23 @@
   margin: 0 0 6px;
   font-size: var(--fs-sm);
 }
-.hotel__phone a,
-.hotel__site a {
+.hotel__phone a {
   color: var(--brand-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* The site link is the one gold accent on the card, matching the reference —
+   everything else on it (icon, phone) stays in the brand teal. */
+.hotel__site a {
+  color: var(--gold-text);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .hotel__note {
   margin: 12px 0 0;
   padding-top: 12px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid color-mix(in srgb, var(--brand-text) 30%, transparent);
+  font-style: italic;
   font-size: var(--fs-xs);
   color: var(--muted-2);
 }

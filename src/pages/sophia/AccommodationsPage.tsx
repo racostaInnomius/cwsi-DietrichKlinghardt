@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { EventMetaIcon } from "@/components/Icons";
 
 type Hotel = {
   name: string;
@@ -155,10 +156,19 @@ export function AccommodationsPage() {
           </p>
         </Reveal>
 
+        <Reveal>
+          <p className="eyebrow">Accommodations</p>
+        </Reveal>
+
         <ul className="card-grid card-grid--3 hotels">
           {HOTELS.map((hotel, index) => (
             <Reveal as="li" key={hotel.name} className="card hotel" delay={index * 60} shift={12}>
-              <h3>{hotel.name}</h3>
+              <div className="hotel__header">
+                <span className="hotel__icon">
+                  <EventMetaIcon kind="pin" />
+                </span>
+                <h3>{hotel.name}</h3>
+              </div>
               <address>{hotel.address}</address>
               {hotel.phone ? (
                 <p className="hotel__phone">
