@@ -183,6 +183,12 @@ h3,
 .section {
   padding-block: var(--section-y);
 }
+/* A section that reads as a continuation of the one above it, not a fresh
+   block — e.g. the lead paragraph directly under Weekly Talks' next-live
+   band. */
+.section--tight {
+  padding-block: clamp(16px, 2vw, 30px);
+}
 
 .section-title {
   margin-bottom: clamp(28px, 3vw, 48px);

@@ -3829,12 +3829,25 @@
    The frame gives the next date its own band, set in the display face, and
    puts the price in a single centred card rather than a comparison table —
    there is only one membership, so there is nothing to compare it against. */
+/* Pulls the band up onto the hero's own rounded bottom edge, so the date
+   reads as a card floating on the seam rather than plain text further down
+   the page. */
+.next-live-band {
+  padding-top: 0;
+  margin-top: -30px;
+}
 .next-live {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
   gap: 8px 20px;
+  max-width: fit-content;
+  margin-inline: auto;
+  padding: 16px clamp(24px, 3vw, 36px);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-lift);
   text-align: center;
 }
 .next-live .eyebrow {

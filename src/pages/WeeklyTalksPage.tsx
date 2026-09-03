@@ -117,22 +117,18 @@ export function WeeklyTalksPage() {
             </p>
             <p className="hero__lead">{page.lead}</p>
             {/* The date and the calendar link live in their own band below, so
-                they are not repeated here. */}
+                they are not repeated here. One button, matching the frame —
+                "Watch live" moved down beside the date it actually refers to. */}
             <div className="hero__actions">
               {joinHref ? (
-                <a className="btn btn-light" href={joinHref}>
+                <a className="btn btn-primary" href={joinHref}>
                   {ctaLabel || "Join now"}
                 </a>
               ) : (
-                <a className="btn btn-light" href="#pricing">
-                  See the membership
+                <a className="btn btn-primary" href="#pricing">
+                  Join now
                 </a>
               )}
-              {nextLive ? (
-                <Link className="btn btn-ghost" to={`/weekly-talks/live/${String(nextLive.id)}`}>
-                  Watch the live
-                </Link>
-              ) : null}
             </div>
           </Reveal>
 
@@ -152,9 +148,10 @@ export function WeeklyTalksPage() {
         </div>
       </AnimatedGradient>
 
-      {/* Next live session, on its own band as the frame places it. */}
+      {/* Next live session, floating on the hero's own bottom edge as the
+          frame places it — a card, not plain text on the page. */}
       {nextLive ? (
-        <section className="section wrap">
+        <section className="section wrap next-live-band">
           <Reveal className="next-live">
             <p className="eyebrow">Next live talk</p>
             <p className="next-live__when">{eventLongDate(nextLive)}</p>
@@ -163,11 +160,14 @@ export function WeeklyTalksPage() {
                 Add to calendar <span aria-hidden="true">↗</span>
               </a>
             ) : null}
+            <Link className="arrow-link" to={`/weekly-talks/live/${String(nextLive.id)}`}>
+              Watch live <span aria-hidden="true">↗</span>
+            </Link>
           </Reveal>
         </section>
       ) : null}
 
-      <section className="section wrap">
+      <section className="section wrap section--tight">
         <Reveal className="prose">
           {page.paragraphs.slice(1).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
@@ -196,17 +196,13 @@ export function WeeklyTalksPage() {
             ))}
           </ul>
 
-          {joinHref ? (
-            <a className="btn btn-primary plan__cta" href={joinHref}>
-              {ctaLabel || "Join my talks"}
-            </a>
-          ) : (
-            /* No live Payment Link, so no button that cannot charge — the same
-               rule the rest of the site follows. */
-            <a className="btn btn-light plan__cta" href="#newsletter">
-              Get notified when it opens
-            </a>
-          )}
+          {/* No live Payment Link yet falls back to the newsletter anchor —
+              a real, working destination — rather than a dead checkout, but
+              still reads as the intended action (see Events for the same
+              pattern). */}
+          <a className="btn btn-primary plan__cta" href={joinHref || "#newsletter"}>
+            {ctaLabel || "Join my talks"}
+          </a>
           <p className="plan__note">Secure checkout · 7-day free trial</p>
         </Reveal>
       </section>
