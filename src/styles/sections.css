@@ -3449,6 +3449,30 @@
 [data-theme="sophia"] .card {
   border-color: color-mix(in srgb, var(--brand-text) 40%, transparent);
 }
+/* New Patients' "Your first steps" row: one bordered strip with dividers
+   between cards, matching the Figma reference, instead of separately
+   rounded cards with a gap. Same flush-strip treatment as the store's Top
+   Picks panel. */
+.card-grid--joined {
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+[data-theme="sophia"] .card-grid--joined {
+  border-color: color-mix(in srgb, var(--brand-text) 40%, transparent);
+}
+.card-grid--joined .card {
+  border: none;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+}
+.card-grid--joined .card:first-child {
+  border-left: none;
+}
+[data-theme="sophia"] .card-grid--joined .card {
+  border-left-color: color-mix(in srgb, var(--brand-text) 40%, transparent);
+}
 /* Optional — only the Sophia pillar/therapy cards use it. Absent elsewhere,
    .card h3's own margin-bottom is all the spacing a plain card needs. */
 .card__icon {
@@ -3644,6 +3668,15 @@
   .card-grid--4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .card-grid--joined .card:nth-child(2) {
+    border-left: 1px solid var(--line);
+  }
+  .card-grid--joined .card:nth-child(odd) {
+    border-left: none;
+  }
+  .card-grid--joined .card:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
 }
 @media (max-width: 640px) {
   .card-grid--2,
@@ -3651,6 +3684,12 @@
   .card-grid--4,
   .stat-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .card-grid--joined .card {
+    border-left: none;
+  }
+  .card-grid--joined .card:not(:first-child) {
+    border-top: 1px solid var(--line);
   }
 }
 

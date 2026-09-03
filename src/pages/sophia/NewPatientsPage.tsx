@@ -90,8 +90,8 @@ export function NewPatientsPage() {
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
             <div className="page-hero__actions page-hero__actions--center">
-              <a className="btn btn-light" href="#contact">
-                Contact us
+              <a className="btn btn-primary" href="#contact">
+                Contact us <span aria-hidden="true">→</span>
               </a>
             </div>
           </Reveal>
@@ -179,7 +179,7 @@ export function NewPatientsPage() {
           <p className="eyebrow">Your first steps</p>
           <h2 className="section-title">What to Expect as a Patient</h2>
         </Reveal>
-        <ul className="card-grid card-grid--3 card-grid--compact">
+        <ul className="card-grid card-grid--3 card-grid--compact card-grid--joined">
           {FIRST_STEPS.map((step, index) => (
             <Reveal as="li" key={step.title} className="card" delay={index * 70} shift={12}>
               <h3>{step.title}</h3>
