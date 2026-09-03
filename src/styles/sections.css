@@ -3429,6 +3429,14 @@
 .card-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .card-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .card-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Denser card, matching the Figma reference for New Patients' approach/steps
+   rows — less padding and a tighter gap than the default .card. */
+.card-grid--compact {
+  gap: clamp(12px, 1.4vw, 20px);
+}
+.card-grid--compact .card {
+  padding: clamp(16px, 1.8vw, 22px);
+}
 .card {
   padding: clamp(20px, 2.4vw, 30px);
   border: 1px solid var(--line);
@@ -3631,7 +3639,7 @@
 /* Card grids step down rather than collapsing straight to one column: three or
    four across on desktop, two on tablets, one only when there is genuinely no
    room. Dropping 3→1 in a single step left very long single-column runs. */
-@media (max-width: 1080px) {
+@media (max-width: 860px) {
   .card-grid--3,
   .card-grid--4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));

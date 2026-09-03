@@ -159,7 +159,7 @@ export function NewPatientsPage() {
             Four things shape every care plan we build.
           </p>
         </Reveal>
-        <ul className="card-grid card-grid--2">
+        <ul className="card-grid card-grid--2 card-grid--compact">
           {APPROACH.map((item, index) => (
             <Reveal as="li" key={item.title} className="card" delay={index * 60} shift={12}>
               <h3>{item.title}</h3>
@@ -174,7 +174,7 @@ export function NewPatientsPage() {
           <p className="eyebrow">Your first steps</p>
           <h2 className="section-title">What to Expect as a Patient</h2>
         </Reveal>
-        <ul className="card-grid card-grid--3">
+        <ul className="card-grid card-grid--3 card-grid--compact">
           {FIRST_STEPS.map((step, index) => (
             <Reveal as="li" key={step.title} className="card" delay={index * 70} shift={12}>
               <h3>{step.title}</h3>
