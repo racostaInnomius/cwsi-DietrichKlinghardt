@@ -3269,6 +3269,12 @@
 .feature-row.feature-row--tight-top {
   padding-top: clamp(20px, 2.6vw, 40px);
 }
+/* Accommodations: the map runs much taller than the copy beside it, and the
+   row's default vertical centering floats that copy far below "How to Find
+   Us" instead of reading as one continuous block with it. */
+#how-to-find-us.feature-row {
+  align-items: start;
+}
 .feature-row:has(.feature-row__media) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
@@ -3993,20 +3999,15 @@
   border: 0;
   border-radius: var(--radius-md, 14px);
 }
-/* Stands in for the map until a row exists, and says where it goes rather than
-   leaving an empty frame. */
-.map-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  aspect-ratio: 4 / 3;
-  border: 1px dashed var(--line);
-  border-radius: var(--radius-md, 14px);
-  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
-  color: var(--brand-text);
-  font-size: var(--fs-sm);
-  font-weight: 600;
+/* Solid brand-teal fill — Accommodations' "Learn more at visitwoodinville.org"
+   reads as a green button in the Figma frame, which on the site's palette is
+   Sophia's dark teal (--brand-3), not a literal green the tokens don't have. */
+.btn-brand {
+  background: var(--brand-3);
+  color: var(--white);
+}
+.btn-brand:hover {
+  background: color-mix(in srgb, var(--brand-3) 85%, black);
 }
 
 .page-hero__actions--center {

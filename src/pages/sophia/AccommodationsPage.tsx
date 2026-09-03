@@ -69,6 +69,12 @@ function telHref(phone: string) {
   return `tel:${phone.replace(/[^\d+]/g, "")}`;
 }
 
+/* Same query the old text-only fallback linked out to — Google's query-embed
+   form (no API key required) so the CMS's own mapEmbedUrl can still take over
+   the moment the clinic sets one, but the page shows an actual map either way. */
+const FALLBACK_MAP_EMBED =
+  "https://www.google.com/maps?q=Sophia+Health+Institute,+Woodinville,+WA&output=embed";
+
 /**
  * Travel & Accommodations.
  *
@@ -85,7 +91,7 @@ export function AccommodationsPage() {
     ],
   });
 
-  const map = mapEmbedUrl(page.raw?.mapEmbedUrl);
+  const map = mapEmbedUrl(page.raw?.mapEmbedUrl) ?? FALLBACK_MAP_EMBED;
 
   return (
     <>
@@ -107,29 +113,18 @@ export function AccommodationsPage() {
         </div>
       </AnimatedGradient>
 
-      <section className="section wrap feature-row feature-row--right">
+      <section
+        id="how-to-find-us"
+        className="section wrap feature-row feature-row--right feature-row--tight-top"
+      >
         <Reveal className="feature-row__media">
-          {map ? (
-            <iframe
-              className="map-embed"
-              src={map}
-              title="Sophia Health Institute on the map"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          ) : (
-            /* No map row in the CMS yet, so the address links out instead of
-               leaving a blank frame where a map should be. */
-            <a
-              className="map-fallback"
-              href="https://www.google.com/maps/search/?api=1&query=Sophia+Health+Institute+Woodinville+WA"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span>Open the clinic in Google Maps</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-          )}
+          <iframe
+            className="map-embed"
+            src={map}
+            title="Sophia Health Institute on the map"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </Reveal>
 
         <Reveal className="feature-row__body" delay={90}>
@@ -140,7 +135,7 @@ export function AccommodationsPage() {
           ))}
           <div className="feature-row__actions">
             <a
-              className="btn btn-light"
+              className="btn btn-brand"
               href="https://visitwoodinville.org"
               target="_blank"
               rel="noreferrer"
