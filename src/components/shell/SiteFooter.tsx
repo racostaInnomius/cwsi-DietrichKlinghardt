@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FOOTER_NAV, type NavItem } from "./navigation";
-import { InstagramIcon, VimeoIcon } from "@/components/Icons";
+import { FacebookIcon, InstagramIcon, TelegramIcon, VimeoIcon } from "@/components/Icons";
 import { env } from "@/lib/env";
 
 function Label({ item }: { item: NavItem }) {
@@ -35,6 +35,12 @@ export function SiteFooter({ theme }: { theme: "dk" | "sophia" }) {
           <div className="site-footer__social">
             <a href={env.INSTAGRAM_URL} aria-label="Instagram">
               <InstagramIcon />
+            </a>
+            <a href={env.FACEBOOK_URL} aria-label="Facebook">
+              <FacebookIcon />
+            </a>
+            <a href={env.TELEGRAM_URL} aria-label="Telegram">
+              <TelegramIcon />
             </a>
             <a href={env.VIMEO_URL} aria-label="Vimeo">
               <VimeoIcon />
