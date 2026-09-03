@@ -196,27 +196,31 @@ export function WeeklyTalksPage() {
         </Reveal>
 
         <Reveal className="plan" delay={90}>
-          <p className="eyebrow">{planLabel}</p>
-          <p className="plan__price">
-            <span className="plan__amount">{planAmount}</span>
-            <span className="plan__period">{planPeriod}</span>
-          </p>
-          <p className="plan__terms">{planTerms}</p>
+          <div className="plan__head">
+            <p className="eyebrow">{planLabel}</p>
+            <p className="plan__price">
+              <span className="plan__amount">{planAmount}</span>
+              <span className="plan__period">{planPeriod}</span>
+            </p>
+            <p className="plan__terms">{planTerms}</p>
+          </div>
 
-          <ul className="tick-list plan__benefits">
-            {benefits.map(([benefit]) => (
-              <li key={benefit}>{benefit}</li>
-            ))}
-          </ul>
+          <div className="plan__body">
+            <ul className="tick-list plan__benefits">
+              {benefits.map(([benefit]) => (
+                <li key={benefit}>{benefit}</li>
+              ))}
+            </ul>
 
-          {/* No live Payment Link yet falls back to the newsletter anchor —
-              a real, working destination — rather than a dead checkout, but
-              still reads as the intended action (see Events for the same
-              pattern). */}
-          <a className="btn btn-primary plan__cta" href={joinHref || "#newsletter"}>
-            {ctaLabel || "Join my talks"}
-          </a>
-          <p className="plan__note">Secure checkout · 7-day free trial</p>
+            {/* No live Payment Link yet falls back to the newsletter anchor —
+                a real, working destination — rather than a dead checkout, but
+                still reads as the intended action (see Events for the same
+                pattern). */}
+            <a className="btn btn-primary plan__cta" href={joinHref || "#newsletter"}>
+              {ctaLabel || "Join my talks"}
+            </a>
+            <p className="plan__note">Secure checkout · 7-day free trial</p>
+          </div>
         </Reveal>
       </section>
 
