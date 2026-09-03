@@ -106,10 +106,6 @@ export function AccommodationsPage() {
           <Breadcrumbs
             items={[{ label: "Sophia", href: "/sophia" }, { label: "Travel & accommodations" }]}
           />
-          <Reveal>
-            <p className="eyebrow">Get started</p>
-            <h1><Marked text={page.title} /></h1>
-          </Reveal>
         </div>
       </AnimatedGradient>
 
@@ -128,6 +124,8 @@ export function AccommodationsPage() {
         </Reveal>
 
         <Reveal className="feature-row__body" delay={90}>
+          <p className="eyebrow">Get started</p>
+          <h1><Marked text={page.title} /></h1>
           {page.paragraphs.map((paragraph) => (
             <p key={paragraph} className="feature-row__copy">
               {paragraph}
