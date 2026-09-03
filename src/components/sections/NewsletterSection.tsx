@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { env } from "@/lib/env";
 import { useSection, SECTION } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -138,46 +139,53 @@ export function NewsletterSection() {
         </Reveal>
       </div>
 
-      {(status === "done" || status === "error") && (
-        <div
-          className="feedback-backdrop"
-          onMouseDown={(event) => {
-            if (event.currentTarget === event.target) closeFeedback();
-          }}
-        >
-          <section
-            className={`feedback-dialog ${status}`}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="newsletter-feedback-title"
+      {/* Portalled to <body>: <main> carries `isolation: isolate` for its
+          gradient-drift underlay (shell.css), which traps this dialog's
+          z-index inside main's own stacking context — the footer, painting
+          right after main in DOM order, then rendered over the bottom of the
+          backdrop instead of under it whenever the footer was in view. */}
+      {(status === "done" || status === "error") &&
+        createPortal(
+          <div
+            className="feedback-backdrop"
+            onMouseDown={(event) => {
+              if (event.currentTarget === event.target) closeFeedback();
+            }}
           >
-            <button
-              ref={closeButton}
-              className="feedback-close"
-              type="button"
-              onClick={closeFeedback}
-              aria-label="Close message"
+            <section
+              className={`feedback-dialog ${status}`}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="newsletter-feedback-title"
             >
-              ×
-            </button>
-            <span className="feedback-mark" aria-hidden="true">
-              {status === "done" ? "✓" : "!"}
-            </span>
-            <p className="eyebrow">Klinghardt Newsletter</p>
-            <h2 id="newsletter-feedback-title">
-              {status === "done" ? "Registration received." : "Something went wrong."}
-            </h2>
-            <p>
-              {status === "done"
-                ? "Thank you. Check your inbox and confirm your email to complete your subscription."
-                : message}
-            </p>
-            <button className="btn btn-primary" type="button" onClick={closeFeedback}>
-              {status === "done" ? "Got it" : "Try again"}
-            </button>
-          </section>
-        </div>
-      )}
+              <button
+                ref={closeButton}
+                className="feedback-close"
+                type="button"
+                onClick={closeFeedback}
+                aria-label="Close message"
+              >
+                ×
+              </button>
+              <span className="feedback-mark" aria-hidden="true">
+                {status === "done" ? "✓" : "!"}
+              </span>
+              <p className="eyebrow">Klinghardt Newsletter</p>
+              <h2 id="newsletter-feedback-title">
+                {status === "done" ? "Registration received." : "Something went wrong."}
+              </h2>
+              <p>
+                {status === "done"
+                  ? "Thank you. Check your inbox and confirm your email to complete your subscription."
+                  : message}
+              </p>
+              <button className="btn btn-primary" type="button" onClick={closeFeedback}>
+                {status === "done" ? "Got it" : "Try again"}
+              </button>
+            </section>
+          </div>,
+          document.body,
+        )}
     </AnimatedGradient>
   );
 }

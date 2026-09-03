@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
@@ -120,7 +121,11 @@ function ContactDialog({ card, onClose }: { card: string[]; onClose: () => void 
     }
   }
 
-  return (
+  // Portalled to <body> for the same reason as the newsletter dialog: <main>
+  // carries `isolation: isolate` for its gradient-drift underlay (shell.css),
+  // which traps a same-tree backdrop's z-index inside main's stacking
+  // context, letting the footer paint over it whenever the footer is in view.
+  return createPortal(
     <div
       className="feedback-backdrop"
       onMouseDown={(event) => {
@@ -154,6 +159,7 @@ function ContactDialog({ card, onClose }: { card: string[]; onClose: () => void 
           </button>
         </div>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }
