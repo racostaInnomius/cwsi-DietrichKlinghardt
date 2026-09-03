@@ -4108,7 +4108,7 @@
 }
 .plan__cta {
   width: 100%;
-  border-radius: var(--radius-pill);
+  border-radius: 10px;
 }
 .plan__note {
   margin: 12px 0 0;
