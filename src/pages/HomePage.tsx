@@ -88,6 +88,10 @@ export function HomePage() {
           fetchPriority="high"
           decoding="async"
         />
+        {/* Mobile only: a soft radial glow behind the copy so the eyebrow/
+            heading/buttons stay legible wherever the portrait happens to
+            fall behind them, instead of overlapping his face directly. */}
+        <div className="hero__scrim" aria-hidden="true" />
         <div className="wrap hero__inner">
           <Reveal>
             <p className="eyebrow hero__eyebrow">Dr. Dietrich Klinghardt™</p>
