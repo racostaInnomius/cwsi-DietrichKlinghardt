@@ -168,6 +168,12 @@
   opacity: 0.92;
   transition: opacity var(--dur-fast) var(--ease);
 }
+/* The shared .tm (base.css) sizes off the 12px sublabel/eyebrow scale —
+   at the nav's own 16px it renders under 6px, unreadable next to
+   "AKADEMY". Its own literal here instead of touching that shared rule. */
+.site-nav__link .tm {
+  font-size: 0.55em;
+}
 .site-nav__link:hover,
 .site-nav__link[aria-current="page"] {
   opacity: 1;
