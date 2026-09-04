@@ -109,15 +109,6 @@ export function HomePage() {
 
       {/* ── Academy teaser ───────────────────────────────────────── */}
       <AnimatedGradient variant="plain" className="home-academy">
-        <img
-          className="home-academy__photo"
-          src="/images/klinghardt-teaching.webp"
-          alt=""
-          width={1400}
-          height={902}
-          loading="lazy"
-          decoding="async"
-        />
         <div className="home-academy__inner">
           <Reveal className="home-academy__block">
             {/* The title reads as the opening words of the paragraph, not a

@@ -122,13 +122,6 @@
    paragraph, matching the reference. The title itself is an inline ARIA
    heading inside that same paragraph (see HomePage.tsx) so the line never
    breaks between "Academy™" and the copy that follows it. */
-.home-academy__photo {
-  display: block;
-  width: 100%;
-  aspect-ratio: 2.2 / 1;
-  object-fit: cover;
-  object-position: center 25%;
-}
 /* Pull this text block farther in than the hero, matching the wide inset in
    the reference. The shared gutter reaches 96px on desktop and contracts on
    smaller screens instead of locking the section to a fixed 105px margin. */
