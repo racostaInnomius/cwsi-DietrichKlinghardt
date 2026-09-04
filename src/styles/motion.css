@@ -137,6 +137,22 @@
   transform: none;
 }
 
+/* ── Velocity skew (Home only) ────────────────────────────────── */
+
+/* A couple of degrees of lean on the page's photos while flicking through
+   it fast, easing back to upright as the scroll settles — the classic
+   Lenis showcase effect (2026-09-06: "un poco de mayor impacto"). Driven
+   by --scroll-skew, which HomePage.tsx writes from lenis.velocity every
+   frame; the hero photo is deliberately left out, since it's already
+   sitting inside a pinned, scroll-driven card and skewing on top of that
+   would read as fighting itself rather than one effect. Needs no
+   reduced-motion override: Lenis (and the effect it drives) is never
+   created there, so --scroll-skew stays at its unset default and this
+   resolves to skewY(0deg) on its own. */
+.scroll-skew {
+  transform: skewY(calc(var(--scroll-skew, 0) * 1deg));
+}
+
 /* ── Reduced motion: show everything, animate nothing ─────────── */
 
 @media (prefers-reduced-motion: reduce) {

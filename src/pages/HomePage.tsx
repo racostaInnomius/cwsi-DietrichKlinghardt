@@ -68,7 +68,7 @@ export function HomePage() {
   const picks = featuredProducts(products);
   const shopPicks = (picks.length ? picks : products).slice(0, 5);
 
-  // Drives two things every frame, Home only:
+  // Drives three things every frame, Home only:
   //  1. A 0→1 scroll-progress custom property on each pinned card's own
   //     element (--hero-scroll, --newsletter-scroll), which sections.css
   //     reads to slide that card's oversized background image — the
@@ -80,6 +80,13 @@ export function HomePage() {
   //     directly off newgenre.studio (a single wheel tick there takes
   //     ~450ms to settle; this matches that curve). Skipped under
   //     reduced-motion.
+  //  3. --scroll-skew, a small, velocity-driven skew on the page's photos
+  //     (2026-09-06: "un poco de mayor impacto") — Lenis exposes real-time
+  //     scroll velocity, which .scroll-skew images (sections.css) turn into
+  //     a couple of degrees of lean while flicking through the page,
+  //     easing back to 0 as the scroll settles. Skipped entirely under
+  //     reduced-motion along with Lenis itself, not just left at rest —
+  //     there's no `lenis.velocity` to read once Lenis never runs.
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -96,6 +103,8 @@ export function HomePage() {
       [".home-hero-pin", ".plain-section.hero", "--hero-scroll"],
       [".home-newsletter-pin", ".plain-section.newsletter", "--newsletter-scroll"],
     ];
+
+    let currentSkew = 0;
 
     let frame: number;
     function raf(time: number) {
@@ -117,6 +126,18 @@ export function HomePage() {
         card.style.setProperty(prop, String(progress));
       }
 
+      if (lenis) {
+        // Lenis's own velocity is jumpy frame to frame (it's a raw delta,
+        // not eased) — lerping toward it instead of assigning it directly
+        // is what makes the lean itself feel fluid rather than jittery.
+        const targetSkew = Math.max(-2.5, Math.min(2.5, lenis.velocity * 0.6));
+        currentSkew += (targetSkew - currentSkew) * 0.12;
+        document.documentElement.style.setProperty(
+          "--scroll-skew",
+          currentSkew.toFixed(3),
+        );
+      }
+
       frame = requestAnimationFrame(raf);
     }
     frame = requestAnimationFrame(raf);
@@ -124,6 +145,7 @@ export function HomePage() {
     return () => {
       cancelAnimationFrame(frame);
       lenis?.destroy();
+      document.documentElement.style.removeProperty("--scroll-skew");
     };
   }, []);
 
@@ -253,6 +275,7 @@ export function HomePage() {
         <div className="wrap home-art__inner">
           <Reveal className="home-art__media">
             <img
+              className="scroll-skew"
               src="/images/art-klinghardt.webp"
               alt="Dr. Klinghardt with a patient during an A.R.T. session"
               width={558}
@@ -288,6 +311,7 @@ export function HomePage() {
       <section className="section wrap feature-row feature-row--right" id="our-clinic">
         <Reveal className="feature-row__media">
           <img
+            className="scroll-skew"
             src="/images/sophia-clinic.webp"
             alt="The Sophia Health Institute, seen from the garden"
             width={1024}
@@ -327,6 +351,7 @@ export function HomePage() {
 
             <Reveal className="talks-band__media">
               <img
+                className="scroll-skew"
                 src="/images/weekly-talks-live.webp"
                 alt="A live Weekly Talk session with Dr. Klinghardt"
                 width={388}
