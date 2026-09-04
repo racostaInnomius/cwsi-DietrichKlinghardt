@@ -37,21 +37,27 @@
    the gold/orange --grad-card normally closes on (2026-09-04: the card was
    competing with, not losing to, this outer layer — the fix is a smaller
    card leaving more of this visible, not a louder card). White also hands
-   off cleanly into Academy's own white/cream ground right after. */
+   off cleanly into Academy's own white/cream ground right after.
+   Stops are --grad-page-home's own six (navy → blue-2 → blue-3 → pale →
+   pale-2 → white), not a hand-picked mix — that mix reused two stops from
+   --grad-card (#85b9c7, #70a7b8) that sit BEHIND #a9cad1 in lightness, so
+   the journey visibly darkened again after already lightening (2026-09-06
+   feedback: "brincos" instead of one steady progression). This set is
+   already proven monotonic dark→light at page scale; spread evenly across
+   230vh (15% taller than before, same feedback) instead of compressed
+   near the top the way the page-level version is, so the progression
+   reads as gradual for the whole scroll, not front-loaded. */
 .home-hero-pin {
   position: relative;
-  height: 200vh;
+  height: 230vh;
   background: linear-gradient(
     180deg,
     #023866 0,
-    #295b7f 12vh,
-    #6f97ab 26vh,
-    #9abbc9 40vh,
-    #a9cad1 62vh,
-    #85b9c7 88vh,
-    #70a7b8 120vh,
-    #cfe0d6 165vh,
-    #ffffff 200vh
+    #295b7f 35vh,
+    #3d6d85 70vh,
+    #c0dbde 125vh,
+    #eef3f3 185vh,
+    #ffffff 230vh
   );
 }
 /* .plain-section.hero (two classes), not .hero alone — motion.css's
@@ -79,17 +85,15 @@
      that when this switched to the transparent "plain" variant sank the
      photo behind .home-hero-pin's own background entirely. */
   isolation: isolate;
-  /* Ends on white, matching the outer wrapper above — same reasoning. */
+  /* Ends on white, matching the outer wrapper above — same reasoning, same
+     monotonic --grad-page-home stop set (see the comment there). */
   background-image: linear-gradient(
     180deg,
     #023866 0%,
-    #295b7f 6%,
-    #6f97ab 13%,
-    #9abbc9 20%,
-    #a9cad1 31%,
-    #85b9c7 44%,
-    #70a7b8 60%,
-    #cfe0d6 82.5%,
+    #295b7f 15%,
+    #3d6d85 30%,
+    #c0dbde 55%,
+    #eef3f3 80%,
     #ffffff 100%
   );
   background-size: 100% 200%;
