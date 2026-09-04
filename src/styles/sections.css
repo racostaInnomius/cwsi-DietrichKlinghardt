@@ -942,8 +942,9 @@
   height: 200vh;
   background: linear-gradient(
     180deg,
-    var(--cream) 0,
-    #f2e4c9 20vh,
+    var(--white) 0,
+    var(--cream) 12vh,
+    #f2e4c9 24vh,
     var(--gold-bright) 60vh,
     var(--gold) 90vh,
     var(--gold-deep) 130vh,
@@ -975,8 +976,9 @@
     ),
     linear-gradient(
       180deg,
-      var(--cream) 0%,
-      #f2e4c9 10%,
+      var(--white) 0%,
+      var(--cream) 6%,
+      #f2e4c9 12%,
       var(--gold-bright) 30%,
       var(--gold) 45%,
       var(--gold-deep) 65%,
