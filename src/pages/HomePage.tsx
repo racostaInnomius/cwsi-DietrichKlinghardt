@@ -312,6 +312,7 @@ export function HomePage() {
                   key={String(event.id ?? index)}
                   event={event}
                   delay={index * 90}
+                  showPrice={false}
                 />
               ))}
             </ul>

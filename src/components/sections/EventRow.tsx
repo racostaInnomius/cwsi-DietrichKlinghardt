@@ -15,7 +15,17 @@ import { EventMetaIcon } from "@/components/Icons";
  * puts price, remaining seats and "Book Now" on the detail page, and sending a
  * visitor to checkout from a list would skip all of it.
  */
-export function EventRow({ event, delay = 0 }: { event: ContentDoc; delay?: number }) {
+export function EventRow({
+  event,
+  delay = 0,
+  showPrice = true,
+}: {
+  event: ContentDoc;
+  delay?: number;
+  /** Home's teaser strip omits price — the design keeps it for the detail
+   *  page and the full Events listing only (2026-09-04: "No poner precios"). */
+  showPrice?: boolean;
+}) {
   const { day, month } = eventDateParts(event);
   const slug = text(event, "slug");
   const title = text(event, "title", "Untitled event");
@@ -42,7 +52,7 @@ export function EventRow({ event, delay = 0 }: { event: ContentDoc; delay?: numb
         <div className="event-row__meta">
           {soldOut ? <span className="tag">Sold out</span> : null}
           {category ? <span className="tag">{category}</span> : null}
-          {price != null ? (
+          {showPrice && price != null ? (
             <span className="event-row__price">
               {money(price, text(event, "currency", "usd"))}
             </span>
