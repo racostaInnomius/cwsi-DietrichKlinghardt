@@ -58,6 +58,17 @@ export function HomePage() {
     ],
   });
 
+  // The whole opening line (title + first paragraph) reveals as one
+  // continuous letter cascade (2026-09-04: "quiero que animes todo el
+  // párrafo") — staggerMs is derived from its combined length so a longer
+  // CMS edit still finishes cascading in about a second, not several.
+  const introTitleChars = intro.title.split(" ").join("").length;
+  const introBodyChars = intro.paragraphs[0].split(" ").join("").length;
+  const introStaggerMs = Math.max(
+    4,
+    Math.min(18, 1300 / (introTitleChars + introBodyChars)),
+  );
+
   const { upcoming, past } = splitByTime(useCollection("events"));
   const [eventsTab, setEventsTab] = useState<"upcoming" | "past">("upcoming");
   const featured = (eventsTab === "upcoming" ? upcoming : past).slice(0, 3);
@@ -106,10 +117,23 @@ export function HomePage() {
     ];
 
     let currentSkew = 0;
+    // Lerped wheel/touch multiplier — 1 is normal speed. The pinned hero
+    // dwell holds the card still on screen for a long scroll distance,
+    // which tempts people into scrolling harder than they realize; that
+    // pent-up speed used to carry Academy's reveal straight past the
+    // viewport before its own letters finished cascading in (2026-09-04:
+    // "sale a toda velocidad"). Softened here rather than shortening the
+    // dwell itself, which the gradient's own pacing still needs.
+    let scrollEase = 1;
+    const HERO_RELEASE_DAMP = 0.4;
+    const HERO_RAMP_IN = 0.85; // hero-scroll progress where softening begins
 
     let frame: number;
     function raf(time: number) {
       lenis?.raf(time);
+
+      let heroProgress = 0;
+      let heroPastReleasePx = 0;
 
       for (const [wrapperSelector, cardSelector, prop] of pins) {
         const wrapper = document.querySelector<HTMLElement>(wrapperSelector);
@@ -125,6 +149,10 @@ export function HomePage() {
         const dwell = rect.height - card.getBoundingClientRect().height;
         const progress = dwell > 0 ? Math.min(1, Math.max(0, -rect.top / dwell)) : 0;
         card.style.setProperty(prop, String(progress));
+        if (wrapperSelector === ".home-hero-pin") {
+          heroProgress = progress;
+          heroPastReleasePx = dwell > 0 ? Math.max(0, -rect.top - dwell) : 0;
+        }
       }
 
       if (lenis) {
@@ -137,6 +165,23 @@ export function HomePage() {
           "--scroll-skew",
           currentSkew.toFixed(3),
         );
+
+        // Ramp the multiplier down approaching release, hold it soft for
+        // just over half a screen height past release (enough for Academy's
+        // reveal to trigger and finish), then ramp back to normal.
+        const rampOutPx = window.innerHeight * 0.55;
+        let targetEase = 1;
+        if (heroPastReleasePx > 0) {
+          targetEase =
+            HERO_RELEASE_DAMP +
+            (1 - HERO_RELEASE_DAMP) * Math.min(1, heroPastReleasePx / rampOutPx);
+        } else if (heroProgress > HERO_RAMP_IN) {
+          const into = (heroProgress - HERO_RAMP_IN) / (1 - HERO_RAMP_IN);
+          targetEase = 1 - (1 - HERO_RELEASE_DAMP) * into;
+        }
+        scrollEase += (targetEase - scrollEase) * 0.12;
+        lenis.options.wheelMultiplier = scrollEase;
+        lenis.options.touchMultiplier = scrollEase;
       }
 
       frame = requestAnimationFrame(raf);
@@ -198,7 +243,9 @@ export function HomePage() {
           <Reveal className="home-academy__block">
             {/* The title reads as the opening words of the paragraph, not a
                 heading over it — an inline ARIA heading keeps it in the
-                document outline without breaking the line before the copy. */}
+                document outline without breaking the line before the copy.
+                Both spans share one letter-index (charOffset) so the cascade
+                reads as a single sweep across the whole line. */}
             <p className="home-academy__copy">
               <SplitReveal
                 as="span"
@@ -206,8 +253,14 @@ export function HomePage() {
                 className="home-academy__title"
                 role="heading"
                 aria-level={2}
+                staggerMs={introStaggerMs}
               />{" "}
-              {intro.paragraphs[0]}
+              <SplitReveal
+                as="span"
+                text={intro.paragraphs[0]}
+                charOffset={introTitleChars}
+                staggerMs={introStaggerMs}
+              />
             </p>
             {intro.paragraphs.slice(1).map((paragraph) => (
               <p key={paragraph} className="home-academy__copy">

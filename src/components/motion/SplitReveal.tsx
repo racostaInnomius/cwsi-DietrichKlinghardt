@@ -9,8 +9,16 @@ import { useEffect, useRef, useState, type ElementType } from "react";
  * this is the same visual read built from the same IntersectionObserver +
  * CSS approach `Reveal` already uses, so it costs no new dependency.
  *
- * Short strings only, by design — a display-sized headline works (per-word
- * stagger stays legible), a full paragraph would just read as flickering.
+ * Tune `staggerMs` down as text length grows — the default (22ms) suits a
+ * short headline; run it across a full paragraph unchanged and the last
+ * letter starts seconds after the first (2026-09-04: "quiero que animes
+ * todo el párrafo").
+ *
+ * `charOffset` lets two adjacent instances read as one continuous cascade —
+ * e.g. a heading-role title followed by a plain-text span for the copy
+ * after it, each its own element (so only the title carries `role="heading"`)
+ * but sharing one letter count so the second doesn't restart the stagger
+ * from zero.
  *
  * SSG-safe: the real text still exists as regular characters in the
  * static HTML (screen readers get the plain string via `aria-label`,
@@ -21,6 +29,7 @@ export function SplitReveal({
   as: Tag = "span",
   className = "",
   staggerMs = 22,
+  charOffset = 0,
   ...rest
 }: {
   text: string;
@@ -28,6 +37,8 @@ export function SplitReveal({
   className?: string;
   /** Delay between each letter's start, in ms. */
   staggerMs?: number;
+  /** Starting index for the stagger delay — see charOffset above. */
+  charOffset?: number;
 } & Record<string, unknown>) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -60,7 +71,7 @@ export function SplitReveal({
   }, []);
 
   const words = text.split(" ");
-  let charIndex = 0;
+  let charIndex = charOffset;
 
   return (
     <Tag
