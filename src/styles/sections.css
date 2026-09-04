@@ -267,6 +267,13 @@
   padding-top: calc(var(--section-y) * 0.595);
 }
 
+/* The shared .section-heading h2 caps at 22ch so long titles wrap on other
+   pages — "Learn Directly from Dr. Klinghardt" (30 chars) needs the full
+   line here instead (2026-09-04: "cambialo por 1 sola" línea). */
+.home-events .section-heading h2 {
+  max-width: none;
+}
+
 .event-list {
   margin: 0;
   padding: 0;
