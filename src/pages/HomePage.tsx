@@ -254,7 +254,7 @@ export function HomePage() {
                 role="heading"
                 aria-level={2}
                 staggerMs={introStaggerMs}
-              />{" "}
+              />
               <SplitReveal
                 as="span"
                 text={intro.paragraphs[0]}
