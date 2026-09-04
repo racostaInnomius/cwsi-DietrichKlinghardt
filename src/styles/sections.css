@@ -137,29 +137,13 @@
   max-width: 16ch;
   margin-bottom: 24px;
   color: var(--ink);
-  /* The gold burst that used to sit behind this hero moved into the title
-     itself: a slow band of warmth passing through the letterforms, using
-     --gold-text — already measured at 4.5:1+ on light grounds sitewide —
-     so the highlight moment never drops below what the resting ink
-     colour already clears. */
-  background: linear-gradient(
-    100deg,
-    var(--ink) 0%,
-    var(--ink) 30%,
-    var(--gold-text) 50%,
-    var(--ink) 70%,
-    var(--ink) 100%
-  );
-  background-size: 240% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: hero-title-shimmer 9s ease-in-out infinite;
-}
-@keyframes hero-title-shimmer {
-  0% { background-position: 100% 0; }
-  50% { background-position: 0% 0; }
-  100% { background-position: 100% 0; }
+  /* The shared --lh-display (1.04) is tight enough that this display face's
+     ascenders/descenders visibly overlap between wrapped lines — invisible
+     while this heading fit on one line, but the narrower 80vh/wider-margin
+     card (2026-09-04) wraps it to two more often. Scoped here rather than
+     loosening --lh-display itself, which every other heading on the site
+     also reads from. */
+  line-height: 1.18;
 }
 /* Ink, not muted: the panel is a mid blue here, where `--muted` falls to
    2.57:1 while ink clears 6:1 — and dark type is what the design puts on this

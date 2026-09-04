@@ -158,13 +158,25 @@
     scroll-behavior: auto !important;
   }
 
-  /* Without these the reveal, the quote lines and the rotating word would stay
-     at their pre-animation state — invisible or translated off. */
+  /* Without these the reveal and the quote lines would stay at their
+     pre-animation state — invisible or translated off. */
   .reveal,
-  .line-quote__line > span,
-  .rotating-word__item {
+  .line-quote__line > span {
     opacity: 1 !important;
     transform: none !important;
+  }
+  /* The rotating word's items all share one grid cell (by design — see
+     RotatingWord.tsx) so only one is ever meant to be visible at a time.
+     Forcing all of them to opacity: 1 here (as the rule above used to)
+     showed every word stacked on top of each other. Freeze on whichever
+     one is current instead, matching the "first word renders complete in
+     static HTML" fallback the component already promises. */
+  .rotating-word__item[data-state="in"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .rotating-word__item[data-state="out"] {
+    opacity: 0 !important;
   }
   .gradient-card::before,
   .site-shell > main::before,
