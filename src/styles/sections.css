@@ -962,31 +962,26 @@
   display: flex;
   align-items: center;
   isolation: isolate;
-  /* Same radial glow as always, layered over an oversized (200%) linear
-     gradient that --newsletter-scroll (HomePage.tsx, written every frame)
-     slides through — first half close to how this band always looked
-     (cream warming into gold), second half continuing into the same navy
-     the footer opens on right after, so the hand-off reads as one
-     continuous dusk rather than a cut. */
-  background-image:
-    radial-gradient(
-      65% 55% at 85% 15%,
-      color-mix(in srgb, var(--gold-bright) 45%, transparent) 0%,
-      transparent 65%
-    ),
-    linear-gradient(
-      180deg,
-      var(--white) 0%,
-      var(--cream) 6%,
-      #f2e4c9 12%,
-      var(--gold-bright) 30%,
-      var(--gold) 45%,
-      var(--gold-deep) 65%,
-      #6b4a1f 82%,
-      #023866 100%
-    );
-  background-size: 100% 100%, 100% 200%;
-  background-position: 0 0, 0 calc(var(--newsletter-scroll, 0) * 100%);
+  /* The radial glow this used to carry alongside the linear gradient (same
+     one the plain, non-Home version below still has) read as a hard patch
+     of colour right where Shop hands off into this section — client
+     removed it directly in devtools (2026-09-04) confirming the plain
+     oversized (200%) linear gradient alone, sliding through
+     --newsletter-scroll (HomePage.tsx, written every frame), reads as one
+     continuous dusk with no seam. */
+  background-image: linear-gradient(
+    180deg,
+    var(--white) 0%,
+    var(--cream) 6%,
+    #f2e4c9 12%,
+    var(--gold-bright) 30%,
+    var(--gold) 45%,
+    var(--gold-deep) 65%,
+    #6b4a1f 82%,
+    #023866 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 calc(var(--newsletter-scroll, 0) * 100%);
 }
 /* Every other page's plain, unmoving version — unchanged from before. The
    nested rule above is three classes deep (0,3,0) against this one class
