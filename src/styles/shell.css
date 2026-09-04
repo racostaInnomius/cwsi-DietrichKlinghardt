@@ -248,6 +248,9 @@
   min-height: 42px;
   padding: 0 22px;
   font-size: 12px;
+  /* Its own literal, not --cream (.btn-light's default) — that fill is
+     shared with every other light button on the site. */
+  background: #e0e7e1;
 }
 
 .cart-button {
