@@ -204,8 +204,8 @@
 
 .site-nav__menu {
   position: absolute;
-  top: calc(100% + 10px);
-  left: -14px;
+  top: calc(100% + 4px);
+  left: 0;
   z-index: 20;
   min-width: 264px;
   margin: 0;
