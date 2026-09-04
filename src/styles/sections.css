@@ -241,13 +241,13 @@
   width: fit-content;
   margin-inline: auto;
 }
-/* Academy sits directly above Events — bring the two 30% closer than the
-   page's normal section rhythm (2026-09-04: "reduce la distancia... en un
-   30%"). Scaling both sides of the gap by the same factor (rather than just
-   one) keeps the cut proportional at every viewport width, since each side
-   clamps over its own range. */
+/* Academy sits directly above Events — bring the two closer than the page's
+   normal section rhythm (2026-09-04: 30%, then "reduce un 15% mas" ->
+   0.7 * 0.85 = 0.595 of the original gap). Scaling both sides of the gap by
+   the same factor (rather than just one) keeps the cut proportional at
+   every viewport width, since each side clamps over its own range. */
 .home-academy__inner {
-  padding-bottom: calc(clamp(48px, 7vw, 88px) * 0.7);
+  padding-bottom: calc(clamp(48px, 7vw, 88px) * 0.595);
 }
 
 .home-quote {
@@ -264,7 +264,7 @@
 
 /* The other half of the Academy→Events gap reduction above. */
 .home-events {
-  padding-top: calc(var(--section-y) * 0.7);
+  padding-top: calc(var(--section-y) * 0.595);
 }
 
 .event-list {
