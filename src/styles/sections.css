@@ -241,6 +241,14 @@
   width: fit-content;
   margin-inline: auto;
 }
+/* Academy sits directly above Events — bring the two 30% closer than the
+   page's normal section rhythm (2026-09-04: "reduce la distancia... en un
+   30%"). Scaling both sides of the gap by the same factor (rather than just
+   one) keeps the cut proportional at every viewport width, since each side
+   clamps over its own range. */
+.home-academy__inner {
+  padding-bottom: calc(clamp(48px, 7vw, 88px) * 0.7);
+}
 
 .home-quote {
   background: var(--cream-2);
@@ -253,6 +261,11 @@
 }
 
 /* ── Events ───────────────────────────────────────────────────── */
+
+/* The other half of the Academy→Events gap reduction above. */
+.home-events {
+  padding-top: calc(var(--section-y) * 0.7);
+}
 
 .event-list {
   margin: 0;
