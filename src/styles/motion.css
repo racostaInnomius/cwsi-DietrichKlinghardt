@@ -26,6 +26,35 @@
   transform: none;
 }
 
+/* ── Split-letter reveal (SplitReveal.tsx) ────────────────────── */
+
+/* perspective on the container, not each letter, is what gives the tilt
+   below a shared vanishing point — matched to beautyunscripted.com's own
+   400px. */
+.split-reveal {
+  perspective: 400px;
+}
+.split-reveal__word {
+  display: inline-block;
+  /* Stands in for the literal space characters SplitReveal.tsx doesn't
+     render between words (every word is its own inline-block so a line
+     never breaks mid-word; a real space node would sit outside that box
+     and animate oddly on its own). */
+  margin-right: 0.26em;
+}
+.split-reveal__char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-0.55em) rotateX(15deg);
+  transform-origin: 0% 100%;
+  transition: opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+.split-reveal.is-visible .split-reveal__char {
+  opacity: 1;
+  transform: none;
+}
+
 /* ── Quote revealed line by line ──────────────────────────────── */
 
 .line-quote {

@@ -8,6 +8,7 @@ import { splitByTime } from "@/lib/format";
 import { featuredProducts, usedCategories, useStoreProducts } from "@/lib/store";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { SplitReveal } from "@/components/motion/SplitReveal";
 import { RotatingWord } from "@/components/motion/RotatingWord";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { EventRow } from "@/components/sections/EventRow";
@@ -199,9 +200,13 @@ export function HomePage() {
                 heading over it — an inline ARIA heading keeps it in the
                 document outline without breaking the line before the copy. */}
             <p className="home-academy__copy">
-              <span role="heading" aria-level={2}>
-                {intro.title}
-              </span>{" "}
+              <SplitReveal
+                as="span"
+                text={intro.title}
+                className="home-academy__title"
+                role="heading"
+                aria-level={2}
+              />{" "}
               {intro.paragraphs[0]}
             </p>
             {intro.paragraphs.slice(1).map((paragraph) => (
