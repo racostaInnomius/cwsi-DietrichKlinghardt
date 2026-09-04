@@ -139,7 +139,7 @@
 .site-nav__list {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 18px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -451,9 +451,11 @@
 
 /* ── Responsive ───────────────────────────────────────────────── */
 
-/* Raised from 1320px: the desktop nav's larger 16px links push the fit point
-   for one unbroken row (brand + nav + Contact Us + cart) out to ~1350px. */
-@media (max-width: 1360px) {
+/* Raised again from 1360px: opening the desktop gap back up to 18px (from
+   10px) for a less cramped nav pushes the one-row fit point out to ~1430px —
+   below that, 1366/1400px laptops fall back to this same compact treatment
+   the wider desktop nav used before the gap was widened. */
+@media (max-width: 1428px) {
   .site-header__cta {
     display: none;
   }
@@ -464,6 +466,10 @@
     max-width: 15ch;
     font-size: 10px;
     letter-spacing: 0.08em;
+    /* The desktop rule forces one line via nowrap; this range relies on
+       max-width actually wrapping long labels ("Dr. Klinghardt Akademy")
+       instead of overflowing into the next item. */
+    white-space: normal;
   }
 }
 
