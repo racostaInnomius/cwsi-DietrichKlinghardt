@@ -349,13 +349,7 @@ export function HomePage() {
       </section>
 
       {/* ── Shop ─────────────────────────────────────────────────── */}
-      {/* Full-bleed wrapper carries the gradient; .home-shop__inner keeps
-          the existing .section/.wrap spacing for the actual content. Was a
-          flat white section — the client's 2026-09-04 request wants the
-          background visibly alive here specifically, the way it now is in
-          the hero. */}
-      <section className="home-shop">
-        <div className="section wrap home-shop__inner">
+      <section className="section wrap home-shop">
         <Reveal className="section-heading section-heading--center">
           <h2>{shop.title}</h2>
           <p className="lead">{shop.lead}</p>
@@ -404,7 +398,6 @@ export function HomePage() {
             </Link>
           </Reveal>
         )}
-        </div>
       </section>
 
       <div className="home-newsletter-pin">

@@ -238,26 +238,6 @@
   margin-inline: auto;
 }
 
-/* ── Shop ─────────────────────────────────────────────────────── */
-
-/* Was flat white — the page gradient's white body band runs straight
-   through it. The client's 2026-09-04 request specifically calls this
-   section out, alongside the hero and newsletter, as somewhere the
-   background should read as alive. Full-bleed, unlike the inset .gradient
-   -card panels: this section reaches the full width of the section like
-   .home-academy does, gold-family stops only (--gold-bright/--gold/
-   --gold-deep), no new colour. */
-.home-shop {
-  background: linear-gradient(
-    180deg,
-    var(--cream) 0%,
-    var(--cream-2) 14%,
-    var(--gold-bright) 62%,
-    var(--gold) 84%,
-    var(--gold-deep) 100%
-  );
-}
-
 .home-quote {
   background: var(--cream-2);
 }
