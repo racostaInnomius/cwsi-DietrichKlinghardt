@@ -134,9 +134,21 @@
   color: var(--gold-on-tint);
 }
 .hero h1 {
-  max-width: 16ch;
+  /* Caps how wide any single line can run, but on its own this doesn't
+     know where the photo starts — a wide word (e.g. "Diagnosis") could
+     still stretch to fill the full 13ch and reach Dr. Klinghardt's face
+     even though a shorter one ("Labels") stayed clear. The real
+     boundary is font-size below: shrunk to leave a fixed, word-
+     independent gap before the photo, whichever word is showing. */
+  max-width: 13ch;
   margin-bottom: 24px;
   color: var(--ink);
+  /* --fs-display-xl (7.2vw) was sized for the old full-width, 100vh
+     card; unchanged, it left "Diagnosis" (the widest rotating word)
+     overlapping the photo once the card shrank 20% (2026-09-04). Scaled
+     down by roughly the same amount here rather than in the shared
+     token, which other pages' headings also read from. */
+  font-size: clamp(36px, 5.2vw, 84px);
   /* The shared --lh-display (1.04) is tight enough that this display face's
      ascenders/descenders visibly overlap between wrapped lines — invisible
      while this heading fit on one line, but the narrower 80vh/wider-margin
@@ -3397,6 +3409,15 @@
     margin: 0 clamp(12px, 2.2vw, 34px);
     border-radius: var(--radius-sm);
     overflow: hidden;
+  }
+  /* The desktop rule shrinks this to leave the photo clear beside the text
+     (2026-09-04) — irrelevant here, where the photo stacks below the copy
+     instead of sitting beside it, so there's nothing to clear. Restores
+     the original, larger size and width instead of inheriting the
+     desktop-tuned ones. */
+  .hero h1 {
+    max-width: none;
+    font-size: var(--fs-display-xl);
   }
   .hero__photo {
     order: 2;
