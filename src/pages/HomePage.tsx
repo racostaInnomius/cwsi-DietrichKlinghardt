@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Lenis from "lenis";
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
@@ -67,6 +68,30 @@ export function HomePage() {
   const picks = featuredProducts(products);
   const shopPicks = (picks.length ? picks : products).slice(0, 5);
 
+  // Smooth/eased scrolling for the hero's scroll-pin effect below — Home
+  // only, so the rest of the site keeps native scroll. Duration/easing
+  // measured directly off newgenre.studio (a single wheel tick there takes
+  // ~450ms to settle; this matches that curve). Skipped entirely under
+  // reduced-motion, where the pin still works but scroll stays native.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const lenis = new Lenis({
+      duration: 0.75,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+    let frame: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      frame = requestAnimationFrame(raf);
+    }
+    frame = requestAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(frame);
+      lenis.destroy();
+    };
+  }, []);
+
   return (
     <>
       <Seo
@@ -76,36 +101,38 @@ export function HomePage() {
       />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <AnimatedGradient variant="card" intensity="strong" className="hero">
-        {/* Decorative: the headline already names the subject, so an alt text
-            here would only repeat it to a screen reader. */}
-        <img
-          className="hero__photo"
-          src="/images/hero-klinghardt.webp"
-          alt=""
-          width={1300}
-          height={600}
-          fetchPriority="high"
-          decoding="async"
-        />
-        <div className="wrap hero__inner">
-          <Reveal>
-            <p className="eyebrow hero__eyebrow">Dr. Dietrich Klinghardt™</p>
-            <h1 className="display-xl">
-              Healing Beyond{" "}
-              <RotatingWord words={["Symptoms", "Diagnosis", "Labels"]} />
-            </h1>
-            <div className="hero__actions">
-              <Link className="btn btn-light" to="/about">
-                Learn more
-              </Link>
-              <Link className="btn btn-ghost" to="/events">
-                Upcoming events
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </AnimatedGradient>
+      <div className="home-hero-pin">
+        <AnimatedGradient variant="plain" className="hero">
+          {/* Decorative: the headline already names the subject, so an alt text
+              here would only repeat it to a screen reader. */}
+          <img
+            className="hero__photo"
+            src="/images/hero-klinghardt.webp"
+            alt=""
+            width={1300}
+            height={600}
+            fetchPriority="high"
+            decoding="async"
+          />
+          <div className="wrap hero__inner">
+            <Reveal>
+              <p className="eyebrow hero__eyebrow">Dr. Dietrich Klinghardt™</p>
+              <h1 className="display-xl">
+                Healing Beyond{" "}
+                <RotatingWord words={["Symptoms", "Diagnosis", "Labels"]} />
+              </h1>
+              <div className="hero__actions">
+                <Link className="btn btn-light" to="/about">
+                  Learn more
+                </Link>
+                <Link className="btn btn-ghost" to="/events">
+                  Upcoming events
+                </Link>
+              </div>
+            </Reveal>
+          </div>
+        </AnimatedGradient>
+      </div>
 
       {/* ── Academy teaser ───────────────────────────────────────── */}
       <AnimatedGradient variant="plain" className="home-academy">
@@ -287,7 +314,13 @@ export function HomePage() {
       </section>
 
       {/* ── Shop ─────────────────────────────────────────────────── */}
-      <section className="section wrap home-shop">
+      {/* Full-bleed wrapper carries the gradient; .home-shop__inner keeps
+          the existing .section/.wrap spacing for the actual content. Was a
+          flat white section — the client's 2026-09-04 request wants the
+          background visibly alive here specifically, the way it now is in
+          the hero. */}
+      <section className="home-shop">
+        <div className="section wrap home-shop__inner">
         <Reveal className="section-heading section-heading--center">
           <h2>{shop.title}</h2>
           <p className="lead">{shop.lead}</p>
@@ -336,6 +369,7 @@ export function HomePage() {
             </Link>
           </Reveal>
         )}
+        </div>
       </section>
 
       <NewsletterSection />

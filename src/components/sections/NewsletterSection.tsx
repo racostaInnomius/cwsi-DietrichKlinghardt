@@ -14,7 +14,10 @@ type Status = "idle" | "sending" | "done" | "error";
  * confirmation links still land on /newsletter/confirmed|error.
  *
  * The designer marks Newsletter as one of the two places where the background
- * gradient should move most, hence `intensity="strong"`.
+ * should read as visibly alive (2026-09-04, alongside the hero and Shop) —
+ * `#newsletter`'s radial glow in sections.css is what actually delivers that;
+ * `intensity` only ever did anything on the `card`/`card-warm` variants this
+ * section doesn't use, so the old `intensity="strong"` here was dead.
  */
 export function NewsletterSection() {
   const section = useSection(SECTION.newsletter, {
@@ -97,7 +100,6 @@ export function NewsletterSection() {
     <AnimatedGradient
       id="newsletter"
       variant="plain"
-      intensity="strong"
       className="newsletter"
     >
       <div className="wrap newsletter__inner">

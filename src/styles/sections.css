@@ -13,12 +13,46 @@
    rounded box with margins, sitting on the navy top of the page gradient, and
    its type is dark navy — not white. That is what makes the eyebrow and the
    lead readable without any special-casing. */
-.hero {
-  margin: 0 clamp(12px, 2.2vw, 34px);
+/* Scroll-driven background: measured directly off newgenre.studio (their
+   hero text sits in `position: sticky; top: 0; height: 100vh` inside a
+   section far taller than the viewport — confirmed by watching its
+   boundingClientRect stay put through 900px of scroll, then release). The
+   panel itself now paints the tall gradient (below); .hero stays pinned on
+   top of it for one screen, so the colour keeps changing while "Healing
+   Beyond Symptoms" holds still, matching the client's 2026-09-04 request.
+   Below 560px the existing mobile layout (stacked photo, static flow)
+   takes over instead — sticky pin + a 200vh reserve reads as broken, not
+   dramatic, at that size, and .home-hero-pin collapses to auto height. */
+.home-hero-pin {
+  position: relative;
+  height: 200vh;
+  background: linear-gradient(
+    180deg,
+    #023866 0,
+    #295b7f 12vh,
+    #6f97ab 26vh,
+    #9abbc9 40vh,
+    #a9cad1 62vh,
+    #85b9c7 88vh,
+    #70a7b8 120vh,
+    #90a28f 165vh,
+    #cca256 200vh
+  );
+}
+/* .plain-section.hero (two classes), not .hero alone — motion.css's
+   .plain-section { position: relative } loads after this file, so an
+   equal-specificity .hero rule silently lost position: sticky to it. */
+.plain-section.hero {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   color: var(--ink);
-  /* Less rounded than the shared .gradient-card default — the panel sits
-     directly under the header, and the design keeps that corner subtle. */
-  border-radius: var(--radius-sm);
+  /* .gradient-card (the old "card" variant this used) carried its own
+     isolation: isolate, which is what kept .hero__photo's z-index: -1
+     contained locally instead of escaping to a higher ancestor. Losing
+     that when this switched to the transparent "plain" variant sank the
+     photo behind .home-hero-pin's own background entirely. */
+  isolation: isolate;
 }
 
 /* The panel the client delivered is the design's hero exactly: the gradient
@@ -62,6 +96,29 @@
   max-width: 16ch;
   margin-bottom: 24px;
   color: var(--ink);
+  /* The gold burst that used to sit behind this hero moved into the title
+     itself: a slow band of warmth passing through the letterforms, using
+     --gold-text — already measured at 4.5:1+ on light grounds sitewide —
+     so the highlight moment never drops below what the resting ink
+     colour already clears. */
+  background: linear-gradient(
+    100deg,
+    var(--ink) 0%,
+    var(--ink) 30%,
+    var(--gold-text) 50%,
+    var(--ink) 70%,
+    var(--ink) 100%
+  );
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: hero-title-shimmer 9s ease-in-out infinite;
+}
+@keyframes hero-title-shimmer {
+  0% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+  100% { background-position: 100% 0; }
 }
 /* Ink, not muted: the panel is a mid blue here, where `--muted` falls to
    2.57:1 while ink clears 6:1 — and dark type is what the design puts on this
@@ -142,6 +199,26 @@
   display: flex;
   width: fit-content;
   margin-inline: auto;
+}
+
+/* ── Shop ─────────────────────────────────────────────────────── */
+
+/* Was flat white — the page gradient's white body band runs straight
+   through it. The client's 2026-09-04 request specifically calls this
+   section out, alongside the hero and newsletter, as somewhere the
+   background should read as alive. Full-bleed, unlike the inset .gradient
+   -card panels: this section reaches the full width of the section like
+   .home-academy does, gold-family stops only (--gold-bright/--gold/
+   --gold-deep), no new colour. */
+.home-shop {
+  background: linear-gradient(
+    180deg,
+    var(--cream) 0%,
+    var(--cream-2) 14%,
+    var(--gold-bright) 62%,
+    var(--gold) 84%,
+    var(--gold-deep) 100%
+  );
 }
 
 .home-quote {
@@ -837,6 +914,18 @@
 
 /* ── Newsletter band ──────────────────────────────────────────── */
 
+/* Was relying entirely on the page gradient's own amber tail for colour
+   here — real, but static. A warm radial glow layered on top (same
+   technique as newgenre.studio's own newsletter card: one off-canvas
+   radial, gold-family only) gives it presence without repainting the
+   page gradient underneath. */
+.newsletter {
+  background-image: radial-gradient(
+    65% 55% at 85% 15%,
+    color-mix(in srgb, var(--gold-bright) 45%, transparent) 0%,
+    transparent 65%
+  );
+}
 .newsletter__inner {
   padding-block: var(--section-y);
   text-align: center;
@@ -3207,9 +3296,27 @@
      it lead. Stacked instead: copy first, then the photo as its own frame
      below — bigger and centred rather than the full letterboxed image, so
      he reads as large and present, not a thin strip under the text. */
-  .hero {
+  /* The scroll-pin effect is desktop-only — sticky + a 200vh reserve on
+     top of this stacked, static layout would just overflow/clip. */
+  .home-hero-pin {
+    height: auto;
+    background: none;
+  }
+  /* .plain-section.hero, matching the two-class selector the base rule
+     uses above 560px — a plain .hero here wouldn't be specific enough to
+     override it. */
+  .plain-section.hero {
+    position: static;
+    height: auto;
     display: flex;
     flex-direction: column;
+    /* .hero paints no background of its own above 560px (the pin wrapper
+       does) — restored here since the pin's tall gradient doesn't apply
+       at this width. Same stops --grad-card already used. */
+    background: var(--grad-card);
+    margin: 0 clamp(12px, 2.2vw, 34px);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
   }
   .hero__photo {
     order: 2;
