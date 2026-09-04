@@ -106,7 +106,13 @@ export function HomePage() {
         const card = document.querySelector<HTMLElement>(cardSelector);
         if (!wrapper || !card) continue;
         const rect = wrapper.getBoundingClientRect();
-        const dwell = rect.height - window.innerHeight;
+        // The card's own height, not window.innerHeight — CSS sticky's
+        // real release point is wrapper height minus the sticky element's
+        // OWN height, and the hero card is deliberately shorter than the
+        // viewport (80vh) since 2026-09-04. Using the viewport height here
+        // would release the card early and desync --hero-scroll from where
+        // it actually unsticks.
+        const dwell = rect.height - card.getBoundingClientRect().height;
         const progress = dwell > 0 ? Math.min(1, Math.max(0, -rect.top / dwell)) : 0;
         card.style.setProperty(prop, String(progress));
       }

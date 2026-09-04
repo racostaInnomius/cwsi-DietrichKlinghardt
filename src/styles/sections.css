@@ -30,13 +30,14 @@
    Below 560px the existing mobile layout (stacked photo, static flow)
    takes over instead — sticky pin + a 200vh reserve reads as broken, not
    dramatic, at that size, and .home-hero-pin collapses to auto height. */
-/* The card's own moving background reads as too small/partial on its own
-   (2026-09-04 feedback) — the photo and the card's own modest width leave
-   little room for it to register. This paints the same colour journey
-   across the FULL wrapper too, so the margins either side of the card (and
-   the header sitting on top of it) carry the same transition — no JS
-   needed here, since this wrapper isn't sticky, plain scroll naturally
-   reveals it in sync with the card's own JS-driven version underneath. */
+/* Paints the same colour journey across the FULL wrapper too, so the space
+   around the card carries the transition as well — no JS needed here,
+   since this wrapper isn't sticky, plain scroll naturally reveals it in
+   sync with the card's own JS-driven version underneath. Ends on white, not
+   the gold/orange --grad-card normally closes on (2026-09-04: the card was
+   competing with, not losing to, this outer layer — the fix is a smaller
+   card leaving more of this visible, not a louder card). White also hands
+   off cleanly into Academy's own white/cream ground right after. */
 .home-hero-pin {
   position: relative;
   height: 200vh;
@@ -49,8 +50,8 @@
     #a9cad1 62vh,
     #85b9c7 88vh,
     #70a7b8 120vh,
-    #90a28f 165vh,
-    #cca256 200vh
+    #cfe0d6 165vh,
+    #ffffff 200vh
   );
 }
 /* .plain-section.hero (two classes), not .hero alone — motion.css's
@@ -59,8 +60,13 @@
 .plain-section.hero {
   position: sticky;
   top: 0;
-  height: 100vh;
-  margin: 0 clamp(12px, 2.2vw, 34px);
+  /* 20% smaller (2026-09-04 feedback: the card itself, not thin margins,
+     was what crowded out the background effect) — both height and side
+     margin scale down together so the card reads as a smaller, still-
+     centred island in a much larger moving field, rather than a full-
+     bleed panel with a sliver of colour peeking round it. */
+  height: 80vh;
+  margin: 0 clamp(40px, 10vw, 160px);
   color: var(--ink);
   border-radius: var(--radius-sm);
   /* Clips the oversized background to the card's own rounded rect — without
@@ -73,6 +79,7 @@
      that when this switched to the transparent "plain" variant sank the
      photo behind .home-hero-pin's own background entirely. */
   isolation: isolate;
+  /* Ends on white, matching the outer wrapper above — same reasoning. */
   background-image: linear-gradient(
     180deg,
     #023866 0%,
@@ -82,8 +89,8 @@
     #a9cad1 31%,
     #85b9c7 44%,
     #70a7b8 60%,
-    #90a28f 82.5%,
-    #cca256 100%
+    #cfe0d6 82.5%,
+    #ffffff 100%
   );
   background-size: 100% 200%;
   background-position: 0 calc(var(--hero-scroll, 0) * 100%);
