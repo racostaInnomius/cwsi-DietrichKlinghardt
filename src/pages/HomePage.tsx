@@ -109,10 +109,27 @@ export function HomePage() {
 
       {/* ── Academy teaser ───────────────────────────────────────── */}
       <AnimatedGradient variant="plain" className="home-academy">
+        <img
+          className="home-academy__photo"
+          src="/images/klinghardt-teaching.webp"
+          alt=""
+          width={1400}
+          height={902}
+          loading="lazy"
+          decoding="async"
+        />
         <div className="home-academy__inner">
           <Reveal className="home-academy__block">
-            <h2>{intro.title}</h2>
-            {intro.paragraphs.map((paragraph) => (
+            {/* The title reads as the opening words of the paragraph, not a
+                heading over it — an inline ARIA heading keeps it in the
+                document outline without breaking the line before the copy. */}
+            <p className="home-academy__copy">
+              <span role="heading" aria-level={2}>
+                {intro.title}
+              </span>{" "}
+              {intro.paragraphs[0]}
+            </p>
+            {intro.paragraphs.slice(1).map((paragraph) => (
               <p key={paragraph} className="home-academy__copy">
                 {paragraph}
               </p>
