@@ -68,27 +68,49 @@ export function HomePage() {
   const picks = featuredProducts(products);
   const shopPicks = (picks.length ? picks : products).slice(0, 5);
 
-  // Smooth/eased scrolling for the hero's scroll-pin effect below — Home
-  // only, so the rest of the site keeps native scroll. Duration/easing
-  // measured directly off newgenre.studio (a single wheel tick there takes
-  // ~450ms to settle; this matches that curve). Skipped entirely under
-  // reduced-motion, where the pin still works but scroll stays native.
+  // Drives two things every frame, Home only:
+  //  1. --hero-scroll (0→1), which sections.css reads to slide the hero
+  //     card's own oversized background image — the gradient scrolling
+  //     *inside* the still-rounded, still-pinned card. Computed from the
+  //     .home-hero-pin wrapper's own position, independent of Lenis, so it
+  //     still works correctly under reduced-motion (only the inertia is
+  //     skipped there, never the pin effect itself).
+  //  2. Lenis, giving the scroll real inertia — duration/easing measured
+  //     directly off newgenre.studio (a single wheel tick there takes
+  //     ~450ms to settle; this matches that curve). Skipped under
+  //     reduced-motion.
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const lenis = new Lenis({
-      duration: 0.75,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    });
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const lenis = prefersReducedMotion
+      ? null
+      : new Lenis({
+          duration: 0.75,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+        });
+
     let frame: number;
     function raf(time: number) {
-      lenis.raf(time);
+      lenis?.raf(time);
+
+      const pin = document.querySelector<HTMLElement>(".home-hero-pin");
+      const hero = document.querySelector<HTMLElement>(".plain-section.hero");
+      if (pin && hero) {
+        const rect = pin.getBoundingClientRect();
+        const dwell = rect.height - window.innerHeight;
+        const progress = dwell > 0 ? Math.min(1, Math.max(0, -rect.top / dwell)) : 0;
+        hero.style.setProperty("--hero-scroll", String(progress));
+      }
+
       frame = requestAnimationFrame(raf);
     }
     frame = requestAnimationFrame(raf);
+
     return () => {
       cancelAnimationFrame(frame);
-      lenis.destroy();
+      lenis?.destroy();
     };
   }, []);
 

@@ -12,32 +12,27 @@
 /* The hero is an inset PANEL, not a full-bleed band: in the design it is a
    rounded box with margins, sitting on the navy top of the page gradient, and
    its type is dark navy — not white. That is what makes the eyebrow and the
-   lead readable without any special-casing. */
+   lead readable without any special-casing. Kept on the real site (2026-09-04
+   client feedback) even with the scroll-pin effect below — the gradient
+   scrolls *inside* the still-rounded, still-inset card, not the card itself
+   going full-bleed. */
 /* Scroll-driven background: measured directly off newgenre.studio (their
    hero text sits in `position: sticky; top: 0; height: 100vh` inside a
    section far taller than the viewport — confirmed by watching its
-   boundingClientRect stay put through 900px of scroll, then release). The
-   panel itself now paints the tall gradient (below); .hero stays pinned on
-   top of it for one screen, so the colour keeps changing while "Healing
-   Beyond Symptoms" holds still, matching the client's 2026-09-04 request.
+   boundingClientRect stay put through 900px of scroll, then release). Their
+   panel is full-bleed; keeping this one inset means the *card itself* can't
+   grow taller than the viewport, so the tall gradient instead lives as this
+   same card's own oversized background image (200% of its height), nudged
+   upward by --hero-scroll — a 0→1 progress value HomePage.tsx writes each
+   frame from the pin wrapper's own scroll position. At rest (0) the top half
+   of that image shows, i.e. roughly what the card always opened on; scrolling
+   through the pin's 100vh dwell slides the remaining half into view.
    Below 560px the existing mobile layout (stacked photo, static flow)
    takes over instead — sticky pin + a 200vh reserve reads as broken, not
    dramatic, at that size, and .home-hero-pin collapses to auto height. */
 .home-hero-pin {
   position: relative;
   height: 200vh;
-  background: linear-gradient(
-    180deg,
-    #023866 0,
-    #295b7f 12vh,
-    #6f97ab 26vh,
-    #9abbc9 40vh,
-    #a9cad1 62vh,
-    #85b9c7 88vh,
-    #70a7b8 120vh,
-    #90a28f 165vh,
-    #cca256 200vh
-  );
 }
 /* .plain-section.hero (two classes), not .hero alone — motion.css's
    .plain-section { position: relative } loads after this file, so an
@@ -46,13 +41,33 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
+  border-radius: var(--radius-sm);
+  /* Clips the oversized background to the card's own rounded rect — without
+     this the lower half of the 200%-tall image would spill past the card's
+     bottom edge into whatever comes after it. */
+  overflow: hidden;
   /* .gradient-card (the old "card" variant this used) carried its own
      isolation: isolate, which is what kept .hero__photo's z-index: -1
      contained locally instead of escaping to a higher ancestor. Losing
      that when this switched to the transparent "plain" variant sank the
      photo behind .home-hero-pin's own background entirely. */
   isolation: isolate;
+  background-image: linear-gradient(
+    180deg,
+    #023866 0%,
+    #295b7f 6%,
+    #6f97ab 13%,
+    #9abbc9 20%,
+    #a9cad1 31%,
+    #85b9c7 44%,
+    #70a7b8 60%,
+    #90a28f 82.5%,
+    #cca256 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 calc(var(--hero-scroll, 0) * 100%);
 }
 
 /* The panel the client delivered is the design's hero exactly: the gradient
@@ -3300,7 +3315,6 @@
      top of this stacked, static layout would just overflow/clip. */
   .home-hero-pin {
     height: auto;
-    background: none;
   }
   /* .plain-section.hero, matching the two-class selector the base rule
      uses above 560px — a plain .hero here wouldn't be specific enough to
@@ -3310,9 +3324,10 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    /* .hero paints no background of its own above 560px (the pin wrapper
-       does) — restored here since the pin's tall gradient doesn't apply
-       at this width. Same stops --grad-card already used. */
+    /* Resets the desktop rule's oversized, scroll-driven background image —
+       the shorthand clears background-size/-position along with it — back
+       to a plain, static --grad-card fill. The scroll-pin effect is
+       desktop-only; below 560px the card just shows its usual gradient. */
     background: var(--grad-card);
     margin: 0 clamp(12px, 2.2vw, 34px);
     border-radius: var(--radius-sm);
