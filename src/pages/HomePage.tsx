@@ -69,12 +69,13 @@ export function HomePage() {
   const shopPicks = (picks.length ? picks : products).slice(0, 5);
 
   // Drives two things every frame, Home only:
-  //  1. --hero-scroll (0→1), which sections.css reads to slide the hero
-  //     card's own oversized background image — the gradient scrolling
-  //     *inside* the still-rounded, still-pinned card. Computed from the
-  //     .home-hero-pin wrapper's own position, independent of Lenis, so it
-  //     still works correctly under reduced-motion (only the inertia is
-  //     skipped there, never the pin effect itself).
+  //  1. A 0→1 scroll-progress custom property on each pinned card's own
+  //     element (--hero-scroll, --newsletter-scroll), which sections.css
+  //     reads to slide that card's oversized background image — the
+  //     gradient scrolling *inside* the still-rounded/still-pinned card.
+  //     Computed from each .home-*-pin wrapper's own position, independent
+  //     of Lenis, so it keeps working under reduced-motion (only the
+  //     inertia is skipped there, never the pin effect itself).
   //  2. Lenis, giving the scroll real inertia — duration/easing measured
   //     directly off newgenre.studio (a single wheel tick there takes
   //     ~450ms to settle; this matches that curve). Skipped under
@@ -91,17 +92,23 @@ export function HomePage() {
           smoothWheel: true,
         });
 
+    const pins: Array<[wrapper: string, card: string, prop: string]> = [
+      [".home-hero-pin", ".plain-section.hero", "--hero-scroll"],
+      [".home-newsletter-pin", ".plain-section.newsletter", "--newsletter-scroll"],
+    ];
+
     let frame: number;
     function raf(time: number) {
       lenis?.raf(time);
 
-      const pin = document.querySelector<HTMLElement>(".home-hero-pin");
-      const hero = document.querySelector<HTMLElement>(".plain-section.hero");
-      if (pin && hero) {
-        const rect = pin.getBoundingClientRect();
+      for (const [wrapperSelector, cardSelector, prop] of pins) {
+        const wrapper = document.querySelector<HTMLElement>(wrapperSelector);
+        const card = document.querySelector<HTMLElement>(cardSelector);
+        if (!wrapper || !card) continue;
+        const rect = wrapper.getBoundingClientRect();
         const dwell = rect.height - window.innerHeight;
         const progress = dwell > 0 ? Math.min(1, Math.max(0, -rect.top / dwell)) : 0;
-        hero.style.setProperty("--hero-scroll", String(progress));
+        card.style.setProperty(prop, String(progress));
       }
 
       frame = requestAnimationFrame(raf);
@@ -394,7 +401,9 @@ export function HomePage() {
         </div>
       </section>
 
-      <NewsletterSection />
+      <div className="home-newsletter-pin">
+        <NewsletterSection />
+      </div>
     </>
   );
 }

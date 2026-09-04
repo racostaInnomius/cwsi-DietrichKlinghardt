@@ -30,9 +30,28 @@
    Below 560px the existing mobile layout (stacked photo, static flow)
    takes over instead — sticky pin + a 200vh reserve reads as broken, not
    dramatic, at that size, and .home-hero-pin collapses to auto height. */
+/* The card's own moving background reads as too small/partial on its own
+   (2026-09-04 feedback) — the photo and the card's own modest width leave
+   little room for it to register. This paints the same colour journey
+   across the FULL wrapper too, so the margins either side of the card (and
+   the header sitting on top of it) carry the same transition — no JS
+   needed here, since this wrapper isn't sticky, plain scroll naturally
+   reveals it in sync with the card's own JS-driven version underneath. */
 .home-hero-pin {
   position: relative;
   height: 200vh;
+  background: linear-gradient(
+    180deg,
+    #023866 0,
+    #295b7f 12vh,
+    #6f97ab 26vh,
+    #9abbc9 40vh,
+    #a9cad1 62vh,
+    #85b9c7 88vh,
+    #70a7b8 120vh,
+    #90a28f 165vh,
+    #cca256 200vh
+  );
 }
 /* .plain-section.hero (two classes), not .hero alone — motion.css's
    .plain-section { position: relative } loads after this file, so an
@@ -929,11 +948,65 @@
 
 /* ── Newsletter band ──────────────────────────────────────────── */
 
-/* Was relying entirely on the page gradient's own amber tail for colour
-   here — real, but static. A warm radial glow layered on top (same
-   technique as newgenre.studio's own newsletter card: one off-canvas
-   radial, gold-family only) gives it presence without repainting the
-   page gradient underneath. */
+/* Mirrors .home-hero-pin/.hero exactly (2026-09-04: bring the scroll effect
+   down to the page's closing section too, so it isn't just the hero that
+   moves). .home-newsletter-pin only exists on Home — HomePage.tsx wraps
+   <NewsletterSection> in it — so every other page's newsletter band (this
+   component is shared across a dozen of them) keeps its plain, static
+   version untouched. */
+.home-newsletter-pin {
+  position: relative;
+  height: 200vh;
+  background: linear-gradient(
+    180deg,
+    var(--cream) 0,
+    #f2e4c9 20vh,
+    var(--gold-bright) 60vh,
+    var(--gold) 90vh,
+    var(--gold-deep) 130vh,
+    #6b4a1f 165vh,
+    #023866 200vh
+  );
+}
+/* .plain-section.newsletter (two classes) for the same reason as
+   .plain-section.hero above — .plain-section's position: relative
+   (motion.css, loaded after this file) wins an equal-specificity tie. */
+.home-newsletter-pin .plain-section.newsletter {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+  /* Same radial glow as always, layered over an oversized (200%) linear
+     gradient that --newsletter-scroll (HomePage.tsx, written every frame)
+     slides through — first half close to how this band always looked
+     (cream warming into gold), second half continuing into the same navy
+     the footer opens on right after, so the hand-off reads as one
+     continuous dusk rather than a cut. */
+  background-image:
+    radial-gradient(
+      65% 55% at 85% 15%,
+      color-mix(in srgb, var(--gold-bright) 45%, transparent) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      180deg,
+      var(--cream) 0%,
+      #f2e4c9 10%,
+      var(--gold-bright) 30%,
+      var(--gold) 45%,
+      var(--gold-deep) 65%,
+      #6b4a1f 82%,
+      #023866 100%
+    );
+  background-size: 100% 100%, 100% 200%;
+  background-position: 0 0, 0 calc(var(--newsletter-scroll, 0) * 100%);
+}
+/* Every other page's plain, unmoving version — unchanged from before. The
+   nested rule above is three classes deep (0,3,0) against this one class
+   (0,1,0), so it wins on specificity alone wherever .home-newsletter-pin
+   actually wraps the section; everywhere else, this is all that applies. */
 .newsletter {
   background-image: radial-gradient(
     65% 55% at 85% 15%,
@@ -3315,6 +3388,7 @@
      top of this stacked, static layout would just overflow/clip. */
   .home-hero-pin {
     height: auto;
+    background: none;
   }
   /* .plain-section.hero, matching the two-class selector the base rule
      uses above 560px — a plain .hero here wouldn't be specific enough to
