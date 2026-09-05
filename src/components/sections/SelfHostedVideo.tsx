@@ -15,14 +15,18 @@ export function SelfHostedVideo({
   poster,
   title,
   caption,
+  className = "",
 }: {
   src: string;
   poster: string;
   title: string;
   caption?: string;
+  className?: string;
 }) {
   return (
-    <figure className="video-frame video-frame--self">
+    <figure
+      className={`video-frame video-frame--self${className ? ` ${className}` : ""}`}
+    >
       {/* The box is the WRAPPER's, not the video's.
           A <video> is a replaced element: with no width of its own it falls
           back to its intrinsic size — 300×150 until the metadata arrives, and

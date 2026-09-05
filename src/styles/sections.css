@@ -878,12 +878,13 @@
 .home-art__inner:has(.home-art__media) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
-.home-art__media img {
-  display: block;
-  width: 100%;
-  height: auto;
+/* The still image's own box (558:457, rounded) — now the film that used to
+   be a placeholder for it (2026-09-05, closing out D15's TODO above:
+   "cambialo... por el mismo video de /academy/five-levels"). .video-frame's
+   own default is a 16:9 box; this keeps the original photo's proportions
+   instead so the two-column layout doesn't reflow. */
+.home-art__media .video-frame__media {
   aspect-ratio: 558 / 457;
-  object-fit: cover;
   border-radius: var(--radius-md, 14px);
 }
 .home-art__accent {

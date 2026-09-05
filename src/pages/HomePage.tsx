@@ -14,6 +14,8 @@ import { SectionHeading } from "@/components/sections/SectionHeading";
 import { EventRow } from "@/components/sections/EventRow";
 import { ProductCard } from "@/components/sections/ProductCard";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
+import { FIVE_LEVELS_VIDEO } from "@/data/media";
 
 /**
  * Home — the frame the rest of the site is measured against.
@@ -327,20 +329,16 @@ export function HomePage() {
       )}
 
       {/* ── A.R.T. ───────────────────────────────────────────────── */}
-      {/* Two columns with the image on the left, the way the design lays it
-          out. The design puts a video thumbnail here; until the film has a host
-          (D15) this is the still — the same frame its play control sits on. */}
+      {/* Two columns with the media on the left, the way the design lays it
+          out. D15's placeholder still is gone now that the film has a host —
+          this reuses the same self-hosted video as /academy/five-levels
+          (2026-09-05), in the still's own 558:457 box (sections.css). */}
       <AnimatedGradient variant="plain" intensity="soft" className="home-art">
         <div className="wrap home-art__inner">
           <Reveal className="home-art__media">
-            <img
+            <SelfHostedVideo
               className="scroll-skew"
-              src="/images/art-klinghardt.webp"
-              alt="Dr. Klinghardt with a patient during an A.R.T. session"
-              width={558}
-              height={457}
-              loading="lazy"
-              decoding="async"
+              {...FIVE_LEVELS_VIDEO}
             />
           </Reveal>
           <Reveal className="home-art__body">
