@@ -889,6 +889,9 @@
 }
 .home-art__accent {
   margin: -8px 0 18px;
+  color: var(--eyebrow-text);
+  font-style: italic;
+  text-transform: uppercase;
 }
 
 .new-patients__photo {
