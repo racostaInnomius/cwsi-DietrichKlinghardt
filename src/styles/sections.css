@@ -57,7 +57,7 @@
     #3d6d85 70vh,
     #c0dbde 125vh,
     #eef3f3 185vh,
-    #ffffff 230vh
+    #f4f6f5 230vh
   );
 }
 /* .plain-section.hero (two classes), not .hero alone — motion.css's
@@ -94,7 +94,7 @@
     #3d6d85 30%,
     #c0dbde 55%,
     #eef3f3 80%,
-    #ffffff 100%
+    #f4f6f5 100%
   );
   background-size: 100% 200%;
   background-position: 0 calc(var(--hero-scroll, 0) * 100%);
@@ -982,7 +982,7 @@
   height: 200vh;
   background: linear-gradient(
     180deg,
-    var(--white) 0,
+    #f4f6f5 0,
     var(--cream) 12vh,
     #f2e4c9 24vh,
     var(--gold-bright) 60vh,
@@ -1011,7 +1011,7 @@
      continuous dusk with no seam. */
   background-image: linear-gradient(
     180deg,
-    var(--white) 0%,
+    #f4f6f5 0%,
     var(--cream) 6%,
     #f2e4c9 12%,
     var(--gold-bright) 30%,

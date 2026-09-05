@@ -145,9 +145,12 @@
      The stops below are that rectangle's, verbatim — identical across 13 DK
      frames, so this is the rule and not one page's decoration.
 
-     Because it stretches over the entire page, the wide `#ffffff` band from
-     52% to 77% is where the body of every page lands, which is why the design
-     sets DARK type on it. Sections must NOT paint their own gradient: doing
+     Because it stretches over the entire page, the wide white band from 52%
+     to 77% is where the body of every page lands, which is why the design
+     sets DARK type on it. Recoloured off pure white to #f4f6f5 sitewide
+     (2026-09-05: "la parte de color blanco... debería ser de color
+     #F4F6F5") — contrast on it is unaffected (--ink still 16.1:1, was
+     17.5:1). Sections must NOT paint their own gradient: doing
      that replays the whole navy→amber journey inside each block and drops
      white text onto colours meant to sit under dark text (measured: 3.13:1 on
      the teal, 1.65:1 on the amber). See docs/AUDIT_FIGMA.md §1.
@@ -183,8 +186,8 @@
     #3d6d85 100px,
     #c0dbde 260px,
     #eef3f3 460px,
-    #ffffff 660px,
-    #ffffff calc(100% - 520px),
+    #f4f6f5 660px,
+    #f4f6f5 calc(100% - 520px),
     #eaaa58 calc(100% - 120px),
     #f79b09 100%
   );
@@ -203,8 +206,8 @@
     #3d6d85 180px,
     #c0dbde 260px,
     #eef3f3 460px,
-    #ffffff 660px,
-    #ffffff calc(100% - 520px),
+    #f4f6f5 660px,
+    #f4f6f5 calc(100% - 520px),
     #eaaa58 calc(100% - 120px),
     #f79b09 100%
   );
