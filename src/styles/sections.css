@@ -262,9 +262,14 @@
 
 /* ── Events ───────────────────────────────────────────────────── */
 
-/* The other half of the Academy→Events gap reduction above. */
+/* The other half of the Academy→Events gap reduction above. Frozen as a
+   literal clamp (56×0.595, 7×0.595, 120×0.595) rather than
+   calc(var(--section-y) * 0.595): --section-y itself drops sitewide below
+   (2026-09-05 consistency pass), and this specific gap was already tuned
+   to its own, separately-approved 40%-off-original number — leaving it on
+   the token would silently compound the two cuts. */
 .home-events {
-  padding-top: calc(var(--section-y) * 0.595);
+  padding-top: clamp(33px, 4.17vw, 71px);
 }
 
 /* The shared .section-heading h2 caps at 22ch so long titles wrap on other

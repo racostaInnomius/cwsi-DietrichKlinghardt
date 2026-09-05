@@ -96,7 +96,14 @@
 
   /* ── Space / shape / motion ───────────────────────────────────── */
   --gutter: clamp(24px, 5vw, 96px);
-  --section-y: clamp(56px, 7vw, 120px);
+  /* Was clamp(56px, 7vw, 120px) — cut ~30% sitewide (2026-09-05: "en
+     muchos lugares están muy alejados... dando la percepción de que la
+     página ha llegado al fin"). This is THE section-rhythm token — .section
+     (base.css) alone backs 37 sections across 15 pages — so one cut here
+     tightens the whole site consistently instead of per-page overrides.
+     Home's Academy→Events gap is exempted (frozen as its own literal clamp,
+     see .home-events) since it was already tuned separately. */
+  --section-y: clamp(40px, 4.9vw, 84px);
   --maxw: 1440px;
   --maxw-prose: 68ch;
 
