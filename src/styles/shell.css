@@ -183,7 +183,9 @@
 }
 .site-nav__sublabel {
   display: block;
-  font-size: 10px;
+  /* Matches .site-nav__link's own 16px (2026-09-05: "hacerlo de tamaño de
+     las demás palabras") — was 10px. */
+  font-size: 16px;
   font-weight: 400;
   letter-spacing: 0.05em;
   opacity: 0.75;
@@ -470,6 +472,13 @@
        max-width actually wrapping long labels ("Dr. Klinghardt Akademy")
        instead of overflowing into the next item. */
     white-space: normal;
+  }
+  /* Matches .site-nav__link's own compact size at this range, same as the
+     wide-desktop rule matches its 16px — without this override the
+     sublabel stayed at 16px below 1428px too and ended up BIGGER than the
+     word above it, wrapping "Sophia Health Institute" onto its own line. */
+  .site-nav__sublabel {
+    font-size: 10px;
   }
 }
 
