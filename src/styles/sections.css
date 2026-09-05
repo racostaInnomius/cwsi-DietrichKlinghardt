@@ -4482,13 +4482,18 @@
    (2026-09-05: "esos espacios son muy exajerados"). Zeroing both leaves
    just the 20px flex gap; the block's own margin-bottom is cut too. */
 .home-shop .section-heading {
-  margin-bottom: clamp(20px, 2.2vw, 32px);
+  margin-bottom: clamp(14px, 1.4vw, 20px);
 }
 .home-shop .section-heading h2 {
   margin-bottom: 0;
 }
 .home-shop .section-heading .lead {
   margin-top: 0;
+  /* Flex containers size to fit a child's margin box, so this was still
+     adding its own 18px on top of .section-heading's margin-bottom above
+     instead of collapsing into it (2026-09-05 follow-up: still too loose
+     after the first pass) — same fix, one level deeper. */
+  margin-bottom: 0;
 }
 .home-shop__filters .pill-list {
   justify-content: center;
