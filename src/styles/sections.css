@@ -4154,10 +4154,11 @@
   color: var(--brand-ink);
 }
 /* Explore the Shop's category pills round less than the shared .pill's
-   default stadium shape (2026-09-05) — scoped here rather than on .pill
-   itself, which Sophia's condition tags also use at the full round. */
+   default stadium shape (2026-09-05, tried --radius-lg first, then asked
+   for --radius-sm instead) — scoped here rather than on .pill itself,
+   which Sophia's condition tags also use at the full round. */
 .home-shop__filters .pill {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
 }
 
 .section-actions {
