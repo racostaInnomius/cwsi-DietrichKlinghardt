@@ -281,7 +281,7 @@ export function HomePage() {
             eyebrow="Events & webinars"
             title={eventsCopy.title}
             lead={eventsCopy.lead}
-            link={{ label: "All events", to: "/events" }}
+            link={{ label: "View all events", to: "/events" }}
           />
 
           <div className="tabs" role="tablist" aria-label="Event dates">

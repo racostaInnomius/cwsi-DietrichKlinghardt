@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Reveal } from "@/components/motion/Reveal";
 
 /**
- * The heading pattern every section of the design repeats: gold eyebrow,
+ * The heading pattern every section of the design repeats: eyebrow,
  * display title, optional lead, and an optional "see all" link pushed to the
  * right on wide screens.
  */

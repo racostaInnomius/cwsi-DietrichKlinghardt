@@ -47,6 +47,17 @@
      mid-tone blue, and no lighter gold clears it. */
   --gold-on-tint: #4d3716;
 
+  /* Eyebrow brand colour — a steel blue matching the hero gradient's own
+     #3d6d85 stop, replacing gold on eyebrows sitewide (2026-09-04). Two
+     variants for the same reason gold needed two: the plain value clears
+     4.5:1 on cream/white/cream-2 (4.95 / 5.64 / 4.61 — measured), but only
+     reaches 2.33:1 on the hero/courses-hero/top-picks tinted panel
+     (#88acbe) — --eyebrow-text-on-tint is darkened along the same hue until
+     it clears AA there too (4.80:1). --gold-text itself is untouched: it
+     still carries the one deliberate gold accent left (.hotel__site a). */
+  --eyebrow-text: #3d6d85;
+  --eyebrow-text-on-tint: #223c49;
+
   /* Feedback */
   --error: #ec221f;
 

@@ -143,7 +143,7 @@ h3,
 
 .eyebrow {
   margin-bottom: 10px;
-  color: var(--gold-text);
+  color: var(--eyebrow-text);
   font-family: var(--font-sans);
   /* Deliberately its own literal, not var(--fs-eyebrow) — that token is
      shared with .chip, .tag and several other small-label elements

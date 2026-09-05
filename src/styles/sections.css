@@ -135,7 +135,7 @@
    design's own choice, not a slip of ours, and the same call as the
    announcement bar. Recorded as D13. */
 .hero__eyebrow {
-  color: var(--gold-on-tint);
+  color: var(--eyebrow-text-on-tint);
 }
 .hero h1 {
   /* Caps how wide any single line can run, but on its own this doesn't
@@ -272,6 +272,22 @@
    line here instead (2026-09-04: "cambialo por 1 sola" línea). */
 .home-events .section-heading h2 {
   max-width: none;
+}
+/* "All events ↗" becomes a filled pill button matching the reference
+   (2026-09-04) — scoped to Home's Events strip only; every other
+   .arrow-link on the site (Shop's "View all", Weekly Talks, Music, the
+   Event detail page's map link) keeps the plain text+arrow look. */
+.home-events .arrow-link {
+  padding: 13px 24px;
+  border-radius: var(--radius);
+  background: #b7cdd4;
+  color: #4c6b78;
+}
+.home-events .arrow-link:hover {
+  background: color-mix(in srgb, #b7cdd4 85%, #4c6b78 15%);
+}
+.home-events .arrow-link span {
+  display: none;
 }
 
 .event-list {
@@ -1405,7 +1421,7 @@
    the panel's blue stretch, but it's the design's own choice for gold-on-
    gradient, not a slip. */
 .courses-hero .eyebrow {
-  color: var(--gold-on-tint);
+  color: var(--eyebrow-text-on-tint);
 }
 .courses-hero h1 {
   max-width: 18ch;
@@ -1952,7 +1968,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--gold-on-tint);
+  color: var(--eyebrow-text-on-tint);
 }
 .top-picks__eyebrow svg {
   width: 13px;
@@ -2668,7 +2684,7 @@
 }
 .practitioner__role {
   margin-bottom: 10px;
-  color: var(--gold-text);
+  color: var(--eyebrow-text);
   font-size: var(--fs-eyebrow);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -3594,8 +3610,8 @@
   padding: 0 22px;
   font-size: 11px;
 }
-/* White, not the shared gold-on-tint — the frame sets this eyebrow in white
-   on this panel specifically (Home's own hero keeps the gold). */
+/* White, not the shared --eyebrow-text-on-tint — the frame sets this eyebrow
+   in white on this panel specifically (Home's own hero keeps the blue). */
 .hero--split .hero__eyebrow {
   color: var(--white);
 }
@@ -4554,7 +4570,7 @@
 }
 .chapter__label {
   margin: 0;
-  color: var(--gold-text);
+  color: var(--eyebrow-text);
   font-family: var(--font-sans);
   font-size: var(--fs-eyebrow);
   font-weight: 600;
