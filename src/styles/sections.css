@@ -4472,7 +4472,23 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-bottom: clamp(28px, 3.4vw, 48px);
+  margin-bottom: clamp(20px, 2vw, 28px);
+}
+/* .section-heading is a flex column here with h2 and .lead as DIRECT
+   children (unlike SectionHeading.tsx's other callers, which wrap them in
+   an inner div) — its own 20px flex `gap` was stacking on top of h2's
+   uncontrolled ~47px default margin-bottom and .lead's 14px margin-top,
+   adding up to 81px between the title and the paragraph alone
+   (2026-09-05: "esos espacios son muy exajerados"). Zeroing both leaves
+   just the 20px flex gap; the block's own margin-bottom is cut too. */
+.home-shop .section-heading {
+  margin-bottom: clamp(20px, 2.2vw, 32px);
+}
+.home-shop .section-heading h2 {
+  margin-bottom: 0;
+}
+.home-shop .section-heading .lead {
+  margin-top: 0;
 }
 .home-shop__filters .pill-list {
   justify-content: center;
