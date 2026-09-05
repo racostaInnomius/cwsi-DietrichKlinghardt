@@ -444,7 +444,7 @@ export function HomePage() {
                   store page, and duplicating that state here would give the
                   same catalogue two places to disagree about what is selected. */}
               <li>
-                <Link className="pill" to="/store">
+                <Link className="pill pill--active" to="/store">
                   All
                 </Link>
               </li>

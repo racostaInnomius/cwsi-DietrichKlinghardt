@@ -2204,6 +2204,20 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+/* The one product the client picks each month — a corner tag, not a full
+   ribbon fold, on whichever card ProductCard is passed featured={true}
+   (2026-09-05, matching the reference: "Klinghardt's Pick"). */
+.product__pick {
+  position: absolute;
+  top: 0;
+  right: 14px;
+  padding: 8px 14px;
+  border-radius: 0 0 6px 6px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 12px;
+  font-weight: 600;
+}
 .product__body {
   display: flex;
   flex: 1;
@@ -2212,6 +2226,17 @@
 .product h3 {
   margin-bottom: 4px;
   font-size: var(--fs-display-sm);
+}
+/* Same label treatment as .top-pick-card__category (Store's own "Top Picks"
+   shelf) — muted and small, not the shared gold .eyebrow, which reads as a
+   section-level label rather than a per-card one. */
+.product__category {
+  margin: 0 0 4px;
+  color: var(--muted-2);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
 }
 .product__subtitle {
   margin-bottom: 14px;
@@ -2228,13 +2253,35 @@
 }
 .product__price {
   font-family: var(--font-display);
-  font-size: 24px;
-  color: var(--brand);
+  font-size: 20px;
+  color: var(--ink);
 }
+/* A compact icon button, not the outlined "Add to cart" text button — same
+   idea as .top-pick-card__arrow, sized up for this card's bigger format.
+   Still calls the same add-to-cart handler; the label moves to aria-label. */
 .product__add {
-  min-height: 40px;
-  padding: 0 16px;
-  font-size: 11px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  margin-left: auto;
+  border: none;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+.product__add:hover {
+  background: var(--brand-2);
+}
+.product__add svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .product__incart {
   margin-top: 8px;
@@ -4097,13 +4144,12 @@
   font-size: var(--fs-sm);
   color: var(--on-surface);
 }
-.pill::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--brand-text);
+/* Plain text pills, no bullet — matches the reference (2026-09-05), which
+   also marks the current one (here, always "All") as a solid filled pill. */
+.pill--active {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-ink);
 }
 
 .section-actions {
@@ -4371,7 +4417,9 @@
    it is painted here with background-clip rather than split into spans. */
 .talks-band__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  /* Photo a third, copy two thirds, matching the reference (2026-09-05) —
+     was an even 1:1 split. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   align-items: center;
   gap: clamp(24px, 3.4vw, 56px);
   padding: clamp(32px, 4.4vw, 72px);
@@ -4397,6 +4445,15 @@
   margin-bottom: 22px;
   color: var(--ink-soft);
 }
+/* Bigger than the shared .btn default, matching the reference (2026-09-05:
+   "Join my talk buton mas grande"). Scoped here rather than on .btn-ghost
+   itself, which other pages use at the normal size. */
+.talks-band__body .btn {
+  min-height: 64px;
+  padding: 0 44px;
+  border-width: 2px;
+  font-size: 16px;
+}
 
 /* ── Shop strip (home) ────────────────────────────────────────────
    The store's own card, five across, with the month's pick leading. */
@@ -4414,28 +4471,51 @@
 .home-shop__filters li {
   list-style: none;
 }
+/* A horizontal scroll strip, not a wrapping grid — the reference
+   (2026-09-05) shows five full cards plus a sixth peeking at the edge as a
+   "there's more" affordance, with a visible scrollbar beneath. Fixed-ish
+   card widths (not 1fr) are what let a card sit half off the right edge
+   instead of the row always resolving to a whole number of equal columns. */
 .product-strip {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
   gap: clamp(14px, 1.8vw, 22px);
   margin: 0;
-  padding: 0;
+  padding: 0 0 18px;
   list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--brand-text) var(--line);
 }
-
-@media (max-width: 1180px) {
-  .product-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+.product-strip::-webkit-scrollbar {
+  height: 6px;
+}
+.product-strip::-webkit-scrollbar-track {
+  background: var(--line);
+  border-radius: var(--radius-pill);
+}
+.product-strip::-webkit-scrollbar-thumb {
+  background: var(--brand-text);
+  border-radius: var(--radius-pill);
+}
+.product-strip .product {
+  flex: 0 0 clamp(220px, 19vw, 272px);
+  scroll-snap-align: start;
+}
+/* Not part of the reference's teaser cards — Store's own full grid
+   (.product-grid, a different class) keeps this tag. */
+.product-strip .product__tag {
+  display: none;
+}
+/* Smaller than .product h3's shared display-sm — at these narrower,
+   fixed-width cards the full display size crowded three-plus lines; the
+   reference's titles read closer to this size relative to the card. */
+.product-strip .product h3 {
+  font-size: clamp(19px, 1.6vw, 23px);
 }
 @media (max-width: 900px) {
   .talks-band__inner {
     grid-template-columns: minmax(0, 1fr);
-  }
-}
-@media (max-width: 640px) {
-  .product-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

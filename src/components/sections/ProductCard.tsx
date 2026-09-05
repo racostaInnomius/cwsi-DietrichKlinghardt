@@ -4,6 +4,7 @@ import { useCart } from "@/lib/cart";
 import { money } from "@/lib/format";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { ArrowIcon } from "@/components/Icons";
 
 /**
  * One product, as the store and the home page's shop strip both draw it.
@@ -33,12 +34,13 @@ export function ProductCard({
     >
       <div className="product__media">
         {product.image ? <img src={product.image} alt="" loading="lazy" /> : null}
+        {featured ? <span className="product__pick">Klinghardt&rsquo;s Pick</span> : null}
         {product.isPhysical ? <span className="product__tag">Ships to you</span> : null}
       </div>
 
       <div className="product__body">
         {product.categoryLabel ? (
-          <p className="eyebrow">{product.categoryLabel}</p>
+          <p className="product__category">{product.categoryLabel}</p>
         ) : null}
         <h3>
           <Marked text={product.title} />
@@ -51,10 +53,11 @@ export function ProductCard({
           ) : null}
           <button
             type="button"
-            className="btn btn-outline product__add"
+            className="product__add"
             onClick={() => add(toCartItem(product))}
+            aria-label={inCart ? `Add another ${product.title}` : `Add ${product.title} to cart`}
           >
-            {inCart ? "Add another" : "Add to cart"}
+            <ArrowIcon />
           </button>
         </div>
         {inCart ? (
