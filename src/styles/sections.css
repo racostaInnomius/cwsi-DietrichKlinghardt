@@ -893,6 +893,13 @@
   font-style: italic;
   text-transform: uppercase;
 }
+/* Same fix as .site-nav__link .tm (shell.css): the shared .tm sizes off the
+   12px sublabel/eyebrow scale, so at this line's own 16px the ® rendered
+   under 6px — effectively invisible (2026-09-05: "el signo de la R no se
+   ve"). */
+.home-art__accent .tm {
+  font-size: 0.55em;
+}
 
 .new-patients__photo {
   margin-bottom: clamp(24px, 3vw, 40px);
