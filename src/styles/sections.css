@@ -3548,6 +3548,16 @@
   margin: 0 0 22px;
   color: var(--muted);
 }
+/* h2's own default (browser UA) margin-bottom is ~45px at this font-size —
+   nothing else in the design resets it, so a copy paragraph landing right
+   after one reads as "far" from its heading (2026-09-05, Home's "Our
+   clinic": "el texto... está muy alejado del feature-row__copy"). Same fix
+   as .feature-row .accent below (already compensating with a negative
+   margin) — only the copy paragraph directly after an h2 needs it; a
+   second .feature-row__copy following the first keeps its normal 22px. */
+.feature-row h2 + .feature-row__copy {
+  margin-top: -30px;
+}
 .feature-row .accent {
   margin: -6px 0 16px;
 }
