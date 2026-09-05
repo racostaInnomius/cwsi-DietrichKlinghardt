@@ -1057,6 +1057,12 @@
 .newsletter h2 {
   max-width: 18ch;
   margin-inline: auto;
+  /* h2's own default (browser UA) margin-bottom is ~47px at this font-size
+     and was never reset, so it won a collapse against .newsletter__lead's
+     16px margin-top — the title read as detached from the paragraph
+     (2026-09-05: "muy despegado del paragraph text"). Zeroing it leaves
+     the lead's own 16px as the only, deliberate gap. */
+  margin-bottom: 0;
 }
 .newsletter__lead {
   max-width: 56ch;
