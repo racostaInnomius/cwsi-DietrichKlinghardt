@@ -2210,13 +2210,15 @@
 .product__pick {
   position: absolute;
   top: 0;
-  right: 14px;
-  padding: 8px 14px;
-  border-radius: 0 0 6px 6px;
+  right: 0;
+  padding: 10px 16px;
+  /* Flush against the card's own top-right corner (same radius), a small
+     tab notch on the only corner that isn't already the card's edge. */
+  border-radius: 0 var(--radius) 0 10px;
   background: var(--brand);
   color: var(--brand-ink);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
 }
 .product__body {
   display: flex;
@@ -2233,9 +2235,9 @@
 .product__category {
   margin: 0 0 4px;
   color: var(--muted-2);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .product__subtitle {
@@ -2253,8 +2255,8 @@
 }
 .product__price {
   font-family: var(--font-display);
-  font-size: 20px;
-  color: var(--ink);
+  font-size: 22px;
+  color: var(--ink-soft);
 }
 /* A compact icon button, not the outlined "Add to cart" text button — same
    idea as .top-pick-card__arrow, sized up for this card's bigger format.
@@ -4137,12 +4139,12 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
-  border: 1px solid color-mix(in srgb, var(--brand-text) 40%, transparent);
+  padding: 16px 30px;
+  border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   background: var(--surface-2);
-  font-size: var(--fs-sm);
-  color: var(--on-surface);
+  font-size: 16px;
+  color: var(--muted);
 }
 /* Plain text pills, no bullet — matches the reference (2026-09-05), which
    also marks the current one (here, always "All") as a solid filled pill. */
@@ -4501,17 +4503,38 @@
 .product-strip .product {
   flex: 0 0 clamp(220px, 19vw, 272px);
   scroll-snap-align: start;
+  /* One unified card (white image zone, cream info zone) instead of a bare
+     image floating above unbounded text — matches the reference (2026-09-05
+     zoomed reference): a visible border, rounded on all four corners, with
+     the image and copy sharing one outline instead of each having its own. */
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--cream);
+}
+.product-strip .product__media {
+  margin-bottom: 0;
+  border-radius: 0;
+  background: var(--white);
+}
+.product-strip .product__body {
+  padding: 18px 20px 20px;
 }
 /* Not part of the reference's teaser cards — Store's own full grid
    (.product-grid, a different class) keeps this tag. */
 .product-strip .product__tag {
   display: none;
 }
-/* Smaller than .product h3's shared display-sm — at these narrower,
-   fixed-width cards the full display size crowded three-plus lines; the
-   reference's titles read closer to this size relative to the card. */
+/* Smaller than .product h3's shared display-sm, and sans-serif bold rather
+   than the display face — at these narrower, fixed-width cards the full
+   display size crowded three-plus lines, and the reference's titles read as
+   bold sans, the same treatment .top-pick-card__body h3 already uses one
+   section over on the Store page. */
 .product-strip .product h3 {
-  font-size: clamp(19px, 1.6vw, 23px);
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 1.3vw, 18px);
+  font-weight: 600;
+  line-height: 1.35;
 }
 @media (max-width: 900px) {
   .talks-band__inner {
