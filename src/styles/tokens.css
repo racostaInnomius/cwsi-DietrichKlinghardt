@@ -47,16 +47,18 @@
      mid-tone blue, and no lighter gold clears it. */
   --gold-on-tint: #4d3716;
 
-  /* Eyebrow brand colour — a steel blue matching the hero gradient's own
-     #3d6d85 stop, replacing gold on eyebrows sitewide (2026-09-04). Two
-     variants for the same reason gold needed two: the plain value clears
-     4.5:1 on cream/white/cream-2 (4.95 / 5.64 / 4.61 — measured), but only
-     reaches 2.33:1 on the hero/courses-hero/top-picks tinted panel
-     (#88acbe) — --eyebrow-text-on-tint is darkened along the same hue until
-     it clears AA there too (4.80:1). --gold-text itself is untouched: it
-     still carries the one deliberate gold accent left (.hotel__site a). */
-  --eyebrow-text: #3d6d85;
-  --eyebrow-text-on-tint: #223c49;
+  /* Eyebrow brand colour (2026-09-04: #D5A35B, applied literally as
+     requested — flagged to the user unresolved, see chat: this value
+     measures only 2.0:1 on cream and 2.28:1 on white, both under WCAG AA's
+     4.5:1 for text this size, and 1.06:1 on the hero/courses-hero/top-picks
+     tinted panel — functionally invisible there. Applied here unchanged on
+     both variants pending the user's call; --gold-on-tint's own precedent
+     (darkened along the same hue until it clears AA on that panel) is the
+     fallback if they want it fixed instead of shipped as-is. --gold-text
+     itself is untouched: it still carries the one deliberate gold accent
+     left (.hotel__site a). */
+  --eyebrow-text: #d5a35b;
+  --eyebrow-text-on-tint: #d5a35b;
 
   /* Feedback */
   --error: #ec221f;
