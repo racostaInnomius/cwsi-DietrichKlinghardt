@@ -1043,13 +1043,11 @@
    nested rule above is three classes deep (0,3,0) against this one class
    (0,1,0), so it wins on specificity alone wherever .home-newsletter-pin
    actually wraps the section; everywhere else, this is all that applies. */
-.newsletter {
-  background-image: radial-gradient(
-    65% 55% at 85% 15%,
-    color-mix(in srgb, var(--gold-bright) 45%, transparent) 0%,
-    transparent 65%
-  );
-}
+/* The radial glow this used to carry read as a hard patch of colour against
+   the page gradient behind it — same call the client already made for
+   Home's own pinned newsletter section (2026-09-04, via devtools), now
+   applied everywhere else .newsletter renders too (2026-09-06: "En todos
+   los gradientes de newsletter del sitio deben quedar como la Imagen 1"). */
 .newsletter__inner {
   padding-block: var(--section-y);
   text-align: center;
