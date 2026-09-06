@@ -181,14 +181,15 @@
 .site-nav__link[aria-current="page"] {
   box-shadow: inset 0 -1px 0 currentColor;
 }
-.site-nav__sublabel {
+/* "by Dr. Klinghardt" carries the .site-nav__link class itself now
+   (2026-09-05: "debe quedar con la clase site-nav__link"), rather than its
+   own rule with values chasing that one's — so it's identical by
+   construction, at every breakpoint, including the mark's size. The only
+   thing still needed on top: .site-nav__link is inline-block, and this
+   still has to sit on its own line ("debe seguir en 2 líneas") below the
+   label above it. */
+.site-nav__link .site-nav__link {
   display: block;
-  /* Matches .site-nav__link's own 16px (2026-09-05: "hacerlo de tamaño de
-     las demás palabras") — was 10px. */
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  opacity: 0.75;
 }
 
 .site-nav__toggle {
@@ -472,13 +473,6 @@
        max-width actually wrapping long labels ("Dr. Klinghardt Akademy")
        instead of overflowing into the next item. */
     white-space: normal;
-  }
-  /* Matches .site-nav__link's own compact size at this range, same as the
-     wide-desktop rule matches its 16px — without this override the
-     sublabel stayed at 16px below 1428px too and ended up BIGGER than the
-     word above it, wrapping "Sophia Health Institute" onto its own line. */
-  .site-nav__sublabel {
-    font-size: 10px;
   }
 }
 
