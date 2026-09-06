@@ -4472,6 +4472,15 @@
 
 /* ── Shop strip (home) ────────────────────────────────────────────
    The store's own card, five across, with the month's pick leading. */
+/* Shop sits directly above the Newsletter pin, which starts sticky at its
+   own top edge with no padding of its own — so Shop's bottom padding is the
+   *entire* visible gap between the two sections. Cut 20% off just that
+   side (2026-09-05), decoupled from --section-y so the shared token (and
+   Shop's own top padding, matching Weekly Talks above it) stay untouched:
+   was 71px at 1920px wide, now 57px (71 * 0.8). */
+.home-shop {
+  padding-bottom: clamp(27px, 3.34vw, 57px);
+}
 .home-shop__filters {
   display: flex;
   flex-wrap: wrap;
