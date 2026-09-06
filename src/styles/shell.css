@@ -190,6 +190,11 @@
    label above it. */
 .site-nav__link .site-nav__link {
   display: block;
+  /* The outer padding is a hit-area for a standalone clickable link — this
+     nested one is just a stacked label, not a separate target, and that
+     6px top padding read as an awkward gap under the line above it
+     (2026-09-05: "estan muy separados... se ve raro"). */
+  padding: 0;
 }
 
 .site-nav__toggle {
