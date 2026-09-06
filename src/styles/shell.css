@@ -352,10 +352,18 @@
   color: var(--brand-ink);
 }
 
+/* Full-bleed + gutter, not .wrap's 1440px-capped column — .site-header
+   uses the same pattern (padding: 14px var(--gutter), no max-width), and
+   .wrap's centering left the footer's content inset noticeably further
+   than the nav bar above it on wide viewports (2026-09-05: "todo el
+   footer debe de ir espaciado al ancho del nav bar"; 240px inset at
+   1920px against the header's 96px). .site-footer__watermark below
+   already uses this same padding-inline-only approach. */
 .site-footer__inner {
   display: grid;
   grid-template-columns: 1.4fr repeat(4, 1fr);
   gap: clamp(24px, 3vw, 48px);
+  padding-inline: var(--gutter);
   padding-bottom: clamp(40px, 5vw, 72px);
 }
 
@@ -458,6 +466,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
+  padding-inline: var(--gutter);
   padding-block: 22px 26px;
   font-size: var(--fs-meta);
   opacity: 0.75;

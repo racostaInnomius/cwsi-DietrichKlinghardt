@@ -24,7 +24,7 @@ export function SiteFooter({ theme }: { theme: "dk" | "sophia" }) {
 
   return (
     <footer className="site-footer" data-theme={theme}>
-      <div className="site-footer__inner wrap">
+      <div className="site-footer__inner">
         <div className="site-footer__brand">
           <Link to="/" aria-label="Dietrich Klinghardt, home">
             <span>Dietrich</span>
@@ -68,7 +68,7 @@ export function SiteFooter({ theme }: { theme: "dk" | "sophia" }) {
         Dr. Dietrich Klinghardt
       </p>
 
-      <div className="site-footer__legal wrap">
+      <div className="site-footer__legal">
         <span>© {year} Dietrich Klinghardt™ All rights reserved.</span>
         <span className="site-footer__legal-links">
           <Link to="/privacy">Privacy Policy</Link>
