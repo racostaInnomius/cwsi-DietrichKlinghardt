@@ -1504,6 +1504,11 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(20px, 2.4vw, 32px);
 }
+/* Three zones per the reference (2026-09-06): a tinted header (badge +
+   title), a white body (description + level chips), and a footer split
+   into a solid CTA and a tint-matched secondary one. A.R.T., MFT, PK and
+   SRT all share the navy tint below; --ank overrides every one of these to
+   the gold tint instead — the only card that changes. */
 .course-path-card {
   display: flex;
   flex-direction: column;
@@ -1516,9 +1521,16 @@
 .course-path-card:hover {
   box-shadow: var(--shadow-card);
 }
+.course-path-card__header {
+  padding: clamp(22px, 2.4vw, 28px) clamp(22px, 2.4vw, 28px) 4px;
+  background: color-mix(in srgb, var(--brand) 8%, var(--white));
+}
+.course-path-card--ank .course-path-card__header {
+  background: color-mix(in srgb, var(--gold) 12%, var(--white));
+}
 .course-path-card__body {
   flex: 1;
-  padding: clamp(22px, 2.4vw, 28px);
+  padding: 18px clamp(22px, 2.4vw, 28px) clamp(22px, 2.4vw, 28px);
 }
 .course-path-card__badge {
   display: inline-block;
@@ -1536,13 +1548,25 @@
 }
 .course-path-card h2 {
   margin-bottom: 12px;
+  color: var(--brand);
   font-size: var(--fs-display-sm);
   line-height: 1.2;
+}
+.course-path-card--ank h2 {
+  color: var(--gold-deep);
 }
 .course-path-card__body p {
   margin-bottom: 16px;
   color: var(--muted);
   font-size: var(--fs-sm);
+}
+.course-path-card .chip {
+  background: color-mix(in srgb, var(--brand) 8%, var(--white));
+  color: var(--brand);
+}
+.course-path-card--ank .chip {
+  background: color-mix(in srgb, var(--gold) 12%, var(--white));
+  color: var(--gold-deep);
 }
 .course-path-card__footer {
   display: flex;
@@ -1570,8 +1594,12 @@
   background: var(--gold);
 }
 .course-path-card__cta--secondary {
-  background: var(--cream);
+  background: color-mix(in srgb, var(--brand) 8%, var(--white));
   color: var(--brand);
+}
+.course-path-card--ank .course-path-card__cta--secondary {
+  background: color-mix(in srgb, var(--gold) 12%, var(--white));
+  color: var(--gold-deep);
 }
 @media (max-width: 980px) {
   .course-path-grid {

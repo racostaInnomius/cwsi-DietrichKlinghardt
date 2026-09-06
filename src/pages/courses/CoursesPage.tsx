@@ -53,11 +53,13 @@ export function CoursesPage() {
               delay={index * 70}
               shift={16}
             >
-              <div className="course-path-card__body">
+              <div className="course-path-card__header">
                 <span className="course-path-card__badge">{path.slug.toUpperCase()}</span>
                 <h2>
                   <Marked text={path.title} />
                 </h2>
+              </div>
+              <div className="course-path-card__body">
                 <p>{path.shortDescription}</p>
                 {path.levels.length ? (
                   <ul className="chips">
