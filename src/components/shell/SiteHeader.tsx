@@ -105,7 +105,10 @@ export function SiteHeader() {
                   >
                     <Label item={item} />
                     {item.sublabel ? (
-                      <span className="site-nav__sublabel">{item.sublabel}</span>
+                      <span className="site-nav__sublabel">
+                        {item.sublabel}
+                        {item.mark ? <sup className="tm">{item.mark}</sup> : null}
+                      </span>
                     ) : null}
                   </Link>
                   {hasChildren ? (

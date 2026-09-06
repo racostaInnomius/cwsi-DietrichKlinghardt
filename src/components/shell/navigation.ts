@@ -25,7 +25,12 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "About", href: "/about" },
   {
     label: "Sophia Health Institute",
-    sublabel: "by Dr. Klinghardt™",
+    /* The mark used to be baked into this string as a plain "™" character,
+       full-size instead of the small+raised treatment Label gives the main
+       label's own mark — inconsistent side by side (2026-09-05: "el de
+       arriba mas pequeño que el de abajo"). Bare now; SiteHeader.tsx
+       appends item.mark the same way for both lines. */
+    sublabel: "by Dr. Klinghardt",
     href: "/sophia",
     mark: "™",
     theme: "sophia",
