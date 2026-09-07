@@ -3495,6 +3495,57 @@
   }
 }
 
+/* iPads sit in the gap the 560px rule below doesn't reach: wide enough to
+   keep the desktop side-by-side layout, but their near-square viewport
+   (portrait ~3:4, landscape ~4:3) is much taller relative to width than the
+   wide desktop screens .hero__photo's object-fit: cover / object-position:
+   right math was tuned against. height: 80vh on a narrow card forces a much
+   bigger cover scale, and object-position: right then windows into a far
+   more zoomed-in slice of the image — his face ends up filling the whole
+   card instead of staying clear on the right, burying the eyebrow, heading
+   and buttons under it. Reuses the exact same fix as the sub-560px case
+   (stack copy above photo, drop the pin) rather than re-tuning the crop math
+   for another viewport shape. Two ranges: iPad portrait/smaller-landscape by
+   width alone, and the larger iPad Pro landscape sizes (1194/1366 wide) by
+   width + a squarer-than-typical-laptop aspect ratio, so ordinary widescreen
+   laptop windows in this width range are left on the desktop layout. */
+@media (min-width: 561px) and (max-width: 1024px),
+  (min-width: 1025px) and (max-width: 1400px) and (max-aspect-ratio: 3/2) {
+  .home-hero-pin {
+    height: auto;
+    background: none;
+  }
+  .plain-section.hero {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--grad-card);
+    margin: 0 clamp(12px, 2.2vw, 34px);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .hero h1 {
+    max-width: none;
+    font-size: var(--fs-display-xl);
+  }
+  .hero__photo {
+    order: 2;
+    position: static;
+    inset: auto;
+    z-index: auto;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 88% 22%;
+  }
+  .hero__inner {
+    order: 1;
+    min-height: 0;
+    padding-top: clamp(28px, 6vw, 40px);
+  }
+}
+
 @media (max-width: 560px) {
   /* Below 560px the copy used to sit directly over his face with no
      separation — cluttered, and it buried the portrait instead of letting
