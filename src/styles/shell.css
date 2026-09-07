@@ -72,9 +72,16 @@
      stays — it is the part of this bar anyone notices — but white on it
      measures 2.13:1, far under AA for 12px. Navy on the same amber clears
      5.59:1 and keeps the bar in the brand's own colours rather than defaulting
-     to black. */
-  color: var(--brand);
+     to black. --brand-text (not --brand itself) so Sophia's override below
+     gets the darker teal ramp step automatically — same reason --brand-text
+     exists at all: plain --brand only reaches 3.61:1 on the cream below. */
+  color: var(--brand-text);
   text-align: center;
+}
+/* Sophia-only bar colour (2026-09-07) — every other page keeps the amber
+   above. */
+[data-theme="sophia"] .announcement {
+  background: #ede8db;
 }
 .announcement p {
   margin: 0;
