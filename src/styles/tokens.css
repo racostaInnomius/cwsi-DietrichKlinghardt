@@ -314,6 +314,28 @@
     #b7d0d2 calc(100% - 200px),
     #228c97 100%
   );
+  /* Home only (/sophia itself, not /sophia/team etc.) — same idea as
+     --grad-page-home for the DK theme. Same stops as --grad-page-full,
+     scaled ~2.4x (50/140/460/620 -> 120/340/1100/1490px) so the fade
+     finishes near where "Who we are" (the section after .sophia-hero and
+     the "Founded by..." row) actually sits, instead of going fully light by
+     620px — right around where .sophia-hero itself ends, which made the
+     hero's own darker overlay (.sophia-hero::before) look like a separate,
+     abruptly-lighter background had already taken over just past it
+     (2026-09-07: "que vaya terminando su difuminación hasta el texto 'Who
+     we are'"). The calc(100% - ...) footer stops are untouched — same
+     reasoning as --grad-page-full's own comment above. */
+  --grad-page-sophia-home: linear-gradient(
+    180deg,
+    #0d858d 0,
+    #3d9298 120px,
+    #b7d0d2 340px,
+    #e6f4f4 1100px,
+    #eef7f8 1490px,
+    #eef7f8 calc(100% - 620px),
+    #b7d0d2 calc(100% - 200px),
+    #228c97 100%
+  );
 
   --grad-card: linear-gradient(135deg, #228c97 0%, #b7d0d2 55%, #e6f4f4 100%);
   --grad-card-warm: linear-gradient(135deg, #146a7d 0%, #b7d0d2 55%, #eef7f8 100%);

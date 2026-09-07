@@ -3930,7 +3930,12 @@
     ),
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--brand-3) 88%, transparent) 0%,
+      /* --brand, not --brand-3 — this is the very top edge, flush against
+         the header (also --brand). --brand-3 here read as a visible colour
+         jump right where the two meet (2026-09-07: "se nota un brinco de
+         color"), the same class of bug --grad-page-full's own top stop was
+         already fixed for (2026-08-31, see the comment there). */
+      color-mix(in srgb, var(--brand) 88%, transparent) 0%,
       color-mix(in srgb, #1cb0b5 82%, transparent) 100%
     );
 }

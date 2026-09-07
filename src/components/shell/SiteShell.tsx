@@ -70,7 +70,16 @@ export function SiteShell({
 
       <SiteHeader />
 
-      <main id="main-content" className={pathname === "/" ? "main-home" : undefined}>
+      <main
+        id="main-content"
+        className={
+          pathname === "/"
+            ? "main-home"
+            : pathname === "/sophia"
+              ? "main-sophia-home"
+              : undefined
+        }
+      >
         {children}
       </main>
 
