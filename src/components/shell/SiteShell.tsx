@@ -35,10 +35,24 @@ export function SiteShell({
   const bannerHref = text(banner, "ctaUrl", "/weekly-talks");
 
   // Route changes scroll to top, except when the URL carries an anchor — the
-  // nav links into #newsletter and #faq and those must land on the section.
+  // nav links into #chronic-illness, #naturopathic-care, #newsletter and
+  // #faq and those must land on the section. Client-side navigation (a
+  // <Link>, not a real page load) never triggers the browser's own
+  // scroll-to-fragment, so this has to do it explicitly — it never did, and
+  // the anchor links simply landed at the top of the target page instead
+  // (2026-09-07: "no está scrolleando a sus lugares"). Offsets by the
+  // sticky header's own height so its section doesn't render half-hidden
+  // underneath it.
   useEffect(() => {
-    if (hash) return;
-    window.scrollTo({ top: 0 });
+    if (!hash) {
+      window.scrollTo({ top: 0 });
+      return;
+    }
+    const target = document.getElementById(hash.slice(1));
+    if (!target) return;
+    const header = document.querySelector<HTMLElement>(".site-header");
+    const offset = (header?.getBoundingClientRect().height ?? 0) + 16;
+    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset });
   }, [pathname, hash]);
 
   return (

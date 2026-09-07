@@ -196,7 +196,7 @@ export function SophiaPage() {
       </section>
 
       {/* The figures on the left, the mission statement on the right. */}
-      <section className="section wrap feature-row" id="chronic-illness">
+      <section className="section wrap feature-row">
         <Reveal className="feature-row__media stat-grid">
           {STATS.map((stat) => (
             <div key={stat.value} className="stat">
@@ -247,7 +247,7 @@ export function SophiaPage() {
       </section>
 
       {/* How care runs: the prose on the left, the numbered steps on the right. */}
-      <section className="section wrap feature-row feature-row--right" id="naturopathic-care">
+      <section className="section wrap feature-row feature-row--right">
         <Reveal className="feature-row__media steps">
           <ol>
             {STEPS.map((step) => (
@@ -280,7 +280,7 @@ export function SophiaPage() {
         </Reveal>
       </section>
 
-      <section className="section wrap">
+      <section className="section wrap" id="naturopathic-care">
         <Reveal className="section-heading section-heading--center">
           <p className="eyebrow">Naturopathic care</p>
           <h2>Healing the Whole Person, Mind, Body, and Spirit.</h2>
@@ -301,7 +301,7 @@ export function SophiaPage() {
         </Reveal>
       </section>
 
-      <section className="section wrap">
+      <section className="section wrap" id="chronic-illness">
         <Reveal className="section-heading section-heading--center">
           <p className="eyebrow">What we treat</p>
           <h2>Complex Conditions. Real Answers.</h2>
