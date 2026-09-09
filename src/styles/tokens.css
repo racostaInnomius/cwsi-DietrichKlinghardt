@@ -194,11 +194,22 @@
      frame and applying it from a lower origin left every internal page about
      one header-height too dark: on Academy, whose heading sits higher than
      most, the h1 landed on #264f76 at 2.83:1. Subtracting the bar and header
-     puts the curve back where the content meets it. */
+     puts the curve back where the content meets it.
+
+     Opening stop changed from #023866 to #4f7896 (client, 2026-09-09):
+     --grad-header (shell.css) ends on #4f7896 at its own bottom edge, so
+     <main> restarting at navy read as a hard jump backwards right at the
+     header/page seam instead of a continuation of it. The old 20px stop
+     (#295b7f) sat between the two and is dropped rather than kept — it was
+     darker than both this new opening colour and the 100px anchor after
+     it, which would have read as a dip. The 100px stop (#3d6d85) is
+     UNCHANGED: it's what D13-d's eyebrow contrast fix on interior pages
+     depends on ("la parada de 100px de la franja superior se oscurece a
+     #3d6d85") — moving it would reopen that. Home and /sophia/* are
+     unaffected; they use --grad-page-home / --grad-page-sophia-home. */
   --grad-page-full: linear-gradient(
     180deg,
-    #023866 0,
-    #295b7f 20px,
+    #4f7896 0,
     #3d6d85 100px,
     #c0dbde 260px,
     #eef3f3 460px,

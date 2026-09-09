@@ -70,6 +70,17 @@
   animation: gradient-drift 32s ease-in-out infinite alternate;
   pointer-events: none;
 }
+/* Client (2026-09-09): "no me gusta [el efecto que cambia de color]... en
+   estas paginas fuera de /sophia y home" — the drift now stops on every
+   OTHER page, more specific than the base rule above so it wins without
+   touching it. Excludes by [data-theme="sophia"] (.site-shell, SiteShell.tsx)
+   rather than .main-sophia-home alone — that class only matches /sophia
+   itself, and every /sophia/* subpage (team, new-patients, ...) needed to
+   keep drifting too, not just the section's own home. Home keeps drifting
+   via the .main-home exclusion, same as before. */
+.site-shell:not([data-theme="sophia"]) > main:not(.main-home)::before {
+  animation: none;
+}
 
 /* ── Announcement bar ─────────────────────────────────────────── */
 
