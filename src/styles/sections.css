@@ -67,13 +67,16 @@
 .plain-section.hero {
   position: sticky;
   top: 0;
-  /* 20% smaller (2026-09-04 feedback: the card itself, not thin margins,
-     was what crowded out the background effect) — both height and side
-     margin scale down together so the card reads as a smaller, still-
-     centred island in a much larger moving field, rather than a full-
-     bleed panel with a sliver of colour peeking round it. */
+  /* Side margin was its own clamp(40px, 10vw, 160px) — always wider than
+     --gutter (2026-09-04 feedback: a smaller, more inset "island" card
+     read better against the moving field behind it). Matched to --gutter
+     now instead (client, 2026-09-09, red-line reference against the nav
+     bar and the Academy quote): "el hero debe hacer mas ancho del lado
+     derecho e izquierdo" — those two now share the same edge as the nav,
+     footer and quote instead of sitting further in. Height (80vh) is
+     unrelated to this and untouched. */
   height: 80vh;
-  margin: 0 clamp(40px, 10vw, 160px);
+  margin: 0 var(--gutter);
   color: var(--ink);
   border-radius: var(--radius-sm);
   /* Clips the oversized background to the card's own rounded rect — without
