@@ -109,13 +109,24 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  background: var(--grad-header);
+  color: var(--brand-ink);
+}
+/* Client (2026-09-09): "podriamos meter el nav bar, el footer y el quote al
+   mismo ancho de la caja de el demas contenido" — the header's own
+   background stays full-bleed (the sticky bar itself), but its content
+   (brand, nav, actions) is now capped/centred the same way .wrap is,
+   matching Sophia/5 Levels/the hero. Same split .site-footer__inner and
+   .home-academy__inner now use below. */
+.site-header__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: clamp(16px, 2.4vw, 40px);
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
   padding: 14px var(--gutter);
-  background: var(--grad-header);
-  color: var(--brand-ink);
 }
 /* Home and the Sophia pages keep the flat brand colour — the gradient
    header is only for the rest of the site. */
@@ -126,21 +137,16 @@
 
 .site-header__brand {
   display: inline-flex;
-  flex-direction: column;
   flex-shrink: 0;
-  font-family: var(--font-display);
-  font-size: clamp(22px, 1.9vw, 27px);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  /* Scale rather than raise the font-size: transform doesn't affect the flex
-     item's own box, so the header's height (set by its tallest child) stays
-     put while the wordmark itself renders 15% bigger. */
-  transform: scale(1.15);
-  transform-origin: left center;
 }
-.site-header__brand .tm {
-  font-size: 0.34em;
-  vertical-align: 0.9em;
+/* The nav brand is now the client's logo file, not a text wordmark — height
+   kept equal to the old text block's rendered size (2 lines * 0.98
+   line-height * the 1.15 scale it used to carry) so the swap doesn't shift
+   the header's height or the mark's visual weight. */
+.site-header__brand-mark {
+  display: block;
+  height: clamp(50px, 4.28vw, 61px);
+  width: auto;
 }
 
 /* Pushes the whole nav (and, via normal flow, the actions right after it)
@@ -184,9 +190,15 @@
 }
 /* The shared .tm (base.css) sizes off the 12px sublabel/eyebrow scale —
    at the nav's own 16px it renders under 6px, unreadable next to
-   "AKADEMY". Its own literal here instead of touching that shared rule. */
+   "AKADEMIE". Its own literal here instead of touching that shared rule.
+   Bumped +40% (client: "hacer el TM aun mas grande, por fa un 30%-50%")
+   after the first pass at 0.77em still wasn't visible enough. vertical-align
+   is also overridden: it's a length in the .tm element's own font-size, so
+   the base rule's 0.75em floats noticeably higher once font-size grows —
+   client: "baja de altura el TM, se ve muy alto". */
 .site-nav__link .tm {
-  font-size: 0.55em;
+  font-size: 1.08em;
+  vertical-align: 0.05em;
 }
 .site-nav__link:hover,
 .site-nav__link[aria-current="page"] {
@@ -366,38 +378,37 @@
   color: var(--brand-ink);
 }
 
-/* Full-bleed + gutter, not .wrap's 1440px-capped column — .site-header
-   uses the same pattern (padding: 14px var(--gutter), no max-width), and
-   .wrap's centering left the footer's content inset noticeably further
-   than the nav bar above it on wide viewports (2026-09-05: "todo el
-   footer debe de ir espaciado al ancho del nav bar"; 240px inset at
-   1920px against the header's 96px). .site-footer__watermark below
-   already uses this same padding-inline-only approach. */
+/* Was full-bleed + gutter, not .wrap's 1440px-capped column, specifically
+   so its content matched the nav bar's own inset (2026-09-05: "todo el
+   footer debe de ir espaciado al ancho del nav bar" — .wrap's centering
+   left a 240px inset at 1920px against the header's 96px gutter). Capped
+   again now (2026-09-09: "el nav bar, el footer y el quote al mismo ancho
+   de la caja de el demas contenido") — but together with .site-header__inner
+   picking up the same max-width/margin-inline:auto above, so nav and
+   footer content still land in the same place; both are just narrower now,
+   matching the rest of the page's content column instead of the full
+   viewport. .site-footer__watermark below intentionally keeps its own
+   padding-inline-only, full-bleed approach — it's a decorative backdrop,
+   not content that needs to line up. */
 .site-footer__inner {
   display: grid;
   grid-template-columns: 1.4fr repeat(4, 1fr);
   gap: clamp(24px, 3vw, 48px);
+  max-width: var(--maxw);
+  margin-inline: auto;
   padding-inline: var(--gutter);
   padding-bottom: clamp(40px, 5vw, 72px);
 }
 
-/* Same wordmark as .site-header__brand, sized to match it exactly
-   (2026-09-05: "el logo del footer igual al del nav") — was its own
-   clamp(24px, 2vw, 30px) with no scale, computing 30px at 1920px wide
-   against the header's 27px * 1.15 = 31.05px. */
+/* Same logo mark as .site-header__brand-mark, sized to match it exactly
+   (2026-09-05: "el logo del footer igual al del nav"). */
 .site-footer__brand a {
   display: inline-flex;
-  flex-direction: column;
-  font-family: var(--font-display);
-  font-size: clamp(22px, 1.9vw, 27px);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  transform: scale(1.15);
-  transform-origin: left center;
 }
-.site-footer__brand a .tm {
-  font-size: 0.34em;
-  vertical-align: 0.9em;
+.site-footer__brand-mark {
+  display: block;
+  height: clamp(50px, 4.28vw, 61px);
+  width: auto;
 }
 .site-footer__social {
   display: flex;
@@ -462,6 +473,8 @@
   margin: 0 0 clamp(18px, 2.4vw, 34px);
   padding-inline: var(--gutter);
   overflow: hidden;
+  /* Client (2026-09-09): "debe de estar alineado a la derecha". */
+  text-align: right;
   font-family: var(--font-display);
   /* 38px was still wider than "Dr. Dietrich Klinghardt" (23 Kalice
      characters, ~10.4× the font-size) fits inside a narrow phone's gutter —
@@ -480,6 +493,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
+  max-width: var(--maxw);
+  margin-inline: auto;
   padding-inline: var(--gutter);
   padding-block: 22px 26px;
   font-size: var(--fs-meta);
@@ -508,7 +523,7 @@
     font-size: 10px;
     letter-spacing: 0.08em;
     /* The desktop rule forces one line via nowrap; this range relies on
-       max-width actually wrapping long labels ("Dr. Klinghardt Akademy")
+       max-width actually wrapping long labels ("Dr. Klinghardt Akademie")
        instead of overflowing into the next item. */
     white-space: normal;
   }

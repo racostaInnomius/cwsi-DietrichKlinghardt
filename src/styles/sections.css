@@ -50,15 +50,16 @@
 .home-hero-pin {
   position: relative;
   height: 230vh;
-  background: linear-gradient(
-    180deg,
-    #023866 0,
-    #295b7f 35vh,
-    #3d6d85 70vh,
-    #c0dbde 125vh,
-    #eef3f3 185vh,
-    #f4f6f5 230vh
-  );
+  /* Client (2026-09-09, revised spec): a single organic run from #023866 to
+     #588ea0 — a straight 2-colour blend, both ends in the same blue family
+     so it's inherently smooth with no muddy midpoint. Scoped to this local
+     wrapper gradient only — NOT --grad-page-home, which Academy's own
+     background sits on and which D13's contrast fixes depend on (see
+     tokens.css). .plain-section.hero's own background-image below and
+     .home-academy's opening stop (sections.css, "Academy teaser") are both
+     derived from these same two colours — keep all three in sync if this
+     changes. */
+  background: linear-gradient(180deg, #023866 0%, #588ea0 100%);
 }
 /* .plain-section.hero (two classes), not .hero alone — motion.css's
    .plain-section { position: relative } loads after this file, so an
@@ -85,30 +86,24 @@
      that when this switched to the transparent "plain" variant sank the
      photo behind .home-hero-pin's own background entirely. */
   isolation: isolate;
-  /* Ends on white, matching the outer wrapper above — same reasoning, same
-     monotonic --grad-page-home stop set (see the comment there). */
-  background-image: linear-gradient(
-    180deg,
-    #023866 0%,
-    #295b7f 15%,
-    #3d6d85 30%,
-    #c0dbde 55%,
-    #eef3f3 80%,
-    #f4f6f5 100%
-  );
-  background-size: 100% 200%;
-  background-position: 0 calc(var(--hero-scroll, 0) * 100%);
+  /* Client (2026-09-09): replaced the flat CSS gradient with the animated
+     reference SVG ("animacion sin doctor.svg") — its motion is native SMIL
+     (<animate> on the gradient stops themselves), so it just plays once
+     embedded, no JS and no more need for the --hero-scroll-driven sliding
+     background-position this used to have. Sized with cover/center since
+     its own 1301×602 viewBox already matches the card's working aspect. */
+  background-image: url("/images/hero-bg-animated.svg");
+  background-size: cover;
+  background-position: center;
 }
 
-/* The panel the client delivered is the design's hero exactly: the gradient
-   with Dr. Klinghardt already composited into the right-hand side.
-   It goes in as an <img> rather than a background because `.gradient-card`
-   sets the `background` shorthand and would reset it — and because a real
-   element can be marked as the LCP candidate and given dimensions.
-   `object-position: right` keeps the copy's half of the panel clear: on narrow
-   screens the portrait is what gets cropped, never the type. `--grad-card`
-   stays underneath, so the panel still has the right colours while the image
-   loads and wherever it cannot cover. */
+/* Client (2026-09-09): swapped for hero-klinghardt-transparent.webp — a
+   real alpha cutout (PENDIENTES.md A15's "mejor alternativa") replacing the
+   old flat composite, so .plain-section.hero's own animated SVG background
+   above now actually shows through around the doctor instead of being
+   permanently hidden behind an opaque photo. `object-position: right`
+   keeps the copy's half of the panel clear: on narrow screens the portrait
+   is what gets cropped, never the type. */
 .hero__photo {
   position: absolute;
   inset: 0;
@@ -131,11 +126,15 @@
   padding-block: clamp(64px, 9vw, 128px);
 }
 /* #93661c is the exact gold the design uses for this eyebrow ("INFLUENTIAL
-   TEACHER"). ⚠️ On the blue stretch of the panel it measures ~1.9:1 — the
-   design's own choice, not a slip of ours, and the same call as the
-   announcement bar. Recorded as D13. */
+   TEACHER"). ⚠️ Below WCAG AA on the hero panel (~2:1 measured against the
+   panel's tinted ground; needs 4.5:1) — --gold-on-tint (tokens.css, #4d3716)
+   is the AA-clearing alternative along the same hue, still sitting unused.
+   Client (2026-09-09) chose #93661c anyway after being shown this tradeoff
+   — matches the brand gold exactly, at the cost of AA here. Scoped to this
+   rule only, not the shared --eyebrow-text-on-tint token (courses-hero,
+   top-picks) — those weren't part of this review. */
 .hero__eyebrow {
-  color: var(--eyebrow-text-on-tint);
+  color: #93661c;
 }
 .hero h1 {
   /* Caps how wide any single line can run, but on its own this doesn't
@@ -212,19 +211,37 @@
   margin-top: 6px;
 }
 
-/* Academy teaser, replacing the old bio intro on this slot. No card, no
-   background of its own — plain like every other section on the page, on
-   the shared page gradient (already near-white by the time it clears the
-   hero). Title and paragraph share one serif, body-weight treatment so they
-   read as one flowing block of text rather than a heading over a
-   paragraph, matching the reference. The title itself is an inline ARIA
-   heading inside that same paragraph (see HomePage.tsx) so the line never
-   breaks between "Academy™" and the copy that follows it. */
-/* Pull this text block farther in than the hero, matching the wide inset in
-   the reference. The shared gutter reaches 96px on desktop and contracts on
-   smaller screens instead of locking the section to a fixed 105px margin. */
+/* Academy teaser, replacing the old bio intro on this slot. Title and
+   paragraph share one serif, body-weight treatment so they read as one
+   flowing block of text rather than a heading over a paragraph, matching
+   the reference. The title itself is an inline ARIA heading inside that
+   same paragraph (see HomePage.tsx) so the line never breaks between
+   "Academy™" and the copy that follows it. */
+/* Client (2026-09-08): the hero's baby-blue "se corta a la mitad de la
+   foto" — should continue down to the Events heading instead. Originally
+   built as a scroll-linked animation (oversized background sliding via
+   --academy-scroll, same technique as .plain-section.hero/.newsletter) but
+   the client found the continuous movement read as the background
+   "deformándose" while scrolling (2026-09-09) and asked for it static
+   instead, same as Events below — so this is now a plain gradient sized to
+   the section's own box, no sliding. .home-academy is a plain-section (full
+   width, no .wrap), so no 100vw pseudo needed here the way Shop/Events'
+   own fix required. */
+.home-academy {
+  /* Client (2026-09-09): #588ea0 held through the first 20%, then fading
+     to #cfe1e2. */
+  background-image: linear-gradient(180deg, #588ea0 20%, #cfe1e2 100%);
+}
+/* Capped at the same 1440px column as .wrap now (client, 2026-09-09: "el
+   nav bar, el footer y el quote al mismo ancho de la caja de el demas
+   contenido, como la foto del hero, y las secciones de sophia, 5 leves").
+   Was margin: 0 var(--gutter) alone — full-bleed, no max-width — which is
+   what made this and the header/footer read wider than the rest of the
+   page's content on wide viewports. */
 .home-academy__inner {
-  margin: 0 var(--gutter);
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
   padding-block: clamp(48px, 7vw, 88px);
 }
 .home-academy__copy {
@@ -236,10 +253,22 @@
   text-align: justify;
   margin: 0 0 28px;
 }
+/* Client: only "Training programmes and certifications for practitioners"
+   and "taught by Dr. Klinghardt" are bold — the rest of the quote stays
+   regular (see the split in HomePage.tsx). */
+.home-academy__copy--bold {
+  font-weight: 700;
+}
+/* Same style as the "Join my talks" button (.talks-band__body .btn) —
+   client: "copiar el estilo de boton que hiciste para join my talks". */
 .home-academy .btn {
   display: flex;
   width: fit-content;
   margin-inline: auto;
+  min-height: 64px;
+  padding: 0 44px;
+  border-width: 2px;
+  font-size: 16px;
 }
 /* Academy sits directly above Events — bring the two closer than the page's
    normal section rhythm (2026-09-04: 30%, then "reduce un 15% mas" ->
@@ -269,7 +298,34 @@
    to its own, separately-approved 40%-off-original number — leaving it on
    the token would silently compound the two cuts. */
 .home-events {
+  position: relative;
+  isolation: isolate;
   padding-top: clamp(33px, 4.17vw, 71px);
+}
+/* Client (2026-09-09, exact spec): #588ea0 fading to #f4f6f5 (the page's
+   lightest established tone, the one hero/newsletter/academy all close on)
+   — but only across the section's own top padding plus half the eyebrow's
+   line height, so the teal touches just the middle of "EVENTS & WEBINARS"
+   and has fully cleared by the title below it. A plain 2-stop gradient
+   whose second stop lands well short of the section's full height holds
+   flat at #f4f6f5 for the remainder — no need to size or repeat it.
+   .home-events is a .wrap (max-width, centred) itself, same as .home-shop,
+   so this pseudo spans the full viewport width via the same 100vw/-50%
+   trick Shop's own fix uses. */
+.home-events::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -1;
+  background-image: linear-gradient(
+    180deg,
+    #cee1e1 0%,
+    #f4f6f5 calc(clamp(33px, 4.17vw, 71px) + 10px)
+  );
 }
 
 /* The shared .section-heading h2 caps at 22ch so long titles wrap on other
@@ -277,6 +333,16 @@
    line here instead (2026-09-04: "cambialo por 1 sola" línea). */
 .home-events .section-heading h2 {
   max-width: none;
+  /* Client (2026-09-09): "subir el parrafo, pegarlo mas al titulo" — the
+     browser's own default h2 margin-bottom (~0.83em, unset elsewhere) plus
+     .lead's 14px margin-top read as too much air. .section-heading's own
+     align-items: flex-end means the "View all events" link tracks the
+     text block's bottom edge, so tightening this also pulls the button up
+     to match — no separate button fix needed. */
+  margin-bottom: 6px;
+}
+.home-events .section-heading .lead {
+  margin-top: 4px;
 }
 /* "All events ↗" becomes a filled pill button matching the reference
    (2026-09-04) — scoped to Home's Events strip only; every other
@@ -901,9 +967,15 @@
 /* Same fix as .site-nav__link .tm (shell.css): the shared .tm sizes off the
    12px sublabel/eyebrow scale, so at this line's own 16px the ® rendered
    under 6px — effectively invisible (2026-09-05: "el signo de la R no se
-   ve"). */
+   ve"). Bumped four times since (client 2026-09-09, twice "mas grande",
+   then +20%, then +10%) — 0.55em → 0.77em → 1.1em → 1.32em → 1.45em — with
+   vertical-align brought down each time to compensate, since the base .tm
+   rule's vertical-align is itself in em units relative to the mark's own
+   (now bigger) size; last request was explicitly to bring it down level
+   with the text's own cap-height instead of floating above it. */
 .home-art__accent .tm {
-  font-size: 0.55em;
+  font-size: 1.45em;
+  vertical-align: 0em;
 }
 
 .new-patients__photo {
@@ -996,9 +1068,15 @@
 .home-newsletter-pin {
   position: relative;
   height: 200vh;
+  /* Client: "el gradient de abajo deberia empezar de baby blue a yellow
+     orange y empezar la transition en el newsletter" — opens on the same
+     baby blue (#c0dbde) as the hero instead of white, then runs the same
+     gold/amber journey it already had into the footer's navy. Local to
+     this wrapper (not --grad-page-home), so it doesn't touch the D13
+     contrast-fix anchors. */
   background: linear-gradient(
     180deg,
-    #f4f6f5 0,
+    #c0dbde 0,
     var(--cream) 12vh,
     #f2e4c9 24vh,
     var(--gold-bright) 60vh,
@@ -1027,7 +1105,7 @@
      continuous dusk with no seam. */
   background-image: linear-gradient(
     180deg,
-    #f4f6f5 0%,
+    #c0dbde 0%,
     var(--cream) 6%,
     #f2e4c9 12%,
     var(--gold-bright) 30%,
@@ -1110,6 +1188,33 @@
   font-size: var(--fs-meta);
   letter-spacing: 0.06em;
   text-align: center;
+}
+/* Home only: .plain-section.newsletter's card background slides from gold
+   to navy as you scroll (--newsletter-scroll, HomePage.tsx). First pass here
+   was a hard class toggle at a fixed threshold; client (2026-09-09) asked
+   for "un poco mas de efecto... una transicion sutil y elegante" instead —
+   so this now blends continuously via color-mix, reading --newsletter-scroll
+   directly (it's just an inherited custom property, no JS class needed).
+   The mix ramps from 0% to 100% white over scroll 0.15→0.35 — a real fade
+   through each colour's own in-between tones, not a snap — landing on pure
+   white comfortably before the background is fully dark. Every other page's
+   newsletter band is static and warm throughout (--newsletter-scroll is
+   never set there), so color-mix's white portion stays pinned at 0% and
+   these colours render exactly as before. */
+.plain-section.newsletter {
+  --newsletter-white-mix: clamp(0%, calc((var(--newsletter-scroll, 0) - 0.15) * 500%), 100%);
+}
+.plain-section.newsletter .eyebrow {
+  color: color-mix(in srgb, white var(--newsletter-white-mix, 0%), var(--eyebrow-text));
+}
+.plain-section.newsletter h2 {
+  color: color-mix(in srgb, white var(--newsletter-white-mix, 0%), var(--on-surface));
+}
+.plain-section.newsletter .newsletter__lead {
+  color: color-mix(in srgb, white var(--newsletter-white-mix, 0%), var(--ink-soft));
+}
+.plain-section.newsletter .newsletter__note {
+  color: color-mix(in srgb, white var(--newsletter-white-mix, 0%), var(--ink));
 }
 
 /* ── Newsletter feedback dialog ───────────────────────────────── */
@@ -4247,6 +4352,19 @@
    which Sophia's condition tags also use at the full round. */
 .home-shop__filters .pill {
   border-radius: var(--radius-sm);
+  /* Client (2026-09-09): "quitar el color blanco... dejar solo el stroke"
+     + "un poco altos" — shared .pill's own padding (16px 30px) and
+     --surface-2 fill trimmed here, scoped to Shop only (other pages'
+     pills — Sophia's condition tags — keep the default look). Vertical
+     padding cut again, 10px → 7px (client: "15% menos altos"), against an
+     estimated ~39px total height (16px text, ~19px line-height + 2×10px). */
+  padding: 7px 22px;
+}
+/* :not(.pill--active) so the "All" pill keeps its solid brand fill —
+   .pill--active's own background rule is lower specificity than this
+   ancestor-scoped one and would otherwise lose to a flat removal here. */
+.home-shop__filters .pill:not(.pill--active) {
+  background: transparent;
 }
 
 .section-actions {
@@ -4512,13 +4630,34 @@
    The heading is MULTICOLOUR in the design, and not by tinting each word — the
    text node carries a gradient fill (#ffb822 → #0b3d65 → #ffb822), which is why
    it is painted here with background-clip rather than split into spans. */
+/* Client (2026-09-09): "se ve un poco plain... le puse como un destello de
+   luz" — same technique as the hero's own animated SVG background (SMIL,
+   no JS), recoloured to --grad-card-warm's new navy/blue/amber stops with
+   an added soft diagonal light streak drifting across. Overrides
+   .gradient-card's own `background` shorthand (motion.css) with a more
+   specific selector, and switches off that rule's ::before drift-copy —
+   redundant now that the movement lives inside the SVG itself, and
+   layering the old oversized/panning copy on top would double up on it. */
+.gradient-card.talks-band {
+  background-image: url("/images/talks-band-bg-animated.svg");
+  background-size: cover;
+  background-position: center;
+}
+.gradient-card.talks-band::before {
+  content: none;
+}
 .talks-band__inner {
   display: grid;
   /* Photo a third, copy two thirds, matching the reference (2026-09-05) —
      was an even 1:1 split. */
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   align-items: center;
-  gap: clamp(24px, 3.4vw, 56px);
+  /* Client (2026-09-09): "juntar un poco el titulo con la foto... todo el
+     texto se ve muy separado". row-gap (title → photo/body row) split from
+     column-gap and cut roughly in half; column-gap trimmed less since the
+     photo and copy still need to read as two columns, not run together. */
+  row-gap: clamp(14px, 1.8vw, 28px);
+  column-gap: clamp(20px, 2.8vw, 44px);
   padding: clamp(32px, 4.4vw, 72px);
 }
 .talks-band__title {
@@ -4526,20 +4665,24 @@
   margin: 0 0 clamp(10px, 1.6vw, 24px);
   font-size: var(--fs-display-xl);
   text-align: center;
-  /* The design's own stops are #ffb822 → #0b3d65 → #ffb822, and the amber ones
-     measured 1.01–2.02:1 over this band. Deepened to #8a5a12, which keeps the
-     two-tone effect and clears 3:1 everywhere the heading falls. */
-  background: linear-gradient(100deg, #8a5a12 0%, #0b3d65 56%, #8a5a12 100%);
+  /* The design's own stops, #ffb822 → #0b3d65 → #ffb822, measured
+     1.01–2.02:1 over the OLD band background and were deepened to #8a5a12
+     (D13-c) to clear 3:1. Restored to the original bright gold (client,
+     2026-09-09: "mas amarillas, como highlighteadas") now that the band's
+     own background changed (--grad-card-warm, tokens.css) — against its new
+     navy top, where this heading actually sits, #ffb822 measures ~3.57:1,
+     clearing AA's 3:1 for text this size. */
+  background: linear-gradient(100deg, #ffb822 0%, #0b3d65 56%, #ffb822 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 .talks-band__body h3 {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .talks-band__body p {
   max-width: 46ch;
-  margin-bottom: 22px;
+  margin-bottom: 16px;
   color: var(--ink-soft);
 }
 /* Bigger than the shared .btn default, matching the reference (2026-09-05:
@@ -4561,7 +4704,31 @@
    Shop's own top padding, matching Weekly Talks above it) stay untouched:
    was 71px at 1920px wide, now 57px (71 * 0.8). */
 .home-shop {
+  position: relative;
+  isolation: isolate;
   padding-bottom: clamp(27px, 3.34vw, 57px);
+}
+/* Scoped to Shop only, not the shared --grad-page-home token (2026-09-08
+   client: reverted an earlier attempt that stretched the page-level
+   gradient — too broad, touched Academy/Events/Art too and didn't match).
+   .home-shop is a .wrap (max-width, centred) itself, not a full-bleed
+   outer element the way AnimatedGradient's sections are, so this pseudo
+   spans the full viewport width behind it via the classic 100vw/-50%
+   trick, then hands off into Newsletter's own #c0dbde opening stop
+   (sections.css, .home-newsletter-pin) for a seamless edge. */
+.home-shop::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -1;
+  /* Ramps in from very pale (matching the hero's own "pale" stop) rather
+     than opening flat on the mid teal (2026-09-08 client: "le faltó un
+     gradiente de menos a mas... del azul super claro al azul claro"). */
+  background: linear-gradient(180deg, #eef3f3 0%, #9dc3d1 20%, #c0dbde 100%);
 }
 .home-shop__filters {
   display: flex;
@@ -4603,19 +4770,24 @@
    "there's more" affordance, with a visible scrollbar beneath. Fixed-ish
    card widths (not 1fr) are what let a card sit half off the right edge
    instead of the row always resolving to a whole number of equal columns. */
+/* Client (2026-09-09): "un poco mas despegada de las cards... un poco mas
+   visible, porque no funciona muy bien" — more room between the cards and
+   the track (18px → 32px), and the track itself thicker (6px → 10px,
+   scrollbar-width: thin → auto for Firefox) so it's easier to both see and
+   actually grab/drag. */
 .product-strip {
   display: flex;
   gap: clamp(14px, 1.8vw, 22px);
   margin: 0;
-  padding: 0 0 18px;
+  padding: 0 0 32px;
   list-style: none;
   overflow-x: auto;
   scroll-snap-type: x proximity;
-  scrollbar-width: thin;
+  scrollbar-width: auto;
   scrollbar-color: var(--brand-text) var(--line);
 }
 .product-strip::-webkit-scrollbar {
-  height: 6px;
+  height: 10px;
 }
 .product-strip::-webkit-scrollbar-track {
   background: var(--line);

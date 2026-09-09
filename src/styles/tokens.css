@@ -252,21 +252,21 @@
     #90a28f 92%,
     #cca256 100%
   );
-  /* The "Join My Weekly Talks" band, sampled across the rendered frame rather
-     than guessed: it runs diagonally from a deep teal at the top right, through
-     a pale middle, into the warm olive-amber it ends on. */
-  /* Lightened at the top compared with the sampled frame. The design sets its
-     display heading in a gradient over this band, and over the original deep
-     teal that heading measured 1.87:1 — under the 3:1 a display size needs.
-     Raising the first two stops gives the heading ground to sit on while the
-     band keeps its teal-to-warm journey. */
+  /* Client (2026-09-09, exact spec from their own Figma paint panel): "se ve
+     un poco plain... mas pop" — replaces the sampled teal-to-olive journey
+     with the same navy/light-blue/amber family the hero's own animated
+     background uses (see hero-bg-animated.svg), given here with real alpha
+     since the source swatch showed a checkered (transparent) gradient bar,
+     not solid stops. NOTE: the previous version's first two stops were
+     deliberately lightened for the heading's own contrast (D13-c, "el
+     original midió 1.87:1") — this reopens that question since the ground
+     the heading sits on has changed; see .talks-band__title below. */
   --grad-card-warm: linear-gradient(
-    200deg,
-    #9fc2cd 0%,
-    #9dc3d1 22%,
-    #94c0c9 48%,
-    #a9bfa4 78%,
-    #c4b88b 100%
+    180deg,
+    rgba(2, 56, 102, 0.8) 0%,
+    rgba(91, 157, 205, 0.2) 42%,
+    rgba(91, 157, 205, 0.5) 72%,
+    rgba(240, 164, 55, 0.8) 97%
   );
 }
 

@@ -28,7 +28,7 @@ import { FIVE_LEVELS_VIDEO } from "@/data/media";
  */
 export function HomePage() {
   const intro = useSection(SECTION.homeIntro, {
-    title: "Dr. Klinghardt Academy™",
+    title: "Dr. Klinghardt Akademie™",
     paragraphs: [
       "Training programmes and certifications for practitioners who want to bring Autonomic Response Testing and the 5 Levels of Healing into their own practice — taught by Dr. Klinghardt and the team he has trained worldwide.",
     ],
@@ -71,6 +71,31 @@ export function HomePage() {
     Math.min(18, 1300 / (introTitleChars + introBodyChars)),
   );
 
+  // Client: only these two phrases carry bold in the Academy quote, the rest
+  // of the paragraph stays regular. Split around them (rather than hand-
+  // authoring three separate strings) so the CMS's own paragraph text still
+  // gets the same treatment as long as it contains these phrases verbatim.
+  // Each segment keeps its own charOffset so the letter cascade still reads
+  // as one continuous sweep across the whole line.
+  const introBoldPhrases = [
+    "Training programmes and certifications for practitioners",
+    "taught by Dr. Klinghardt",
+  ];
+  const introBodySegments = (() => {
+    const pattern = new RegExp(
+      `(${introBoldPhrases.map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+    );
+    let offset = introTitleChars;
+    return intro.paragraphs[0]
+      .split(pattern)
+      .filter(Boolean)
+      .map((text) => {
+        const charOffset = offset;
+        offset += text.split(" ").join("").length;
+        return { text, bold: introBoldPhrases.includes(text), charOffset };
+      });
+  })();
+
   const { upcoming, past } = splitByTime(useCollection("events"));
   const [eventsTab, setEventsTab] = useState<"upcoming" | "past">("upcoming");
   const featured = (eventsTab === "upcoming" ? upcoming : past).slice(0, 3);
@@ -82,7 +107,7 @@ export function HomePage() {
   const picks = featuredProducts(products);
   const shopPicks = (picks.length ? picks : products).slice(0, 5);
 
-  // Drives three things every frame, Home only:
+  // Drives two things every frame, Home only:
   //  1. A 0→1 scroll-progress custom property on each pinned card's own
   //     element (--hero-scroll, --newsletter-scroll), which sections.css
   //     reads to slide that card's oversized background image — the
@@ -94,13 +119,6 @@ export function HomePage() {
   //     directly off newgenre.studio (a single wheel tick there takes
   //     ~450ms to settle; this matches that curve). Skipped under
   //     reduced-motion.
-  //  3. --scroll-skew, a small, velocity-driven skew on the page's photos
-  //     (2026-09-06: "un poco de mayor impacto") — Lenis exposes real-time
-  //     scroll velocity, which .scroll-skew images (sections.css) turn into
-  //     a couple of degrees of lean while flicking through the page,
-  //     easing back to 0 as the scroll settles. Skipped entirely under
-  //     reduced-motion along with Lenis itself, not just left at rest —
-  //     there's no `lenis.velocity` to read once Lenis never runs.
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -118,7 +136,6 @@ export function HomePage() {
       [".home-newsletter-pin", ".plain-section.newsletter", "--newsletter-scroll"],
     ];
 
-    let currentSkew = 0;
     // Lerped wheel/touch multiplier — 1 is normal speed. The pinned hero
     // dwell holds the card still on screen for a long scroll distance,
     // which tempts people into scrolling harder than they realize; that
@@ -158,16 +175,6 @@ export function HomePage() {
       }
 
       if (lenis) {
-        // Lenis's own velocity is jumpy frame to frame (it's a raw delta,
-        // not eased) — lerping toward it instead of assigning it directly
-        // is what makes the lean itself feel fluid rather than jittery.
-        const targetSkew = Math.max(-2.5, Math.min(2.5, lenis.velocity * 0.6));
-        currentSkew += (targetSkew - currentSkew) * 0.12;
-        document.documentElement.style.setProperty(
-          "--scroll-skew",
-          currentSkew.toFixed(3),
-        );
-
         // Ramp the multiplier down approaching release, hold it soft for
         // just over half a screen height past release (enough for Academy's
         // reveal to trigger and finish), then ramp back to normal.
@@ -193,7 +200,6 @@ export function HomePage() {
     return () => {
       cancelAnimationFrame(frame);
       lenis?.destroy();
-      document.documentElement.style.removeProperty("--scroll-skew");
     };
   }, []);
 
@@ -212,10 +218,10 @@ export function HomePage() {
               here would only repeat it to a screen reader. */}
           <img
             className="hero__photo"
-            src="/images/hero-klinghardt.webp"
+            src="/images/hero-klinghardt-transparent.webp"
             alt=""
-            width={1300}
-            height={600}
+            width={1920}
+            height={1080}
             fetchPriority="high"
             decoding="async"
           />
@@ -257,19 +263,23 @@ export function HomePage() {
                 aria-level={2}
                 staggerMs={introStaggerMs}
               />
-              <SplitReveal
-                as="span"
-                text={intro.paragraphs[0]}
-                charOffset={introTitleChars}
-                staggerMs={introStaggerMs}
-              />
+              {introBodySegments.map((segment, i) => (
+                <SplitReveal
+                  key={i}
+                  as="span"
+                  text={segment.text}
+                  charOffset={segment.charOffset}
+                  staggerMs={introStaggerMs}
+                  className={segment.bold ? "home-academy__copy--bold" : undefined}
+                />
+              ))}
             </p>
             {intro.paragraphs.slice(1).map((paragraph) => (
               <p key={paragraph} className="home-academy__copy">
                 {paragraph}
               </p>
             ))}
-            <Link className="btn btn-outline" to="/academy">
+            <Link className="btn btn-ghost" to="/academy">
               Learn more
             </Link>
           </Reveal>
@@ -336,10 +346,7 @@ export function HomePage() {
       <AnimatedGradient variant="plain" intensity="soft" className="home-art">
         <div className="wrap home-art__inner">
           <Reveal className="home-art__media">
-            <SelfHostedVideo
-              className="scroll-skew"
-              {...FIVE_LEVELS_VIDEO}
-            />
+            <SelfHostedVideo {...FIVE_LEVELS_VIDEO} />
           </Reveal>
           <Reveal className="home-art__body">
             <p className="eyebrow">Diagnostic method</p>
@@ -368,7 +375,6 @@ export function HomePage() {
       <section className="section wrap feature-row feature-row--right" id="our-clinic">
         <Reveal className="feature-row__media">
           <img
-            className="scroll-skew"
             src="/images/sophia-clinic.webp"
             alt="The Sophia Health Institute, seen from the garden"
             width={1024}
@@ -408,7 +414,6 @@ export function HomePage() {
 
             <Reveal className="talks-band__media">
               <img
-                className="scroll-skew"
                 src="/images/weekly-talks-live.webp"
                 alt="A live Weekly Talk session with Dr. Klinghardt"
                 width={388}

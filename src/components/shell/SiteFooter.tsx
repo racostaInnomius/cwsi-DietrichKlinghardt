@@ -27,10 +27,7 @@ export function SiteFooter({ theme }: { theme: "dk" | "sophia" }) {
       <div className="site-footer__inner">
         <div className="site-footer__brand">
           <Link to="/" aria-label="Dietrich Klinghardt, home">
-            <span>Dietrich</span>
-            <span>
-              Klinghardt<sup className="tm">™</sup>
-            </span>
+            <img className="site-footer__brand-mark" src="/images/logo-tm.svg" alt="" />
           </Link>
           <div className="site-footer__social">
             <a href={env.INSTAGRAM_URL} aria-label="Instagram">

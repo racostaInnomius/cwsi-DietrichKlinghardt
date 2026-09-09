@@ -1,0 +1,22 @@
+<svg width="1200" height="500" viewBox="0 0 1200 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="500" fill="url(#talksBase)"/>
+<rect width="1200" height="500" fill="url(#talksStreak)"/>
+<defs>
+<linearGradient id="talksBase" x1="600" y1="0" x2="600" y2="500" gradientUnits="userSpaceOnUse">
+<stop offset="0%" stop-color="#023866" stop-opacity="0.8"/>
+<stop offset="42%" stop-color="#5B9DCD" stop-opacity="0.2"/>
+<stop offset="72%" stop-color="#5B9DCD" stop-opacity="0.5"/>
+<stop offset="97%" stop-color="#F0A437" stop-opacity="0.8"/>
+</linearGradient>
+<linearGradient id="talksStreak" x1="0" y1="500" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+<animate attributeName="x1" values="-200;150;-200" keyTimes="0;0.5;1" dur="11s" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1" repeatCount="indefinite"/>
+<animate attributeName="x2" values="1000;1350;1000" keyTimes="0;0.5;1" dur="11s" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1" repeatCount="indefinite"/>
+<stop offset="0" stop-color="#FFFDF6" stop-opacity="0"/>
+<stop stop-color="#FFFDF6" stop-opacity="0">
+<animate attributeName="offset" values="0.18;0.52;0.18" keyTimes="0;0.5;1" dur="9s" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1" repeatCount="indefinite"/>
+<animate attributeName="stop-opacity" values="0.16;0.3;0.16" keyTimes="0;0.5;1" dur="9s" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1" repeatCount="indefinite"/>
+</stop>
+<stop offset="1" stop-color="#FFFDF6" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

@@ -71,96 +71,95 @@ export function SiteHeader() {
       className={`site-header${pathname === "/" ? " site-header--home" : ""}`}
       ref={headerRef}
     >
-      <Link className="site-header__brand" to="/" aria-label="Dietrich Klinghardt, home">
-        <span>Dietrich</span>
-        <span>
-          Klinghardt<sup className="tm">™</sup>
-        </span>
-      </Link>
-
-      <nav
-        className={`site-nav${mobileOpen ? " is-open" : ""}`}
-        aria-label="Primary"
-        id={menuId}
-      >
-        <ul className="site-nav__list">
-          {PRIMARY_NAV.map((item) => {
-            const hasChildren = Boolean(item.children?.length);
-            const isOpen = openMenu === item.href;
-            const isCurrent =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
-
-            return (
-              <li
-                key={item.href}
-                className={`site-nav__item${hasChildren ? " has-children" : ""}`}
-                onMouseEnter={hasChildren ? () => setOpenMenu(item.href) : undefined}
-                onMouseLeave={hasChildren ? () => setOpenMenu(null) : undefined}
-              >
-                <span className="site-nav__row">
-                  <Link
-                    className="site-nav__link"
-                    to={item.href}
-                    aria-current={isCurrent ? "page" : undefined}
-                  >
-                    <Label item={item} />
-                    {item.sublabel ? (
-                      <span className="site-nav__link">
-                        {item.sublabel}
-                        {item.mark ? <sup className="tm">{item.mark}</sup> : null}
-                      </span>
-                    ) : null}
-                  </Link>
-                  {hasChildren ? (
-                    <button
-                      type="button"
-                      className="site-nav__toggle"
-                      aria-expanded={isOpen}
-                      aria-label={`${item.label} submenu`}
-                      onClick={() => setOpenMenu(isOpen ? null : item.href)}
-                    >
-                      <svg viewBox="0 0 12 8" aria-hidden="true">
-                        <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
-                      </svg>
-                    </button>
-                  ) : null}
-                </span>
-
-                {hasChildren ? (
-                  <ul className={`site-nav__menu${isOpen ? " is-open" : ""}`}>
-                    {item.children!.map((child) => (
-                      <li key={child.href}>
-                        <Link
-                          to={child.href}
-                          aria-current={isChildCurrent(pathname, child.href) ? "page" : undefined}
-                        >
-                          <Label item={child} />
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      <div className="site-header__actions">
-        <Link className="btn btn-light site-header__cta" to="/contact">
-          Contact us
+      <div className="site-header__inner">
+        <Link className="site-header__brand" to="/" aria-label="Dietrich Klinghardt, home">
+          <img className="site-header__brand-mark" src="/images/logo-tm.svg" alt="" />
         </Link>
-        <CartButton />
-        <button
-          type="button"
-          className="site-header__burger"
-          aria-expanded={mobileOpen}
-          aria-controls={menuId}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          onClick={() => setMobileOpen((open) => !open)}
+
+        <nav
+          className={`site-nav${mobileOpen ? " is-open" : ""}`}
+          aria-label="Primary"
+          id={menuId}
         >
-          <span aria-hidden="true">{mobileOpen ? "✕" : "☰"}</span>
-        </button>
+          <ul className="site-nav__list">
+            {PRIMARY_NAV.map((item) => {
+              const hasChildren = Boolean(item.children?.length);
+              const isOpen = openMenu === item.href;
+              const isCurrent =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+              return (
+                <li
+                  key={item.href}
+                  className={`site-nav__item${hasChildren ? " has-children" : ""}`}
+                  onMouseEnter={hasChildren ? () => setOpenMenu(item.href) : undefined}
+                  onMouseLeave={hasChildren ? () => setOpenMenu(null) : undefined}
+                >
+                  <span className="site-nav__row">
+                    <Link
+                      className="site-nav__link"
+                      to={item.href}
+                      aria-current={isCurrent ? "page" : undefined}
+                    >
+                      <Label item={item} />
+                      {item.sublabel ? (
+                        <span className="site-nav__link">
+                          {item.sublabel}
+                          {item.mark ? <sup className="tm">{item.mark}</sup> : null}
+                        </span>
+                      ) : null}
+                    </Link>
+                    {hasChildren ? (
+                      <button
+                        type="button"
+                        className="site-nav__toggle"
+                        aria-expanded={isOpen}
+                        aria-label={`${item.label} submenu`}
+                        onClick={() => setOpenMenu(isOpen ? null : item.href)}
+                      >
+                        <svg viewBox="0 0 12 8" aria-hidden="true">
+                          <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                        </svg>
+                      </button>
+                    ) : null}
+                  </span>
+
+                  {hasChildren ? (
+                    <ul className={`site-nav__menu${isOpen ? " is-open" : ""}`}>
+                      {item.children!.map((child) => (
+                        <li key={child.href}>
+                          <Link
+                            to={child.href}
+                            aria-current={isChildCurrent(pathname, child.href) ? "page" : undefined}
+                          >
+                            <Label item={child} />
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="site-header__actions">
+          <Link className="btn btn-light site-header__cta" to="/contact">
+            Contact us
+          </Link>
+          <CartButton />
+          <button
+            type="button"
+            className="site-header__burger"
+            aria-expanded={mobileOpen}
+            aria-controls={menuId}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMobileOpen((open) => !open)}
+          >
+            <span aria-hidden="true">{mobileOpen ? "✕" : "☰"}</span>
+          </button>
+        </div>
       </div>
     </header>
   );
