@@ -44,13 +44,9 @@ export const PRIMARY_NAV: NavItem[] = [
   },
   { label: "Events", href: "/events" },
   {
-    // "Akademy", not "Academy" — that is how the design writes the trademark in
-    // the navigation, and 15 of the 19 times it appears in the file. The other
-    // four say "Academy", so the design contradicts itself; the nav form wins
-    // here and the spelling is pending the client's confirmation (see A14).
-    // `Klinghardt Akademie` below is a different thing: the German academy in
-    // Europe, whose name really is spelled that way.
-    label: "Dr. Klinghardt Akademy",
+    // "Akademie", matching the German spelling — client-confirmed (see A14),
+    // superseding the design's original "Akademy" navigation form.
+    label: "Dr. Klinghardt Akademie",
     href: "/academy",
     mark: "™",
     children: [

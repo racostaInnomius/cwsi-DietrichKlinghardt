@@ -141,7 +141,7 @@ export const routes: RouteRecord[] = [
               title: "Educational Resources",
               eyebrow: "Publications",
               phase: "F3",
-              crumbs: [{ label: "Akademy", href: "/academy" }, { label: "Publications" }],
+              crumbs: [{ label: "Akademie", href: "/academy" }, { label: "Publications" }],
             }),
           },
           {
@@ -152,7 +152,7 @@ export const routes: RouteRecord[] = [
               // The designer's notes mark the Akademie as separate work the
               // client is handling; it lands with the content load, not before.
               phase: "F9",
-              crumbs: [{ label: "Akademy", href: "/academy" }, { label: "Klinghardt Akademie" }],
+              crumbs: [{ label: "Akademie", href: "/academy" }, { label: "Klinghardt Akademie" }],
             }),
           },
           { path: "courses", element: <CoursesPage />, loader: loadTrainingPaths },

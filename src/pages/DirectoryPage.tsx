@@ -76,7 +76,7 @@ export function DirectoryPage() {
       <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
-            items={[{ label: "Akademy", href: "/academy" }, { label: "Find a therapist" }]}
+            items={[{ label: "Akademie", href: "/academy" }, { label: "Find a therapist" }]}
           />
           <Reveal>
             <p className="eyebrow">Global practitioner directory</p>

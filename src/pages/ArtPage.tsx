@@ -37,7 +37,7 @@ export function ArtPage() {
       <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
-            items={[{ label: "Akademy", href: "/academy" }, { label: "A.R.T. Klinghardt" }]}
+            items={[{ label: "Akademie", href: "/academy" }, { label: "A.R.T. Klinghardt" }]}
           />
           <Reveal>
             <p className="eyebrow">Signature method</p>
