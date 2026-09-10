@@ -108,18 +108,39 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  transition: padding var(--dur) var(--ease), font-size var(--dur) var(--ease);
+}
+/* Client (2026-09-09): 10% thinner and the text 10% smaller once scrolled
+   past the very top (SiteShell.tsx toggles .is-scrolled off window.scrollY),
+   animating back to full size at the top again — the transition above on
+   the un-suffixed rule handles both directions the same way. Then another
+   15% on top of that (client, same day, follow-up): 0.9 * 0.85 = 0.765. */
+.announcement.is-scrolled p {
+  padding-block: calc(9px * 0.765);
+  font-size: calc(var(--fs-eyebrow) * 0.765);
 }
 .announcement a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-/* ── Header ───────────────────────────────────────────────────── */
-
-.site-header {
+/* Client (2026-09-09): "el sintillo... al hacer scroll down, que tambien
+   se mantenga arriba del menu" — the announcement bar used to scroll away
+   on its own while only .site-header stayed pinned; now both stick
+   together as one unit; SiteShell.tsx stacks .announcement then
+   <SiteHeader /> inside this. Sticky lives here instead of on .site-header
+   itself so the two share one positioning context (stacked in normal
+   flow) rather than needing the header's top offset hand-computed against
+   the announcement bar's own, changing, height. */
+.site-shell__sticky-top {
   position: sticky;
   top: 0;
   z-index: 50;
+}
+
+/* ── Header ───────────────────────────────────────────────────── */
+
+.site-header {
   background: var(--grad-header);
   color: var(--brand-ink);
 }

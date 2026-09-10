@@ -5,7 +5,7 @@ import { useTrainingPaths } from "@/lib/trainingPaths";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
-import { TeachersStrip } from "@/components/sections/TeachersStrip";
+import { CoursesHeroPhotos } from "@/components/sections/CoursesHeroPhotos";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
@@ -39,7 +39,7 @@ export function CoursesPage() {
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
           </Reveal>
-          <TeachersStrip />
+          <CoursesHeroPhotos />
         </div>
       </AnimatedGradient>
 

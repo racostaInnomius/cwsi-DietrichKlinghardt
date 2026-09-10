@@ -146,6 +146,21 @@ export function HomePage() {
     let scrollEase = 1;
     const HERO_RELEASE_DAMP = 0.4;
     const HERO_RAMP_IN = 0.85; // hero-scroll progress where softening begins
+    // The dwell's own middle stretch — nothing new happens on screen while
+    // it plays out, just the pinned card's background sliding through its
+    // colour journey — read as dragging on too long (client, 2026-09-09:
+    // "se esta quedando mucho tiempo detenido... que el scroll sea mas
+    // rapido"). Sped up here instead of shortening .home-hero-pin's own
+    // height, which would also compress the gradient's pacing. Ramps up
+    // from normal speed (so the arrival into the pin doesn't feel abrupt),
+    // holds boosted through the middle, then eases back to normal well
+    // before HERO_RAMP_IN so the existing release-damping above still has
+    // a normal starting point to soften from — not a boosted one, which
+    // would risk the exact "sale a toda velocidad" problem that damping
+    // was built to fix.
+    const HERO_BOOST = 1.7;
+    const HERO_BOOST_IN = 0.12;
+    const HERO_BOOST_OUT = 0.65;
 
     let frame: number;
     function raf(time: number) {
@@ -187,6 +202,14 @@ export function HomePage() {
         } else if (heroProgress > HERO_RAMP_IN) {
           const into = (heroProgress - HERO_RAMP_IN) / (1 - HERO_RAMP_IN);
           targetEase = 1 - (1 - HERO_RELEASE_DAMP) * into;
+        } else if (heroProgress > HERO_BOOST_OUT) {
+          const outOf =
+            (heroProgress - HERO_BOOST_OUT) / (HERO_RAMP_IN - HERO_BOOST_OUT);
+          targetEase = HERO_BOOST - (HERO_BOOST - 1) * outOf;
+        } else if (heroProgress > HERO_BOOST_IN) {
+          targetEase = HERO_BOOST;
+        } else if (heroProgress > 0) {
+          targetEase = 1 + (HERO_BOOST - 1) * (heroProgress / HERO_BOOST_IN);
         }
         scrollEase += (targetEase - scrollEase) * 0.12;
         lenis.options.wheelMultiplier = scrollEase;

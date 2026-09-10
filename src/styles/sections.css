@@ -116,6 +116,17 @@
   object-fit: cover;
   object-position: right center;
   pointer-events: none;
+  /* Client (2026-09-09): the pinned card holding still for its whole dwell
+     read as "atorado" (stuck) even with the scroll-speed boost above —
+     that boost changes how much wheel input the dwell takes, not what's
+     actually visible, and the card itself never moved. A slow scale tied
+     to --hero-scroll (the same 0→1 dwell progress driving the background)
+     gives it its own subtle life, directly connected to the scroll input
+     rather than a time-based animation that would keep running even if
+     the reader stopped scrolling. transform-origin matches object-position
+     so the zoom grows out from the subject, not off-centre. */
+  transform: scale(calc(1 + var(--hero-scroll, 0) * 0.08));
+  transform-origin: right center;
 }
 /* Centred, not bottom-aligned: in the design the copy runs from about a quarter
    to two thirds down the panel — which is exactly the pale-blue stretch of the
@@ -1537,12 +1548,22 @@
 /* ── Courses: header, method grid ─────────────────────────────── */
 
 /* Inset gradient panel, like the home hero — the design's frame, not the
-   plain page-gradient this section used to sit on directly. */
+   plain page-gradient this section used to sit on directly. overflow:
+   hidden already comes from the shared .gradient-card rule (motion.css) —
+   that's what keeps .courses-hero-photos' scroll drift clipped to the
+   panel below and never visible past it. */
 .courses-hero {
   margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
 }
+/* Text left, instructor photos right (client, 2026-09-09) — was a single
+   stacked column with the (then text-only, photo-less) teacher strip
+   running full-width underneath. */
 .courses-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
   padding-block: clamp(48px, 6vw, 96px);
 }
 /* Same call as the home hero's eyebrow (D13): this gold measures ~1.9:1 on
@@ -1559,46 +1580,68 @@
   margin-top: 18px;
 }
 
-/* Teacher cards drifting sideways under the header. */
-.teachers {
-  margin-top: clamp(32px, 4vw, 56px);
-  overflow: hidden;
-  /* The track is twice the content, so it can translate a full copy and loop
-     without a visible jump. */
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+/* Instructor photo cluster, replacing the old text-only teacher marquee
+   now that real photos exist for it (2026-09-09) — two columns, the right
+   one offset down to interlock with the left, matching the client's own
+   reference screenshot. Each column drifts vertically at its own rate as
+   the page scrolls (--courses-photos-scroll, CoursesHeroPhotos.tsx),
+   reading as one layered cluster rather than a flat grid — the same brief
+   TeachersStrip's own comment already cited ("el header replica
+   new.consciouslife.com"), just vertical/scroll-driven here instead of a
+   horizontal auto-drifting strip. */
+.courses-hero-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 1.6vw, 20px);
+  height: clamp(360px, 42vw, 560px);
 }
-.teachers__track {
+.courses-hero-photos__col {
   display: flex;
-  width: max-content;
-  animation: teachers-drift 42s linear infinite;
+  flex-direction: column;
+  gap: clamp(12px, 1.6vw, 20px);
+  transform: translateY(calc(var(--courses-photos-scroll, 0) * var(--courses-photos-rate)));
 }
-.teachers__track ul {
-  display: flex;
-  gap: 14px;
+.courses-hero-photos__col--a {
+  /* 0.05 → 0.3 (client, 2026-09-09: "hazlo mas llamativo") — together
+     with the tighter ±280px clamp in CoursesHeroPhotos.tsx, this column
+     now travels up to ~84px. */
+  --courses-photos-rate: 0.3;
+}
+.courses-hero-photos__col--b {
+  /* Offset down, interlocking with column a, and drifting the opposite
+     way for the parallax depth — -0.08 → -0.45, ~126px of travel. */
+  --courses-photos-rate: -0.45;
+  margin-top: 18%;
+}
+.courses-hero-photos__card {
+  position: relative;
   margin: 0;
-  padding: 0 7px 26px;
-  list-style: none;
-}
-.teacher {
-  min-width: 220px;
-  padding: 16px 20px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface-2);
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-md, 14px);
+  overflow: hidden;
   box-shadow: var(--shadow-card);
 }
-.teacher b {
+.courses-hero-photos__card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.courses-hero-photos__card figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 28px 16px 14px;
+  background: linear-gradient(180deg, transparent, rgba(2, 22, 40, 0.82));
+  color: var(--white);
+}
+.courses-hero-photos__card figcaption b {
   display: block;
   font-size: var(--fs-sm);
 }
-.teacher span {
-  color: var(--muted);
+.courses-hero-photos__card figcaption span {
+  display: block;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.78);
   font-size: var(--fs-meta);
-}
-@keyframes teachers-drift {
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 /* Three-up grid of training-path cards, replacing the old row list. Every

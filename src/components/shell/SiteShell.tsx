@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
@@ -34,6 +34,20 @@ export function SiteShell({
   const bannerCta = text(banner, "ctaLabel", "Join now");
   const bannerHref = text(banner, "ctaUrl", "/weekly-talks");
 
+  // Shrinks the announcement bar once the page has scrolled past the very
+  // top, back to full size at the top again (client, 2026-09-09: "cuando
+  // comience a seguir al menu... un 10% mas delgado... cuando regrese a
+  // top que regrese a su tamaño original"). A small threshold rather than
+  // > 0 so it doesn't flicker on the sub-pixel scroll jitter some
+  // trackpads report at rest.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   // Route changes scroll to top, except when the URL carries an anchor — the
   // nav links into #chronic-illness, #naturopathic-care, #newsletter and
   // #faq and those must land on the section. Client-side navigation (a
@@ -42,7 +56,10 @@ export function SiteShell({
   // the anchor links simply landed at the top of the target page instead
   // (2026-09-07: "no está scrolleando a sus lugares"). Offsets by the
   // sticky header's own height so its section doesn't render half-hidden
-  // underneath it.
+  // underneath it. The announcement bar is sticky too now (2026-09-09:
+  // "que tambien se mantenga arriba del menu"), stacked above the header
+  // inside .site-shell__sticky-top — so the offset has to cover that
+  // whole wrapper's height, not just the header's own.
   useEffect(() => {
     if (!hash) {
       window.scrollTo({ top: 0 });
@@ -50,8 +67,8 @@ export function SiteShell({
     }
     const target = document.getElementById(hash.slice(1));
     if (!target) return;
-    const header = document.querySelector<HTMLElement>(".site-header");
-    const offset = (header?.getBoundingClientRect().height ?? 0) + 16;
+    const stickyTop = document.querySelector<HTMLElement>(".site-shell__sticky-top");
+    const offset = (stickyTop?.getBoundingClientRect().height ?? 0) + 16;
     window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset });
   }, [pathname, hash]);
 
@@ -61,14 +78,19 @@ export function SiteShell({
         Skip to content
       </a>
 
-      <aside className="announcement" aria-label="Announcement">
-        <p>
-          {bannerText}{" "}
-          <a href={bannerHref}>{bannerCta}</a>
-        </p>
-      </aside>
+      <div className="site-shell__sticky-top">
+        <aside
+          className={`announcement${scrolled ? " is-scrolled" : ""}`}
+          aria-label="Announcement"
+        >
+          <p>
+            {bannerText}{" "}
+            <a href={bannerHref}>{bannerCta}</a>
+          </p>
+        </aside>
 
-      <SiteHeader />
+        <SiteHeader />
+      </div>
 
       <main
         id="main-content"
