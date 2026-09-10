@@ -206,7 +206,7 @@ export function HomePage() {
   return (
     <>
       <Seo
-        title={"Dr. Dietrich Klinghardt™ — Healing Beyond Symptoms"}
+        title={"Dr. Klinghardt Official Website"}
         description="Physician, educator and innovator in biological medicine. Autonomic Response Testing, the 5 Levels of Healing, live weekly talks and upcoming events."
         path="/"
       />

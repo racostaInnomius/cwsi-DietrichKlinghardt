@@ -91,7 +91,7 @@ export function NewPatientsPage() {
             {page.lead ? <p className="lead">{page.lead}</p> : null}
             <div className="page-hero__actions page-hero__actions--center">
               <a className="btn btn-primary" href="#contact">
-                Contact us <span aria-hidden="true">→</span>
+                Become a Patient <span aria-hidden="true">→</span>
               </a>
             </div>
           </Reveal>
@@ -169,7 +169,7 @@ export function NewPatientsPage() {
         </ul>
         <div className="section-actions">
           <a className="btn btn-primary" href="#contact">
-            Contact us <span aria-hidden="true">→</span>
+            Become a Patient <span aria-hidden="true">→</span>
           </a>
         </div>
       </section>

@@ -58,7 +58,17 @@ export const PRIMARY_NAV: NavItem[] = [
       { label: "Dr. Klinghardt Foundation", href: "/foundation", mark: "™" },
     ],
   },
-  { label: "Online courses", href: "/courses" },
+  {
+    // Two lines to trim this item's own horizontal footprint (client,
+    // 2026-09-09: "probar mostrar 'Online Courses' en dos lineas para
+    // mejorar el espacio del menu") — reusing the same label/sublabel
+    // stack Sophia's nav item already uses, which renders both lines at
+    // the same size/weight (site-nav__link .site-nav__link only changes
+    // display/padding, not typography).
+    label: "Online",
+    sublabel: "Courses",
+    href: "/courses",
+  },
   { label: "Store", href: "/store" },
   { label: "Music", href: "/music" },
 ];

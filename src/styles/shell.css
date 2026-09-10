@@ -177,13 +177,16 @@
   /* flex-start to match .site-header__inner above — same "Sophia Health
      Institute™..." 2-line item, same reasoning. */
   align-items: flex-start;
-  /* Fixed 18px, like .site-nav__link's fixed 16px font-size below, didn't
-     shrink at all between the 960px hamburger breakpoint and full desktop
-     width — seven items plus the logo and CTA simply ran out of room and
-     overflowed the viewport on laptop-sized screens instead of fitting
-     (client, 2026-09-09: "se ve muy cargada de lado derecho tanto que se
-     sale"). Fluid now, same idea as .site-header__inner's own gap. */
-  gap: clamp(10px, 1.6vw, 18px);
+  /* Was fixed 18px, like .site-nav__link's fixed 16px font-size below, and
+     didn't shrink at all between the 960px hamburger breakpoint and full
+     desktop width — seven items plus the logo and CTA simply ran out of
+     room and overflowed the viewport on laptop-sized screens (client,
+     2026-09-09: "se ve muy cargada de lado derecho tanto que se sale").
+     Made fluid then; top end raised again just now, 18px → 28px (client,
+     2026-09-09: "revisar espaciados... se percibe demasiado saturado"),
+     which "Online Courses" moving to two lines just below helps make room
+     for. */
+  gap: clamp(10px, 2vw, 28px);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -209,7 +212,10 @@
      at. */
   font-size: clamp(13px, 1.05vw, 16px);
   font-weight: 500;
-  letter-spacing: 0.02em;
+  /* 0.02em → 0.04em, alongside the wider gap above (client, 2026-09-09:
+     "se percibe demasiado saturado") — a touch more open tracking on
+     uppercase type reads calmer without needing a size change. */
+  letter-spacing: 0.04em;
   line-height: 1.25;
   text-transform: uppercase;
   max-width: none;
