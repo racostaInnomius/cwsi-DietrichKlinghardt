@@ -112,8 +112,12 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
         <Link to={href}>More info</Link>
         {price ? <strong>{price}</strong> : null}
       </div>
+      {/* Client (2026-09-11, against the Figma): "el boton de VIEW EVENT
+          cambia el texto por BOOK NOW" — every card in the reference reads
+          "Book now" regardless of registration type; only "Sold out"
+          still overrides it. */}
       <Link to={href} className="event-card__cta">
-        {soldOut ? "Sold out" : event.registrationType === "paid" ? "Book now" : "View event"}
+        {soldOut ? "Sold out" : "Book now"}
         <span aria-hidden="true">↗</span>
       </Link>
     </Reveal>

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
+import { useLocation } from "react-router-dom";
 import { env } from "@/lib/env";
 import { useSection, SECTION } from "@/lib/sections";
+import { themeForPath } from "@/components/shell/navigation";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -18,8 +20,25 @@ type Status = "idle" | "sending" | "done" | "error";
  * `#newsletter`'s radial glow in sections.css is what actually delivers that;
  * `intensity` only ever did anything on the `card`/`card-warm` variants this
  * section doesn't use, so the old `intensity="strong"` here was dead.
+ *
+ * Client (2026-09-10, on the footer fade): "no se ve el mismo estilo y
+ * efecto en el scroll... revisa a profundidad el home y aplicalo a la parte
+ * baja de las paginas internas" — Home's fade isn't a static gradient, it's
+ * HomePage.tsx pinning this section (position: sticky inside a 200vh
+ * wrapper) and sliding its background from amber to navy as the pin plays
+ * out, so it lands on the exact navy the footer opens on. Every internal DK
+ * page renders this same component, so the pin lives HERE instead of being
+ * wired into eight separate page files — Home keeps doing its own thing
+ * (HomePage.tsx already wraps it in .home-newsletter-pin with its own
+ * baby-blue-opening gradient tied to the hero's scroll rig), so this only
+ * self-pins on every OTHER Dietrich Klinghardt page. Sophia is excluded too
+ * — its own theme never asked for this, and the amber/navy journey is a DK
+ * colour story.
  */
 export function NewsletterSection() {
+  const { pathname } = useLocation();
+  const isPinned = pathname !== "/" && themeForPath(pathname) === "dk";
+
   const section = useSection(SECTION.newsletter, {
     title: "Join Our Newsletter",
     paragraphs: [
@@ -45,6 +64,29 @@ export function NewsletterSection() {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [status]);
+
+  // Same rig as HomePage.tsx's own hero/newsletter pins: --newsletter-scroll
+  // is the pinned card's 0→1 progress through its dwell (wrapper height
+  // minus the sticky card's own height), read by sections.css to slide the
+  // card's oversized background and blend its text toward white. Global
+  // querySelector, not a ref, for the same reason Home's own version uses
+  // it — there is only ever one #newsletter section on screen.
+  useEffect(() => {
+    if (!isPinned) return;
+    let frame: number;
+    function raf() {
+      const wrapper = document.querySelector<HTMLElement>(".newsletter-pin");
+      const card = document.querySelector<HTMLElement>(".newsletter-pin .plain-section.newsletter");
+      if (wrapper && card) {
+        const dwell = wrapper.getBoundingClientRect().height - card.getBoundingClientRect().height;
+        const progress = dwell > 0 ? Math.min(1, Math.max(0, -wrapper.getBoundingClientRect().top / dwell)) : 0;
+        card.style.setProperty("--newsletter-scroll", String(progress));
+      }
+      frame = requestAnimationFrame(raf);
+    }
+    frame = requestAnimationFrame(raf);
+    return () => cancelAnimationFrame(frame);
+  }, [isPinned]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -96,7 +138,7 @@ export function NewsletterSection() {
     }
   }
 
-  return (
+  const content = (
     <AnimatedGradient
       id="newsletter"
       variant="plain"
@@ -190,4 +232,6 @@ export function NewsletterSection() {
         )}
     </AnimatedGradient>
   );
+
+  return isPinned ? <div className="newsletter-pin">{content}</div> : content;
 }

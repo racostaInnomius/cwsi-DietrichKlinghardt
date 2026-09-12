@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection } from "@/lib/sections";
@@ -6,8 +6,16 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { Pyramid } from "@/components/Pyramid";
 
-type Action = { label: string; to?: string; href?: string; ghost?: boolean };
+type Action = {
+  label: string;
+  to?: string;
+  href?: string;
+  ghost?: boolean;
+  /** The arrow the Figma sets on this specific action, e.g. "Course dates →". */
+  arrow?: boolean;
+};
 
 type Branch = {
   eyebrow: string;
@@ -39,15 +47,28 @@ const BRANCHES: Branch[] = [
     accent: "Browse our directory to find practitioners near you.",
     body: "Looking for a certified A.R.T.® therapist or consultant near you? Our therapist directory helps you find qualified practitioners and clinics in your area, ready to support you on your journey toward health and wellbeing. Each listing links to the therapist's own website, where you can read about their approach, specialities and the services they offer.",
     actions: [{ label: "Learn more", to: "/academy/therapists" }],
+    // Client (2026-09-11): "el mapa interactivo seria solo una imagen no un
+    // mapa interactivo... puedes tomar este mapa" — the client's own asset,
+    // not a live/interactive map.
+    media: {
+      src: "/images/art-therapists-map.png",
+      alt: "Map of A.R.T. therapist locations across Europe",
+      width: 509,
+      height: 411,
+    },
     side: "left",
   },
   {
     eyebrow: "Signature method",
     title: "A.R.T Klinghardt™",
     body: "A.R.T Klinghardt™ (AUTONOMIC RESPONSE TESTING®) is a holistic method that works on an energetic level to support personal well-being. Using a kinesiological muscle test, it observes how the body responds to different stimuli to reveal possible energetic imbalances. It offers a complementary holistic assessment and is not a substitute for medical or psychotherapeutic care.",
+    // Client (2026-09-11, against the Figma): "el boton de Course dates...
+    // son 2 botones y asi deben de quedar" — reversed from the first pass:
+    // "About the course" is the outline one, "Course dates" is filled with
+    // an arrow.
     actions: [
-      { label: "About the course", to: "/academy/art" },
-      { label: "Course dates", to: "/courses", ghost: true },
+      { label: "About the course", to: "/academy/art", ghost: true },
+      { label: "Course dates", to: "/courses", arrow: true },
     ],
     media: {
       src: "/images/art-klinghardt.webp",
@@ -63,13 +84,27 @@ const BRANCHES: Branch[] = [
     accent: "Autonomic Response Testing®",
     body: "According to Dr. Dietrich Klinghardt™, humans exist in several dimensions at once: the physical body lives within a sphere of invisible bodies that surround and permeate it. Each higher level organises the ones below it, while the lower levels supply energy — so a problem can begin on any level and travel downward until it becomes visible.",
     actions: [{ label: "Learn more", to: "/academy/five-levels" }],
+    // Client (2026-09-10): "5 levels of healing falta el grafico" — the
+    // Figma shows the same pyramid /academy/five-levels already builds in
+    // full. Client (2026-09-11, follow-up, exact reference): "identico" —
+    // the condensed version this first tried (name only, no ordinals, no
+    // axis labels) wasn't close enough; <Pyramid compact /> is the exact
+    // same component/markup as the full page, just scaled down.
+    brandCard: (
+      <div className="academy-pyramid">
+        <Pyramid compact />
+      </div>
+    ),
     side: "left",
   },
   {
     eyebrow: "Research & books",
     title: "Publications and Educational Resources",
     body: "Throughout his career, Dr. Dietrich Klinghardt™ has written and contributed to books, articles, clinical papers, protocols, teaching manuals, interviews and educational presentations exploring biological and integrative medicine. This collection brings together selected works reflecting the evolution of his clinical thinking — from his early work in neural therapy and psycho-kinesiology to his later writing on neurobiology, environmental influences, chronic illness and The 5 Levels of Healing™.",
-    actions: [{ label: "Learn more", to: "/academy/publications" }],
+    // Client (2026-09-11, against the Figma): "el boton de Research & books
+    // debe quedar identico" — outline here, unlike the filled "Learn more"
+    // the other branches use.
+    actions: [{ label: "Learn more", to: "/academy/publications", ghost: true }],
     media: {
       src: "/images/publications.webp",
       alt: "Books and teaching manuals by Dr. Klinghardt",
@@ -124,6 +159,7 @@ function Actions({ actions }: { actions: Action[] }) {
             to={action.to}
           >
             {action.label}
+            {action.arrow ? <span aria-hidden="true">→</span> : null}
           </Link>
         ) : (
           <a
@@ -132,6 +168,7 @@ function Actions({ actions }: { actions: Action[] }) {
             href={action.href}
           >
             {action.label}
+            {action.arrow ? <span aria-hidden="true">→</span> : null}
           </a>
         ),
       )}
@@ -149,27 +186,78 @@ function Actions({ actions }: { actions: Action[] }) {
  * copy the client actually wrote.
  */
 export function AcademyPage() {
+  // Client (2026-09-10): "en la frase con texto falso, usar la misma frase
+  // del homepage que esta abajo de la foto del hero" — same fallback copy
+  // as SECTION.homeIntro (HomePage.tsx), word for word, rather than this
+  // page's own placeholder.
   const page = useSection("academy", {
     title: "Dr. Klinghardt Akademie™",
     paragraphs: [
-      "Everything taught under the Klinghardt name in one place: the method, the framework it sits inside, the training that certifies it, and the practitioners who work with it.",
+      "Training programmes and certifications for practitioners who want to bring Autonomic Response Testing and the 5 Levels of Healing into their own practice — taught by Dr. Klinghardt and the team he has trained worldwide.",
     ],
   });
 
+  // Client (2026-09-11, against the Figma): the reference bolds one clause
+  // mid-paragraph ("ut labore et dolore magna" in its own lorem ipsum) —
+  // the same treatment Home's own academy teaser gives this exact copy
+  // (HomePage.tsx's introBoldPhrases), applied here since the hero now
+  // carries that same paragraph word for word.
+  const heroBoldPhrases = [
+    "Training programmes and certifications for practitioners",
+    "taught by Dr. Klinghardt",
+  ];
+  const heroLeadParts = page.lead
+    ? page.lead.split(
+        new RegExp(
+          `(${heroBoldPhrases.map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+        ),
+      )
+    : [];
+
   return (
-    <>
+    // Client (2026-09-10): "los botones tienen que ser navy blue, no
+    // beige... #023866" — scoped to this page (sections.css) rather than
+    // .btn-light itself, which stays cream everywhere else it's used
+    // (Home, Sophia, ...) with no matching complaint there.
+    <div className="academy-page">
       <Seo
         title={"Dr. Klinghardt Akademie™"}
         description="A.R.T., the 5 Levels of Healing, certification training and the practitioner directory."
         path="/academy"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
+      {/* Client (2026-09-10): "falta el diseno y el logo en el hero,
+          agregar por fa" — the frame gives this hero its own rounded
+          gradient panel and wordmark, not the flat text-only band every
+          other internal page uses; .academy-hero (sections.css) carries
+          that, reusing the same navy-to-amber card gradient as the home
+          hero and weekly-talks band.
+
+          Client (2026-09-11, against the Figma): the reference's own
+          heading isn't the plain page title — it's the same two-part
+          "Klinghardt" / "AKADEMIE" wordmark the brand-card panels draw
+          further down this page (no separate eyebrow above it, no small
+          logo mark), so this now matches that treatment instead of
+          page.title, the same way those brand cards are hand-set rather
+          than CMS-driven. */}
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero academy-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
-            <p className="eyebrow">Learning centre</p>
-            <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
+            <h1 className="academy-hero__wordmark">
+              <span className="academy-hero__name">Klinghardt</span>
+              <span className="academy-hero__sub">Akademie</span>
+            </h1>
+            {page.lead ? (
+              <p className="lead">
+                {heroLeadParts.map((part, index) =>
+                  heroBoldPhrases.includes(part) ? (
+                    <strong key={index}>{part}</strong>
+                  ) : (
+                    <Fragment key={index}>{part}</Fragment>
+                  ),
+                )}
+              </p>
+            ) : null}
           </Reveal>
         </div>
       </AnimatedGradient>
@@ -207,6 +295,6 @@ export function AcademyPage() {
       ))}
 
       <NewsletterSection />
-    </>
+    </div>
   );
 }

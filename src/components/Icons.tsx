@@ -44,6 +44,40 @@ export function HeartIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5 4.6 13c-2-2-2-5.2 0-7.1 2-1.9 5-1.7 6.8.4l.6.7.6-.7c1.8-2.1 4.8-2.3 6.8-.4 2 1.9 2 5.1 0 7.1Z" /></svg>;
 }
 
+/* Contact page card icons (2026-09-11, against the Figma): one per
+   category — mail for general inquiries, a briefcase for media/press, a
+   microphone for speaking/events. HeartIcon above already covers the
+   Foundation card. Stroke-based like EventMetaIcon below, not filled
+   paths like HeartIcon, to sit inside the same small rounded badge. */
+export function MailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m4 7 8 6 8-6" />
+    </svg>
+  );
+}
+
+export function BriefcaseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="8" width="18" height="11" rx="2" />
+      <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <path d="M3 13h18" />
+    </svg>
+  );
+}
+
+export function MicrophoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M5 11a7 7 0 0 0 14 0" />
+      <path d="M12 18v3" />
+    </svg>
+  );
+}
+
 export function DropletIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.2 6 7.7 6 10.6a6 6 0 1 1-12 0C6 10.7 8.5 7.2 12 3Z" /></svg>;
 }

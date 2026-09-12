@@ -58,7 +58,11 @@ export function CourseDatesPage() {
         path={`/courses/${path.slug}/dates`}
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
+      {/* Client (2026-09-11): "el titulo lo siento super grande bajarle
+          unos 15 pt" — .course-dates-hero (sections.css) scopes the fix to
+          this page's own h1 rather than the shared --fs-display-lg token
+          every other page-hero uses. */}
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero course-dates-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[
@@ -74,7 +78,11 @@ export function CourseDatesPage() {
         </div>
       </AnimatedGradient>
 
-      <section className="section wrap">
+      {/* Client: "subir el evento mas pegado al titulo, esta super
+          despegado" — .section--tight-top (base.css) is the same fix
+          already used elsewhere for a section sitting directly under a
+          page-hero with nothing between them. */}
+      <section className="section section--tight-top wrap">
         {visible.length ? (
           <>
             <ul className="course-list">
@@ -86,6 +94,13 @@ export function CourseDatesPage() {
                 const format = text(event, "format") === "online" ? "Online course" : "Seminar";
 
                 return (
+                  // Client (2026-09-11): "hazla un poco mas cuadrada como en
+                  // figma" — pointing at the site's own course-path-card
+                  // grid (/courses) as the reference: a tinted header
+                  // (date + title), a white body (facts), a footer split
+                  // into a solid CTA and a tint-matched secondary one.
+                  // Same three-zone shape here instead of the old single
+                  // horizontal row.
                   <Reveal
                     as="li"
                     key={String(event.id ?? index)}
@@ -93,18 +108,20 @@ export function CourseDatesPage() {
                     delay={(index % PAGE_SIZE) * 70}
                     shift={16}
                   >
-                    <div className="course-card__date" aria-hidden="true">
-                      <b>{day}</b>
-                      <span>{month}</span>
-                    </div>
-
-                    <div className="course-card__body">
+                    <div className="course-card__header">
+                      <div className="course-card__date" aria-hidden="true">
+                        <b>{day}</b>
+                        <span>{month}</span>
+                      </div>
                       <p className="eyebrow">{format}</p>
                       <h2>
                         <Link to={eventSlug ? `/events/${eventSlug}` : "/events"}>
                           <Marked text={text(event, "title", "Course date")} />
                         </Link>
                       </h2>
+                    </div>
+
+                    <div className="course-card__body">
                       <dl className="course-card__facts">
                         {text(event, "instructor") ? (
                           <div>
@@ -139,24 +156,24 @@ export function CourseDatesPage() {
                       </dl>
                     </div>
 
-                    <div className="course-card__buy">
-                      {price != null ? (
-                        <span className="course-card__price">
-                          {money(price, text(event, "currency", "usd"))}
-                        </span>
-                      ) : null}
+                    <div className="course-card__footer">
                       {href ? (
-                        <a className="btn btn-primary" href={href}>
+                        <a className="course-card__cta course-card__cta--primary" href={href}>
                           Book now
                         </a>
                       ) : (
                         <Link
-                          className="btn btn-outline"
+                          className="course-card__cta course-card__cta--primary"
                           to={eventSlug ? `/events/${eventSlug}` : "/events"}
                         >
                           Details
                         </Link>
                       )}
+                      {price != null ? (
+                        <span className="course-card__cta course-card__cta--secondary">
+                          {money(price, text(event, "currency", "usd"))}
+                        </span>
+                      ) : null}
                     </div>
                   </Reveal>
                 );

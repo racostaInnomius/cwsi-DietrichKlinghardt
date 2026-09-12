@@ -1,11 +1,20 @@
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { MailIcon, BriefcaseIcon, MicrophoneIcon, HeartIcon } from "@/components/Icons";
+
+/** Category badge icon per card — matched against the label text so CMS
+ * rows (any wording) still fall back to a plain envelope. */
+function cardIcon(label: string) {
+  const key = label.toLowerCase();
+  if (key.includes("media") || key.includes("press")) return BriefcaseIcon;
+  if (key.includes("speak") || key.includes("event")) return MicrophoneIcon;
+  if (key.includes("foundation")) return HeartIcon;
+  return MailIcon;
+}
 
 /** label | email | what this address is for */
 /**
@@ -23,13 +32,14 @@ const CARDS_FALLBACK: string[][] = [
 ];
 
 /**
- * Contact — four addressed cards. The designer's note: each of the four emails
- * "opens a popup to write to that address".
+ * Contact — four addressed cards.
  *
- * The popup exists because a bare `mailto:` is a dead end for anyone reading on
- * a machine with no mail client configured: it either does nothing or opens
- * something they never use. The dialog shows the address in full and offers
- * both paths — open the mail app, or copy it.
+ * Client (2026-09-11, against a closer Figma reference than the frame this
+ * originally shipped from): each card shows a category icon and the plain
+ * mailto address directly — no "write to us" button, no popup. Simpler than
+ * the original design note ("opens a popup to write to that address"), and
+ * the more recent reference wins per the client's own priority order
+ * (Figma over an older written note once the two disagree).
  */
 export function ContactPage() {
   const contact = useSection(SECTION.contact, {
@@ -39,7 +49,6 @@ export function ContactPage() {
     ],
   });
   const cards = useRecords(SECTION.contactCards, 3, CARDS_FALLBACK);
-  const [active, setActive] = useState<string[] | null>(null);
 
   return (
     <>
@@ -49,7 +58,10 @@ export function ContactPage() {
         path="/contact"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center">
+      {/* Client (2026-09-11): "pegar el parrafo de texto al titulo, y las
+          tarjetas tambien acercarlas, se ven muy separadas" —
+          .contact-hero (sections.css) scopes both fixes to this page. */}
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center contact-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Get in touch</p>
@@ -59,21 +71,23 @@ export function ContactPage() {
         </div>
       </AnimatedGradient>
 
-      <section className="section wrap section--tight-top">
+      <section className="section wrap section--tight-top contact-section">
         <ul className="contact-grid contact-grid--joined">
-          {cards.map(([label, email, description], index) => (
-            <Reveal as="li" key={email} className="contact-card" delay={index * 80}>
-              <h2>{label}</h2>
-              <p>{description}</p>
-              <button
-                type="button"
-                className="btn btn-outline"
-                onClick={() => setActive([label, email, description])}
-              >
-                Write to us
-              </button>
-            </Reveal>
-          ))}
+          {cards.map(([label, email, description], index) => {
+            const Icon = cardIcon(label);
+            return (
+              <Reveal as="li" key={email} className="contact-card" delay={index * 80}>
+                <span className="contact-card__icon">
+                  <Icon />
+                </span>
+                <h2>{label}</h2>
+                <p>{description}</p>
+                <a className="contact-card__email" href={`mailto:${email}`}>
+                  <MailIcon /> {email}
+                </a>
+              </Reveal>
+            );
+          })}
         </ul>
 
         {/* The frame carries this warning under the four cards, and it is the
@@ -90,76 +104,6 @@ export function ContactPage() {
           </Link>
         </Reveal>
       </section>
-
-      {active ? <ContactDialog card={active} onClose={() => setActive(null)} /> : null}
     </>
-  );
-}
-
-function ContactDialog({ card, onClose }: { card: string[]; onClose: () => void }) {
-  const [label, email] = card;
-  const closeButton = useRef<HTMLButtonElement>(null);
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    closeButton.current?.focus();
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(email);
-      setCopied(true);
-    } catch {
-      // Clipboard access can be refused (insecure context, permissions). The
-      // address is on screen either way, so this is not worth an error state.
-      setCopied(false);
-    }
-  }
-
-  // Portalled to <body> for the same reason as the newsletter dialog: <main>
-  // carries `isolation: isolate` for its gradient-drift underlay (shell.css),
-  // which traps a same-tree backdrop's z-index inside main's stacking
-  // context, letting the footer paint over it whenever the footer is in view.
-  return createPortal(
-    <div
-      className="feedback-backdrop"
-      onMouseDown={(event) => {
-        if (event.currentTarget === event.target) onClose();
-      }}
-    >
-      <section
-        className="feedback-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="contact-dialog-title"
-      >
-        <button
-          ref={closeButton}
-          className="feedback-close"
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          ×
-        </button>
-        <p className="eyebrow">{label}</p>
-        <h2 id="contact-dialog-title">{email}</h2>
-        <p>{card[2]}</p>
-        <div className="contact-dialog__actions">
-          <a className="btn btn-primary" href={`mailto:${email}`}>
-            Open email app
-          </a>
-          <button className="btn btn-outline" type="button" onClick={copy}>
-            {copied ? "Copied" : "Copy address"}
-          </button>
-        </div>
-      </section>
-    </div>,
-    document.body,
   );
 }

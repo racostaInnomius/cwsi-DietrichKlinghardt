@@ -120,14 +120,19 @@ export function AboutPage() {
             <img className="about-bio__portrait" src={about.image} alt="Dr. Dietrich Klinghardt" />
           </Reveal>
         ) : null}
-        <Reveal className="chapters" delay={about.image ? 120 : 0}>
+        <div className="chapters">
           {chapters.map(([label, body], index) => (
-            <div key={label} className="chapter" style={{ "--reveal-delay": `${index * 60}ms` } as React.CSSProperties}>
+            <Reveal
+              as="div"
+              key={label}
+              className="chapter"
+              delay={(about.image ? 120 : 0) + index * 90}
+            >
               <h2 className="chapter__label">{label}</h2>
               <p>{body}</p>
-            </div>
+            </Reveal>
           ))}
-        </Reveal>
+        </div>
       </section>
 
       <section className="section wrap">

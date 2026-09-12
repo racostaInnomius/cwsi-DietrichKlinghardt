@@ -44,6 +44,13 @@
 .site-shell > main.main-sophia-home::before {
   background: var(--grad-page-sophia-home, var(--grad-page-full));
 }
+/* /about only — see --grad-page-about in tokens.css for why. */
+.site-shell > main.main-about {
+  background: var(--grad-page-about, var(--grad-page-full));
+}
+.site-shell > main.main-about::before {
+  background: var(--grad-page-about, var(--grad-page-full));
+}
 
 /* The designer asked for a background that moves (ref. newgenre.studio). It
    drifts once, for the page, instead of once per section: an oversized copy of
@@ -432,6 +439,44 @@
   padding-top: clamp(48px, 5vw, 76px);
   background: var(--brand);
   color: var(--brand-ink);
+}
+/* Client (2026-09-10): "el footer se debe de difuminar... con la ultima
+   seccion naranja, como en el homepage". Most internal DK pages render
+   <NewsletterSection>, which now self-pins and slides its own background
+   from amber to this exact navy (sections.css, .newsletter-pin) — the same
+   mechanism Home uses, not a static image, per the client's follow-up the
+   same day ("revisa a profundidad el home y aplicalo"). This overlay is
+   only the fallback for the few internal DK pages that skip Newsletter
+   entirely (Contact, Cart, Legal, the coming-soon placeholders...), where
+   <main> still lands directly on the page gradient's amber tail with
+   nothing between it and the footer — suppressed below wherever a pinned
+   newsletter is already on the page, so the two mechanisms never show at
+   once (a flat static image reappearing right under an already-navy pinned
+   card read as the seam coming back). Positioned (not a flat z-index) so
+   it paints UNDER the footer's real content below: an absolutely-positioned
+   box with z-index:auto still paints above ordinary, non-positioned
+   in-flow children, so those get position:relative too. */
+.site-footer[data-fade]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: clamp(200px, 20vw, 360px);
+  background-image: linear-gradient(180deg, #f79b09 0%, var(--brand) 100%);
+  pointer-events: none;
+}
+.site-footer[data-fade] .site-footer__inner,
+.site-footer[data-fade] .site-footer__watermark,
+.site-footer[data-fade] .site-footer__legal {
+  position: relative;
+}
+/* Suppresses the fallback above wherever NewsletterSection has already
+   self-pinned (.newsletter-pin, sections.css) — that pin's own last stop
+   is this exact navy, so the static image here would have nothing left to
+   do except reintroduce a stray band of amber right under an already-navy
+   card. :has() lets this reach across from main's own subtree to its
+   sibling footer without any JS wiring between the two. */
+.site-shell:has(main .newsletter-pin) .site-footer[data-fade]::before {
+  content: none;
 }
 
 /* Was full-bleed + gutter, not .wrap's 1440px-capped column, specifically

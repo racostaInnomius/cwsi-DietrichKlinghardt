@@ -18,12 +18,26 @@ function Label({ item }: { item: NavItem }) {
  * navy on DK pages, teal on /sophia/* — per the client's 2026-09-01 request;
  * it used to stay navy everywhere (the footer closing the whole site, not
  * the sub-brand), but Sophia now gets its own colour here too.
+ *
+ * `fade` (client, 2026-09-10: "el footer se debe de difuminar... con la
+ * ultima seccion naranja, como en el homepage") paints the same amber→navy
+ * run the page gradient already ends on (tokens.css, --grad-page-full)
+ * across the footer's own top edge, so the seam reads as one continuous
+ * fade instead of a hard cut. Home already gets this for free — its pinned
+ * newsletter gradient's last stop is this exact navy — so SiteShell only
+ * passes it for internal DK pages.
  */
-export function SiteFooter({ theme }: { theme: "dk" | "sophia" }) {
+export function SiteFooter({
+  theme,
+  fade = false,
+}: {
+  theme: "dk" | "sophia";
+  fade?: boolean;
+}) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="site-footer" data-theme={theme}>
+    <footer className="site-footer" data-theme={theme} data-fade={fade || undefined}>
       <div className="site-footer__inner">
         <div className="site-footer__brand">
           <Link to="/" aria-label="Dietrich Klinghardt, home">

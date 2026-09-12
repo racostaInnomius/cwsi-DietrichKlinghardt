@@ -486,6 +486,12 @@
   gap: 0;
   margin: 0 0 2px;
 }
+/* Client (2026-09-10): "el azul de UPCOMING EVENTS Y PAST EVENTS, mas
+   grande, que se ve tiny... como un 50% mas" — 10px -> 15px. Client
+   (2026-09-11, against the Figma): "UPCOMING EVENTS lo tenemos en 2
+   lineas y en figma esta en una sola" — the larger size plus the fixed
+   210px cap wrapped "UPCOMING"/"EVENTS" onto two lines at narrower
+   widths; nowrap keeps it one line and the tab just grows to fit instead. */
 .events-page__tabs .tab {
   flex: 1;
   max-width: 210px;
@@ -495,11 +501,16 @@
   border: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--white) 80%, transparent);
   border-radius: 0;
-  color: var(--brand);
+  /* Client (2026-09-11): "el texto de los eventos no seleccionados debe
+     estar en blanco" — unselected now white, selected keeps the navy
+     (matching its own underline) so the active tab still reads as the
+     stronger one of the two. */
+  color: var(--white);
   background: transparent;
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 .events-page__tabs .tab[aria-selected="true"] {
   border-color: var(--brand);
@@ -539,24 +550,26 @@
 .event-card__main:hover {
   background: color-mix(in srgb, var(--brand) 3%, var(--surface-2));
 }
+/* Client (2026-09-10): "hacer fecha numero en cuadrado mas grande un 50%
+   o mas" — 52px box, 27px day and 8px month all scaled by 1.5. */
 .event-card__date {
   display: grid;
   justify-items: center;
   align-content: center;
-  width: 52px;
-  height: 52px;
+  width: 78px;
+  height: 78px;
   border: 1px solid var(--line);
   font-family: var(--font-display);
   color: var(--ink);
 }
 .event-card__date b {
-  font-size: 27px;
+  font-size: 40px;
   font-weight: 400;
   line-height: 1;
 }
 .event-card__date span {
   font-family: var(--font-sans);
-  font-size: 8px;
+  font-size: 12px;
   line-height: 1.1;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -564,18 +577,22 @@
 .event-card__body {
   margin-top: clamp(34px, 4.5vw, 64px);
 }
+/* Client: "la location de letras doradas mas grande tambien un 50% mas
+   notorio" — 12px -> 18px. */
 .event-card__location {
   margin: 0 0 10px;
   color: var(--gold-deep);
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
+/* Client: "el titulo del programa quitarle el puntaje, se ve muy grande,
+   quitarle uno 5-7pt" — clamp shifted down ~7px (≈5-7pt) at both ends. */
 .event-card__body h3 {
   max-width: 18ch;
   margin: 0;
-  font-size: clamp(24px, 2.2vw, 34px);
+  font-size: clamp(17px, 1.75vw, 27px);
   line-height: 1.12;
 }
 .event-card__details {
@@ -585,17 +602,19 @@
   padding: 0;
   list-style: none;
 }
+/* Client: "agrandar el texto y la parte de los iconos un 50% se ve tiny" —
+   10px text -> 15px, 12px icons -> 18px. */
 .event-card__details li {
   display: flex;
   align-items: center;
   gap: 7px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 15px;
   line-height: 1.3;
 }
 .event-card__details svg {
-  width: 12px;
-  height: 12px;
+  width: 18px;
+  height: 18px;
   flex: none;
   fill: none;
   stroke: var(--brand);
@@ -612,9 +631,26 @@
   padding: 0 clamp(22px, 3vw, 42px);
   background: color-mix(in srgb, var(--brand) 5%, var(--surface-2));
   color: var(--muted);
-  font-size: 10px;
+  /* Client: "el boton de more info y view event debe de ser el font mas
+     grande, unos 5pt mas" — 10px + ~5pt (6.7px) rounds to 17px, matching
+     .event-card__cta below so both buttons read at the same weight. */
+  font-size: 17px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+/* Client first asked (text doc) for "More info" to become a bordered
+   button "como el boton de view event" — reverted (2026-09-11) once the
+   client's own Figma showed it plain, muted, no frame at all: "el de
+   nosotros tiene un marco" that the reference doesn't have. Kept a larger
+   invisible hit area (padding, inline-flex) rather than the visible box,
+   so it is still an easy target without contradicting the Figma. */
+.event-card__footer a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 8px 0;
+  margin: -8px 0;
+  transition: color var(--dur-fast) var(--ease);
 }
 .event-card__footer a:hover {
   color: var(--brand);
@@ -631,7 +667,7 @@
   gap: 9px;
   background: var(--brand);
   color: var(--brand-ink);
-  font-size: 10px;
+  font-size: 17px;
   font-weight: 500;
   letter-spacing: var(--tracking-button);
   text-transform: uppercase;
@@ -718,6 +754,39 @@
   color: var(--brand-ink);
 }
 
+/* Client (2026-09-11): "los botones... deben verse como la imagen anexa"
+   — sentence case (the shared .tab above is uppercase, meant for the
+   Events-page tabs it was built for) and a "Shop all" reset link sharing
+   the row instead of wrapping under the pills. */
+.store-filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(24px, 3vw, 40px);
+}
+.store-filters-row .tabs {
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+/* Client (2026-09-11): "no deben ser pildoras deben ser cuadarados con
+   esquinas redondeadas" — the shared .tab is fully pill-shaped
+   (--radius-pill); a smaller, subtle radius instead, just for this row. */
+.store-filters .tab {
+  border-radius: var(--radius-sm);
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: normal;
+}
+.store-filters__shop-all {
+  flex: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .empty-note {
   max-width: var(--maxw-prose);
   padding: 26px 28px;
@@ -754,15 +823,26 @@
   align-items: start;
 }
 
+/* Client: "bajarle el punto a ART 1 PRACTICAL, esta enorme. Checar diseno
+   uno s15 o 20 pt" — h1 defaults to --fs-display-lg (clamp(40px, 5.4vw,
+   86px)), shared by every other page-hero h1; this page's own literal
+   instead, ~15-20pt (~24px) off both ends of that clamp. */
+.event-copy h1 {
+  font-size: clamp(16px, 3.9vw, 62px);
+}
+
 /* ── Left column: the "Event details" panel ─────────────────── */
 
 .event-panel {
   position: sticky;
   top: 96px;
 }
+/* Client (2026-09-10): "poner la tarjeta con orillas redondeadas, sutiles,
+   no super redondas. Algo sutil" — was sharp corners (no radius at all). */
 .event-panel__card {
   overflow: hidden;
   border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
   background: var(--surface-2);
   box-shadow: var(--shadow-card);
 }
@@ -1131,10 +1211,65 @@
   background-size: 100% 200%;
   background-position: 0 calc(var(--newsletter-scroll, 0) * 100%);
 }
+
+/* Client (2026-09-10, follow-up on the footer fade): "no se ve el mismo
+   estilo y efecto en el scroll... revisa a profundidad el home y aplicalo
+   a la parte baja de las paginas internas" — every OTHER Dietrich
+   Klinghardt page now gets the identical pin-and-slide mechanic (Sophia
+   and Home opt out — see NewsletterSection.tsx's isPinned).
+
+   Client, same day, on the first pass here going straight to solid orange:
+   Home's own pin doesn't open on saturated colour either — at scroll 0 the
+   sticky card shows the PALE top of its asset (baby blue into cream), only
+   warming up over the first half-viewport, because Home's own page gradient
+   is still pale where its pin begins (right after Shop, well before
+   --grad-page-home's own amber tail). These pages instead reach solid
+   #f79b09 at the very bottom of <main> (--grad-page-full's own tail,
+   tokens.css) BEFORE this pin ever starts — opening flat-orange skipped
+   Home's pale beat entirely. Reopening on the same pale #f4f6f5 the page's
+   own amber tail itself opens on (a few hundred px earlier in that same
+   tail) gives this the identical soft-open feel without inventing a colour
+   the page hasn't already used. */
+.newsletter-pin {
+  position: relative;
+  height: 200vh;
+  background: linear-gradient(
+    180deg,
+    #f4f6f5 0,
+    #f2e4c9 20vh,
+    #eaaa58 44vh,
+    #f79b09 68vh,
+    var(--gold-deep) 110vh,
+    #6b4a1f 160vh,
+    #023866 200vh
+  );
+}
+.newsletter-pin .plain-section.newsletter {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+  background-image: linear-gradient(
+    180deg,
+    #f4f6f5 0%,
+    #f2e4c9 10%,
+    #eaaa58 22%,
+    #f79b09 34%,
+    var(--gold-deep) 55%,
+    #6b4a1f 80%,
+    #023866 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 calc(var(--newsletter-scroll, 0) * 100%);
+}
+
 /* Every other page's plain, unmoving version — unchanged from before. The
-   nested rule above is three classes deep (0,3,0) against this one class
-   (0,1,0), so it wins on specificity alone wherever .home-newsletter-pin
-   actually wraps the section; everywhere else, this is all that applies. */
+   nested rules above are three classes deep (0,3,0) against this one class
+   (0,1,0), so they win on specificity alone wherever .home-newsletter-pin
+   or .newsletter-pin actually wrap the section; everywhere else (Sophia's
+   own newsletter-less pages aside), this is all that applies. */
 /* The radial glow this used to carry read as a hard patch of colour against
    the page gradient behind it — same call the client already made for
    Home's own pinned newsletter section (2026-09-04, via devtools), now
@@ -1217,6 +1352,21 @@
    these colours render exactly as before. */
 .plain-section.newsletter {
   --newsletter-white-mix: clamp(0%, calc((var(--newsletter-scroll, 0) - 0.15) * 500%), 100%);
+}
+/* Client (repeated across About/Akademie/Store/Next-courses, 2026-09-10):
+   "darle un poco mas de aire al newsletter... que se vea que es otra
+   seccion diferente" — every internal newsletter band sat directly on the
+   same transparent page gradient as the section before it, with only the
+   shared --section-y gap, so it read as a continuation rather than a
+   closing band of its own. Home excludes itself below: its pinned 200vh
+   wrapper already reads as fully its own section, and margin here would
+   only shift the sticky card's own pin start point. */
+.plain-section.newsletter {
+  margin-top: clamp(32px, 6vw, 88px);
+}
+.home-newsletter-pin .plain-section.newsletter,
+.newsletter-pin .plain-section.newsletter {
+  margin-top: 0;
 }
 .plain-section.newsletter .eyebrow {
   color: color-mix(in srgb, white var(--newsletter-white-mix, 0%), var(--eyebrow-text));
@@ -1552,6 +1702,29 @@
    hidden already comes from the shared .gradient-card rule (motion.css) —
    that's what keeps .courses-hero-photos' scroll drift clipped to the
    panel below and never visible past it. */
+/* Client (2026-09-10): "el hero no funciona bien... se debe de parar hasta
+   que scrollean todas las imagenes de la derecha... se baja inmediatamente
+   y no puedes ni leer" — same pin-and-hold rig as .home-hero-pin /
+   .newsletter-pin: a tall wrapper holds the sticky card on screen for a
+   real stretch of scroll, not the multi-screen dwell the hero/newsletter
+   pins use, since this card has far less to reveal.
+   Client (2026-09-11, follow-up): "el hero quedo muy alto... del mismo
+   tamano que el de /sophia y el de home" — the card itself stays the same
+   80vh the home hero already uses (.plain-section.hero), not the full
+   100vh viewport height the first pass here stretched it to; only the
+   wrapper is taller than the card, which is what holds it in place while
+   scrolling. */
+.courses-hero-pin {
+  position: relative;
+  height: 160vh;
+}
+.courses-hero-pin .courses-hero {
+  position: sticky;
+  top: 0;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+}
 .courses-hero {
   margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
@@ -1576,8 +1749,12 @@
   max-width: 18ch;
   color: var(--ink);
 }
+/* Client (2026-09-10): "Al titulo, esta muy despegado" — h1's own UA
+   default margin-bottom is ~52px, which the old +18px only added to
+   (siblings' positive margins collapse to the larger one, not the sum —
+   still 52px, not 70px). -40px collapses that down to a few px instead. */
 .courses-hero .lead {
-  margin-top: 18px;
+  margin-top: -40px;
 }
 
 /* Instructor photo cluster, replacing the old text-only teacher marquee
@@ -1595,22 +1772,32 @@
   gap: clamp(12px, 1.6vw, 20px);
   height: clamp(360px, 42vw, 560px);
 }
+/* Client (2026-09-11): "la imagen que esta mas abajo no se alcanza a
+   mostrar completamente... que suban mas las de la derecha y bajen mas
+   las de la izquierda" — each column now interpolates between its own
+   --from/--to across the pin's raw 0→1 progress (CoursesHeroPhotos.tsx),
+   instead of both columns sharing one pre-scaled scroll value and just
+   flipping sign. Column b's --to is negative (ends ABOVE its resting
+   spot, not just back at 0), which is what actually pulls its lower photo
+   (previously clipped by the card's own overflow: hidden) into frame by
+   the end of the hold; column a's --to is positive to move opposite. */
 .courses-hero-photos__col {
+  --from: 0px;
+  --to: 0px;
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 1.6vw, 20px);
-  transform: translateY(calc(var(--courses-photos-scroll, 0) * var(--courses-photos-rate)));
+  transform: translateY(
+    calc(var(--from) + (var(--to) - var(--from)) * var(--courses-photos-progress, 0))
+  );
 }
 .courses-hero-photos__col--a {
-  /* 0.05 → 0.3 (client, 2026-09-09: "hazlo mas llamativo") — together
-     with the tighter ±280px clamp in CoursesHeroPhotos.tsx, this column
-     now travels up to ~84px. */
-  --courses-photos-rate: 0.3;
+  --from: -30px;
+  --to: 70px;
 }
 .courses-hero-photos__col--b {
-  /* Offset down, interlocking with column a, and drifting the opposite
-     way for the parallax depth — -0.08 → -0.45, ~126px of travel. */
-  --courses-photos-rate: -0.45;
+  --from: 60px;
+  --to: -110px;
   margin-top: 18%;
 }
 .courses-hero-photos__card {
@@ -1697,14 +1884,15 @@
 .course-path-card--ank .course-path-card__badge {
   background: var(--gold);
 }
+/* Client (2026-09-10): "el titulo de las tarjetas no es azul, es negro...
+   Y bajar el puntaje unos 5pt" — was the shared --fs-display-sm token
+   (26-36px) in --brand navy; this is its own literal now; ~5pt (6.7px)
+   off both ends of that clamp. */
 .course-path-card h2 {
   margin-bottom: 12px;
-  color: var(--brand);
-  font-size: var(--fs-display-sm);
+  color: var(--ink);
+  font-size: clamp(19px, 2vw, 29px);
   line-height: 1.2;
-}
-.course-path-card--ank h2 {
-  color: var(--gold-deep);
 }
 .course-path-card__body p {
   margin-bottom: 16px;
@@ -1915,55 +2103,97 @@
 
 /* ── Courses: dates ───────────────────────────────────────────── */
 
+/* Client (2026-09-11): "el titulo lo siento super grande bajarle unos 15
+   pt" — h1 defaults to --fs-display-lg (clamp(40px, 5.4vw, 86px)), shared
+   by every other page-hero; this page's own literal instead, ~15pt
+   (20px) off both ends of that clamp. */
+.course-dates-hero h1 {
+  font-size: clamp(20px, 4.14vw, 66px);
+  /* Client (2026-09-11): "en el titulo la parte inferior marcada con
+     naranja quita ese margen" — h1's own default margin-bottom (DevTools:
+     the amber box below the text), on top of .section--tight-top's own
+     gap to the card below it. */
+  margin-bottom: 0;
+}
+/* Client (2026-09-11): "reduce el espacio inferior... dejalo igual que el
+   superior" — .page-hero__inner's shared padding-block is asymmetric
+   (28-52px top, 48-96px bottom); this page's own literal makes them equal
+   instead of touching the shared rule every other page-hero still uses. */
+.course-dates-hero .page-hero__inner {
+  padding-block: clamp(28px, 3.4vw, 52px);
+}
+
+/* Client (2026-09-11): "hazla un poco mas cuadrada como en figma" —
+   pointing at the site's own course-path-card grid (/courses) as the
+   reference. Same three-column grid and three-zone card shape as
+   .course-path-grid/.course-path-card below, rather than the single-
+   column list of wide horizontal rows this used to be. */
 .course-list {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: clamp(16px, 2vw, 24px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 32px);
 }
 .course-card {
-  display: grid;
-  grid-template-columns: 92px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(18px, 3vw, 40px);
-  padding: clamp(20px, 2.2vw, 30px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--surface-2);
-  transition: border-color var(--dur-fast) var(--ease),
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease),
     box-shadow var(--dur) var(--ease);
 }
+/* Client: "que la tarjeta no se pinte el stroke negro cuando le pones el
+   mouse over, que sea algo mas sutil, que se pinte azul claro... super
+   claro" — var(--brand) (navy) read as a near-black stroke against the
+   card's own pale background; a light-blue tint on both the border and
+   the fill instead. */
 .course-card:hover {
-  border-color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 35%, transparent);
+  background: color-mix(in srgb, var(--brand) 4%, var(--surface-2));
   box-shadow: var(--shadow-card);
 }
+.course-card__header {
+  padding: clamp(22px, 2.4vw, 28px) clamp(22px, 2.4vw, 28px) 4px;
+  background: color-mix(in srgb, var(--brand) 8%, var(--white));
+}
 .course-card__date {
-  display: grid;
+  display: inline-grid;
   justify-items: center;
   gap: 2px;
-  color: var(--brand);
+  margin-bottom: 16px;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: var(--brand-ink);
 }
 .course-card__date b {
   font-family: var(--font-display);
-  font-size: 38px;
+  font-size: 21px;
   font-weight: 400;
   line-height: 1;
 }
 .course-card__date span {
-  font-size: var(--fs-meta);
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 .course-card h2 {
-  margin-bottom: 14px;
-  font-size: var(--fs-display-sm);
+  margin: 0;
+  font-size: clamp(18px, 1.8vw, 23px);
+  line-height: 1.25;
+}
+.course-card__body {
+  flex: 1;
+  padding: 18px clamp(22px, 2.4vw, 28px) clamp(22px, 2.4vw, 28px);
 }
 .course-card__facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 32px;
+  display: grid;
+  gap: 10px;
   margin: 0;
 }
 .course-card__facts dt {
@@ -1977,15 +2207,45 @@
   margin: 2px 0 0;
   font-size: var(--fs-sm);
 }
-.course-card__buy {
-  display: grid;
-  justify-items: center;
-  gap: 10px;
+.course-card__footer {
+  display: flex;
 }
-.course-card__price {
-  font-family: var(--font-display);
-  font-size: 26px;
+.course-card__cta {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  padding: 0 14px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.course-card__cta--primary {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+.course-card__cta--secondary {
+  background: color-mix(in srgb, var(--brand) 8%, var(--white));
   color: var(--brand);
+  font-family: var(--font-display);
+  font-size: 18px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+@media (max-width: 980px) {
+  .course-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .course-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .load-more {
   display: flex;
@@ -2180,32 +2440,50 @@
 }
 .top-picks__head h2 {
   max-width: 22ch;
+  margin-bottom: 0;
   font-size: var(--fs-display-md);
 }
+/* Client (2026-09-11): "cambiar picks of the month a blanco, no se ve muy
+   bien" — was --gold-deep, hard to read against the card gradient's own
+   amber stretch further down; white instead, matching the Figma.
+   Client, same day, follow-up: "debe quedar en dos lineas: Dr.
+   Klinghardt's Top 5 / Picks of the Month" — display: block forces the
+   line break right before this em regardless of container width, instead
+   of leaving it to wrap wherever the text happens to run out of room. */
 .top-picks__head h2 em {
-  color: var(--gold-deep);
+  display: block;
+  color: var(--white);
   font-style: italic;
 }
+/* Client: "pegar el parrafo de texto mas al titulo" — h2's own default
+   margin-bottom (reset above) was adding to this margin-top instead of
+   collapsing against it as intended. */
 .top-picks__head .lead {
   max-width: 52ch;
-  margin-top: 14px;
+  margin-top: 10px;
   font-size: var(--fs-sm);
 }
+/* Client: "cambiar el estilo que dice current selection, no poner el
+   texto sobre fondo azul. Es stroke y letras blancas y negro el mes y
+   año deben de estar mas grandes" — was a translucent white fill that
+   still read as a blue box against the card's own navy top; a plain
+   stroke instead, with the label white and the date bigger and dark. */
 .top-picks__badge {
   flex: none;
   padding: 16px 22px;
-  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--white) 55%, transparent);
+  background: transparent;
 }
 .top-picks__badge .eyebrow {
   margin-bottom: 4px;
-  color: var(--muted-2);
+  color: var(--white);
 }
 .top-picks__badge-date {
   margin: 0;
+  color: var(--ink);
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 32px;
 }
 
 .top-picks__grid {
@@ -2227,9 +2505,35 @@
 .top-pick-card:first-child {
   border-left: none;
 }
+/* Client: "la tarjeta numero 1 debe de tener fondo azul, por que se debe
+   destacar de las demas" — navy fill on the info panel only (the photo
+   stays as-is), with its own text flipped to white/gold for contrast. */
+.top-pick-card:first-child .top-pick-card__body {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+.top-pick-card:first-child .top-pick-card__category {
+  color: var(--gold-bright);
+}
+.top-pick-card:first-child .top-pick-card__body h3,
+.top-pick-card:first-child .top-pick-card__price {
+  color: var(--brand-ink);
+}
+/* The arrow button's own navy-on-white would disappear against this
+   card's now-navy footer — inverted to white-on-navy here only. */
+.top-pick-card:first-child .top-pick-card__arrow {
+  background: var(--white);
+  color: var(--brand);
+}
+.top-pick-card:first-child .top-pick-card__arrow:hover {
+  background: var(--cream);
+}
+/* Client: "hacer las tarjetas la parte de la foto mas cuadrada... se ve
+   muy angosta" — was 5:3 (a wide, short strip); close to square instead,
+   matching the reference photos. */
 .top-pick-card__media {
   position: relative;
-  aspect-ratio: 5 / 3;
+  aspect-ratio: 1 / 1;
   background: var(--cream-2);
 }
 .top-pick-card__media img {
@@ -2237,19 +2541,22 @@
   height: 100%;
   object-fit: cover;
 }
+/* Client: "los numeros y las flechas azules mas grandes, comparar diseno
+   please" — 20px circle / 10px numeral was tiny next to the reference's
+   own badge; ~1.6x bigger on both, matching the enlarged arrow below. */
 .top-pick-card__number {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--brand);
   color: var(--brand-ink);
   font-family: var(--font-sans);
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 700;
 }
 .top-pick-card__body {
@@ -2285,8 +2592,8 @@
 .top-pick-card__arrow {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 38px;
+  height: 38px;
   flex: none;
   border: none;
   border-radius: 50%;
@@ -2299,8 +2606,8 @@
   background: var(--brand-2);
 }
 .top-pick-card__arrow svg {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.6;
@@ -2411,6 +2718,36 @@
 .product h3 {
   margin-bottom: 4px;
   font-size: var(--fs-display-sm);
+}
+/* Client (2026-09-11): "las tarjetas de los articulos, copiar el estilo
+   de las tarjetas del homepage, esta todavia tiene el estilo viejo de
+   los titulos enormes" — Home's own .product-strip already carries this
+   exact fix (below); the Store's full grid (.product-grid) still used
+   the shared, larger serif .product h3 default. Same values, copied. */
+.product-grid .product h3 {
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 1.3vw, 18px);
+  font-weight: 600;
+  line-height: 1.35;
+}
+/* Client (2026-09-11, follow-up): "se ve un poco distinto de home... las
+   tarjetas un poco distinto" — Home's .product-strip wraps the photo and
+   copy in one unified card (white image zone, cream info zone, a single
+   shared border) instead of a bare image floating above unbounded text;
+   the Store grid never got that same treatment. Same values, copied. */
+.product-grid .product {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--cream);
+}
+.product-grid .product__media {
+  margin-bottom: 0;
+  border-radius: 0;
+  background: var(--white);
+}
+.product-grid .product__body {
+  padding: 18px 20px 20px;
 }
 /* Same label treatment as .top-pick-card__category (Store's own "Top Picks"
    shelf) — muted and small, not the shared gold .eyebrow, which reads as a
@@ -2985,6 +3322,24 @@
 
 /* ── Contact ──────────────────────────────────────────────────── */
 
+/* Client (2026-09-11): "pegar el parrafo de texto al titulo, y las
+   tarjetas tambien acercarlas, se ven muy separadas" — h1's own default
+   margin-bottom (52px) wasn't collapsing usefully against the lead's own
+   18px, and .page-hero__inner's own bottom padding (up to 96px) plus
+   .section--tight-top's top padding left ~138px before the cards. */
+.contact-hero h1 {
+  margin-bottom: 0;
+}
+/* Client (2026-09-11, follow-up): "reduce en un 50% la distancia entre las
+   cards y el texto superior" — measured ~101px total (this padding-bottom
+   plus .section--tight-top's own top padding below); both halved. */
+.contact-hero .page-hero__inner {
+  padding-bottom: clamp(14px, 1.7vw, 26px);
+}
+.contact-section {
+  padding-top: clamp(6px, 0.8vw, 12px);
+}
+
 .contact-grid {
   margin: 0;
   padding: 0;
@@ -3003,36 +3358,94 @@
   border-radius: var(--radius-lg);
   background: var(--surface-2);
 }
-.contact-card h2 {
-  font-size: var(--fs-display-sm);
+/* Client (2026-09-11, against a closer Figma reference): a small icon
+   badge above the title, and the card itself more compact overall —
+   the display-sm heading and roomy padding were sized for a lone card,
+   not one of four packed into a shared grid. */
+.contact-card__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  /* Was solid white, which disappeared once the cards themselves went
+     back to white (client's exact per-card colours below) — a light
+     brand tint keeps the badge visible against either card colour. */
+  background: color-mix(in srgb, var(--brand) 8%, var(--white));
+  color: var(--brand);
 }
+/* Same convention as .card__icon (Sophia's pillar icons): every icon here
+   renders as an outline via CSS, regardless of how its own path was
+   authored — CSS fill/stroke on a shared class beats each SVG's own
+   presentation attributes, so this is what actually decides the look,
+   not the individual icon components. */
+.contact-card__icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+.contact-card h2 {
+  font-size: clamp(18px, 1.6vw, 22px);
+}
+/* Client: "poner la tarjeta azul bebe, el texto todo negro, el boton
+   azul. Mas parecido al branding" — was --muted (grey) on a plain white
+   card. */
 .contact-card p {
   margin: 0;
-  color: var(--muted);
+  color: var(--ink);
   font-size: var(--fs-sm);
 }
-.contact-card .btn {
+/* Client, same reference: no "write to us" button/popup — the mailto
+   address shown directly, with its own small icon. */
+.contact-card__email {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: auto;
+  color: var(--brand);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.contact-card__email:hover {
+  text-decoration: underline;
+}
+.contact-card__email svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
 }
 /* The four cards as one bordered grid with dividers, not four separate
-   cards with a gap between them. */
+   cards with a gap between them. Client (2026-09-11): "todas las cards de
+   /contact deben tener sus lineas de color #E7ECF0" — every border/divider
+   in this block, not the shared var(--line) other pages still use. */
 .contact-grid--joined {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0;
-  border: 1px solid var(--line);
+  border: 1px solid #e7ecf0;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--surface-2);
+  background: var(--white);
 }
+/* Client (2026-09-11, exact spec): white for General Inquiries, Media &
+   Press and the Foundation card; #F3F6F7 for Speaking & Events only
+   (the 3rd of the four, in render order) — not one flat tint across all
+   four the way the previous "azul bebe" pass read it. */
 .contact-grid--joined .contact-card {
   border: none;
   border-radius: 0;
+  padding: clamp(20px, 2.2vw, 28px);
+  background: var(--white);
+}
+.contact-grid--joined .contact-card:nth-child(3) {
+  background: #f3f6f7;
 }
 .contact-grid--joined .contact-card:nth-child(even) {
-  border-left: 1px solid var(--line);
+  border-left: 1px solid #e7ecf0;
 }
 .contact-grid--joined .contact-card:nth-child(n + 3) {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid #e7ecf0;
 }
 @media (max-width: 640px) {
   .contact-grid--joined {
@@ -3042,20 +3455,9 @@
     border-left: none;
   }
   .contact-grid--joined .contact-card:nth-child(n + 2) {
-    border-top: 1px solid var(--line);
+    border-top: 1px solid #e7ecf0;
   }
 }
-.contact-dialog__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-}
-/* The address is the dialog's headline, and addresses are not display copy. */
-.feedback-dialog h2 {
-  word-break: break-word;
-}
-
 .contact-form {
   display: grid;
   gap: 16px;
@@ -3605,7 +4007,6 @@
   .donate-panel {
     position: static;
   }
-  .course-card,
   .directory-search,
   .live-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -3619,13 +4020,6 @@
   }
   .cart-line__qty {
     grid-column: 2;
-  }
-  .course-card__buy {
-    justify-items: start;
-    grid-auto-flow: column;
-    justify-content: start;
-    align-items: center;
-    gap: 18px;
   }
   .timeline__item {
     grid-template-columns: minmax(0, 1fr);
@@ -3768,6 +4162,74 @@
   }
 }
 
+/* ── Academy hero ─────────────────────────────────────────────────
+   Client (2026-09-10): "falta el diseno y el logo en el hero" — the frame
+   gives this one page its own rounded gradient panel and wordmark, not the
+   flat text-only band every other internal page opens on. Inset like the
+   home hero/weekly-talks card rather than full-bleed, and reuses the same
+   navy-to-amber --grad-card journey (tokens.css) so it reads as the same
+   family of panel, not a one-off colour. */
+.academy-hero {
+  margin: clamp(16px, 2.4vw, 32px) var(--gutter) 0;
+  border-radius: var(--radius-lg, 22px);
+  background: var(--grad-card);
+}
+.academy-hero .wrap {
+  max-width: none;
+  padding-inline: 0;
+  text-align: center;
+}
+.academy-hero .page-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Client (2026-09-11, against the Figma): the hero's own heading is the
+   same "Klinghardt" / "AKADEMIE" wordmark the brand-card panels draw
+   further down the page — same two-part shape, dark ink here instead of
+   white since the hero sits on the card's own pale middle band rather
+   than the brand-card's navy fill. */
+.academy-hero__wordmark {
+  max-width: none;
+  font-family: var(--font-display);
+}
+.academy-hero__name {
+  display: block;
+  font-size: clamp(36px, 4.6vw, 58px);
+  line-height: 1;
+  color: var(--ink);
+}
+.academy-hero__sub {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-size: clamp(14px, 1.3vw, 17px);
+  font-weight: 500;
+  /* Client (2026-09-11): "fijate en la proporcion - formato del texto" —
+     AKADEMIE reads noticeably wider under Klinghardt in the Figma than the
+     shared .brand-card__sub's 0.42em (measured against __name's own
+     rendered text width: ~0.50 here, ~0.67 in the reference). */
+  letter-spacing: 0.78em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.academy-hero .lead {
+  max-width: 56ch;
+  margin-top: clamp(20px, 2.6vw, 32px);
+  margin-inline: auto;
+}
+/* Client: "los botones tienen que ser navy blue, no beige, cambiarlos por
+   fa #023866" — .btn-light's cream fill is the site-wide default (Home,
+   Sophia, ...), so this overrides it only on this page rather than
+   touching the shared class. */
+.academy-page .btn-light {
+  background: #023866;
+  color: var(--brand-ink);
+}
+.academy-page .btn-light:hover {
+  background: var(--brand-2);
+}
+
 /* ── Feature rows (Academy) ───────────────────────────────────────
    A picture on one side and a column of copy on the other, alternating down
    the page — how the design lays out the Academy branches. `--right` swaps the
@@ -3801,13 +4263,77 @@
 .feature-row--right:has(.feature-row__media) .feature-row__media {
   order: 2;
 }
-.feature-row__media img,
-.feature-row .brand-card {
+.feature-row__media img {
   display: block;
   width: 100%;
   aspect-ratio: 558 / 457;
   object-fit: cover;
   border-radius: var(--radius-md, 14px);
+}
+/* Same box as the photos above, but display: grid (not: block) — .brand-card
+   itself already sets that to stack __name/__sub onto two lines, and this
+   rule's higher specificity (.feature-row .brand-card vs. .brand-card alone)
+   was winning the cascade and silently flattening them onto one (client,
+   2026-09-11, against the Figma: "que estan en 2 lineas el texto"). */
+.feature-row .brand-card {
+  display: grid;
+  place-content: center;
+  width: 100%;
+  aspect-ratio: 558 / 457;
+  border-radius: var(--radius-md, 14px);
+}
+/* Client (2026-09-11, against the Figma): the "Five levels" branch
+   (AcademyPage.tsx) needs the same condensed pyramid /academy/five-levels
+   already builds in full — not a photo, and not the self-hosted film
+   tried first. Sits in the same .feature-row__media slot as every other
+   branch's photo, so it gets the same box, just with its own white card
+   background (photos/the brand-card wordmarks paint their own). */
+.academy-pyramid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 558 / 457;
+  padding: clamp(16px, 2.4vw, 28px);
+  border-radius: var(--radius-md, 14px);
+  background: var(--white);
+  overflow: hidden;
+}
+/* Client (2026-09-11, exact Figma reference): the full pyramid
+   (.pyramid, below) scaled down to fit this card slot — same ordinals,
+   glyphs and "objective/subjective reality" axis, not the simplified
+   name-only bands the first pass here used. Every value below is that
+   same rule's own, just smaller. */
+.academy-pyramid .pyramid.pyramid--compact {
+  width: 100%;
+  padding-inline: clamp(30px, 8vw, 48px);
+}
+.pyramid--compact .pyramid__stack {
+  gap: 4px;
+}
+.pyramid--compact .pyramid__level {
+  gap: 6px;
+  padding: 5px 8px;
+}
+.pyramid--compact .pyramid__level--apex {
+  padding: 12px 8px 6px;
+}
+.pyramid--compact .pyramid__ordinal {
+  font-size: clamp(9px, 2.2vw, 12px);
+}
+.pyramid--compact .pyramid__name {
+  font-size: clamp(7px, 1.8vw, 10px);
+}
+.pyramid--compact .pyramid__level:not(.pyramid__level--apex) .pyramid__name {
+  padding-left: 6px;
+}
+.pyramid--compact .pyramid__glyph svg,
+.pyramid--compact .pyramid__glyph {
+  font-size: 9px;
+}
+.pyramid--compact .pyramid__axis {
+  font-size: 7px;
+  letter-spacing: 0.1em;
 }
 /* Sophia's "who we are" row crops the campus photo much wider/shorter than
    every other feature-row's default portrait-ish ratio, per the Figma.
@@ -3841,8 +4367,14 @@
 .feature-row h2 + .feature-row__copy {
   margin-top: -30px;
 }
+/* Client (2026-09-10, doc): "los espacios entre titulo y parrafo no esten
+   tan despegados" — h2's own UA default margin-bottom is ~45px, and the
+   old -6px only trimmed it to ~39px between the title and this accent
+   line; the reference sits them almost flush. -40px collapses against
+   that 45px down to a few px, matching Find A.R.T. Therapists / Five
+   Levels / Klinghardt Akademie (every branch that carries an accent). */
 .feature-row .accent {
-  margin: -6px 0 16px;
+  margin: -40px 0 16px;
 }
 .feature-row__actions {
   display: flex;
@@ -3869,12 +4401,44 @@
   font-family: var(--font-sans);
   font-size: clamp(12px, 1.1vw, 15px);
   font-weight: 500;
-  letter-spacing: 0.42em;
+  /* Client (2026-09-11): same proportion fix as .academy-hero__sub above —
+     0.42em measured ~0.53-0.58 of __name's rendered width; 0.68em brings
+     both "Akademie" (~0.65) and "Foundation" (~0.71) into the Figma's own
+     ~0.67 range. */
+  letter-spacing: 0.68em;
   text-transform: uppercase;
-  padding-left: 0.42em;
+  /* Was padding-left: 0.42em, a gap from __name when the two sat inline on
+     one line — now that .feature-row .brand-card's display:grid fix above
+     lets them stack onto two (the Figma's own layout), a left offset just
+     reads as off-centre under __name. */
+  padding-left: 0;
 }
+/* Client (2026-09-10): "el background tambien esta mal el color, este se
+   ve mas obscuro... el tuyo esta arriba y mi diseño es de abajo" — the
+   reference image (Figma) holds navy through roughly the top half, then
+   only warms into amber right at the bottom-right corner; the old 55%
+   stop started that warm-up too early, reading as a muddier, more evenly
+   split navy/amber card than the clean navy-with-a-warm-corner the
+   reference shows. */
+/* Client (2026-09-11, exact Figma reference): a soft pale-white light
+   sweeping across the diagonal opposite the navy→amber one, not a flat
+   two-tone card — a second, lower layer painted on top of the original
+   corner gradient. */
 .brand-card--akademie {
-  background: linear-gradient(160deg, #023866 0%, #2f7fa6 55%, #e9a43f 100%);
+  background:
+    linear-gradient(
+      205deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.55) 48%,
+      transparent 66%
+    ),
+    linear-gradient(
+      155deg,
+      #023866 0%,
+      #023866 32%,
+      #2f7fa6 62%,
+      #e9a43f 100%
+    );
 }
 .brand-card--foundation {
   background: linear-gradient(160deg, #0d858d 0%, #17646b 100%);
@@ -4808,6 +5372,21 @@
 .home-shop__filters .pill-list {
   justify-content: center;
 }
+/* Client (2026-09-11): "juntar mas los textos" — same bug as .home-shop
+   above, just with h1 instead of h2 (this section-heading uses h1, the
+   page's own title): .section-heading's flex gap stacks on top of the
+   heading's own uncontrolled default margin-bottom and .lead's margin-top
+   instead of collapsing, since flex children never collapse margins. */
+.store-intro .section-heading {
+  margin-bottom: clamp(14px, 1.4vw, 20px);
+}
+.store-intro .section-heading h1 {
+  margin-bottom: 0;
+}
+.store-intro .section-heading .lead {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 .home-shop__filters li {
   list-style: none;
 }
@@ -5030,7 +5609,7 @@
 }
 .chapter {
   display: grid;
-  grid-template-columns: minmax(0, 140px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
   gap: clamp(14px, 2vw, 28px);
   align-items: start;
   padding-bottom: clamp(18px, 2.2vw, 28px);
@@ -5040,16 +5619,27 @@
   padding-bottom: 0;
   border-bottom: 0;
 }
+/* Client (2026-09-10): "hacerlas mas grandes, del mismo tamano que el nuevo
+   estilo, como la palabra timeline" — this used var(--fs-eyebrow) (12px),
+   the small size shared with chips/tags/footer titles; every *heading*
+   eyebrow like "Timeline" above uses .eyebrow's own 17px literal
+   (base.css) instead. These golden labels are that same kind of eyebrow,
+   just laid out beside a paragraph rather than above one. */
 .chapter__label {
   margin: 0;
   color: var(--eyebrow-text);
   font-family: var(--font-sans);
-  font-size: var(--fs-eyebrow);
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
+/* Client: "los parrafos de texto de la derecha hacerlos mas estrechos, que
+   las lineas de texto no sean tan largas, para facilitar la lectura" — the
+   grid column runs the full remaining width (a few hundred px wider than
+   .lead's own 68ch prose measure), so it needs its own, narrower cap. */
 .chapter p {
+  max-width: 52ch;
   margin: 0;
   color: var(--muted);
 }
@@ -5079,12 +5669,18 @@
 /* The medical warning under the contact cards. Set apart rather than styled as
    body copy: it limits what these addresses are for, and a reader skimming the
    four cards has to meet it. */
+/* Client (2026-09-11, exact spec): #023866 (--brand) at 4% over white. */
+/* Client (2026-09-11, clarified): "la transparencia ayudara a ver lo que
+   hay detras de esa card" — real alpha transparency (rgba), not a
+   color-mix tint over white: 90% transparent (10% opacity) so the page's
+   own gradient behind the card actually shows through it. Dark text/
+   button again since the card no longer goes solid. */
 .contact-note {
   margin: clamp(16px, 2vw, 24px) 0 0;
   padding: clamp(18px, 2.2vw, 26px);
-  border: 1px solid var(--line);
+  border: 1px solid #e7ecf0;
   border-radius: var(--radius);
-  background: var(--cream-2);
+  background: rgba(2, 56, 102, 0.1);
   text-align: center;
 }
 .contact-note p {

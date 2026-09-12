@@ -52,29 +52,28 @@ export function CoursesHeroPhotos() {
     let frame: number;
     function raf() {
       const el = ref.current;
-      if (el) {
-        // 0 when the cluster's centre is at the viewport's own centre —
-        // negative above it, positive below — so the drift is centred on
-        // the natural "resting" scroll position instead of only ever
-        // running one direction.
-        const rect = el.getBoundingClientRect();
-        const mid = rect.top + rect.height / 2 - window.innerHeight / 2;
-        // Clamped to ±280px — was ±1200 (client, 2026-09-09: "no se nota
-        // que tenga algun efecto... hazlo mas llamativo"), which combined
-        // with the CSS rates below meant the full drift only showed up
-        // after scrolling much further than the hero is actually on
-        // screen for. A tighter clamp reaches its full effect within an
-        // ordinary scroll past the hero instead of needing an unrealistic
-        // amount of it, and stays capped rather than sliding the cards
-        // fully out of frame on a long scroll.
-        const clamped = Math.max(-280, Math.min(280, -mid));
-        // "px" suffix matters: without a unit, multiplying this by the
-        // unitless --courses-photos-rate in CSS produces a bare number,
-        // which translateY() rejects outright — an invalid calc() drops
-        // the WHOLE transform declaration, not just the invalid part. That
-        // was the actual bug behind "no se nota que tenga algun efecto":
-        // the transform was never applying at all, at any rate.
-        el.style.setProperty("--courses-photos-scroll", `${clamped}px`);
+      // Client (2026-09-10): the hero is now pinned (.courses-hero-pin,
+      // sections.css) instead of scrolling past freely — the drift is
+      // driven off that pin's own 0→1 progress (same dwell/progress math
+      // as HomePage.tsx's hero/newsletter pins) rather than the card's
+      // free-floating position relative to the viewport's centre, so the
+      // photos settle into place exactly once over the hold instead of
+      // nudging back and forth as the whole page scrolls past.
+      const wrapper = document.querySelector<HTMLElement>(".courses-hero-pin");
+      const card = document.querySelector<HTMLElement>(".courses-hero-pin .courses-hero");
+      if (el && wrapper && card) {
+        // The card's own height (80vh, sections.css), not window.innerHeight
+        // — sticky actually releases at wrapperHeight - cardHeight, and the
+        // card here is shorter than the viewport (client, 2026-09-11: "el
+        // hero quedo muy alto... del mismo tamano que home"), so using the
+        // full window height would release the pin too early and desync
+        // this progress from where it actually unsticks.
+        const dwell = wrapper.getBoundingClientRect().height - card.getBoundingClientRect().height;
+        const progress = dwell > 0 ? Math.min(1, Math.max(0, -wrapper.getBoundingClientRect().top / dwell)) : 0;
+        // Raw 0→1: each column (sections.css) interpolates its own
+        // --from/--to across this directly, rather than both sharing one
+        // pre-scaled pixel value.
+        el.style.setProperty("--courses-photos-progress", String(progress));
       }
       frame = requestAnimationFrame(raf);
     }

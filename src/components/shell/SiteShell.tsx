@@ -22,6 +22,15 @@ export function SiteShell({
 }) {
   const { pathname, hash } = useLocation();
   const resolvedTheme = theme ?? themeForPath(pathname);
+  // Every internal DK page (not Home, not /sophia/*, which keep their own
+  // treatment). Most of these render <NewsletterSection>, which self-pins
+  // and already ends on this exact navy (see NewsletterSection.tsx) — this
+  // flag only matters as the static fallback (shell.css) for the handful
+  // that don't (Contact, Cart, Legal, the coming-soon placeholders...),
+  // where <main> still ends on the page gradient's amber with nothing
+  // between it and the footer. shell.css suppresses this fallback outright
+  // wherever a pinned newsletter is already on the page.
+  const footerFade = resolvedTheme === "dk" && pathname !== "/";
 
   // The announcement bar is editable from the CMS like any other copy; the
   // fallback keeps the bar meaningful when the CMS is unreachable.
@@ -99,13 +108,15 @@ export function SiteShell({
             ? "main-home"
             : pathname === "/sophia"
               ? "main-sophia-home"
-              : undefined
+              : pathname === "/about"
+                ? "main-about"
+                : undefined
         }
       >
         {children}
       </main>
 
-      <SiteFooter theme={resolvedTheme} />
+      <SiteFooter theme={resolvedTheme} fade={footerFade} />
     </div>
   );
 }

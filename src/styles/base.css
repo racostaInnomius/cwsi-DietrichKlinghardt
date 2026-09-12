@@ -160,12 +160,16 @@ h3,
   color: var(--muted);
 }
 
-/* Italic serif accent — e.g. "Browse our directory to find practitioners". */
+/* Italic serif accent — e.g. "Browse our directory to find practitioners".
+   Client (2026-09-11, against the Figma, on /academy): "las letras van en
+   otro color" — the Figma's accent line reads gold, not the plain grey
+   --muted this carried before, across every place this class renders
+   (Global Network, Five Levels, Learning Center). */
 .accent {
   font-family: var(--font-serif);
   font-weight: 300;
   font-style: italic;
-  color: var(--muted);
+  color: var(--eyebrow-text);
 }
 
 .prose p {

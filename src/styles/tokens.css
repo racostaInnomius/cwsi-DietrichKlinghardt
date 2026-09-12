@@ -239,6 +239,27 @@
     #f79b09 100%
   );
 
+  /* /about only (client, 2026-09-10): "el azul del fondo se debe de ver mas
+     notorio, el azul claro debe de bajar hasta el titulo que dice Timeline...
+     ahorita se ve plano el color empezando desde la palabra background" —
+     --grad-page-full fades the light blue to near-white by 460-660px, well
+     before the chapters section (Background/Frameworks/Teaching/Mission)
+     even starts, so it reads flat behind all four. Same opening/closing
+     stops (still the D13 anchors interior pages depend on), just holding
+     #c0dbde through the chapters block instead of fading it out at 460px. */
+  --grad-page-about: linear-gradient(
+    180deg,
+    #4f7896 0,
+    #3d6d85 100px,
+    #c0dbde 260px,
+    #c0dbde 900px,
+    #eef3f3 1150px,
+    #f4f6f5 1350px,
+    #f4f6f5 calc(100% - 520px),
+    #eaaa58 calc(100% - 120px),
+    #f79b09 100%
+  );
+
   /* Inset gradient CARDS — the only gradients the design paints inside a page:
      the home hero panel and the "Join My Weekly Talks" band. Both are rounded
      boxes with margins sitting on the page gradient.

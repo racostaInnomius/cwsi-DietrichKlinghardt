@@ -32,16 +32,24 @@ export function CoursesPage() {
         path="/courses"
       />
 
-      <AnimatedGradient variant="card" intensity="normal" className="courses-hero">
-        <div className="wrap courses-hero__inner">
-          <Reveal>
-            <p className="eyebrow">Online courses</p>
-            <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
-          </Reveal>
-          <CoursesHeroPhotos />
-        </div>
-      </AnimatedGradient>
+      {/* Client (2026-09-10): "el hero no funciona bien... se debe de parar
+          hasta que scrollean todas las imagenes de la derecha... se baja
+          inmediatamente y no puedes ni leer" — pinned now (same rig as
+          Home's own hero/newsletter pins), so the card holds still on
+          screen for a real stretch of scroll instead of scrolling past in
+          an instant. */}
+      <div className="courses-hero-pin">
+        <AnimatedGradient variant="card" intensity="normal" className="courses-hero">
+          <div className="wrap courses-hero__inner">
+            <Reveal>
+              <p className="eyebrow">Online courses</p>
+              <h1><Marked text={page.title} /></h1>
+              {page.lead ? <p className="lead">{page.lead}</p> : null}
+            </Reveal>
+            <CoursesHeroPhotos />
+          </div>
+        </AnimatedGradient>
+      </div>
 
       <section className="section wrap">
         <ul className="course-path-grid">
