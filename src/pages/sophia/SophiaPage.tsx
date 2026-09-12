@@ -197,14 +197,17 @@ export function SophiaPage() {
 
       {/* The figures on the left, the mission statement on the right. */}
       <section className="section wrap feature-row">
-        <Reveal className="feature-row__media stat-grid">
-          {STATS.map((stat) => (
-            <div key={stat.value} className="stat">
+        {/* Figma comment (Noemi Cruz): "animar" — each tile now reveals on
+            its own as you scroll to it, staggered, instead of the whole
+            grid fading up as one flat block. */}
+        <div className="feature-row__media stat-grid">
+          {STATS.map((stat, index) => (
+            <Reveal as="div" key={stat.value} className="stat" delay={index * 80} shift={12}>
               <p className="stat__value">{stat.value}</p>
               <p className="stat__label">{stat.label}</p>
-            </div>
+            </Reveal>
           ))}
-        </Reveal>
+        </div>
 
         <Reveal className="feature-row__body" delay={90}>
           <p className="eyebrow">Who we are</p>
