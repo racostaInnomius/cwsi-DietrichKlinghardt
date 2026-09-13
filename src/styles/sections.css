@@ -4222,12 +4222,15 @@
    fa #023866" — .btn-light's cream fill is the site-wide default (Home,
    Sophia, ...), so this overrides it only on this page rather than
    touching the shared class. */
+/* background-color (not the background shorthand) — base.css's own .btn
+   now paints the hover slide via background-image/-position, which the
+   shorthand would silently reset back to none. --btn-fill keeps this
+   button's existing hover colour flowing through that same mechanism
+   instead of the old instant swap. */
 .academy-page .btn-light {
-  background: #023866;
+  --btn-fill: var(--brand-2);
+  background-color: #023866;
   color: var(--brand-ink);
-}
-.academy-page .btn-light:hover {
-  background: var(--brand-2);
 }
 
 /* ── Feature rows (Academy) ───────────────────────────────────────
@@ -4753,12 +4756,13 @@
 /* The default .btn-ghost reads brand-teal text — invisible on this dark
    photo. Only here it flips to white, same pattern as .site-header__cta
    already does against the header's own dark background. */
+/* --btn-fill (base.css's slide mechanism), not a :hover { background }
+   override — that shorthand would reset the hover slide's own
+   background-image/-position back to none for this one button. */
 .sophia-hero .btn-ghost {
+  --btn-fill: rgba(255, 255, 255, 0.14);
   border-color: rgba(255, 255, 255, 0.7);
   color: var(--white);
-}
-.sophia-hero .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.14);
 }
 
 /* ── Shared blocks for the Sophia pages ───────────────────────────
@@ -4782,6 +4786,10 @@
   font-size: clamp(38px, 4.4vw, 62px);
   line-height: 1;
   color: var(--brand);
+  /* Client's reference demo: keeps the digits' own width steady while
+     <AnimatedCounter> counts up, instead of the number jittering wider/
+     narrower digit by digit. */
+  font-variant-numeric: tabular-nums;
 }
 .stat__label {
   margin: 0;
@@ -4884,7 +4892,11 @@
 }
 /* The connecting line the design draws down the left edge of the list — one
    line for the whole list, not a segment per step, so it never gaps between
-   items regardless of how tall each one's copy runs. */
+   items regardless of how tall each one's copy runs. It draws top-to-bottom
+   as the steps scroll into view: scaleY keeps the line at its full computed
+   height (top/bottom offsets) rather than needing an animatable `height`,
+   and gates off the first step's own Reveal state via :has() so it starts
+   growing right as the list appears, no separate observer needed. */
 .steps ol::before {
   content: "";
   position: absolute;
@@ -4893,6 +4905,12 @@
   bottom: 6px;
   width: 1px;
   background: var(--line);
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1100ms var(--ease);
+}
+.steps ol:has(.step:first-child.is-visible)::before {
+  transform: scaleY(1);
 }
 .step {
   position: relative;
@@ -5046,7 +5064,8 @@
 /* The button on this band is a light-teal fill, not the cream .btn-light
    everywhere else uses on a dark ground — matches the reference exactly. */
 .cta-band--dark .cta-band__actions .btn {
-  background: color-mix(in srgb, var(--white) 55%, var(--brand));
+  --btn-fill: color-mix(in srgb, var(--white) 40%, var(--brand));
+  background-color: color-mix(in srgb, var(--white) 55%, var(--brand));
   color: var(--brand-3);
 }
 
@@ -5222,11 +5241,9 @@
    reads as a green button in the Figma frame, which on the site's palette is
    Sophia's dark teal (--brand-3), not a literal green the tokens don't have. */
 .btn-brand {
-  background: var(--brand-3);
+  --btn-fill: color-mix(in srgb, var(--brand-3) 85%, black);
+  background-color: var(--brand-3);
   color: var(--white);
-}
-.btn-brand:hover {
-  background: color-mix(in srgb, var(--brand-3) 85%, black);
 }
 
 .page-hero__actions--center {

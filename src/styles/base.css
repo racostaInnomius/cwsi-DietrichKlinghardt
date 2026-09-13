@@ -232,7 +232,24 @@ h3,
 
 /* ── Buttons ──────────────────────────────────────────────────── */
 
+/* Client (2026-09-12), via the designer: "animar los botones de manera
+   mas visible en toda la pagina" — a sliding fill on hover (not an
+   instant colour swap) plus a subtle lift, and an arrow that slides in
+   from inside the label where one is already in the markup. The
+   designer's own reference (sophia-buttons.css) used a separate
+   ::before layer for the fill, which only paints above bare, unwrapped
+   button text (the common case here — most call sites render `{label}`
+   directly, not `<span>{label}</span>`) if every button is rewrapped in
+   a span; that would mean touching JSX at every one of the ~40 call
+   sites instead of just this stylesheet. A background-position slide on
+   the button's own background reaches the exact same visual result
+   without that risk — text always paints above an element's own
+   background, wrapped in a span or not. --btn-fill is each variant's
+   existing hover colour (kept exactly, not the reference's own navy/
+   cream tokens, which don't match this site's palette); only *how* it
+   arrives changes, not the destination colour or any button's copy. */
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -248,29 +265,53 @@ h3,
   letter-spacing: var(--tracking-button);
   text-transform: uppercase;
   text-align: center;
-  transition: background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
-    transform var(--dur-fast) var(--ease);
+  background-image: linear-gradient(to right, var(--btn-fill, transparent) 50%, transparent 50%);
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  transition: background-position var(--dur) var(--ease),
+    border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
 }
-.btn:hover {
-  transform: translateY(-1px);
+.btn:hover,
+.btn:focus-visible {
+  background-position: 0 0;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+/* The arrow already in the markup on many buttons (e.g. "New patients
+   →") starts collapsed and slides in from the label on hover, instead of
+   sitting there permanently — the designer's "micro-interacción de
+   flecha ... aparece deslizandose desde dentro del texto". aria-hidden
+   scopes this to decorative icon spans only, never a button's own
+   (visible, real) label text. */
+.btn > span[aria-hidden="true"] {
+  display: inline-block;
+  max-width: 1.4em;
+  opacity: 1;
+  transform: translateX(0);
+  transition: max-width var(--dur) var(--ease), opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease), margin var(--dur) var(--ease);
+}
+.btn:not(:hover):not(:focus-visible) > span[aria-hidden="true"] {
+  max-width: 0;
+  margin-left: -10px;
+  opacity: 0;
+  transform: translateX(-6px);
+  overflow: hidden;
 }
 
 .btn-primary {
-  background: var(--brand);
+  --btn-fill: var(--brand-2);
+  background-color: var(--brand);
   color: var(--brand-ink);
-}
-.btn-primary:hover {
-  background: var(--brand-2);
 }
 
 .btn-outline {
+  --btn-fill: color-mix(in srgb, var(--brand) 8%, transparent);
   border-color: color-mix(in srgb, var(--brand) 35%, transparent);
   color: var(--brand);
-  background: transparent;
-}
-.btn-outline:hover {
-  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  background-color: transparent;
 }
 
 /* Secondary buttons, as the design draws them: a cream fill and a navy outline,
@@ -278,15 +319,15 @@ h3,
    sections painted dark gradients — now that the page carries one gradient and
    the type is dark throughout, a white ghost button would be invisible. */
 .btn-light {
-  background: var(--cream);
+  --btn-fill: color-mix(in srgb, var(--ink) 6%, var(--cream));
+  background-color: var(--cream);
   color: var(--ink);
 }
 .btn-ghost {
+  --btn-fill: color-mix(in srgb, var(--brand) 10%, transparent);
   border-color: var(--brand);
   color: var(--brand);
-}
-.btn-ghost:hover {
-  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  background-color: transparent;
 }
 /* Sophia's brand teal is far lighter than DK's navy, and as button text over
    the pale end of its own page gradient it stops at 4.06:1 — so the outline

@@ -2,6 +2,7 @@ import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Marked } from "@/components/Marked";
 import { CtaBand } from "@/components/sections/CtaBand";
 import {
@@ -17,12 +18,15 @@ import {
   ClipboardCheckIcon,
 } from "@/components/Icons";
 
-/** The four figures the frame sets in Fraunces at 62px. */
-const STATS = [
-  { value: "25+", label: "Years of clinical experience" },
-  { value: "10K", label: "Patients treated worldwide" },
-  { value: "5", label: "Levels of healing addressed" },
-  { value: "100%", label: "Root-cause focused care" },
+/* Client (2026-09-12), via the designer: "para los numeros... podemos
+   hacer un conteo" — split into the numeric target + suffix/format
+   AnimatedCounter needs, instead of the pre-formatted display strings
+   ("25+", "10K") this carried before. */
+const STATS: { to: number; suffix?: string; format?: "k"; label: string }[] = [
+  { to: 25, suffix: "+", label: "Years of clinical experience" },
+  { to: 10000, format: "k", label: "Patients treated worldwide" },
+  { to: 5, label: "Levels of healing addressed" },
+  { to: 100, suffix: "%", label: "Root-cause focused care" },
 ];
 
 const PILLARS = [
@@ -202,8 +206,10 @@ export function SophiaPage() {
             grid fading up as one flat block. */}
         <div className="feature-row__media stat-grid">
           {STATS.map((stat, index) => (
-            <Reveal as="div" key={stat.value} className="stat" delay={index * 80} shift={12}>
-              <p className="stat__value">{stat.value}</p>
+            <Reveal as="div" key={stat.label} className="stat" delay={index * 80} shift={12}>
+              <p className="stat__value">
+                <AnimatedCounter to={stat.to} suffix={stat.suffix} format={stat.format} />
+              </p>
               <p className="stat__label">{stat.label}</p>
             </Reveal>
           ))}
@@ -249,21 +255,24 @@ export function SophiaPage() {
         </Reveal>
       </section>
 
-      {/* How care runs: the prose on the left, the numbered steps on the right. */}
+      {/* How care runs: the prose on the left, the numbered steps on the
+          right. Each step now reveals on its own as it scrolls into view,
+          staggered — same fix as the stat tiles above, not the whole list
+          fading up as one flat block. */}
       <section className="section wrap feature-row feature-row--right">
-        <Reveal className="feature-row__media steps">
+        <div className="feature-row__media steps">
           <ol>
-            {STEPS.map((step) => (
-              <li key={step.n} className="step">
+            {STEPS.map((step, index) => (
+              <Reveal as="li" key={step.n} className="step" delay={index * 90} shift={12}>
                 <span className="step__n">{step.n}</span>
                 <div>
                   <h3>{step.title}</h3>
                   <p>{step.body}</p>
                 </div>
-              </li>
+              </Reveal>
             ))}
           </ol>
-        </Reveal>
+        </div>
 
         <Reveal className="feature-row__body" delay={90}>
           <p className="eyebrow">Our approach</p>
