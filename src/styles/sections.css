@@ -73,12 +73,19 @@
      now instead (client, 2026-09-09, red-line reference against the nav
      bar and the Academy quote): "el hero debe hacer mas ancho del lado
      derecho e izquierdo" — those two now share the same edge as the nav,
-     footer and quote instead of sitting further in. Height (80vh) is
-     unrelated to this and untouched. */
-  height: 80vh;
+     footer and quote instead of sitting further in.
+     Client (2026-09-14): "quiero que todos los heros sean del mismo
+     tamaño que /foundation" — was 80vh (a comment here used to call that
+     "unrelated" to the margin change above and safe to leave; it's the
+     one now being matched to the shared standard). Confirmed the pin's
+     scroll math in HomePage.tsx reads the card's live
+     getBoundingClientRect().height every frame — nothing hardcodes 80vh,
+     so this is a safe swap. --radius-sm → --radius-lg to match too; this
+     was the one page-hero-family card not already on the shared radius. */
+  height: clamp(420px, 37vw, 560px);
   margin: 0 var(--gutter);
   color: var(--ink);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg, 22px);
   /* Clips the oversized background to the card's own rounded rect — without
      this the lower half of the 200%-tall image would spill past the card's
      bottom edge into whatever comes after it. */
@@ -212,18 +219,6 @@
 }
 
 /* ── Home: intro + quote ──────────────────────────────────────── */
-
-.home-intro__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(24px, 4vw, 72px);
-}
-.home-intro h2 {
-  max-width: 12ch;
-}
-.home-intro .arrow-link {
-  margin-top: 6px;
-}
 
 /* Academy teaser, replacing the old bio intro on this slot. Title and
    paragraph share one serif, body-weight treatment so they read as one
@@ -1714,19 +1709,32 @@
    100vh viewport height the first pass here stretched it to; only the
    wrapper is taller than the card, which is what holds it in place while
    scrolling. */
-.courses-hero-pin {
-  position: relative;
-  height: 160vh;
+/* Client (2026-09-14): "quiero que todos los heros sean del mismo tamaño
+   que /foundation" — same fixed height and gutter every other page-hero
+   uses (base.css .page-hero), not this card's own former 80vh/custom
+   margin. Desktop-only (900px+, matching .page-hero's own breakpoint in
+   base.css): below that width the title + lead + photo cluster wraps to
+   more lines, and forcing the fixed height clipped it (measured, not
+   assumed) — same failure Foundation's own hero had before it got this
+   guard, so the pin/fixed-height pair is disabled below 900px exactly like
+   .home-hero-pin already does, rather than just shrinking the number. */
+@media (min-width: 900px) {
+  .courses-hero-pin {
+    position: relative;
+    height: 160vh;
+  }
+  .courses-hero-pin .courses-hero {
+    position: sticky;
+    top: 0;
+    height: clamp(420px, 37vw, 560px);
+  }
 }
 .courses-hero-pin .courses-hero {
-  position: sticky;
-  top: 0;
-  height: 80vh;
   display: flex;
   align-items: center;
 }
 .courses-hero {
-  margin: 0 clamp(12px, 2.2vw, 34px);
+  margin: 0 var(--gutter);
   color: var(--ink);
 }
 /* Text left, instructor photos right (client, 2026-09-09) — was a single
@@ -2115,13 +2123,9 @@
      gap to the card below it. */
   margin-bottom: 0;
 }
-/* Client (2026-09-11): "reduce el espacio inferior... dejalo igual que el
-   superior" — .page-hero__inner's shared padding-block is asymmetric
-   (28-52px top, 48-96px bottom); this page's own literal makes them equal
-   instead of touching the shared rule every other page-hero still uses. */
-.course-dates-hero .page-hero__inner {
-  padding-block: clamp(28px, 3.4vw, 52px);
-}
+/* The equal-top/bottom-padding override this rule used to carry (client,
+   2026-09-11) is moot now that .page-hero has a fixed height and centers
+   its content (base.css, 2026-09-14) rather than sizing to padding. */
 
 /* Client (2026-09-11): "hazla un poco mas cuadrada como en figma" —
    pointing at the site's own course-path-card grid (/courses) as the
@@ -2408,12 +2412,32 @@
 
 /* Same boxed-gradient treatment as the Courses hero: margin on every side,
    corners from .gradient-card's own radius. */
+/* Client (2026-09-14, follow-up): "ajustalo también" — this panel now
+   matches the full hero standard (docs/HERO_STANDARD.md): zero top margin
+   (flush under the header like every other hero, not its own clamped gap)
+   and the same fixed height. Fitting a real 5-product grid into that height
+   meant shrinking the head copy and the cards proportionally (see
+   .top-pick-card__media below) rather than just clipping the overflow.
+   Desktop-only (900px+, same guard as .page-hero/.courses-hero): the grid
+   stays 5 columns at any width (no mobile column-count override exists),
+   so at phone widths the fixed height clipped the whole product row —
+   measured, not assumed, same failure class as Foundation/Courses. */
 .top-picks {
-  margin: clamp(24px, 4vw, 56px) clamp(12px, 2.2vw, 34px) 0;
+  margin: 0 var(--gutter);
   color: var(--ink);
 }
+@media (min-width: 900px) {
+  .top-picks {
+    height: clamp(420px, 37vw, 560px);
+  }
+  .top-picks__inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
 .top-picks__inner {
-  padding: clamp(32px, 4vw, 56px) clamp(24px, 3vw, 44px);
+  padding: clamp(18px, 2vw, 28px) clamp(20px, 2.4vw, 36px);
 }
 .top-picks__head {
   display: flex;
@@ -2421,7 +2445,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: clamp(28px, 3.4vw, 44px);
+  margin-bottom: clamp(12px, 1.6vw, 20px);
 }
 .top-picks__eyebrow {
   display: flex;
@@ -2441,7 +2465,7 @@
 .top-picks__head h2 {
   max-width: 22ch;
   margin-bottom: 0;
-  font-size: var(--fs-display-md);
+  font-size: clamp(24px, 2.6vw, 38px);
 }
 /* Client (2026-09-11): "cambiar picks of the month a blanco, no se ve muy
    bien" — was --gold-deep, hard to read against the card gradient's own
@@ -2530,10 +2554,14 @@
 }
 /* Client: "hacer las tarjetas la parte de la foto mas cuadrada... se ve
    muy angosta" — was 5:3 (a wide, short strip); close to square instead,
-   matching the reference photos. */
+   matching the reference photos.
+   Client (2026-09-14, follow-up): "ajusta el tamaño de las cards... de
+   manera proporcional" — shortened again (not back to 5:3) so 5 columns +
+   the head copy fit the fixed hero height above; still closer to square
+   than the original wide strip. */
 .top-pick-card__media {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 2;
   background: var(--cream-2);
 }
 .top-pick-card__media img {
@@ -2570,8 +2598,15 @@
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
+/* Client (2026-09-14): "que queden todos en una sola linea agrega '...' si
+   se sobre pasa" — long product names (e.g. "The 5 Levels of Healing® —
+   Practitioner Handbook") were wrapping to 2 lines and pushing card heights
+   out of sync with each other. */
 .top-pick-card__body h3 {
   margin: 0 0 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 600;
@@ -2912,45 +2947,241 @@
 
 /* ── Foundation ───────────────────────────────────────────────── */
 
-/* The Foundation headline is three sentences, so it needs room the other
-   page heroes do not. */
-.foundation-title {
-  max-width: 24ch;
+/* Client (2026-09-14, Figma): wordmark above the title, tight gap beneath it
+   so the title reads as directly following the mark, not a separate block.
+   White fill in the source SVG — same white the plain eyebrow used to be,
+   so it stays legible on the same dark part of the gradient.
+   Client (2026-09-14, follow-up): "el logo un 10% mas grande", then
+   another "aumenta 15% mas el tamaño proporcional" on top of that — each
+   clamp bound scaled in turn (120→132→151.8, 11vw→12.1vw→13.9vw,
+   160→176→202.4), not a flat px bump, so it stays proportional at every
+   viewport width instead of just at one. */
+.foundation-hero__logo {
+  display: block;
+  width: clamp(152px, 13.9vw, 202px);
+  height: auto;
+  margin: 0 auto 12px;
 }
-.foundation-actions {
-  margin-top: 28px;
+/* Client (2026-09-14): "establece este hero como base para todos los heros
+   del sitio" — the inset margin, rounded corners and compact padding that
+   were tuned here moved to the shared .page-hero/.page-hero__inner rules
+   (base.css) so every hero site-wide uses them. What's left below is
+   specific to Foundation: the logo, its title's font-size (a 3-sentence
+   title needs a size no other page-hero has to accommodate, cut a further
+   15% per a follow-up request) and its accent line — not part of the "base"
+   the client meant. */
+.foundation-title {
+  max-width: 26ch;
+  font-size: clamp(33px, 4.5vw, 73px);
+}
+/* Client (2026-09-14, follow-up): "un margen 10% mas grande de la parte
+   superior del hero" — this page's own top padding, ×1.1 over the shared
+   .page-hero__inner default (base.css: 16/1.8vw/28), scoped here so the
+   other 17 page-heroes keep the shared value. Desktop-only, matching the
+   base rule's own @media (min-width: 900px) guard — mobile still sizes to
+   content there, unaffected by this. */
+@media (min-width: 900px) {
+  .foundation-hero .page-hero__inner {
+    padding-top: clamp(17.6px, 1.98vw, 30.8px);
+  }
+}
+/* The reference styles the closing sentence as an italic accent line, in a
+   lighter blue than the rest of the (near-black) title.
+   Client (2026-09-14, follow-up): "procura que quede en una sola linea" —
+   its own block, independent of .foundation-title's 26ch max-width (which
+   the first two sentences still need to keep their own line break).
+   white-space: nowrap is desktop-only (900px+) — at phone widths this
+   line has nowhere near enough room (measured: 485px needed in a 390px
+   viewport), so it wraps normally there instead of running off-screen. */
+.foundation-title__accent {
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+  color: var(--brand-2);
+}
+@media (min-width: 900px) {
+  .foundation-title__accent {
+    white-space: nowrap;
+  }
 }
 
+/* Client (2026-09-14, Figma): copy stacks in one column (title, paragraph,
+   CTA) instead of splitting title/paragraph across two columns; the second
+   column holds the wordmark card instead of sitting empty. */
+.foundation-purpose__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+}
+.foundation-purpose__copy h2 {
+  margin-top: 10px;
+  max-width: 14ch;
+}
+.foundation-purpose__copy .prose {
+  margin-top: 16px;
+}
+.foundation-purpose__cta {
+  margin-top: 22px;
+}
+/* Client (2026-09-14): "siempre visible" — overrides the shared .btn
+   hover-reveal (base.css) that hides the arrow span until :hover/
+   :focus-visible on every other button site-wide; these two Foundation
+   CTAs keep it shown at rest instead. */
+.foundation-purpose__cta:not(:hover):not(:focus-visible) > span[aria-hidden="true"],
+.foundation-quote__cta:not(:hover):not(:focus-visible) > span[aria-hidden="true"] {
+  max-width: 1.4em;
+  margin-left: 0;
+  opacity: 1;
+  transform: translateX(0);
+}
+/* Same wordmark as the hero, now white-on-gradient inside a rounded card —
+   the design's second placement of the Foundation logo.
+   Client (2026-09-14, reference image): the Foundation brand's own teal,
+   not the DK navy this card opened on — same exact gradient
+   .brand-card--foundation already uses on /academy, so both placements of
+   the Foundation card agree instead of each inventing its own colour. */
+.foundation-purpose__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, #0d858d 0%, #17646b 100%);
+}
+.foundation-purpose__card-logo {
+  width: 55%;
+  height: auto;
+}
+@media (max-width: 720px) {
+  .foundation-purpose__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .foundation-purpose__card {
+    order: -1;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Client (2026-09-14, Figma): a vertical list with one icon badge per row,
+   replacing the four-card grid — a divider between rows stands in for the
+   cards' own borders. */
 .commitments {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: clamp(20px, 2.6vw, 36px);
 }
 .commitment {
-  padding: clamp(24px, 2.6vw, 36px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface-2);
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(16px, 2vw, 24px);
+  padding: clamp(20px, 2.4vw, 28px) 0;
+  border-bottom: 1px solid var(--line);
 }
-.commitment__number {
-  display: block;
-  margin-bottom: 14px;
-  font-family: var(--font-display);
-  font-size: 34px;
-  line-height: 1;
-  color: var(--gold);
+.commitment:first-child {
+  padding-top: 0;
+}
+.commitment:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.commitment__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  /* Client (2026-09-15, exact spec): #E6EDF6. */
+  background: #e6edf6;
+  color: var(--brand);
+}
+/* Client (2026-09-15, reference image): stroke-style icons (archive,
+   graduation cap, flask, globe — see Icons.tsx) each already carry their
+   own fill="none"/stroke="currentColor", so this no longer force-fills
+   them the way the earlier filled-path icon set needed. */
+.commitment__icon svg {
+  width: 20px;
+  height: 20px;
 }
 .commitment h3 {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   font-size: var(--fs-display-sm);
 }
 .commitment p {
   margin: 0;
   color: var(--muted);
   font-size: var(--fs-sm);
+}
+
+/* Client (2026-09-14, Figma + doc): last section on the page, transparent so
+   <main>'s own page gradient (shell.css --grad-page-full) shows through and
+   lands on its amber/orange tail here — no card background of its own. */
+/* Client (2026-09-15): fixed 65px top padding, not the shared clamp — a
+   flat value per the client's own literal spec, keeping the bottom
+   padding as it was. */
+.foundation-quote {
+  padding-top: 65px;
+  padding-bottom: clamp(56px, 8vw, 96px);
+}
+/* Client (2026-09-14, reference image): left-aligned block, not centered —
+   both the text itself (text-align) and the block's own position (no more
+   margin: 0 auto).
+   Client (2026-09-15, follow-up): the regular-weight text is upright, not
+   italic — only the bold clause (.foundation-quote__text strong, below)
+   stays italic. */
+.foundation-quote__text {
+  max-width: 46ch;
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: var(--fs-display-sm);
+  font-style: normal;
+  line-height: 1.5;
+  color: var(--ink);
+}
+/* Client (2026-09-15): "no se nota que texto esta en negritas" — the
+   browser's synthesized bold-italic on this serif wasn't heavy enough to
+   read as a distinct weight next to the regular italic around it; an
+   explicit 700 makes the contrast obvious. */
+/* font-weight: 700 alone barely reads here — Kalice (tokens.css/base.css
+   @font-face) has no bold-italic face, only regular-italic and
+   normal-style bold, so the browser can only fake a bold weight on top of
+   the italic face it does have, and that synthesis is too subtle at this
+   size. A thin same-colour stroke reinforces it so the weight difference
+   actually shows. */
+.foundation-quote__text strong {
+  font-style: italic;
+  font-weight: 700;
+  -webkit-text-stroke: 0.6px currentColor;
+}
+.foundation-quote__text p {
+  margin: 0;
+}
+/* Client (2026-09-15): "del mismo tamaño que... foundation-quote__text" +
+   "no tan alejado" — matches the quote's own font-size instead of its own
+   smaller clamp, and the gap above it is tighter (was 20px on top of the
+   <p>'s own default margin, which .foundation-quote__text p above now
+   zeroes out). Still the brand's accent blue, still upright (not italic),
+   which is what actually sets it apart from the quote now. */
+.foundation-quote__text cite {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-serif);
+  font-size: var(--fs-display-sm);
+  font-style: normal;
+  color: var(--brand-2);
+}
+/* Client (2026-09-15): "centrala y que no este tan alejado" — centered
+   independently of the quote/citation above (which stay left-aligned via
+   their own explicit text-align/display), and the gap to the citation
+   shrunk from a clamp(24-36px) down to a flat 16px. */
+.foundation-quote__inner {
+  text-align: center;
+}
+.foundation-quote__cta {
+  margin-top: 16px;
 }
 
 /* ── Donations ────────────────────────────────────────────────── */
@@ -3330,12 +3561,9 @@
 .contact-hero h1 {
   margin-bottom: 0;
 }
-/* Client (2026-09-11, follow-up): "reduce en un 50% la distancia entre las
-   cards y el texto superior" — measured ~101px total (this padding-bottom
-   plus .section--tight-top's own top padding below); both halved. */
-.contact-hero .page-hero__inner {
-  padding-bottom: clamp(14px, 1.7vw, 26px);
-}
+/* The extra-tight bottom-padding override this rule used to carry (client,
+   2026-09-11 follow-up) is moot now that .page-hero has a fixed height and
+   centers its content (base.css, 2026-09-14) rather than sizing to padding. */
 .contact-section {
   padding-top: clamp(6px, 0.8vw, 12px);
 }
@@ -3990,7 +4218,6 @@
 /* ── Responsive ───────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
-  .home-intro__grid,
   .home-teasers,
   .home-art__inner:has(.home-art__media),
   .feature-row:has(.feature-row__media),
@@ -4066,8 +4293,8 @@
     display: flex;
     flex-direction: column;
     background: var(--grad-card);
-    margin: 0 clamp(12px, 2.2vw, 34px);
-    border-radius: var(--radius-sm);
+    margin: 0 var(--gutter);
+    border-radius: var(--radius-lg, 22px);
     overflow: hidden;
   }
   .hero h1 {
@@ -4116,8 +4343,8 @@
        to a plain, static --grad-card fill. The scroll-pin effect is
        desktop-only; below 560px the card just shows its usual gradient. */
     background: var(--grad-card);
-    margin: 0 clamp(12px, 2.2vw, 34px);
-    border-radius: var(--radius-sm);
+    margin: 0 var(--gutter);
+    border-radius: var(--radius-lg, 22px);
     overflow: hidden;
   }
   /* The desktop rule shrinks this to leave the photo clear beside the text
@@ -4165,15 +4392,11 @@
 /* ── Academy hero ─────────────────────────────────────────────────
    Client (2026-09-10): "falta el diseno y el logo en el hero" — the frame
    gives this one page its own rounded gradient panel and wordmark, not the
-   flat text-only band every other internal page opens on. Inset like the
-   home hero/weekly-talks card rather than full-bleed, and reuses the same
-   navy-to-amber --grad-card journey (tokens.css) so it reads as the same
-   family of panel, not a one-off colour. */
-.academy-hero {
-  margin: clamp(16px, 2.4vw, 32px) var(--gutter) 0;
-  border-radius: var(--radius-lg, 22px);
-  background: var(--grad-card);
-}
+   flat text-only band every other internal page opens on. That inset
+   card/rounded/navy-to-amber treatment is now what EVERY page-hero uses
+   (base.css, 2026-09-14) via the `card` variant, so the margin/radius/
+   background this rule used to hardcode here were dropped — this page's
+   own top margin was the one page-hero drifting from the shared sizing. */
 .academy-hero .wrap {
   max-width: none;
   padding-inline: 0;
@@ -4273,44 +4496,24 @@
   object-fit: cover;
   border-radius: var(--radius-md, 14px);
 }
-/* Same box as the photos above, but display: grid (not: block) — .brand-card
-   itself already sets that to stack __name/__sub onto two lines, and this
-   rule's higher specificity (.feature-row .brand-card vs. .brand-card alone)
-   was winning the cascade and silently flattening them onto one (client,
-   2026-09-11, against the Figma: "que estan en 2 lineas el texto"). */
-.feature-row .brand-card {
-  display: grid;
-  place-content: center;
-  width: 100%;
-  aspect-ratio: 558 / 457;
-  border-radius: var(--radius-md, 14px);
+/* Client (2026-09-14): "quiero que quede en estas dimenciones... 405x405" —
+   the Akademie/Foundation logo panels only, square instead of the shared
+   558:457 photo ratio above (higher specificity via the two classes wins
+   without an !important). height: auto is required here, not implied —
+   the <img height="405"> HTML attribute otherwise resolves to a fixed
+   405px UA-stylesheet height alongside this rule's own width: 100%, which
+   leaves both dimensions already definite and aspect-ratio has nothing
+   left to compute (silently ignored instead of erroring). */
+.feature-row__media img.feature-row__media-img--square {
+  aspect-ratio: 1 / 1;
+  height: auto;
 }
-/* Client (2026-09-11, against the Figma): the "Five levels" branch
-   (AcademyPage.tsx) needs the same condensed pyramid /academy/five-levels
-   already builds in full — not a photo, and not the self-hosted film
-   tried first. Sits in the same .feature-row__media slot as every other
-   branch's photo, so it gets the same box, just with its own white card
-   background (photos/the brand-card wordmarks paint their own). */
-.academy-pyramid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  aspect-ratio: 558 / 457;
-  padding: clamp(16px, 2.4vw, 28px);
-  border-radius: var(--radius-md, 14px);
-  background: var(--white);
-  overflow: hidden;
-}
-/* Client (2026-09-11, exact Figma reference): the full pyramid
-   (.pyramid, below) scaled down to fit this card slot — same ordinals,
-   glyphs and "objective/subjective reality" axis, not the simplified
-   name-only bands the first pass here used. Every value below is that
-   same rule's own, just smaller. */
-.academy-pyramid .pyramid.pyramid--compact {
-  width: 100%;
-  padding-inline: clamp(30px, 8vw, 48px);
-}
+/* .academy-pyramid (the "Five levels" branch's own card wrapper) was
+   removed 2026-09-14 — that branch now uses a static export in the same
+   .feature-row__media img slot every other branch's photo uses, instead of
+   rendering <Pyramid compact /> live inside a bespoke white card. The
+   shared .pyramid--compact rules below stay: /academy/five-levels' own
+   page still renders the live component. */
 .pyramid--compact .pyramid__stack {
   gap: 4px;
 }
@@ -4383,68 +4586,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-}
-
-/* The two branded panels the design draws instead of photographing: a gradient
-   and a wordmark. Cheaper to draw than to wait on an export, and it stays in
-   the brand's own colours rather than a flattened screenshot of them. */
-.brand-card {
-  display: grid;
-  place-content: center;
-  gap: 6px;
-  text-align: center;
-  color: var(--white);
-  font-family: var(--font-display);
-}
-.brand-card__name {
-  font-size: clamp(28px, 3.4vw, 46px);
-  line-height: 1;
-}
-.brand-card__sub {
-  font-family: var(--font-sans);
-  font-size: clamp(12px, 1.1vw, 15px);
-  font-weight: 500;
-  /* Client (2026-09-11): same proportion fix as .academy-hero__sub above —
-     0.42em measured ~0.53-0.58 of __name's rendered width; 0.68em brings
-     both "Akademie" (~0.65) and "Foundation" (~0.71) into the Figma's own
-     ~0.67 range. */
-  letter-spacing: 0.68em;
-  text-transform: uppercase;
-  /* Was padding-left: 0.42em, a gap from __name when the two sat inline on
-     one line — now that .feature-row .brand-card's display:grid fix above
-     lets them stack onto two (the Figma's own layout), a left offset just
-     reads as off-centre under __name. */
-  padding-left: 0;
-}
-/* Client (2026-09-10): "el background tambien esta mal el color, este se
-   ve mas obscuro... el tuyo esta arriba y mi diseño es de abajo" — the
-   reference image (Figma) holds navy through roughly the top half, then
-   only warms into amber right at the bottom-right corner; the old 55%
-   stop started that warm-up too early, reading as a muddier, more evenly
-   split navy/amber card than the clean navy-with-a-warm-corner the
-   reference shows. */
-/* Client (2026-09-11, exact Figma reference): a soft pale-white light
-   sweeping across the diagonal opposite the navy→amber one, not a flat
-   two-tone card — a second, lower layer painted on top of the original
-   corner gradient. */
-.brand-card--akademie {
-  background:
-    linear-gradient(
-      205deg,
-      transparent 30%,
-      rgba(255, 255, 255, 0.55) 48%,
-      transparent 66%
-    ),
-    linear-gradient(
-      155deg,
-      #023866 0%,
-      #023866 32%,
-      #2f7fa6 62%,
-      #e9a43f 100%
-    );
-}
-.brand-card--foundation {
-  background: linear-gradient(160deg, #0d858d 0%, #17646b 100%);
 }
 
 /* Hero with a companion image beside the copy (Weekly Talks). Only this

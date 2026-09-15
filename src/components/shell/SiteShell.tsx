@@ -30,7 +30,12 @@ export function SiteShell({
   // where <main> still ends on the page gradient's amber with nothing
   // between it and the footer. shell.css suppresses this fallback outright
   // wherever a pinned newsletter is already on the page.
-  const footerFade = resolvedTheme === "dk" && pathname !== "/";
+  // Client (2026-09-15): "solamente en /foundation... que sea azul sin el
+  // degradado naranja" — its own quote section already ends the page on
+  // the amber tail on purpose (a separate, earlier request), so the
+  // footer's fade would double up on the same transition right under it.
+  const footerFade =
+    resolvedTheme === "dk" && pathname !== "/" && pathname !== "/foundation";
 
   // The announcement bar is editable from the CMS like any other copy; the
   // fallback keeps the bar meaningful when the CMS is unreachable.

@@ -62,7 +62,7 @@ export function CourseDatesPage() {
           unos 15 pt" — .course-dates-hero (sections.css) scopes the fix to
           this page's own h1 rather than the shared --fs-display-lg token
           every other page-hero uses. */}
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero course-dates-hero">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero course-dates-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[

@@ -61,7 +61,7 @@ export function ContactPage() {
       {/* Client (2026-09-11): "pegar el parrafo de texto al titulo, y las
           tarjetas tambien acercarlas, se ven muy separadas" —
           .contact-hero (sections.css) scopes both fixes to this page. */}
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center contact-hero">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero page-hero--center contact-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Get in touch</p>

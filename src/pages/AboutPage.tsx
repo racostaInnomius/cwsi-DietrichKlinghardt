@@ -100,7 +100,7 @@ export function AboutPage() {
         path="/about"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero page-hero--center">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">About</p>

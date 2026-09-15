@@ -45,7 +45,7 @@ export function FiveLevelsPage() {
         path="/academy/five-levels"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero page-hero--center">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero page-hero--center">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Akademie", href: "/academy" }, { label: "The 5 Levels of Healing" }]}

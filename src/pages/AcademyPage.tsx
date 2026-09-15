@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment } from "react";
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useSection } from "@/lib/sections";
@@ -6,7 +6,6 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
-import { Pyramid } from "@/components/Pyramid";
 
 type Action = {
   label: string;
@@ -25,8 +24,16 @@ type Branch = {
   body: string;
   actions: Action[];
   /** `media: "right"` puts the picture on the right, as the frame alternates. */
-  media?: { src: string; alt: string; width: number; height: number };
-  brandCard?: ReactNode;
+  media?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    /** Client (2026-09-14): the Akademie/Foundation logo panels are square
+     *  (405×405), not the 558:457 photo aspect every other branch's media
+     *  uses. */
+    square?: boolean;
+  };
   side: "left" | "right";
 };
 
@@ -88,13 +95,16 @@ const BRANCHES: Branch[] = [
     // Figma shows the same pyramid /academy/five-levels already builds in
     // full. Client (2026-09-11, follow-up, exact reference): "identico" —
     // the condensed version this first tried (name only, no ordinals, no
-    // axis labels) wasn't close enough; <Pyramid compact /> is the exact
-    // same component/markup as the full page, just scaled down.
-    brandCard: (
-      <div className="academy-pyramid">
-        <Pyramid compact />
-      </div>
-    ),
+    // axis labels) wasn't close enough; <Pyramid compact /> matched pixel-
+    // for-pixel. Client (2026-09-14): swapped the live component for a
+    // static export of that same render — same media slot every other
+    // branch's photo uses.
+    media: {
+      src: "/images/5_levels.png",
+      alt: "The 5 Levels of Healing pyramid",
+      width: 556,
+      height: 458,
+    },
     side: "left",
   },
   {
@@ -119,15 +129,16 @@ const BRANCHES: Branch[] = [
     accent: "Dr. Klinghardt's academy in Europe",
     body: "Based in Europe, the Klinghardt Akademie is Dr. Klinghardt's European training centre. It carries his diagnostic and therapeutic methods forward as a living system, continuously shaped by his clinical practice, research and decades of experience. Here, therapists and health-minded individuals can train directly in his core methods — A.R.T Klinghardt™ and Psycho-Kinesiology — grounded in The 5 Levels of Healing™. Seminars and materials are offered primarily in Europe.",
     actions: [{ label: "Go to site", to: "/academy/akademie" }],
-    // The frame shows a branded panel rather than a photograph, so it is drawn
-    // rather than waiting on an asset that would only ever be a gradient and a
-    // wordmark.
-    brandCard: (
-      <span className="brand-card brand-card--akademie">
-        <span className="brand-card__name">Klinghardt</span>
-        <span className="brand-card__sub">Akademie</span>
-      </span>
-    ),
+    // Client (2026-09-14): real exported panel, replacing the drawn
+    // gradient + wordmark this branch opened with — same media slot every
+    // other branch's photo uses, not the special brandCard one.
+    media: {
+      src: "/images/Klinghardt_Akademie.png",
+      alt: "Klinghardt Akademie",
+      width: 405,
+      height: 405,
+      square: true,
+    },
     side: "left",
   },
   {
@@ -138,12 +149,15 @@ const BRANCHES: Branch[] = [
       { label: "Learn more", to: "/foundation" },
       { label: "Donate now", to: "/foundation/donate", ghost: true },
     ],
-    brandCard: (
-      <span className="brand-card brand-card--foundation">
-        <span className="brand-card__name">Klinghardt™</span>
-        <span className="brand-card__sub">Foundation</span>
-      </span>
-    ),
+    // Client (2026-09-14): real exported panel, replacing the drawn
+    // gradient + wordmark this branch opened with.
+    media: {
+      src: "/images/Klinghardt_Foundation.png",
+      alt: "Klinghardt Foundation",
+      width: 405,
+      height: 405,
+      square: true,
+    },
     side: "right",
   },
 ];
@@ -235,12 +249,13 @@ export function AcademyPage() {
 
           Client (2026-09-11, against the Figma): the reference's own
           heading isn't the plain page title — it's the same two-part
-          "Klinghardt" / "AKADEMIE" wordmark the brand-card panels draw
-          further down this page (no separate eyebrow above it, no small
-          logo mark), so this now matches that treatment instead of
-          page.title, the same way those brand cards are hand-set rather
-          than CMS-driven. */}
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero academy-hero">
+          "Klinghardt" / "AKADEMIE" wordmark treatment used further down
+          this page (no separate eyebrow above it, no small logo mark), so
+          this now matches that instead of page.title. (2026-09-14: those
+          panels further down are now real exported images, not drawn
+          CSS/text — this hero's own wordmark is unaffected, still hand-set
+          here.) */}
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero academy-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <h1 className="academy-hero__wordmark">
@@ -267,20 +282,17 @@ export function AcademyPage() {
           key={branch.title}
           className={`section wrap feature-row feature-row--${branch.side}`}
         >
-          {branch.media || branch.brandCard ? (
+          {branch.media ? (
             <Reveal className="feature-row__media">
-              {branch.media ? (
-                <img
-                  src={branch.media.src}
-                  alt={branch.media.alt}
-                  width={branch.media.width}
-                  height={branch.media.height}
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                branch.brandCard
-              )}
+              <img
+                className={branch.media.square ? "feature-row__media-img--square" : undefined}
+                src={branch.media.src}
+                alt={branch.media.alt}
+                width={branch.media.width}
+                height={branch.media.height}
+                loading="lazy"
+                decoding="async"
+              />
             </Reveal>
           ) : null}
 

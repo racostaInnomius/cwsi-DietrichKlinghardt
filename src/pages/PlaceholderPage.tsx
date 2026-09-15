@@ -32,7 +32,7 @@ export function PlaceholderPage({
         noindex
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           {crumbs?.length ? <Breadcrumbs items={crumbs} /> : null}
           <Reveal>

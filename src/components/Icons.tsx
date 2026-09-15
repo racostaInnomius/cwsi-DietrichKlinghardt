@@ -78,6 +78,53 @@ export function MicrophoneIcon() {
   );
 }
 
+/* Foundation page's "Four central commitments" list (2026-09-15, against
+   the client's reference image): one icon per commitment — an archive box
+   for the legacy/records one, a graduation cap for education, a flask for
+   research, a globe for access/reach. Stroke-based, matching the Contact
+   card icons above (MailIcon etc.) rather than the filled paths further
+   up this file. */
+export function ArchiveIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="4" rx="1" />
+      <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" />
+      <path d="M10 12h4" />
+    </svg>
+  );
+}
+
+export function GraduationCapIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 3 2 8l10 5 10-5-10-5Z" />
+      <path d="M6 10.5V16c0 1 2.5 2.5 6 2.5s6-1.5 6-2.5v-5.5" />
+      <path d="M22 8v6" />
+    </svg>
+  );
+}
+
+export function FlaskIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M9 3h6" />
+      <path d="M10 3v6L4.6 18.4A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.6L14 9V3" />
+      <path d="M7.5 15h9" />
+    </svg>
+  );
+}
+
+export function GlobeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a14 14 0 0 1 0 18" />
+      <path d="M12 3a14 14 0 0 0 0 18" />
+    </svg>
+  );
+}
+
 export function DropletIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.2 6 7.7 6 10.6a6 6 0 1 1-12 0C6 10.7 8.5 7.2 12 3Z" /></svg>;
 }

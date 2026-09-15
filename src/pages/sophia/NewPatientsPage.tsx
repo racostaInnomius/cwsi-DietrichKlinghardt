@@ -81,7 +81,7 @@ export function NewPatientsPage() {
         path="/sophia/new-patients"
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Sophia", href: "/sophia" }, { label: "New patients" }]}

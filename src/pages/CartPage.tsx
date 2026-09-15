@@ -47,7 +47,7 @@ export function CartPage() {
         noindex
       />
 
-      <AnimatedGradient variant="plain" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Checkout</p>
