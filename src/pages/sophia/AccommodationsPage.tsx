@@ -102,7 +102,7 @@ export function AccommodationsPage() {
         path="/sophia/accommodations"
       />
 
-      <AnimatedGradient variant="card" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="plain" intensity="soft" className="page-hero sophia-plain-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Sophia", href: "/sophia" }, { label: "Travel & accommodations" }]}

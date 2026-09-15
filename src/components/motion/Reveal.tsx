@@ -17,6 +17,7 @@ export function Reveal({
   className = "",
   once = true,
   style,
+  triggerOn = "scroll",
 }: {
   children: ReactNode;
   /** Element to render — use `section`/`li` to keep semantics intact. */
@@ -29,6 +30,13 @@ export function Reveal({
   once?: boolean;
   /** Merged with the reveal's own custom properties, never replacing them. */
   style?: React.CSSProperties;
+  /**
+   * "scroll" (default): waits for the element to scroll into view. "load":
+   * plays as soon as the page has mounted — for a block that sits high
+   * enough up that it should arrive with the page instead of waiting on
+   * scroll (client, 2026-09-15, Home's Academy teaser).
+   */
+  triggerOn?: "scroll" | "load";
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -37,12 +45,13 @@ export function Reveal({
     const node = ref.current;
     if (!node) return;
     if (
+      triggerOn === "load" ||
       typeof window === "undefined" ||
       !("IntersectionObserver" in window) ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-      setVisible(true);
-      return;
+      const frame = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(frame);
     }
 
     const observer = new IntersectionObserver(
@@ -62,7 +71,7 @@ export function Reveal({
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [once]);
+  }, [once, triggerOn]);
 
   return (
     <Tag

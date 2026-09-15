@@ -189,6 +189,62 @@ export function HomePage() {
         }
       }
 
+      // Client (2026-09-15): "cuando comience el scroll down únicamente se
+      // comience a mover el background hasta que llega el final del
+      // degradado azul que termina en el eyebrow de 'Events & webinars'" —
+      // the loop above still drives --hero-scroll from the pin's own dwell
+      // (now only ~14px, since .home-hero-pin was trimmed to remove the dead
+      // scroll space before Academy), which made the photo's scroll-tied
+      // zoom below resolve almost instantly instead of gradually. Computes a
+      // value tied to a real, much longer distance instead — from the hero
+      // wrapper's own top (unaffected by the pin math above) down to where
+      // the Events section's eyebrow sits — while leaving heroProgress/
+      // heroPastReleasePx (the Lenis speed easing just below) on the
+      // original dwell-based value, unchanged. No layout moves: this only
+      // reads existing element positions, it doesn't reserve any extra
+      // height anywhere.
+      //
+      // Client (2026-09-15, follow-up): "animes... el background que tiene
+      // class='home-hero-pin' y class='plain-section home-academy'...
+      // sincronizarlos" — both of those read this same value now (set on
+      // <html> so it inherits everywhere, not just on the hero card), each
+      // sliding its own oversized background-image via background-position
+      // (sections.css) so the two read as one continuous colour journey
+      // instead of two separately-authored, independently-static gradients.
+      const heroWrapper = document.querySelector<HTMLElement>(".home-hero-pin");
+      const eventsEyebrow = document.querySelector<HTMLElement>(".home-events .eyebrow");
+      if (heroWrapper) {
+        const wrapperTop = heroWrapper.getBoundingClientRect().top;
+        const scrolledPastTop = Math.max(0, -wrapperTop);
+        // Falls back to the pin's own dwell (heroProgress) when there are no
+        // events to anchor on — .home-events doesn't render at all then, see
+        // HomePage.tsx's conditional above — so the effect still exists
+        // instead of getting stuck at 0.
+        const distance = eventsEyebrow
+          ? eventsEyebrow.getBoundingClientRect().top - wrapperTop
+          : 0;
+        const bgProgress =
+          distance > 0 ? Math.min(1, scrolledPastTop / distance) : heroProgress;
+        document.documentElement.style.setProperty("--hero-scroll", String(bgProgress));
+      }
+
+      // Client (2026-09-15): "cómo podemos implementar el efecto del
+      // background al hacer scroll down... no me refiero al background del
+      // hero... analízalo cómo puede quedar mejor" — .site-shell > main::before
+      // (shell.css) already paints a whole-page drifting layer behind every
+      // section on Home, but purely on a 32s CSS keyframe loop, with no
+      // relationship to scroll at all. Chosen approach: keep that ambient
+      // loop exactly as it is (untouched, shared with every other page that
+      // uses it) and ADD a second, independent motion on top of it — a slow
+      // parallax translateY, Home-only, driven by how far the page has
+      // scrolled. The keyframe only ever animates background-position, this
+      // only ever sets transform, so the two run concurrently without
+      // fighting over the same property. Capped well under the layer's own
+      // 20% oversize buffer (background-size: 120% 120%, sections.css) so it
+      // never reveals a hard edge no matter how long the page is.
+      const pageDrift = Math.min(160, window.scrollY * 0.08);
+      document.documentElement.style.setProperty("--page-bg-drift", `${pageDrift}px`);
+
       if (lenis) {
         // Ramp the multiplier down approaching release, hold it soft for
         // just over half a screen height past release (enough for Academy's
@@ -223,6 +279,17 @@ export function HomePage() {
     return () => {
       cancelAnimationFrame(frame);
       lenis?.destroy();
+      // Client (2026-09-15): "asegúrate de que el único hero que se esté
+      // modificando sea Home" — --hero-scroll is set on <html> (so
+      // .home-hero-pin and .home-academy can both read it), which meant it
+      // silently outlived this effect: a client-side nav to another route
+      // left the last scrolled value sitting on the root element instead of
+      // clearing when Home unmounts. Nothing today reads --hero-scroll
+      // outside Home's own classes, so this was never visible, but it's a
+      // real leak — cleaned up here rather than left as a landmine for
+      // whatever the next --hero-scroll consumer turns out to be.
+      document.documentElement.style.removeProperty("--hero-scroll");
+      document.documentElement.style.removeProperty("--page-bg-drift");
     };
   }, []);
 
@@ -271,7 +338,15 @@ export function HomePage() {
       {/* ── Academy teaser ───────────────────────────────────────── */}
       <AnimatedGradient variant="plain" className="home-academy">
         <div className="home-academy__inner">
-          <Reveal className="home-academy__block">
+          {/* Client (2026-09-15): "de un inicio ponlo inmediatamente abajo
+              del hero... que se alcance a distinguir al entrar al sitio y
+              que ejecute la animación una vez que se lee todo el DOM" — this
+              block now sits close enough to the top (hero's scroll-pin dwell
+              trimmed to match, sections.css) that it's part of arriving on
+              the page, not something scroll uncovers later. triggerOn="load"
+              plays the cascade on mount instead of waiting for an
+              IntersectionObserver hit. */}
+          <Reveal className="home-academy__block" triggerOn="load">
             {/* The title reads as the opening words of the paragraph, not a
                 heading over it — an inline ARIA heading keeps it in the
                 document outline without breaking the line before the copy.
@@ -285,6 +360,7 @@ export function HomePage() {
                 role="heading"
                 aria-level={2}
                 staggerMs={introStaggerMs}
+                triggerOn="load"
               />
               {introBodySegments.map((segment, i) => (
                 <SplitReveal
@@ -294,6 +370,7 @@ export function HomePage() {
                   charOffset={segment.charOffset}
                   staggerMs={introStaggerMs}
                   className={segment.bold ? "home-academy__copy--bold" : undefined}
+                  triggerOn="load"
                 />
               ))}
             </p>

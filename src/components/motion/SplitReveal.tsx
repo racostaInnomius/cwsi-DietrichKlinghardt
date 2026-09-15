@@ -30,6 +30,7 @@ export function SplitReveal({
   className = "",
   staggerMs = 22,
   charOffset = 0,
+  triggerOn = "scroll",
   ...rest
 }: {
   text: string;
@@ -39,6 +40,15 @@ export function SplitReveal({
   staggerMs?: number;
   /** Starting index for the stagger delay — see charOffset above. */
   charOffset?: number;
+  /**
+   * "scroll" (default): waits for the element to scroll into view, via
+   * IntersectionObserver. "load": plays as soon as the page has mounted,
+   * for text that sits high enough up that it should already be part of
+   * arriving on the page rather than something scroll uncovers (client,
+   * 2026-09-15, Home's Academy teaser: "que ejecute la animación una vez
+   * que se lee todo el DOM").
+   */
+  triggerOn?: "scroll" | "load";
 } & Record<string, unknown>) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -47,12 +57,17 @@ export function SplitReveal({
     const node = ref.current;
     if (!node) return;
     if (
+      triggerOn === "load" ||
       typeof window === "undefined" ||
       !("IntersectionObserver" in window) ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-      setVisible(true);
-      return;
+      // A frame late rather than synchronous with mount, so the CSS
+      // transition (opacity/transform on .split-reveal__char) actually has
+      // a "before" state to animate away from instead of painting straight
+      // into "is-visible".
+      const frame = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(frame);
     }
 
     const observer = new IntersectionObserver(
@@ -68,7 +83,7 @@ export function SplitReveal({
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [triggerOn]);
 
   const words = text.split(" ");
   let charIndex = charOffset;

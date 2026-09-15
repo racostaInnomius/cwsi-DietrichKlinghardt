@@ -43,13 +43,40 @@
    --grad-card (#85b9c7, #70a7b8) that sit BEHIND #a9cad1 in lightness, so
    the journey visibly darkened again after already lightening (2026-09-06
    feedback: "brincos" instead of one steady progression). This set is
-   already proven monotonic dark→light at page scale; spread evenly across
-   230vh (15% taller than before, same feedback) instead of compressed
-   near the top the way the page-level version is, so the progression
-   reads as gradual for the whole scroll, not front-loaded. */
+   already proven monotonic dark→light at page scale; was spread evenly
+   across a tall reserve (200-230vh across earlier revisions) instead of
+   compressed near the top, so the progression read as gradual across a
+   long scroll rather than front-loaded — see decision history below.
+   Client (2026-09-15, first pass): "se perdió la animación [de Academy]...
+   mueve el texto apenas debajo del hero" — read at the time as the dwell
+   having grown (from shrinking the hero card to the shared .page-hero size,
+   2026-09-14, without shrinking this wrapper to match), so it was trimmed
+   from 230vh to 210vh to restore the older ~1350px dwell.
+   Client (2026-09-15, follow-up — supersedes the above): clarified that
+   wasn't the ask at all — Academy should sit "inmediatamente abajo del
+   hero", "se alcance a distinguir al entrar al sitio" (visible as you
+   land, not after any real scroll) "y que ejecute la animación una vez
+   que se lee todo el DOM" (on load, not on scroll — see Reveal/SplitReveal's
+   triggerOn="load" in HomePage.tsx). A tall reserve here is structurally
+   incompatible with that: whatever height this wrapper carries is dead
+   scroll space before Academy's section starts, no matter how the card
+   inside it is sized. Cut to the card's own height plus a small buffer —
+   enough for position: sticky to still resolve without a division-by-zero
+   feel, not enough to hold anything on screen. The wrapper's own background
+   gradient below is still there for the sliver that remains, but reading it
+   as a "journey" no longer applies — it was this tall specifically so scroll
+   would reveal it gradually, and that space is gone by request.
+   Client (2026-09-15, next follow-up): "subelo un 50% mas" — halved the
+   buffer again (40px → 20px), paired with halving .home-academy__inner's
+   own top padding below for the other half of the gap.
+   Client (2026-09-15, next follow-up): "subelo otro 30% mas" — cut this
+   buffer by another 30% (20px → 14px), paired with the same 30% cut to
+   .home-academy__inner's top padding below. */
 .home-hero-pin {
   position: relative;
-  height: 230vh;
+  /* Matches .plain-section.hero's own min-height basis below (2026-09-15,
+     /sophia standard) plus the same 14px sticky-resolve buffer. */
+  height: calc(min(64vh, 600px) + 14px);
   /* Client (2026-09-09, revised spec): a single organic run from #023866 to
      #588ea0 — a straight 2-colour blend, both ends in the same blue family
      so it's inherently smooth with no muddy midpoint. Scoped to this local
@@ -58,7 +85,21 @@
      tokens.css). .plain-section.hero's own background-image below and
      .home-academy's opening stop (sections.css, "Academy teaser") are both
      derived from these same two colours — keep all three in sync if this
-     changes. */
+     changes.
+     Client (2026-09-15): tried painting this 180% tall and sliding it via
+     background-position (var(--hero-scroll)) to sync with .home-academy
+     below. Reverted — this wrapper is only ~14px taller than the sticky
+     card it holds, so the only part of this background ever actually
+     visible is a ~14px sliver right at the seam with Academy. At 0%/0%
+     (rest) that sliver showed roughly the MIDDLE of the oversized gradient
+     (#316786, a dark blue-navy) instead of its own bottom stop — sitting
+     between the hero card's own amber ending and Academy's teal opening
+     as a visible third colour, confirmed by sampling actual rendered
+     pixels at the boundary (client: "tiene brincos de colores"). A sliver
+     that thin can't show a slide as motion either way (client: "no veo
+     nada de efecto"), so back to a flat, static fill ending on the exact
+     colour Academy opens on — the only requirement that sliver actually
+     has is to not be a visible seam. */
   background: linear-gradient(180deg, #023866 0%, #588ea0 100%);
 }
 /* .plain-section.hero (two classes), not .hero alone — motion.css's
@@ -81,11 +122,20 @@
      scroll math in HomePage.tsx reads the card's live
      getBoundingClientRect().height every frame — nothing hardcodes 80vh,
      so this is a safe swap. --radius-sm → --radius-lg to match too; this
-     was the one page-hero-family card not already on the shared radius. */
-  height: clamp(420px, 37vw, 560px);
-  margin: 0 var(--gutter);
+     was the one page-hero-family card not already on the shared radius.
+     Client (2026-09-15): "/sophia" is now the base for every hero's
+     dimensions/positioning (base.css .page-hero has the full writeup) —
+     min-height: min(64vh, 600px) instead of a fixed clamp(420px, 37vw,
+     560px), the same clamp(12px, 2.2vw, 34px) margin, --radius-sm instead
+     of --radius-lg. min-height rather than height for the same reason as
+     .page-hero: it can't clip, so there's no need to gate this to
+     desktop-only the way the previous fixed height had to be (it never
+     was gated here to begin with, since the pin's own scroll math already
+     reads the card's live height every frame). */
+  min-height: min(64vh, 600px);
+  margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
-  border-radius: var(--radius-lg, 22px);
+  border-radius: var(--radius-sm);
   /* Clips the oversized background to the card's own rounded rect — without
      this the lower half of the 200%-tall image would spill past the card's
      bottom edge into whatever comes after it. */
@@ -116,10 +166,14 @@
    is what gets cropped, never the type. */
 .hero__photo {
   position: absolute;
+  /* Client (2026-09-15): tried making him smaller/contained (78%, then 105%
+     at a higher anchor after a follow-up) — reverted at the client's request
+     ("quitar solo el cambio de foto", keeping the background animation
+     below). Back to the original: cover, full panel, right-aligned crop. */
   inset: 0;
-  z-index: -1;
   width: 100%;
   height: 100%;
+  z-index: -1;
   object-fit: cover;
   object-position: right center;
   pointer-events: none;
@@ -232,10 +286,21 @@
    --academy-scroll, same technique as .plain-section.hero/.newsletter) but
    the client found the continuous movement read as the background
    "deformándose" while scrolling (2026-09-09) and asked for it static
-   instead, same as Events below — so this is now a plain gradient sized to
-   the section's own box, no sliding. .home-academy is a plain-section (full
-   width, no .wrap), so no 100vw pseudo needed here the way Shop/Events'
-   own fix required. */
+   instead, same as Events below.
+   Client (2026-09-15) — revisited that decision on purpose ("animes...
+   sincronizarlos, revisa a profundidad"), tried a gentler slide
+   (background-size 130%, position tied to var(--hero-scroll)) synced with
+   .home-hero-pin above. Reverted a second time: sampling the actual
+   rendered pixels at the hero/Academy seam turned up a real bug in
+   .home-hero-pin's own half of that pairing (a wrong slice of its
+   oversized gradient showing as a third, out-of-place colour — see the
+   note there), and separately, this section's own 130%/28% slide was
+   subtle enough that the client couldn't perceive it as motion at all
+   ("no veo nada de efecto"). Not worth re-tuning a third time on a
+   technique that's now been rejected twice for related reasons — flat and
+   static again, exactly as the 2026-09-09 decision left it. .home-academy
+   is a plain-section (full width, no .wrap), so no 100vw pseudo needed
+   here the way Shop/Events' own fix required. */
 .home-academy {
   /* Client (2026-09-09): #588ea0 held through the first 20%, then fading
      to #cfe1e2. */
@@ -252,6 +317,15 @@
   margin-inline: auto;
   padding-inline: var(--gutter);
   padding-block: clamp(48px, 7vw, 88px);
+}
+/* Client (2026-09-15): "subelo un 50% mas" — halves this block's own top
+   padding (bottom is already scoped separately below, for the gap to
+   Events) so Academy sits closer under the hero, on top of the matching
+   cut to .home-hero-pin's buffer just above.
+   Client (2026-09-15, next follow-up): "subelo otro 30% mas" — another
+   30% cut on top of the previous 0.5 factor (0.5 * 0.7 = 0.35). */
+.home-academy__inner {
+  padding-top: calc(clamp(48px, 7vw, 88px) * 0.35);
 }
 .home-academy__copy {
   font-family: var(--font-serif);
@@ -455,6 +529,21 @@
 
 /* ── Events page: hero + three-column programme grid ─────────── */
 
+/* Client (2026-09-15): "/events no lleva hero... regresalo a como estaba
+   anteriormente" — variant flipped back to "plain" in EventsPage.tsx, and
+   this resets the shared .page-hero box model (margin/radius/min-height/
+   flex, base.css) back to how the page rendered before hero
+   standardization (2026-09-14): plain text on the page's own gradient, no
+   card, no dimensions of its own. The eyebrow/h1/lead colour rules from
+   .page-hero are untouched and still apply — those predate the box-model
+   change and were never part of what's being reverted here. */
+.events-page__hero {
+  margin: 0;
+  border-radius: 0;
+  overflow: visible;
+  min-height: 0;
+  display: block;
+}
 .events-page__hero-inner {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.75fr);
@@ -1717,7 +1806,14 @@
    more lines, and forcing the fixed height clipped it (measured, not
    assumed) — same failure Foundation's own hero had before it got this
    guard, so the pin/fixed-height pair is disabled below 900px exactly like
-   .home-hero-pin already does, rather than just shrinking the number. */
+   .home-hero-pin already does, rather than just shrinking the number.
+   Client (2026-09-15): "/sophia" is now the base for hero dimensions —
+   min-height: min(64vh, 600px) instead of the fixed clamp(420px, 37vw,
+   560px), same as base.css .page-hero and Home's .plain-section.hero.
+   Left the 900px pin/sticky gate itself untouched — that guard exists
+   because the pin's own scroll-jacking doesn't suit the stacked mobile
+   layout, a behaviour question, not a sizing one, so it's out of scope
+   for a dimensions-only change even though min-height can no longer clip. */
 @media (min-width: 900px) {
   .courses-hero-pin {
     position: relative;
@@ -1726,7 +1822,7 @@
   .courses-hero-pin .courses-hero {
     position: sticky;
     top: 0;
-    height: clamp(420px, 37vw, 560px);
+    min-height: min(64vh, 600px);
   }
 }
 .courses-hero-pin .courses-hero {
@@ -1734,8 +1830,15 @@
   align-items: center;
 }
 .courses-hero {
-  margin: 0 var(--gutter);
+  margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
+}
+/* Same fix as base.css .page-hero.gradient-card: .gradient-card
+   (motion.css, loaded after this file) sets its own border-radius: var(
+   --radius-lg, 22px) at equal specificity and wins on source order, so the
+   compound selector's extra specificity is needed to land --radius-sm. */
+.courses-hero.gradient-card {
+  border-radius: var(--radius-sm);
 }
 /* Text left, instructor photos right (client, 2026-09-09) — was a single
    stacked column with the (then text-only, photo-less) teacher strip
@@ -2418,23 +2521,30 @@
    and the same fixed height. Fitting a real 5-product grid into that height
    meant shrinking the head copy and the cards proportionally (see
    .top-pick-card__media below) rather than just clipping the overflow.
-   Desktop-only (900px+, same guard as .page-hero/.courses-hero): the grid
-   stays 5 columns at any width (no mobile column-count override exists),
-   so at phone widths the fixed height clipped the whole product row —
-   measured, not assumed, same failure class as Foundation/Courses. */
+   Client (2026-09-15): "/sophia" is now the base for hero dimensions —
+   min-height: min(64vh, 600px) instead of the fixed clamp(420px, 37vw,
+   560px). Unlike the fixed height this replaces, min-height can't clip, so
+   the previous desktop-only guard (needed only because the 5-column grid
+   doesn't reflow and a fixed height clipped it below 900px — see
+   .top-picks__grid's own note further down, still a known separate issue
+   at narrow widths) is no longer the thing protecting mobile here; this
+   now applies at every width, same as .page-hero. */
 .top-picks {
-  margin: 0 var(--gutter);
+  margin: 0 clamp(12px, 2.2vw, 34px);
   color: var(--ink);
+  min-height: min(64vh, 600px);
+  /* Same reasoning as base.css .page-hero: a min-height alone gives a
+     percentage-height child nothing to resolve against, so .top-picks__inner
+     below uses flex: 1 against this flex container instead of height: 100%. */
+  display: flex;
 }
-@media (min-width: 900px) {
-  .top-picks {
-    height: clamp(420px, 37vw, 560px);
-  }
-  .top-picks__inner {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
+.top-picks.gradient-card {
+  border-radius: var(--radius-sm);
+}
+.top-picks__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .top-picks__inner {
   padding: clamp(18px, 2vw, 28px) clamp(20px, 2.4vw, 36px);
@@ -4293,8 +4403,10 @@
     display: flex;
     flex-direction: column;
     background: var(--grad-card);
-    margin: 0 var(--gutter);
-    border-radius: var(--radius-lg, 22px);
+    /* Client (2026-09-15): /sophia's own margin/radius, matching the
+       desktop rule above now instead of the old Foundation-based values. */
+    margin: 0 clamp(12px, 2.2vw, 34px);
+    border-radius: var(--radius-sm);
     overflow: hidden;
   }
   .hero h1 {
@@ -4343,8 +4455,11 @@
        to a plain, static --grad-card fill. The scroll-pin effect is
        desktop-only; below 560px the card just shows its usual gradient. */
     background: var(--grad-card);
-    margin: 0 var(--gutter);
-    border-radius: var(--radius-lg, 22px);
+    /* Client (2026-09-15): /sophia's own margin/radius, matching the other
+       two .plain-section.hero rules now instead of the old Foundation-based
+       values. */
+    margin: 0 clamp(12px, 2.2vw, 34px);
+    border-radius: var(--radius-sm);
     overflow: hidden;
   }
   /* The desktop rule shrinks this to leave the photo clear beside the text
@@ -4794,6 +4909,24 @@
   justify-content: center;
 }
 
+
+/* Client (2026-09-15): "/sophia/team, /sophia/new-patients and
+   /sophia/accommodations no llevan hero... regresarlo a como estaba
+   anteriormente" — each page's AnimatedGradient is back to variant="plain",
+   and this resets the shared .page-hero box model (margin/radius/
+   min-height/flex, base.css) back to how they rendered before hero
+   standardization (2026-09-14): plain text on the page's own gradient, no
+   card, no dimensions of its own. The .page-hero/.page-hero__inner
+   typography (eyebrow/h1/lead colour, including the Sophia-specific
+   overrides restored in base.css) is untouched — that predates the
+   box-model change and was never part of what's being reverted here. */
+.sophia-plain-hero {
+  margin: 0;
+  border-radius: 0;
+  overflow: visible;
+  min-height: 0;
+  display: block;
+}
 
 /* ── Sophia home hero ─────────────────────────────────────────────
    The brand lockup sits directly on the campus photo — no card, no blur —
@@ -5495,8 +5628,19 @@
   z-index: -1;
   /* Ramps in from very pale (matching the hero's own "pale" stop) rather
      than opening flat on the mid teal (2026-09-08 client: "le faltó un
-     gradiente de menos a mas... del azul super claro al azul claro"). */
-  background: linear-gradient(180deg, #eef3f3 0%, #9dc3d1 20%, #c0dbde 100%);
+     gradiente de menos a mas... del azul super claro al azul claro").
+     Client (2026-09-15): "que el degradado sea mas marcado y mas sutil" —
+     the old 20% stop reached its full mid-tone within the first fifth of
+     the section, then sat nearly flat (9dc3d1→c0dbde is a tiny hop) for
+     the remaining 80%, so it read as a hard little band up top and a flat
+     fill below it. Moving the peak to 55% and deepening it to #70a7b8
+     (already used as a stop in --grad-card, so it stays in the site's own
+     palette) spreads the same rise-and-fall across the whole section — a
+     single smooth arc, more visible as an actual gradient (marcado) and
+     with no abrupt step anywhere in it (sutil). Endpoints untouched: 0%
+     and 100% still hand off to the hero above and Newsletter's own
+     #c0dbde opening stop below. */
+  background: linear-gradient(180deg, #f4f6f5 0%, #70a7b8 55%, #c0dbde 100%);
 }
 .home-shop__filters {
   display: flex;

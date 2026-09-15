@@ -366,56 +366,67 @@ h3,
    heading and lead just below, where the gradient has lightened enough to carry
    them — #1c1916 on the #55889e it lands on is 4.75:1. Navy type would
    disappear into the navy, which is what `--brand` used to do here. */
-/* Client (2026-09-14): the Foundation hero — inset "island" card, rounded
-   corners, compact padding (15% shorter than this rule's own previous
-   values), and now a fixed height — is the base for every page-hero
-   site-wide. --gutter is the same inset the Home hero and the
-   nav/footer/quote edge already share. Sophia gets these same dimensions
-   and corners too, but keeps its own gradient — [data-theme="sophia"]
-   already redefines --grad-card to its teal (tokens.css), so using the
-   same `card` variant there picks up Sophia's colours automatically. */
+/* Client (2026-09-15): "/sophia" (its own .sophia-hero, sections.css) is now
+   the base for every page-hero's dimensions and positioning, superseding
+   the Foundation-derived rules this block carried before (margin: var(--gutter),
+   border-radius: var(--radius-lg), a fixed clamp(420px, 37vw, 560px) height,
+   desktop-only — see git history / HERO_STANDARD.md for that version).
+   Every value below is copied from .sophia-hero's own computed styles
+   (measured live at 1440/1024/768/390px), not re-derived:
+   margin clamp(12px, 2.2vw, 34px), border-radius var(--radius-sm), a
+   min-height of min(64vh, 600px) instead of a fixed height, and a much
+   roomier, symmetric padding-block. The one deliberate change this brings:
+   min-height doesn't clip, so — like Sophia's own hero — this now applies
+   at EVERY width, not just desktop. A page whose content needs more than
+   64vh/600px simply grows past it instead of matching every other hero's
+   height exactly; "todos los heros miden lo mismo" (2026-09-14) now reads
+   as "same minimum", the same trade-off /sophia itself already makes. */
 .page-hero {
   color: var(--ink);
-  margin: 0 var(--gutter);
-  border-radius: var(--radius-lg, 22px);
+  margin: 0 clamp(12px, 2.2vw, 34px);
+  border-radius: var(--radius-sm);
   overflow: hidden;
+  min-height: min(64vh, 600px);
+  /* .sophia-hero is itself the flex container its inner block stretches
+     inside (flex: 1 below) — a min-height alone doesn't give a percentage-
+     height child anything to resolve against, so this copies that same
+     structure rather than trying to fake it with height: 100%. */
+  display: flex;
 }
- /* Kept tight on purpose. The eyebrow has to land where the page gradient is
-    still dark enough to carry white type — the design puts it about 80px into
-    the page, and every extra pixel of padding slides it toward the light band
-    where white stops being readable. */
+/* border-radius above loses in practice: every .page-hero also carries
+   .gradient-card (motion.css, loaded after this file, AnimatedGradient's
+   variant="card"), whose own border-radius: var(--radius-lg, 22px) is the
+   same specificity (0,1,0) and wins on source order alone. Invisible before
+   because the old standard also used --radius-lg here, so both rules agreed
+   by coincidence; now that this one is deliberately smaller, the compound
+   selector's extra specificity (0,2,0) is needed to actually win. */
+.page-hero.gradient-card {
+  border-radius: var(--radius-sm);
+}
+/* Matches .sophia-hero__inner's own clamp(64px, 9vw, 128px), both sides —
+   Sophia's hero centres its block vertically inside a roomy pad rather than
+   the tight, top-loaded padding the old Foundation-based rule used. */
 .page-hero__inner {
-  padding-block: clamp(16px, 1.8vw, 28px) clamp(18px, 2.5vw, 34px);
-}
-/* "Quiero que todos los heros sean del mismo tamaño que /foundation" — 531px
-   is what Foundation's own content (logo + 3-line title + lead) renders at
-   ~1440px wide; every other page-hero's content measured shorter than that
-   with the padding above, so centering it in a fixed box (rather than
-   cropping) is safe. clamp() keeps the SAME proportion at other widths
-   instead of a bare px value going stale the moment --gutter or the padding
-   above changes.
-
-   Desktop-only (900px+): below that, titles wrap to more lines at the same
-   font size — a fixed height clipped Foundation's own logo/lead on a phone
-   (measured, not assumed) at 420px. Mobile keeps the pre-existing "size to
-   content" behaviour instead of forcing a number tuned for desktop copy. */
-@media (min-width: 900px) {
-  .page-hero {
-    height: clamp(420px, 37vw, 560px);
-  }
-  .page-hero__inner {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: clamp(64px, 9vw, 128px);
 }
 .page-hero .eyebrow {
   color: var(--white);
 }
-/* Sophia's gradient lightens far faster than the DK one — it is already a pale
-   teal where the eyebrow lands, so white measures 2.98:1 there. Ink instead,
-   which is what the Sophia frames use on that ground anyway. */
+/* Client (2026-09-15): restored — these three Sophia-scoped overrides were
+   removed earlier today when /sophia/team, /sophia/new-patients and
+   /sophia/accommodations briefly lost their own hero and this looked like
+   dead code (no .page-hero left rendering under [data-theme="sophia"]).
+   Those three pages are back to their own plain hero (variant="plain",
+   .sophia-plain-hero below) using this same .page-hero/.page-hero__inner
+   typography, so this is live again — same values as before, from
+   ed2469f. Sophia's gradient lightens far faster than the DK one — it is
+   already a pale teal where the eyebrow lands, so white measures 2.98:1
+   there. Ink instead, which is what the Sophia frames use on that ground
+   anyway. */
 [data-theme="sophia"] .page-hero .eyebrow,
 [data-theme="sophia"] .page-hero .breadcrumbs ol,
 [data-theme="sophia"] .page-hero .breadcrumbs a,
@@ -427,9 +438,9 @@ h3,
   color: var(--brand-text);
 }
 /* And it needs the opposite spacing to the DK pages. Sophia's gradient goes
-   from teal to pale in 140px, so its hero content has to sit LOWER to clear the
-   transition — at y=28 the ground is #3c8090, where neither ink (3.9:1) nor
-   white (3.4:1) reaches AA. Below ~90px ink clears 6:1. */
+   from teal to pale in 140px, so its hero content has to sit LOWER to clear
+   the transition — at y=28 the ground is #3c8090, where neither ink (3.9:1)
+   nor white (3.4:1) reaches AA. Below ~90px ink clears 6:1. */
 [data-theme="sophia"] .page-hero__inner {
   padding-block-start: clamp(72px, 7vw, 104px);
 }

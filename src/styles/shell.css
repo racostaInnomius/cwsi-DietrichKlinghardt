@@ -34,8 +34,22 @@
 .site-shell > main.main-home {
   background: var(--grad-page-home, var(--grad-page-full));
 }
+/* Client (2026-09-15): "el efecto del background al hacer scroll down...
+   no me refiero al background del hero... analízalo cómo puede quedar
+   mejor" — adds a slow scroll-tied parallax on top of this layer's existing
+   32s ambient drift (gradient-drift, motion.css) instead of replacing it:
+   the keyframe only ever touches background-position, this only ever
+   touches transform, so both run at once without fighting over the same
+   property. --page-bg-drift is written every frame by HomePage.tsx, capped
+   at 160px — comfortably inside this layer's own 20% oversize buffer
+   (background-size: 120% 120%, .site-shell > main::before above), so it
+   can never pull a hard edge into view no matter how long the page gets.
+   Home-only by construction (.main-home), and additive on top of the
+   shared rule above rather than a change to it — every other page's
+   ::before is completely untouched. */
 .site-shell > main.main-home::before {
   background: var(--grad-page-home, var(--grad-page-full));
+  transform: translateY(calc(var(--page-bg-drift, 0px) * -1));
 }
 /* /sophia itself — see --grad-page-sophia-home in tokens.css for why. */
 .site-shell > main.main-sophia-home {
@@ -639,6 +653,30 @@
        max-width actually wrapping long labels ("Dr. Klinghardt Akademie")
        instead of overflowing into the next item. */
     white-space: normal;
+  }
+  /* Client (2026-09-15): "que a ese item le des el espacio suficiente para
+     que quede en 2 líneas solamente, no reduzcas el tamaño del texto" — the
+     shared 15ch cap above was narrow enough to wrap "Sophia Health
+     Institute™" itself onto 2 lines, landing 3 total once "by Dr.
+     Klinghardt™" (already forced to its own line, see .site-nav__link
+     .site-nav__link above) stacked under it. Widened just this item's outer
+     link so the label fits on one line at the same 14px/0.04em this
+     breakpoint already uses — font-size untouched, only the box it's
+     allowed to fill. The nested sublabel link isn't selected here (it has
+     no href of its own), so it keeps the shared 15ch/wrap rule, though "by
+     Dr. Klinghardt™" is short enough to never need it. */
+  a.site-nav__link[href="/sophia"] {
+    max-width: 26ch;
+    white-space: nowrap;
+  }
+  /* The nested sublabel span ("by Dr. Klinghardt™") has no href of its own,
+     so the selector above doesn't reach it — it was still catching the
+     shared 15ch/wrap rule and breaking into 2 lines by itself ("BY DR." /
+     "KLINGHARDT™"), landing back on 3 total. It's well under 15ch's worth of
+     visible width once uppercased, so nowrap alone is enough here. */
+  a.site-nav__link[href="/sophia"] .site-nav__link {
+    max-width: none;
+    white-space: nowrap;
   }
 }
 
