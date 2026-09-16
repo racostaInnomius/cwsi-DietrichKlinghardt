@@ -34,8 +34,14 @@ export function SiteShell({
   // degradado naranja" — its own quote section already ends the page on
   // the amber tail on purpose (a separate, earlier request), so the
   // footer's fade would double up on the same transition right under it.
+  // Client (2026-09-16): "dejalo con la terminación baja - footer de
+  // /foundation" — /courses/art dropped its NewsletterSection too and
+  // wants that same flat-navy ending, no fade.
   const footerFade =
-    resolvedTheme === "dk" && pathname !== "/" && pathname !== "/foundation";
+    resolvedTheme === "dk" &&
+    pathname !== "/" &&
+    pathname !== "/foundation" &&
+    pathname !== "/courses/art";
 
   // The announcement bar is editable from the CMS like any other copy; the
   // fallback keeps the bar meaningful when the CMS is unreachable.

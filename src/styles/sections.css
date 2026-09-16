@@ -1648,6 +1648,15 @@
   max-width: 760px;
 }
 
+/* Client (2026-09-16, Figma): on /courses/art the panel sits on the LEFT,
+   narrow column, copy on the right — the mirror of every other .two-col
+   page (Cart, Donate keep the wide-then-narrow order). The panel is first
+   in the DOM here (same pattern as .event-detail/EventDetailPage), so this
+   only needs to swap the track widths — no `order` needed. */
+.two-col--reverse {
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+}
+
 .form-panel {
   position: sticky;
   top: 96px;
@@ -2071,6 +2080,9 @@
   list-style: none;
 }
 .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   padding: 6px 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
@@ -2081,46 +2093,127 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+.chip svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
 .chips--lg .chip {
   padding: 10px 18px;
   font-size: var(--fs-meta);
+  /* Client (2026-09-16, Figma): these two chip rows (exam requirements,
+     recommended seminars) read as slightly-rounded rectangles, not the
+     full pill .chip uses elsewhere (e.g. the level chips on /courses). */
+  border-radius: var(--radius-sm);
+}
+/* Client (2026-09-16, Figma): the "recommended" seminars read as a cooler,
+   link-like chip (a tint plus a trailing arrow) next to the plain grey
+   "requirement" chips above — same shape, different weight. There's no
+   destination for these yet (recommendedSeminars is plain text, not a
+   relationship), so the arrow is decorative rather than a real link, same
+   spirit as the design. */
+/* Client (2026-09-16, Figma): exact swatches from the file — the same mint
+   family as .footnotes, no matching tokens in tokens.css. */
+.chip--link {
+  background: #e5f4f4;
+  border-color: #d0e3e7;
+}
+.chip--link span {
+  font-size: 1.15em;
+  line-height: 1;
 }
 
 /* ── Courses: training path detail ────────────────────────────── */
+
+/* Sits on the still-blue top of the page gradient, same band the shared
+   .page-hero eyebrow is white on — this page skips that wrapper (like
+   .event-detail-page) but needs the same treatment for the eyebrow to stay
+   legible there. Scoped to .path-body specifically so it doesn't touch the
+   panel's own "Training path" eyebrow, which needs to stay white always
+   (it sits on the panel's solid navy head, not the page gradient). */
+.path-detail-hero .path-body .eyebrow {
+  color: var(--white);
+}
+.path-detail-hero .breadcrumbs {
+  margin-bottom: clamp(20px, 2.6vw, 34px);
+}
+.path-detail-hero .breadcrumbs ol,
+.path-detail-hero .breadcrumbs__sep,
+.path-detail-hero .breadcrumbs a,
+.path-detail-hero .breadcrumbs span[aria-current="page"] {
+  color: var(--ink);
+}
 
 .path-body {
   display: grid;
   gap: clamp(40px, 5vw, 76px);
 }
-.path-body .btn {
-  margin-top: 20px;
-}
 .path-body h2 {
   font-size: var(--fs-display-md);
 }
+.path-about__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 8px 0 4px;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+}
+.path-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 24px;
+}
+.path-body__final-cta {
+  width: 100%;
+  margin-top: 24px;
+  justify-content: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
+/* Client (2026-09-16, Figma): the panel splits into a solid-navy head (the
+   path's own mark, matching the hero card it sits beside) and a plain white
+   body underneath — was a single flat surface before. overflow: hidden on
+   the panel itself is what keeps the head's square corners clipped to the
+   panel's own rounded ones, so it reads as one card, not two stacked. */
 .path-panel {
   position: sticky;
   top: 96px;
-  padding: clamp(24px, 2.6vw, 34px);
+  overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  /* Client (2026-09-16, Figma): square top corners, rounded bottom only —
+     the navy head reads as flush with the card's own top edge. */
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   background: var(--surface-2);
   box-shadow: var(--shadow-card);
+}
+.path-panel__head {
+  padding: clamp(22px, 2.4vw, 30px) clamp(24px, 2.6vw, 34px) 24px;
+  background: var(--brand);
+}
+.path-panel__head .eyebrow {
+  color: var(--brand-ink);
+  opacity: 0.8;
 }
 .path-panel__mark {
   margin-bottom: 2px;
   font-family: var(--font-display);
   font-size: clamp(28px, 2.4vw, 34px);
   line-height: 1;
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 .path-panel__subtitle {
-  margin-bottom: 26px;
-  color: var(--muted);
+  margin-bottom: 0;
+  color: var(--brand-ink);
+  opacity: 0.8;
   font-size: var(--fs-meta);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+.path-panel__body {
+  padding: clamp(24px, 2.6vw, 34px);
 }
 .path-panel h3 {
   margin-bottom: 8px;
@@ -2131,44 +2224,100 @@
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
+/* Client (2026-09-16, Figma): a divider between Target group / Language /
+   Diploma / the CTA — the fragments they're written in don't add a DOM
+   wrapper to hang a gap on, so the line sits on top of whichever element
+   starts the next block instead. */
+.path-panel__body h3:not(:first-child) {
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
 .path-panel ul {
   margin: 0 0 22px;
   padding: 0;
   display: grid;
-  gap: 6px;
+  gap: 8px;
   list-style: none;
   font-size: var(--fs-sm);
 }
-.path-panel > p:not(.eyebrow):not(.path-panel__mark):not(.path-panel__subtitle) {
+.path-panel ul li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+/* Client (2026-09-16, Figma): exact swatch for every checkmark in this
+   card — replaces the earlier stand-in of var(--brand) now that Figma
+   gives an actual color (tokens.css has no green/teal to reach for). */
+.path-panel ul li svg,
+.path-panel__diploma svg {
+  width: 14px;
+  height: 14px;
+  margin-top: 3px;
+  color: #2b9ca1;
+  flex-shrink: 0;
+}
+.path-panel__body > p:not(.eyebrow) {
   margin-bottom: 22px;
   font-size: var(--fs-sm);
 }
+.path-panel__diploma {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.path-panel__foot {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
 .path-panel__cta {
   width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
+/* Client (2026-09-16, Figma): outline numbers linked by a single connecting
+   line down the column, instead of solid-filled circles with a horizontal
+   rule under every step — reads as one continuous path, not a stack of
+   separate rows. The line is one pseudo-element on the list itself (not
+   per-step) so it runs unbroken behind every number, including the gaps. */
 .curriculum {
+  position: relative;
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--line);
+}
+.curriculum::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 15px;
+  width: 1px;
+  background: var(--line);
 }
 .curriculum__step {
+  position: relative;
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-columns: 32px minmax(0, 1fr);
   gap: 18px;
   align-items: start;
-  padding-block: 18px;
-  border-bottom: 1px solid var(--line);
+  padding-block: 14px;
 }
 .curriculum__number {
+  position: relative;
   display: grid;
   place-items: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--brand);
-  color: var(--brand-ink);
+  /* Client (2026-09-16, Figma): exact swatch — border and background both
+     this same mint, so the ring reads as a solid fill, not an outline. */
+  border: 1.5px solid #e5f4f4;
+  background: #e5f4f4;
+  color: var(--brand);
   font-size: var(--fs-meta);
   font-weight: 700;
 }
@@ -2182,6 +2331,9 @@
   font-size: var(--fs-sm);
 }
 .curriculum__final {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-top: 20px;
   padding: 18px 22px;
   border-radius: var(--radius);
@@ -2189,8 +2341,23 @@
   color: var(--brand-ink);
   font-size: var(--fs-lead);
 }
+.curriculum__final svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+/* Client (2026-09-16, Figma): the asterisked notes sit inside their own
+   bordered box, set apart from the numbered list above instead of running
+   on as plain paragraphs. */
 .footnotes {
   margin-top: 20px;
+  padding: 16px 20px;
+  /* Client (2026-09-16, Figma): exact swatch from the file — a mint tint
+     with no matching token in tokens.css, so it's literal here rather than
+     forced onto an unrelated existing token. */
+  border: 1px solid #e1efef;
+  border-radius: var(--radius);
+  background: #e5f4f4;
 }
 .footnotes p {
   max-width: 72ch;
@@ -2198,16 +2365,29 @@
   color: var(--muted-2);
   font-size: var(--fs-xs);
 }
+.footnotes p:last-child {
+  margin-bottom: 0;
+}
 
+/* Client (2026-09-16, Figma): each row now reads as its own rounded card
+   with a trailing chevron (an accordion's own resting state), instead of a
+   flat list separated by rules. Nothing actually expands yet — the design
+   draws the closed state only — so this is the same static list, restyled. */
 .seminar-list {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .seminar {
-  padding-block: 16px;
-  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
   font-family: var(--font-display);
   font-size: var(--fs-lead);
 }
@@ -4337,6 +4517,14 @@
   .two-col,
   .about-bio--portrait {
     grid-template-columns: minmax(0, 1fr);
+  }
+  /* The stacked card pushes this eyebrow well past the still-blue band it
+     sits on at desktop width — by here the page gradient has already
+     faded pale, so the white forced above (.path-detail-hero .path-body
+     .eyebrow) would go invisible. Same selector specificity as that rule
+     (both 3 classes deep) so this media query actually wins on mobile. */
+  .path-detail-hero .path-body .eyebrow {
+    color: var(--eyebrow-text);
   }
   .event-panel,
   .form-panel,

@@ -131,7 +131,7 @@ export function NewPatientsPage() {
         </Reveal>
       </section>
 
-      <section className="section wrap">
+      <section className="section wrap" id="faq">
         <Reveal>
           <p className="eyebrow">Frequently asked</p>
           <h2 className="section-title">You May Be Wondering…</h2>

@@ -27,6 +27,8 @@ export interface TrainingPath {
   /** Expanded name under the mark, e.g. "AUTONOMIC RESPONSE TESTING®". */
   subtitle: string;
   shortDescription: string;
+  /** Photo under the title, on the pages the design actually draws one for. */
+  heroImage?: string;
   /** Level chips on the grid card: "ART I", "ART II", … */
   levels: string[];
   targetGroup: string[];
@@ -58,6 +60,7 @@ export const trainingPaths: TrainingPath[] = [
     subtitle: "AUTONOMIC RESPONSE TESTING®",
     shortDescription:
       "The A.R.T Klinghardt™, AUTONOMIC RESPONSE TESTING® developed by Dr. Dietrich Klinghardt™ is a holistic approach that uses physical reactions as indicators of internal processes, promoting general well-being by addressing personal issues and inner blockages.",
+    heroImage: "/images/DietrichARTK.png",
     levels: ["ART I", "ART II", "ART III", "ART Actual (IV)"],
     targetGroup: [
       "Doctors, dentists",

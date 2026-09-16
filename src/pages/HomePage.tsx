@@ -460,7 +460,7 @@ export function HomePage() {
               </p>
             ))}
             <div className="home-art__actions">
-              <Link className="btn btn-outline" to="/academy/art">
+              <Link className="btn btn-outline" to="/courses/art">
                 About the course
               </Link>
               <Link className="btn btn-primary" to="/academy/therapists">

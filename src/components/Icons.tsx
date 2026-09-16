@@ -185,6 +185,37 @@ export function ArrowIcon() {
   return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>;
 }
 
+/** Small stroke checkmark — the training-path panel's target group / language /
+    diploma bullets and the exam-requirement chips (Figma draws these in a
+    generic UI-kit green; this site has no green anywhere else in its palette,
+    so it renders in the brand navy instead — same mark, the site's own ink). */
+export function CheckIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3.2 8.4 6.4 11.6 12.8 5" />
+    </svg>
+  );
+}
+
+/** Small stroke chevron — the seminar-list accordion rows. */
+export function ChevronIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 3.5 11 8l-5 4.5" />
+    </svg>
+  );
+}
+
+/** Small stroke medal — the curriculum's closing "examination with certificate" bar. */
+export function MedalIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="8" cy="9.5" r="4" />
+      <path d="M6 6 4.5 1.5h2L8 5l1.5-3.5h2L10 6" />
+    </svg>
+  );
+}
+
 /** Paper plane — the dark contact-form band's "Send message" button. */
 export function SendIcon() {
   return (
