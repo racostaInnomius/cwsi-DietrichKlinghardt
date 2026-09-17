@@ -42,6 +42,17 @@ export const SECTION = {
   sophiaTeam: "sophia-team",
   newPatients: "new-patients",
   accommodations: "accommodations",
+
+  /* Client (2026-09-18): "Archives" — migrated from klinghardt-akademie.de
+     (password-protected legacy site), kept in German on purpose. Own slugs
+     rather than reusing e.g. SECTION.fiveLevels: same subject as the
+     existing English /academy pages, different (German) copy and source,
+     not a replacement for them. */
+  archivesHome: "archives-home",
+  archivesArt: "archives-art-klinghardt",
+  archivesApn: "archives-apn",
+  archivesFiveLevels: "archives-five-levels",
+  archivesFiveLevelsList: "archives-five-levels-list",
 } as const;
 
 export interface Section {

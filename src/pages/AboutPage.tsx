@@ -1,6 +1,5 @@
 import { Seo } from "@/components/Seo";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
-import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
@@ -100,15 +99,17 @@ export function AboutPage() {
         path="/about"
       />
 
-      <AnimatedGradient variant="card" intensity="soft" className="page-hero page-hero--center about-hero">
-        <div className="wrap page-hero__inner">
-          <Reveal>
-            <p className="eyebrow">About</p>
-            <h1><Marked text={about.title} /></h1>
-            {about.lead ? <p className="lead about__lead">{about.lead}</p> : null}
-          </Reveal>
-        </div>
-      </AnimatedGradient>
+      {/* Client (2026-09-18): "no debe tener un Hero" — no boxed/inset
+          gradient card here; the design sits this title directly on the
+          page's own ambient gradient (shell.css), the same plain-ground
+          convention EventDetailPage uses. */}
+      <section className="section wrap about-title">
+        <Reveal>
+          <p className="eyebrow">About</p>
+          <h1><Marked text={about.title} /></h1>
+          {about.lead ? <p className="lead about__lead">{about.lead}</p> : null}
+        </Reveal>
+      </section>
 
       {/* Two columns only when there is a portrait — an empty half of the grid
           reads as a missing image rather than as space. */}
@@ -136,7 +137,7 @@ export function AboutPage() {
       </section>
 
       <section className="section wrap">
-        <Reveal>
+        <Reveal className="section-heading section-heading--center">
           <p className="eyebrow">Timeline</p>
           <h2 className="section-title">A Life Dedicated to Healing</h2>
         </Reveal>

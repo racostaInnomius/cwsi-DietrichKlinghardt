@@ -250,6 +250,143 @@
   flex-wrap: wrap;
   gap: 14px;
 }
+/* Archives (migrated from klinghardt-akademie.de, 2026-09-18) — client,
+   after a side-by-side review: "quiero que dejes todo identico... cada
+   mínimo detalle", then, on the hero specifically: "Ajusta el hero parq
+   que quede igual que en hero principal del home y también la imagen del
+   Dr. Dietrich" — dropped the source-site-literal two-column split hero
+   in favour of reusing Home's own .hero/.hero__photo pattern (full-bleed
+   transparent cutout behind the copy) and Home's own hero image asset
+   (hero-klinghardt-transparent.webp, already in the repo — "hay imágenes
+   que ya tenemos… reutilizalas") instead of the plain studio photo
+   downloaded from the source site. */
+/* .plain-section.hero.archives-hero (three classes) — AnimatedGradient's
+   variant="plain" renders "plain-section" alongside the "hero
+   archives-hero" passed in, so the actual element carries all three; the
+   base rule below is itself .plain-section.hero (two classes), so a
+   plain .archives-hero override here would be a LOWER-specificity
+   selector, not even a tie — it would always lose regardless of file
+   order. */
+.plain-section.hero.archives-hero {
+  /* That base rule also sets position: sticky — Home's own scroll-driven
+     "pin and dwell" effect (HomePage.tsx), tied to JS that reads the
+     hero's own height every frame. Nothing drives that on this page, so
+     left running it would just glue the hero to the top of the viewport
+     while the rest of the page scrolls past underneath. */
+  position: relative;
+  top: auto;
+}
+/* Source's h1 sets "Klinghardt" / "Akademie" on two hard lines, not a
+   naturally-wrapping phrase — measured via getComputedStyle, not eyeballed:
+   two block spans reproduce that regardless of viewport width. */
+.archives-hero__title {
+  display: flex;
+  flex-direction: column;
+}
+/* Measured directly off the source (getComputedStyle): "Mehr erfahren"
+   (the feature-row teasers below the hero) is a solid navy pill, already
+   .btn-primary's own colours under the DK theme (--brand is navy there
+   already) — just a touch more rounded (10px vs the shared 6px
+   --radius-sm) than the site default. This one is unaffected by the
+   hero's own switch back to Home's look. */
+.archives-page .btn-primary {
+  border-radius: 10px;
+}
+/* The subpages (ArchivesArtPage, ArchivesApnPage, ArchivesFiveLevelsPage)
+   have no boxed hero — breadcrumbs sit in their own thin section, so the
+   very first feature-row needs to sit closer under them than .section's
+   shared top padding would otherwise leave. */
+.archives-row--tight-top {
+  padding-top: 0;
+}
+/* The pyramid diagram is a graphic (556×458 — client, 2026-09-18: swapped
+   to this already-in-repo asset, 5_levels_.png, in place of the one
+   scraped from the source site), not a photo — .feature-row__media img's
+   shared aspect-ratio (558/457) and object-fit: cover would crop it;
+   contain on its own natural ratio keeps the whole diagram visible
+   instead. No background here (client, 2026-09-18: "es transparente...
+   por que se sigue viendo el fondo blanco") — the PNG's own transparency
+   is meant to show the page's ambient gradient behind it, which
+   --surface-2 (an opaque white, tokens.css) was painting over. */
+.archives-levels-intro .feature-row__media img {
+  aspect-ratio: 556 / 458;
+  object-fit: contain;
+}
+.archives-levels-intro__subtitle {
+  margin: 0 0 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+/* Client (2026-09-18): the source stacks the 5 levels as full-width
+   blocks that alternate left/right down the page (confirmed on a
+   full-page screenshot) rather than a side-by-side pyramid+legend grid —
+   .levels (the English /academy/five-levels shape) doesn't match this
+   source, so this is its own, simpler pattern. */
+.archives-levels {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 7vw, 96px);
+}
+.archives-level {
+  max-width: 620px;
+}
+.archives-level--right {
+  margin-left: auto;
+  text-align: left;
+}
+.archives-level p {
+  margin: 0 0 1.1em;
+  color: var(--muted);
+}
+.archives-level p:last-child {
+  margin-bottom: 0;
+}
+/* Client (2026-09-18): "/archives" home's three teaser images — square,
+   top edge level with the eyebrow/title, bottom edge level with the
+   button, "podemos tener un margen del 15%... para mejor presentación".
+   First attempt sized the square FROM the text column's stretched height
+   (an auto grid column + height: 100% on the image) — CSS Grid's
+   percentage-height-vs-intrinsic-column-size combination turned out to be
+   circular in practice (all three rows measured the exact same, content-
+   independent height once wired up, not each row's own text height), so
+   this instead keeps .feature-row's own fixed 1fr/1fr columns and sizes
+   the square from its OWN column's width — top edge locked to the text
+   column's top via align-items: start (both are grid-row siblings
+   starting at the same line), bottom edge landing within the client's own
+   15% allowance rather than forced exact. */
+/* :has(.feature-row__media) added purely for specificity parity — the
+   base rule setting this row's default 1fr/1fr (sections.css, further
+   down) is itself a two-class selector via that same :has(), so a plain
+   two-class .feature-row.archives-square-row here would tie it and lose
+   on source order (this block loads first). Three class-level selectors
+   beats that regardless of which file position wins ties. */
+.feature-row.archives-square-row:has(.feature-row__media) {
+  align-items: start;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+}
+/* .feature-row__media's own order: 2 (the --right modifier, sections.css
+   above) moves the image to the second grid track visually without
+   changing which track is textually "wider" here — swapped back so the
+   15%-wider track always lands under the image, not whichever side it
+   happens to render on. */
+.feature-row.archives-square-row.feature-row--right:has(.feature-row__media) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+}
+.archives-square-row .feature-row__media img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+/* Client (2026-09-18): "que se vea la cara completa ya que sale cortada de
+   la frente" — this portrait is 683×1024 (much taller than the 1:1 square
+   above forces it into), and object-fit: cover's default centred crop
+   split that overflow evenly top/bottom, taking a slice off the forehead
+   along with it. The face sits in the upper half of the original photo,
+   so anchoring the crop there instead keeps the whole face and loses
+   shoulder/chest room at the bottom instead. */
+.archives-square-row__media--portrait {
+  object-position: center 15%;
+}
 
 /* ── Section headings ─────────────────────────────────────────── */
 
@@ -1711,8 +1848,13 @@
   border-radius: var(--radius);
 }
 
+/* Client (2026-09-18): "se ve cargada a la izquierda, necesito que se vea
+   centrada" — same cause and fix as .chapters above: .timeline__item's
+   own 1fr text column always stretched to .wrap's full width, so capped
+   and centred here instead of touching the shared grid column itself. */
 .timeline {
-  margin: 0;
+  max-width: var(--maxw-prose);
+  margin-inline: auto;
   padding: 0;
   list-style: none;
   border-left: 1px solid var(--line);
@@ -4696,7 +4838,11 @@
   flex-wrap: wrap;
   gap: clamp(24px, 4vw, 48px);
   align-items: flex-start;
-  text-align: left;
+  /* Client (2026-09-18): "Toda la alineación del texto debe ser
+     'justificado'" — only visibly affects text that actually wraps to
+     multiple lines here (the lead paragraph); single-line text (name,
+     role, breadcrumb, chips) is unaffected by justify either way. */
+  text-align: justify;
 }
 .team-member-header__photo {
   flex: 0 0 auto;
@@ -4740,7 +4886,14 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+/* Client (2026-09-18): "el margen derecho debe estar alineado con el
+   texto inferior" (the ABOUT paragraphs below) — same shared-class max-
+   width trap as .team-member-about p (base.css's .lead caps at 68ch,
+   base.css's own maxw-prose token), which left this well short of the
+   info column's actual right edge (measured 1181px vs. 1350px at
+   1440px). Removed here so both blocks' right edges line up. */
 .team-member-header__info .lead {
+  max-width: none;
   margin-bottom: 20px;
 }
 /* Client (2026-09-18): "el texto de Naturopathic Doctor debe de quedar de
@@ -4780,6 +4933,19 @@
    at any width in between. */
 .team-member-about {
   margin-top: clamp(-160px, calc(-24px - 6.875vw), -40px);
+  text-align: justify;
+}
+/* Client (2026-09-18): "el margen izquierdo... 25% mas a la derecha" +
+   "el margen derecho... 25% mas a la izquierda" — /sophia/team/* only
+   (SiteShell.tsx stamps #main-content with .main-sophia-team-member for
+   exactly these routes, since .wrap's own side padding, --gutter, is
+   shared by every page on the site). 25% more inset on both sides means
+   25% more of --gutter itself: clamp(24px, 5vw, 96px) -> clamp(30px,
+   6.25vw, 120px). Client's follow-up ("otro 20% mas") stacks another 20%
+   on top of that already-widened value, not the original --gutter: 30 *
+   1.2 = 36px, 6.25 * 1.2 = 7.5vw, 120 * 1.2 = 144px. */
+#main-content.main-sophia-team-member .wrap {
+  padding-inline: clamp(36px, 7.5vw, 144px);
 }
 .team-member-about .eyebrow {
   margin-bottom: 16px;
@@ -5057,39 +5223,48 @@
   flex-direction: column;
   align-items: center;
 }
-/* Client (2026-09-11, against the Figma): the hero's own heading is the
-   same "Klinghardt" / "AKADEMIE" wordmark the brand-card panels draw
-   further down the page — same two-part shape, dark ink here instead of
-   white since the hero sits on the card's own pale middle band rather
-   than the brand-card's navy fill. */
-.academy-hero__wordmark {
+/* Client (2026-09-18): "utiliza el logo 'akademie_logo.svg' en lugar del
+   texto" — replaces the hand-set "Klinghardt" / "AKADEMIE" two-line
+   wordmark (the two rules this used to need, .academy-hero__name and
+   .academy-hero__sub, are retired) with the real exported logo file.
+   .academy-hero .page-hero__inner's own align-items: center already
+   centres it horizontally; margin-inline: auto is the belt-and-braces
+   version in case the h1 ever stretches to a wider box than the image
+   itself. */
+/* .academy-hero h1 (not the lower-specificity .academy-hero__wordmark
+   alone) — base.css's .page-hero h1 is a class+type selector too, so a
+   plain single-class rule here would lose that tie on specificity
+   regardless of source order, leaving the logo's <h1> capped at the
+   shared 20ch and, with no font-size of its own left to size that ch
+   unit sensibly, stretching wide enough to throw off the centering
+   below. */
+.academy-hero h1 {
   max-width: none;
-  font-family: var(--font-display);
 }
-.academy-hero__name {
+.academy-hero__logo {
   display: block;
-  font-size: clamp(36px, 4.6vw, 58px);
-  line-height: 1;
-  color: var(--ink);
+  width: min(100%, 320px);
+  height: auto;
+  margin-inline: auto;
 }
-.academy-hero__sub {
-  display: block;
-  margin-top: 6px;
-  font-family: var(--font-sans);
-  font-size: clamp(14px, 1.3vw, 17px);
-  font-weight: 500;
-  /* Client (2026-09-11): "fijate en la proporcion - formato del texto" —
-     AKADEMIE reads noticeably wider under Klinghardt in the Figma than the
-     shared .brand-card__sub's 0.42em (measured against __name's own
-     rendered text width: ~0.50 here, ~0.67 in the reference). */
-  letter-spacing: 0.78em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
+/* Client (2026-09-18): "utiliza esta tipografía y el tamaño de texto
+   (calculalo) en la imagen anexa que es la que utilizamos en general del
+   sitio" — the reference image is this exact paragraph's copy (this hero
+   already carries Home's own academy-teaser text word for word, see the
+   AcademyPage.tsx comment above), rendered where it normally lives:
+   .home-academy__copy. Matched verbatim rather than eyeballing a size off
+   the screenshot — same font-family, font-size, weight, line-height,
+   justification and colour. */
 .academy-hero .lead {
   max-width: 56ch;
   margin-top: clamp(20px, 2.6vw, 32px);
   margin-inline: auto;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--fs-display-sm);
+  line-height: 1.4;
+  color: var(--ink);
+  text-align: justify;
 }
 /* Client: "los botones tienen que ser navy blue, no beige, cambiarlos por
    fa #023866" — .btn-light's cream fill is the site-wide default (Home,
@@ -5423,12 +5598,19 @@ ul.sophia-therapies-grid h3 {
    wrap to more lines on a narrow phone, which is exactly why this stays
    off below 901px. Three of the four already measured exactly 600px
    under the old min-height (content already fit); .academy-art-hero
-   measured 631px and needed its own trim, below. */
+   measured 631px and needed its own trim, below.
+   /about dropped out of this group (2026-09-18): "no debe tener un Hero"
+   — it no longer renders a .gradient-card at all, so these two rules'
+   .about-hero.gradient-card selectors would never match; removed rather
+   than left as dead weight. .academy-hero joins the group the same day
+   ("utiliza las dimenciones definidas en sophia_hero_dimension"), the
+   card-warm variant included — the rule only cares about .gradient-card
+   + height, not which gradient token paints it. */
 @media (min-width: 901px) {
   .music-hero.gradient-card,
-  .about-hero.gradient-card,
   .foundation-hero.gradient-card,
-  .academy-art-hero.gradient-card {
+  .academy-art-hero.gradient-card,
+  .academy-hero.gradient-card {
     height: var(--sophia-hero-dimension-height);
     overflow: hidden;
   }
@@ -5446,9 +5628,9 @@ ul.sophia-therapies-grid h3 {
      height at all — exactly what "no modifiques el tamaño del hero
      principal" asked. */
   .music-hero.gradient-card .page-hero__inner,
-  .about-hero.gradient-card .page-hero__inner,
   .foundation-hero.gradient-card .page-hero__inner,
-  .academy-art-hero.gradient-card .page-hero__inner {
+  .academy-art-hero.gradient-card .page-hero__inner,
+  .academy-hero.gradient-card .page-hero__inner {
     min-height: 0;
   }
 }
@@ -6272,6 +6454,12 @@ ul.sophia-therapies-grid h3 {
 /* .card h3 defaults to --brand-text (teal) — the hotel name reads as
    ordinary ink instead, per the Figma reference, now that the icon carries
    the brand colour. */
+/* Client (2026-09-18): "quitar el outline de las tarjetas" — the hotel
+   cards only, not [data-theme="sophia"] .card's shared border used
+   elsewhere on /sophia/*. */
+.card-grid.hotels .card {
+  border: none;
+}
 .hotel h3 {
   margin-bottom: 0;
   color: var(--ink);
@@ -6723,9 +6911,23 @@ ul.sophia-therapies-grid h3 {
    The frame states the biography as four short chapters with a label beside
    each, rather than as running prose, and gives every timeline entry an era, a
    context line and a title before the body. */
+/* Client (2026-09-18): "se ve cargada a la izquierda, necesito que se vea
+   centrada" — the label+body grid's own 1fr second column always
+   stretched to .wrap's full width regardless of the 52ch cap on the text
+   itself (.chapter p, below), so the block sat flush left with a large
+   unused gap on the right. Capped and centred here, matching the
+   reference image; reset inside .about-bio--portrait (the two-column
+   portrait+chapters layout, a different permutation this reference
+   doesn't show), where the grid's own 1.1fr column already sizes it. */
 .chapters {
   display: grid;
   gap: clamp(22px, 2.6vw, 34px);
+  max-width: var(--maxw-prose);
+  margin-inline: auto;
+}
+.about-bio--portrait .chapters {
+  max-width: none;
+  margin-inline: 0;
 }
 .chapter {
   display: grid;
@@ -6777,6 +6979,24 @@ ul.sophia-therapies-grid h3 {
 }
 .about__lead {
   margin-top: 18px;
+}
+/* Client (2026-09-18): "no debe tener un Hero" — plain title block, no
+   card/box, sitting directly on <main>'s own ambient page gradient
+   (shell.css). Centred per the reference image; the eyebrow needs the
+   same white-on-dark override every boxed page-hero already carries
+   (base.css), since it lands on the gradient's still-dark opening few
+   dozen px — h1 and .lead need none, their shared defaults (--ink,
+   --muted) already read fine by the time the gradient has lightened
+   under them. */
+.about-title {
+  text-align: center;
+}
+.about-title .eyebrow {
+  color: var(--white);
+}
+.about-title h1,
+.about-title .lead {
+  margin-inline: auto;
 }
 
 @media (max-width: 720px) {

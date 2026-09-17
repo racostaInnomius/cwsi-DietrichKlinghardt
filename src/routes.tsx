@@ -23,6 +23,10 @@ import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
 import { TeamMemberPage } from "@/pages/sophia/TeamMemberPage";
 import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
 import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
+import { ArchivesPage } from "@/pages/archives/ArchivesPage";
+import { ArchivesArtPage } from "@/pages/archives/ArchivesArtPage";
+import { ArchivesApnPage } from "@/pages/archives/ArchivesApnPage";
+import { ArchivesFiveLevelsPage } from "@/pages/archives/ArchivesFiveLevelsPage";
 import { CoursesPage } from "@/pages/courses/CoursesPage";
 import { TrainingPathPage } from "@/pages/courses/TrainingPathPage";
 import { CourseDatesPage } from "@/pages/courses/CourseDatesPage";
@@ -208,6 +212,18 @@ export const routes: RouteRecord[] = [
           },
           { path: "sophia/new-patients", element: <NewPatientsPage /> },
           { path: "sophia/accommodations", element: <AccommodationsPage /> },
+
+          // ── Archives (migrated from klinghardt-akademie.de, 2026-09-18) ──
+          { path: "archives", element: <ArchivesPage /> },
+          { path: "archives/art-klinghardt", element: <ArchivesArtPage /> },
+          {
+            path: "archives/apn-applied-psycho-neurobiology",
+            element: <ArchivesApnPage />,
+          },
+          {
+            path: "archives/five-levels-of-healing",
+            element: <ArchivesFiveLevelsPage />,
+          },
         ],
       },
 

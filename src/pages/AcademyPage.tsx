@@ -259,8 +259,13 @@ export function AcademyPage() {
         <div className="wrap page-hero__inner">
           <Reveal>
             <h1 className="academy-hero__wordmark">
-              <span className="academy-hero__name">Klinghardt</span>
-              <span className="academy-hero__sub">Akademie</span>
+              <img
+                className="academy-hero__logo"
+                src="/images/akademie_logo.svg"
+                alt="Dr. Klinghardt Akademie"
+                width={252}
+                height={77}
+              />
             </h1>
             {page.lead ? (
               <p className="lead">

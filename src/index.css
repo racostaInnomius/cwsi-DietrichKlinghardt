@@ -5,8 +5,15 @@
    it `.accent`'s font-style: italic had no real face to use, and base.css's
    site-wide `font-synthesis: none` (a deliberate call, so nothing else fakes a
    bold/italic) meant the browser didn't fake one either, so text set in it
-   rendered upright (2026-09-05: "no se ve en italica inclinada"). */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Libre+Baskerville:wght@400;700&family=Cormorant+Garamond:wght@400;500&display=swap');
+   rendered upright (2026-09-05: "no se ve en italica inclinada").
+   Same story again (2026-09-18), this time for weight: only 300/400 were
+   requested, so a <strong> asking for 700 (.academy-hero .lead, styled
+   after .home-academy__copy) had no real bold face either, and the same
+   font-synthesis: none meant the browser didn't fake one — 700 matched
+   back down to the loaded 400 and read identical to the regular text
+   ("no se ve diferencia entre normal y strong"). Added 700 rather than
+   touching font-synthesis, same fix shape as the italic case above. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=Libre+Baskerville:wght@400;700&family=Cormorant+Garamond:wght@400;500&display=swap');
 
 /* MapLibre GL's own stylesheet — required for the map canvas, controls and
    popups to position at all. Imported before ours so the directory rules

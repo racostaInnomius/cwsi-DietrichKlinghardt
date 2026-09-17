@@ -71,6 +71,19 @@ export const PRIMARY_NAV: NavItem[] = [
   },
   { label: "Store", href: "/store" },
   { label: "Music", href: "/music" },
+  // Client (2026-09-18): migrated from klinghardt-akademie.de (password-
+  // protected legacy site) — its own "Ausbildung & Seminare" dropdown
+  // becomes this item's children, minus Kontakt (not migrated; the site's
+  // own /contact covers it). Content stays German on purpose.
+  {
+    label: "Archives",
+    href: "/archives",
+    children: [
+      { label: "A.R.T. Klinghardt", href: "/archives/art-klinghardt", mark: "™" },
+      { label: "Applied Psycho-Neurobiology (APN)", href: "/archives/apn-applied-psycho-neurobiology" },
+      { label: "5 Levels of Healing", href: "/archives/five-levels-of-healing", mark: "™" },
+    ],
+  },
 ];
 
 /** Footer columns, from the four-column footer that repeats on every frame. */
@@ -89,6 +102,7 @@ export const FOOTER_NAV: { title: string; items: NavItem[] }[] = [
       { label: "Upcoming Events", href: "/events" },
       { label: "Training Programs", href: "/courses" },
       { label: "Certifications", href: "/courses" },
+      { label: "Archives", href: "/archives" },
     ],
   },
   {

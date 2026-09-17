@@ -17,6 +17,23 @@ const FLAT_ENDING_PATHS = new Set([
   "/academy/five-levels",
   "/weekly-talks",
 ]);
+/* Client (2026-09-18): "Necesito terminación plana para '/archives/*'" —
+ * a whole section (the landing page plus every migrated subpage), not one
+ * more exact route to add to the set above, so this checks the prefix
+ * instead — the same shape as navigation.ts's own SOPHIA_PREFIXES check.
+ * None of the Archives pages render <NewsletterSection>, so they already
+ * meet that precondition.
+ */
+const FLAT_ENDING_PREFIXES = ["/archives"];
+
+function hasFlatEnding(pathname: string): boolean {
+  return (
+    FLAT_ENDING_PATHS.has(pathname) ||
+    FLAT_ENDING_PREFIXES.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    )
+  );
+}
 
 /**
  * The frame every page of the new site renders inside: announcement bar,
@@ -51,7 +68,7 @@ export function SiteShell({
   // any page that drops its NewsletterSection and wants /foundation's same
   // flat-navy ending (no fade) gets added to this list.
   const footerFade =
-    resolvedTheme === "dk" && pathname !== "/" && !FLAT_ENDING_PATHS.has(pathname);
+    resolvedTheme === "dk" && pathname !== "/" && !hasFlatEnding(pathname);
 
   // The announcement bar is editable from the CMS like any other copy; the
   // fallback keeps the bar meaningful when the CMS is unreachable.
@@ -131,7 +148,9 @@ export function SiteShell({
               ? "main-sophia-home"
               : pathname === "/about"
                 ? "main-about"
-                : undefined
+                : pathname.startsWith("/sophia/team/")
+                  ? "main-sophia-team-member"
+                  : undefined
         }
       >
         {children}

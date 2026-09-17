@@ -82,9 +82,14 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
       ? `Hybrid${platform ? ` — ${platform}` : ""}`
       : "In person";
   const language = text(event, "language", "English");
+  // Client (2026-09-18): "ponerle precio... si no hay precio ponerlo en
+  // 0.00" — money()'s own maximumFractionDigits drops to 0 for whole
+  // numbers (so a real $0 price would print "$0"), which doesn't match
+  // the literal "0.00" asked for here, so the fallback is spelled out
+  // instead of routed through money(0, ...).
   const price = typeof event.price === "number"
     ? money(event.price, text(event, "currency", "usd"))
-    : "";
+    : "$0.00";
   const soldOut = event.status === "sold_out" || event.soldOut === true;
   const href = slug ? `/events/${slug}` : "/events";
 
@@ -110,7 +115,7 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
 
       <div className="event-card__footer">
         <Link to={href}>More info</Link>
-        {price ? <strong>{price}</strong> : null}
+        <strong>{price}</strong>
       </div>
       {/* Client (2026-09-11, against the Figma): "el boton de VIEW EVENT
           cambia el texto por BOOK NOW" — every card in the reference reads
