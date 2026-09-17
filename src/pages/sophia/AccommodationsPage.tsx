@@ -139,7 +139,7 @@ export function AccommodationsPage() {
               target="_blank"
               rel="noreferrer"
             >
-              Learn more at visitwoodinville.org
+              Learn more at visitwoodinville.org <span aria-hidden="true">→</span>
             </a>
           </div>
         </Reveal>

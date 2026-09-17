@@ -92,14 +92,24 @@
   pointer-events: none;
 }
 /* Client (2026-09-09): "no me gusta [el efecto que cambia de color]... en
-   estas paginas fuera de /sophia y home" — the drift now stops on every
-   OTHER page, more specific than the base rule above so it wins without
-   touching it. Excludes by [data-theme="sophia"] (.site-shell, SiteShell.tsx)
-   rather than .main-sophia-home alone — that class only matches /sophia
-   itself, and every /sophia/* subpage (team, new-patients, ...) needed to
-   keep drifting too, not just the section's own home. Home keeps drifting
-   via the .main-home exclusion, same as before. */
-.site-shell:not([data-theme="sophia"]) > main:not(.main-home)::before {
+   estas paginas fuera de /sophia y home" — the drift stopped on every
+   OTHER page, more specific than the base rule above so it won without
+   touching it.
+   Client (2026-09-18, follow-up, reversing the above for Sophia): "yo no
+   quiero ninguna animación en el nav en /sophia" — found by disabling the
+   `animation` property directly in DevTools on /sophia/accommodations and
+   seeing the page gradient's opening colour (tokens.css, --grad-page-full
+   / --grad-page-sophia-home) finally read as fully settled/integrated
+   against the header instead of visibly drifting past it: the drift is an
+   oversized (120%×120%), animated copy of the SAME gradient sliding behind
+   the static one beneath it — at rest they align (same colour top-to-
+   bottom), but mid-drift the moving copy's own y=0 no longer lines up with
+   the static layer's y=0, so the seam this whole exchange has been chasing
+   was never really the *stop colour* — it was this animation exposing a
+   momentary misalignment on every cycle. Sophia dropped from the :not()
+   here entirely (was excluded specifically to keep drifting); DK home
+   still drifts via the .main-home exclusion, untouched. */
+.site-shell > main:not(.main-home)::before {
   animation: none;
 }
 

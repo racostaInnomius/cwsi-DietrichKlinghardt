@@ -130,7 +130,7 @@ const CONDITIONS = [
  */
 export function SophiaPage() {
   const page = useSection(SECTION.sophiaHome, {
-    title: "Founded by Dr. Dietrich Klinghardt™ Built for True Healing.",
+    title: "Founded by Dr. Dietrich Klinghardt™ Built for True Healing",
     paragraphs: [
       "Sophia Health Institute by Dr. Klinghardt™ is a world-renowned healing centre dedicated to restoring health on every level — physical, emotional, mental and spiritual. We provide a truly individualised, root-cause approach to complex chronic illness.",
     ],
@@ -168,10 +168,12 @@ export function SophiaPage() {
             />
             <div className="sophia-hero__actions">
               <Link className="btn btn-light" to="/sophia/new-patients">
-                Become a new patient
+                <span className="btn-label">Become a new patient</span>
+                <span aria-hidden="true">→</span>
               </Link>
               <Link className="btn btn-ghost" to="/sophia/accommodations">
-                Travel & accommodation
+                <span className="btn-label">Travel & accommodation</span>
+                <span aria-hidden="true">→</span>
               </Link>
             </div>
           </Reveal>
@@ -180,7 +182,7 @@ export function SophiaPage() {
 
       {/* Who we are — the campus photo, the claim and the copy. */}
       <section className="section wrap feature-row feature-row--right">
-        <Reveal className="feature-row__media">
+        <Reveal className="feature-row__media feature-row__media--match-copy">
           <img
             src="/images/sophia-clinic.webp"
             alt="Sophia Health Institute campus"
@@ -193,7 +195,7 @@ export function SophiaPage() {
 
         <Reveal className="feature-row__body" delay={90}>
           <p className="eyebrow">Sophia Health Institute by Dr. Klinghardt™</p>
-          <h2><Marked text={page.title} /></h2>
+          <h2 className="sophia-welcome-title"><Marked text={page.title} /></h2>
           {page.lead ? <p className="feature-row__copy">{page.lead}</p> : null}
           <Link className="btn btn-primary" to="/sophia/new-patients">
             New patients <span aria-hidden="true">→</span>
@@ -219,7 +221,7 @@ export function SophiaPage() {
 
         <Reveal className="feature-row__body" delay={90}>
           <p className="eyebrow">Who we are</p>
-          <h2>A Different Kind of Medicine, Built Around You.</h2>
+          <h2>A Different Kind of Medicine, Built Around You</h2>
           <p className="feature-row__copy">
             At Sophia Health Institute®, we believe real healing goes deeper than
             managing symptoms. Our mission is simple: to provide comprehensive,
@@ -237,11 +239,11 @@ export function SophiaPage() {
       </section>
 
       <section className="section wrap">
-        <Reveal className="section-heading section-heading--center">
+        <Reveal className="section-heading section-heading--center sophia-pillars-heading">
           <p className="eyebrow">What makes Sophia unique</p>
-          <h2>Six Pillars of A Different Approach.</h2>
+          <h2>Six Pillars of A Different Approach</h2>
         </Reveal>
-        <ul className="card-grid card-grid--3">
+        <ul className="card-grid card-grid--3 sophia-pillars-grid">
           {PILLARS.map((pillar, index) => (
             <Reveal as="li" key={pillar.title} className="card" delay={index * 60} shift={12}>
               <div className="card__icon">{pillar.icon}</div>
@@ -252,7 +254,7 @@ export function SophiaPage() {
         </ul>
         <Reveal className="section-actions" delay={120}>
           <Link className="btn btn-primary" to="/sophia/new-patients">
-            New patients
+            New patients <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
       </section>
@@ -278,7 +280,7 @@ export function SophiaPage() {
 
         <Reveal className="feature-row__body" delay={90}>
           <p className="eyebrow">Our approach</p>
-          <h2>Cutting-edge Science Meets Heartfelt Care.</h2>
+          <h2>Cutting-edge Science Meets Heartfelt Care</h2>
           <p className="feature-row__copy">
             At Sophia Health Institute by Dr. Klinghardt™, we don't just look at
             your symptoms. We look at your entire health history and current
@@ -295,11 +297,11 @@ export function SophiaPage() {
       </section>
 
       <section className="section wrap" id="naturopathic-care">
-        <Reveal className="section-heading section-heading--center">
+        <Reveal className="section-heading section-heading--center sophia-therapies-heading">
           <p className="eyebrow">Naturopathic care</p>
-          <h2>Healing the Whole Person, Mind, Body, and Spirit.</h2>
+          <h2>Healing the Whole Person, Mind, Body, and Spirit</h2>
         </Reveal>
-        <ul className="card-grid card-grid--4">
+        <ul className="card-grid card-grid--4 sophia-therapies-grid">
           {THERAPIES.map((therapy, index) => (
             <Reveal as="li" key={therapy.title} className="card" delay={index * 60} shift={12}>
               <div className="card__icon">{therapy.icon}</div>
@@ -310,17 +312,17 @@ export function SophiaPage() {
         </ul>
         <Reveal className="section-actions" delay={120}>
           <Link className="btn btn-primary" to="/sophia/new-patients">
-            Become a new patient
+            Become a new patient <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
       </section>
 
       <section className="section wrap" id="chronic-illness">
-        <Reveal className="section-heading section-heading--center">
+        <Reveal className="section-heading section-heading--center sophia-conditions-heading">
           <p className="eyebrow">What we treat</p>
-          <h2>Complex Conditions. Real Answers.</h2>
+          <h2>Complex Conditions. Real Answers</h2>
         </Reveal>
-        <Reveal className="pill-list" delay={90}>
+        <Reveal className="pill-list sophia-conditions-pills" delay={90}>
           {CONDITIONS.map((condition) => (
             <span key={condition} className="pill">
               {condition}
@@ -335,13 +337,13 @@ export function SophiaPage() {
           <>
             Stop Wondering.
             <br />
-            Start Finding Answers.
+            Start Finding Answers
           </>
         }
         body="The Sophia Health Institute by Dr. Klinghardt™ team is ready to help you. Before you become a patient, it is natural to have questions — our patient coordinator would be happy to answer them."
       >
         <Link className="btn btn-light" to="/sophia/new-patients">
-          Become a new patient
+          Become a new patient <span aria-hidden="true">→</span>
         </Link>
       </CtaBand>
     </>

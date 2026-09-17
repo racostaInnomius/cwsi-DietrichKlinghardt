@@ -3,6 +3,7 @@ import type { RouteRecord } from "vite-react-ssg";
 import { ContentProvider, loadSiteContent } from "@/lib/content";
 import { CartProvider } from "@/lib/cart";
 import { fetchCollection, fetchEvents } from "@/lib/cms";
+import { slugifyName, teamBios } from "@/data/teamBios";
 import { trainingPaths } from "@/data/trainingPaths";
 import { SiteShell } from "@/components/shell/SiteShell";
 import { HomePage } from "@/pages/HomePage";
@@ -19,6 +20,7 @@ import { WeeklyTalksPage } from "@/pages/WeeklyTalksPage";
 import { LiveTalkPage } from "@/pages/LiveTalkPage";
 import { SophiaPage } from "@/pages/sophia/SophiaPage";
 import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
+import { TeamMemberPage } from "@/pages/sophia/TeamMemberPage";
 import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
 import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
 import { CoursesPage } from "@/pages/courses/CoursesPage";
@@ -189,6 +191,21 @@ export const routes: RouteRecord[] = [
           // ── Sophia Health Institute (teal theme, route-driven) ────
           { path: "sophia", element: <SophiaPage /> },
           { path: "sophia/team", element: <SophiaTeamPage /> },
+          {
+            path: "sophia/team/:slug",
+            element: <TeamMemberPage />,
+            // One pre-rendered page per team member that has a local bio
+            // (see teamBios) — a CMS row added without a matching bio still
+            // renders client-side (TeamMemberPage's own not-found state)
+            // instead of failing the build.
+            getStaticPaths: async () => {
+              const board = await fetchCollection("board-members");
+              return board
+                .map((row) => (typeof row.name === "string" ? slugifyName(row.name) : ""))
+                .filter((slug) => slug && teamBios[slug])
+                .map((slug) => `sophia/team/${slug}`);
+            },
+          },
           { path: "sophia/new-patients", element: <NewPatientsPage /> },
           { path: "sophia/accommodations", element: <AccommodationsPage /> },
         ],

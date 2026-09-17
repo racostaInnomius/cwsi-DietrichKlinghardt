@@ -344,17 +344,23 @@
      Sophia frames (Homepage, team, new patients, accommodations). Note it never
      goes dark — Sophia pages carry dark type from top to bottom. */
   /* Same ~100px shift as the DK theme, for the same reason.
-     0% is --brand itself (#0d858d), not the darker #146a7d this used to
-     open on — that mismatch, not the pace, was what made the flat header
-     read as a hard seam against this gradient (2026-08-31): the header
-     paints flat at the brand colour for its whole height, so the gradient
-     underneath has to *start* at that same colour or the join is a colour
-     change, not just a lightening. The 140/460/620px anchors are
-     untouched — that is where the ink-coloured eyebrow/breadcrumb on
-     Sophia's page-hero is tuned to already be light (see base.css). */
+     0% used to be --brand itself (#0d858d) rather than the darker #146a7d
+     this once opened on — that mismatch, not the pace, was what made the
+     flat header read as a hard seam against this gradient (2026-08-31):
+     the header paints flat at the brand colour for its whole height, so
+     the gradient underneath has to *start* at that same colour or the
+     join is a colour change, not just a lightening.
+     Client (2026-09-18): "que el degradado se fusione de manera amigable
+     y orgánica con el color del menu" on /sophia/team, /sophia/new-
+     patients and /sophia/accommodations — same #1f858d refinement just
+     applied to --grad-page-sophia-home, for the same reason and the same
+     near-invisible seam against --brand (G/B channels match exactly; only
+     R shifts). The 140/460/620px anchors are untouched — that is where
+     the ink-coloured eyebrow/breadcrumb on Sophia's page-hero is tuned to
+     already be light (see base.css). */
   --grad-page-full: linear-gradient(
     180deg,
-    #0d858d 0,
+    #1f858d 0,
     #3d9298 50px,
     #b7d0d2 140px,
     #e6f4f4 460px,
@@ -374,14 +380,33 @@
      (2026-09-07: "que vaya terminando su difuminación hasta el texto 'Who
      we are'"). The calc(100% - ...) footer stops are untouched — same
      reasoning as --grad-page-full's own comment above. */
+  /* Client (2026-09-18): tried #146a7d first ("aplica el #146A7D en
+     /sophia") — visibly seamed against the header's flat #0d858d fill, as
+     warned. #1f858d is the client's own follow-up refinement: same R
+     channel shift as #146a7d's intent, but G/B land exactly on --brand's
+     own (133/141), so the seam all but disappears while the opening still
+     reads slightly warmer than a flat brand-colour match. */
+  /* Client (2026-09-18): first tried "sube hasta la altura del boton" using
+     the final CTA band's own button as the landmark (658px from the page's
+     bottom edge) — not visible, because .cta-band--dark paints its own
+     opaque gradient over that whole range, hiding all but a thin strip
+     right above the footer. Client's follow-up re-pointed the landmark to
+     "#naturopathic-care > ... section-actions > a" — the "Become a new
+     patient" button in the Healing the Whole Person / Naturopathic care
+     section, 1768px above the page's bottom edge (measured live) — well
+     before the CTA band, so the whole fade is now on ordinary page
+     background and directly visible. The plateau's end moves from 658px to
+     1768px: from the button's height down to the footer, the page now runs
+     the complete light-to-dark journey (#eef7f8 -> #b7d0d2 -> #228c97)
+     instead of packing it into the final ~650px. */
   --grad-page-sophia-home: linear-gradient(
     180deg,
-    #0d858d 0,
+    #1f858d 0,
     #3d9298 120px,
     #b7d0d2 340px,
     #e6f4f4 1100px,
     #eef7f8 1490px,
-    #eef7f8 calc(100% - 620px),
+    #eef7f8 calc(100% - 1768px),
     #b7d0d2 calc(100% - 200px),
     #228c97 100%
   );

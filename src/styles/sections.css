@@ -4601,11 +4601,44 @@
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: clamp(20px, 2.4vw, 36px);
 }
-.team-card__photo {
-  aspect-ratio: 3 / 4;
-  margin-bottom: 16px;
+/* Client (2026-09-18): "sube las cards un 60% al texto inmediato
+   superior" — the gap above the grid is the hero's own bottom padding
+   (.page-hero__inner, shared by every internal-page hero) plus this
+   section's own top padding (.section's shared --section-y); neither can
+   be touched without moving every other page that shares them, so this
+   section (scoped to just this page) pulls itself up instead. Both of
+   those are themselves vw-based clamps with their own min/max plateaus,
+   so a single flat px value that hit 60% at one viewport overshot into a
+   negative (overlapping) gap at narrower ones — measured 205px at 1440px
+   but only ~120px/115px at 768px/375px (already near those two rules' own
+   floors by then). Fit as its own clamp from those three measurements:
+   flat -69px through ~811px (60% of the ~115-120px floor), then scaling
+   with viewport up to -123px at 1440px (60% of the measured 205px). */
+.sophia-team-grid-section {
+  margin-top: clamp(-123px, -8.5vw, -69px);
+}
+/* Client (2026-09-18): "CAMBIAR EL estilo de las tarjetas, debe de ser
+   como el diseño de figma... es una tarjeta blanca, sin outline" — the
+   card itself was previously unstyled (photo + text floating directly on
+   the page background, no container); now a proper white card with the
+   photo bleeding flush to its top edge (overflow: hidden on the card
+   clips the image to the card's own radius, so .team-card__photo no
+   longer needs its own) and the text/button padded below it. */
+.team-card {
+  display: flex;
+  flex-direction: column;
+  /* .team-grid's grid rows default to align-items: stretch, so every card
+     in a row already matches its tallest sibling's height — this just
+     lets that extra height go somewhere instead of sitting unused below
+     a shorter card's content. */
+  height: 100%;
   overflow: hidden;
   border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: 0 1px 2px rgba(28, 25, 22, 0.06), 0 12px 28px rgba(28, 25, 22, 0.08);
+}
+.team-card__photo {
+  aspect-ratio: 3 / 4;
   background: var(--brand-soft);
 }
 .team-card__photo img {
@@ -4613,9 +4646,24 @@
   height: 100%;
   object-fit: cover;
 }
+/* Client (2026-09-18): "todos los botones de las cards deben estar
+   ubicadas en la parte del fondo de la card para que se vean uniformes"
+   — role/title copy varies in length from one person to the next, so
+   without this the button landed at a different height on every card.
+   flex:1 here (inside .team-card's own column above) plus margin-top:
+   auto on the button (below) pins it to the bottom of every card
+   regardless of how much text sits above it. */
+.team-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 18px 20px;
+}
 .team-card h2 {
   margin-bottom: 4px;
-  font-size: var(--fs-display-sm);
+  /* Client (2026-09-18): "bajar el 3 puntos al nombre" — 3px off every
+     bound of --fs-display-sm's own clamp(26px, 2.4vw, 36px). */
+  font-size: clamp(23px, calc(2.4vw - 3px), 33px);
 }
 .team-card__role {
   margin-bottom: 2px;
@@ -4626,9 +4674,124 @@
   text-transform: uppercase;
 }
 .team-card__title {
-  margin: 0;
+  margin: 0 0 14px;
   color: var(--muted);
   font-size: var(--fs-sm);
+}
+.team-card__cta {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 18px;
+  font-size: 13px;
+  margin-top: auto;
+}
+
+/* ── Sophia: team member "Learn more" page ───────────────────────
+   Client (2026-09-18): "Crear las paginas de learn more para todos los
+   doctores" — photo + name/role/chips/intro side by side in the hero,
+   full bio below on plain ground, same closing CTA band as every other
+   Sophia page. */
+.team-member-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: flex-start;
+  text-align: left;
+}
+.team-member-header__photo {
+  flex: 0 0 auto;
+  width: clamp(160px, 20vw, 240px);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--brand-soft);
+}
+.team-member-header__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.team-member-header__info {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.team-member-header__role {
+  margin: 4px 0 12px;
+  font-size: var(--fs-sm);
+}
+.team-member-header__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+/* Client (2026-09-18): "background color pill #E6EDF6, el texto de color
+   #194F76 y sin outline" — overrides the shared .pill's --line border and
+   --surface-2 fill for these credential chips only. */
+.team-member-header__chips .pill {
+  padding: 6px 14px;
+  border: none;
+  background: #e6edf6;
+  color: #194f76;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.team-member-header__info .lead {
+  margin-bottom: 20px;
+}
+/* Client (2026-09-18): "el texto de Naturopathic Doctor debe de quedar de
+   color navy y subirlo un 60% mas al texto inmediato superior" — same
+   unreset-h1-margin-bottom issue as /sophia/team's own hero (base.css
+   resets margin-top on headings but never margin-bottom): h1's leftover
+   52px default was winning the margin-collapse over .team-member-header
+   __role's own 4px, so zeroed here and replaced with a literal 40% of
+   that measured 52px gap (~21px). */
+.team-member-header__info h1 {
+  margin-bottom: 0;
+}
+.team-member-header__role {
+  margin-top: 21px;
+  color: #023866;
+}
+/* Client (2026-09-18), per the reference image: navy, not the Sophia
+   theme's teal .btn-primary default — same literal #023866 the Academy
+   page's own .btn-light override already uses for the same reason,
+   scoped to just this button. */
+.team-member-header__cta {
+  --btn-fill: var(--brand-2);
+  background-color: #023866;
+  color: var(--brand-ink);
+}
+/* Client (2026-09-18): "subelo un 70% con respecto al boton inmediato
+   superior" — .section's shared top padding (--section-y) plus the hero's
+   own bottom padding make up the gap above; scoped here rather than
+   touching either shared rule (see .sophia-team-grid-section above for
+   the same reasoning). That combined gap isn't a single clean clamp —
+   .team-member-header itself also wraps to a stacked layout somewhere
+   in this range, so the raw gap dips before it climbs (measured 122px at
+   375px, 98px at 640px, 188px at 1440px, 223px at 1920px) — so this was
+   fit conservatively from those points rather than solved for an exact
+   70% everywhere: it always cuts at least ~45% and reaches the full 70%
+   at the 1440px reference width, and never goes negative (overlapping)
+   at any width in between. */
+.team-member-about {
+  margin-top: clamp(-160px, calc(-24px - 6.875vw), -40px);
+}
+.team-member-about .eyebrow {
+  margin-bottom: 16px;
+}
+/* Client (2026-09-18): "debe comenzar... con la fotografia superior y
+   terminar... en el mismo lugar que el texto superior" — .prose p's
+   shared max-width (68ch, base.css) was capping this well short of the
+   header row's own right edge (measured 744px vs. the header's 1368px
+   right edge at 1440px); removed here so the paragraph spans the full
+   width of the photo + info row above it, left-edge-to-right-edge. */
+.team-member-about p {
+  max-width: none;
 }
 
 .place-list {
@@ -4982,6 +5145,121 @@
   aspect-ratio: 558 / 457;
   object-fit: cover;
   border-radius: var(--radius-md, 14px);
+}
+/* Client (2026-09-18, /sophia "Who we are" row): "hazla mas corta,
+   recortala... desde la altura del texto ... y termine hasta la altura
+   del boton" — the shared 558:457 ratio above ran taller than the copy
+   column beside it. Stretch (instead of the row's own default
+   align-items: center) makes the row's height follow the copy column's
+   real content height — the only side with intrinsic height once this
+   image's own aspect-ratio is dropped — and height: 100% + object-fit:
+   cover crops the photo down to exactly that span, eyebrow-top to
+   button-bottom, instead of centering the taller original around it.
+   Two classes on the wrapper (not source order) for the specificity to
+   beat the shared rule above, matching the ...--square variant's own
+   convention just below. */
+.feature-row:has(.feature-row__media--match-copy) {
+  align-items: stretch;
+}
+.feature-row__media.feature-row__media--match-copy img {
+  height: 100%;
+  aspect-ratio: auto;
+}
+/* Below 900px the row collapses to one column and the two sides stack
+   into separate rows instead of sharing one (same breakpoint as the grid
+   collapse itself, sections.css's shared list) — "match the copy's
+   height" has no meaning once they're not side by side, and height: 100%
+   with no row height to resolve against blew this up to ~862px (measured,
+   not assumed). Reverts to the shared photo ratio there. */
+@media (max-width: 900px) {
+  .feature-row__media.feature-row__media--match-copy img {
+    height: auto;
+    aspect-ratio: 558 / 457;
+  }
+}
+/* Client (2026-09-18): "el '™' mas grande... proporcional al texto" — .tm
+   (base.css) is shared by every trademark mark site-wide at 0.32em, sized
+   for the much larger display headings it usually rides inside; this h2's
+   own font-size is smaller, so the mark read tiny in comparison. Scoped to
+   just this heading rather than the shared class. */
+.sophia-welcome-title .tm {
+  font-size: 0.5em;
+  vertical-align: 0.65em;
+}
+/* Client (2026-09-18): "disminuye la distancia un 50%" between "Six Pillars
+   of A Different Approach." and its eyebrow. The space between them is
+   .section-heading's flex gap (20px) plus .eyebrow's own margin-bottom
+   (10px) = 30px; halved to 15px (10px gap + 5px margin) here only — both
+   .section-heading and .eyebrow are shared by every other page's section
+   headings. */
+.sophia-pillars-heading {
+  gap: 10px;
+  /* Client (2026-09-18): "sube un 50% las cards... al texto inmediatamente
+     superior" — halves .section-heading's own margin-bottom (the gap to
+     the card-grid below), which is shared by every other page's section
+     headings, so overridden here only. */
+  margin-bottom: clamp(14px, 1.75vw, 28px);
+}
+.sophia-pillars-heading .eyebrow {
+  margin-bottom: 5px;
+}
+/* Client (2026-09-18): same "sube un 50%... al titulo inmediatamente
+   superior" treatment, now for "Healing the Whole Person" -> its card
+   grid. Only the gap to the grid was requested here, not the eyebrow gap
+   above the heading (unlike sophia-pillars-heading). */
+.sophia-therapies-heading {
+  margin-bottom: clamp(14px, 1.75vw, 28px);
+}
+/* Client (2026-09-18): "cambia sus titulos a negro" — the "Six Pillars" and
+   "Healing the Whole Person" card titles only. .card h3 defaults to
+   --brand-text (teal) sitewide (also used by New Patients' steps and
+   Accommodations' hotel name), so scoped to just these two grids. */
+ul.sophia-pillars-grid h3,
+ul.sophia-therapies-grid h3 {
+  color: var(--ink);
+  /* Client (2026-09-18): "subir el pt del titulo... unos 5pts" — .card h3
+     normally inherits --fs-lead (clamp(17px, 1.2vw, 18px), shared sitewide);
+     +5px added to every bound of that same clamp, scoped to just these two
+     grids. */
+  font-size: clamp(22px, calc(1.2vw + 5px), 23px);
+}
+/* Client (2026-09-18): "quitar sus outlines" — /sophia's Six Pillars and
+   Healing/Naturopathic cards only, not the rest of /sophia/* (New Patients'
+   steps, Accommodations' hotel card, etc. keep the shared [data-theme=
+   "sophia"] .card border). Extra class on the selector beats that rule's
+   equal (0,2,0) specificity without !important. */
+.card-grid.sophia-pillars-grid .card,
+.card-grid.sophia-therapies-grid .card {
+  border: none;
+}
+/* Client (2026-09-18): "Subir el titulo 'Complex Conditions...' un 50% con
+   el eyebrow inmediato superior" — same technique as .sophia-pillars-heading
+   above: halves the eyebrow-to-title gap (.section-heading's 20px flex gap
+   + .eyebrow's own 10px margin-bottom = 30px total -> 15px). Also "sube en
+   un 60% al titulo inmediato superior" for the pill-list below this
+   heading: cuts .section-heading's own margin-bottom (its gap to whatever
+   comes next, clamp(28px, 3.5vw, 56px)) to 40% of that. */
+.sophia-conditions-heading {
+  gap: 10px;
+  margin-bottom: clamp(11.2px, 1.4vw, 22.4px);
+}
+.sophia-conditions-heading .eyebrow {
+  margin-bottom: 5px;
+}
+/* Client (2026-09-18): bullets + colours for the condition pills only —
+   .pill is shared with the store's filter pills (home-shop__filters),
+   which the same comment above this class documents as deliberately
+   bulletless, so scoped here instead of touching .pill itself. The bullet
+   is a ::before pseudo-element, which .pill's own display:inline-flex +
+   gap:8px already lays out as an ordinary flex item ahead of the label
+   text — no extra markup needed. */
+.sophia-conditions-pills .pill {
+  background: #e5f4f4;
+  border-color: #b7dadb;
+}
+.sophia-conditions-pills .pill::before {
+  content: "•";
+  color: #00858c;
 }
 /* Client (2026-09-14): "quiero que quede en estas dimenciones... 405x405" —
    the Akademie/Foundation logo panels only, square instead of the shared
@@ -5388,6 +5666,19 @@
   min-height: 0;
   display: block;
 }
+/* Client (2026-09-18): "/sophia/team" — title + copy must be centred
+   (page-hero--center, added alongside this class in the JSX, already does
+   that sitewide) and the lead paragraph sits "muy despegado" from the
+   title. The real cause wasn't .page-hero .lead's own margin-top (10px,
+   already tight) — base.css resets every heading's margin-top to 0 but
+   never its margin-bottom, so h1 was still carrying the browser's default
+   (measured 52px here) and margin-collapse let that win over the lead's
+   smaller 10px. Zeroed here, scoped to this page's hero only — a sitewide
+   h1 margin-bottom reset risks unpicking spacing every other page's hero
+   was tuned around. */
+.sophia-team-hero h1 {
+  margin-bottom: 0;
+}
 
 /* ── Sophia home hero ─────────────────────────────────────────────
    The brand lockup sits directly on the campus photo — no card, no blur —
@@ -5473,6 +5764,72 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
+}
+/* Client (2026-09-18): "los botones... al hacer hover se mueven rapida y
+   descontroladamente" — root cause: base.css's shared arrow-reveal (.btn >
+   span[aria-hidden]) grew the hovered button's width by ~19px, and this
+   row used to sit only ~18px under its container's cap (560px, from
+   .sophia-hero__content) — that growth alone pushed the row past it,
+   wrapping to a second line mid-hover, moving the cursor off the button,
+   ending the hover, unwrapping, and re-triggering the same thing in a
+   loop. Client's follow-up requests ("mismo tamaño... una sola línea",
+   "que no se vuelvan en 2 lineas") replaced the fix below 641px is left
+   alone (real mobile: two same-size, non-wrapping buttons with this much
+   text do not fit a phone screen, and flex-wrap here is what stacks them
+   safely — nothing this ticket asked for). From 641px up (where two
+   274px-ish buttons + 12px gap comfortably fit the >577px available even
+   at that breakpoint's own gutter), the buttons are pinned to equal width
+   and one row, and the arrow's space is reserved permanently instead of
+   collapsing to 0 at rest — so hover can never change either button's
+   width, can't force a wrap, and can't force the label onto a second
+   line. */
+@media (min-width: 641px) {
+  .sophia-hero__actions {
+    flex-wrap: nowrap;
+  }
+  /* Client (2026-09-18): "se ven cargados a la izquierda" — reserving the
+     arrow's space permanently (so hover can't change either button's
+     width, see above) kept it inline with the text as flex content, so
+     .btn's own justify-content: center was centering [text + gap +
+     reserved-but-invisible arrow] as one block — pushing the text left of
+     the button's true centre at all times, not just on hover. A first fix
+     (absolute-positioned arrow pinned to the button's own edge) centred
+     the text correctly but then overlapped it on the shorter label
+     ("Become a new patient", measured 6px of overlap on hover) once both
+     buttons were forced to the same width above — the arrow's inset was
+     fixed to the button edge, blind to how much room the centred text
+     actually left on that side. Fixed instead with a 3-column grid
+     (spacer / label / arrow): the two 1fr spacer columns are always
+     equal, so the label (an explicit .btn-label span, needed because a
+     grid can't target a bare text node) is always truly centred between
+     them regardless of the arrow column's own width, and the arrow gets
+     its own dedicated column so it can never overlap the label. */
+  .sophia-hero__actions .btn {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: 10px;
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+  }
+  .sophia-hero__actions .btn .btn-label {
+    grid-column: 2;
+  }
+  .sophia-hero__actions .btn > span[aria-hidden="true"] {
+    grid-column: 3;
+    /* Grid's own version of the automatic-minimum-size trap already found
+       twice elsewhere this session (flex children refusing to shrink
+       below content size): without this, the arrow's appearing content
+       forced column 3's 1fr track past its equal share of column 1's
+       (empty) 1fr on hover, so the two spacers stopped matching and the
+       centred label visibly slid ~7px left to make room. */
+    min-width: 0;
+    justify-self: start;
+    max-width: none;
+    margin-left: 0;
+    overflow: visible;
+  }
 }
 /* The default .btn-ghost reads brand-teal text — invisible on this dark
    photo. Only here it flips to white, same pattern as .site-header__cta
