@@ -159,11 +159,13 @@ export function SophiaPage() {
         />
         <div className="wrap sophia-hero__inner">
           <Reveal className="sophia-hero__content">
-            <p className="sophia-hero__title">
-              <span className="sophia-hero__title-main">Sophia</span>
-              <span className="sophia-hero__title-sub">Health Institute</span>
-            </p>
-            <p className="sophia-hero__subtitle">by Dr. Klinghardt™</p>
+            <img
+              className="sophia-hero__logo"
+              src="/images/sophoa%20lockup_white.svg"
+              alt="Sophia Health Institute by Dr. Klinghardt™"
+              width={414}
+              height={157}
+            />
             <div className="sophia-hero__actions">
               <Link className="btn btn-light" to="/sophia/new-patients">
                 Become a new patient

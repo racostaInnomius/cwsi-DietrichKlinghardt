@@ -39,7 +39,7 @@ export function CoursesPage() {
           screen for a real stretch of scroll instead of scrolling past in
           an instant. */}
       <div className="courses-hero-pin">
-        <AnimatedGradient variant="card" intensity="normal" className="courses-hero">
+        <AnimatedGradient variant="card-warm" intensity="normal" className="courses-hero">
           <div className="wrap courses-hero__inner">
             <Reveal>
               <p className="eyebrow">Online courses</p>

@@ -70,7 +70,7 @@ export function MusicPage() {
         path="/music"
       />
 
-      <AnimatedGradient variant="card" intensity="normal" className="page-hero">
+      <AnimatedGradient variant="card" intensity="normal" className="page-hero music-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <p className="eyebrow">Sound and healing</p>

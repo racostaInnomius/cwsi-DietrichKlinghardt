@@ -26,6 +26,13 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), copyHtaccess()],
     resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+    // maplibre-gl bundles its vector-tile decoder as a Web Worker; Vite's
+    // dev-time dependency pre-bundling rewrites that worker's internal
+    // module URL and breaks it (net::ERR_FAILED loading
+    // maplibre-gl-worker.mjs, tiles never decode past the background
+    // layer). Excluding it from optimizeDeps serves it unbundled instead,
+    // which the worker resolves correctly.
+    optimizeDeps: { exclude: ["maplibre-gl"] },
     server: {
       port: 4325,
       // Payload intentionally allows only known public origins. Proxying CMS

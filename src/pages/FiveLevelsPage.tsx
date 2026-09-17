@@ -1,29 +1,22 @@
 import { Seo } from "@/components/Seo";
 import { useSection, SECTION } from "@/lib/sections";
 import { videoEmbed } from "@/lib/cms";
-import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { VideoPlayer } from "@/components/sections/VideoPlayer";
 import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
-import { Pyramid } from "@/components/Pyramid";
 import { FIVE_LEVELS_VIDEO } from "@/data/media";
 import { FIVE_LEVELS as LEVELS } from "@/data/fiveLevels";
 
 /**
  * The 5 Levels of Healing.
  *
- * The pyramid is the page. It is built as a real ordered list — the top level
- * drawn as the apex and the four below it as bands that widen toward the base —
- * so the order survives with styles off, and each band is tied to its paragraph
- * by the level's own accent colour rather than by position alone.
- *
- * The two rotated words along the sides ("objective reality" climbing the left,
- * "subjective reality" the right) are decorative in the design's sense but not
- * in meaning: they name the axis the pyramid runs along, so they are real text,
- * marked aria-hidden only because the list already carries the order.
+ * The pyramid itself renders as a static image (`/images/5_levels.png`,
+ * client request 2026-09-16) rather than the `<Pyramid />` component this
+ * page used before — that component is still what the /academy hub's card
+ * slot uses (`<Pyramid compact />`), untouched. The legend beside the image
+ * (heading + body per level) stays a real list, driven by `FIVE_LEVELS`.
  */
 export function FiveLevelsPage() {
   const page = useSection(SECTION.fiveLevels, {
@@ -45,20 +38,18 @@ export function FiveLevelsPage() {
         path="/academy/five-levels"
       />
 
-      <AnimatedGradient variant="card" intensity="soft" className="page-hero page-hero--center">
-        <div className="wrap page-hero__inner">
-          <Breadcrumbs
-            items={[{ label: "Akademie", href: "/academy" }, { label: "The 5 Levels of Healing" }]}
-          />
-          <Reveal>
-            <p className="eyebrow">A framework for wholeness</p>
-            <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
-          </Reveal>
-        </div>
-      </AnimatedGradient>
+      <section className="section wrap five-levels-hero">
+        <Breadcrumbs
+          items={[{ label: "Akademie", href: "/academy" }, { label: "The 5 Levels of Healing" }]}
+        />
+        <Reveal>
+          <p className="eyebrow">A framework for wholeness</p>
+          <h1><Marked text={page.title} /></h1>
+          {page.lead ? <p className="lead">{page.lead}</p> : null}
+        </Reveal>
+      </section>
 
-      <section className="section wrap">
+      <section className="section wrap five-levels-video">
         <Reveal>
           {embedded ? (
             <VideoPlayer video={embedded} />
@@ -69,7 +60,13 @@ export function FiveLevelsPage() {
       </section>
 
       <section className="section wrap levels">
-        <Pyramid />
+        <img
+          className="levels__pyramid-image"
+          src="/images/5_levels.png"
+          alt="The 5 Levels of Healing, from base to apex: 1st Physical Body, 2nd Energy Body, 3rd Mental, 4th Intuitive, 5th Spiritual"
+          width={556}
+          height={458}
+        />
 
         <div className="levels__legend">
           {LEVELS.map((level, index) => (
@@ -101,8 +98,6 @@ export function FiveLevelsPage() {
           <cite>— Dr. Dietrich Klinghardt™</cite>
         </Reveal>
       </section>
-
-      <NewsletterSection />
     </>
   );
 }

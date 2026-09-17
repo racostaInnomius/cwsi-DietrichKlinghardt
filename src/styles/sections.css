@@ -240,7 +240,8 @@
    band anyway. */
 .hero__lead {
   max-width: 52ch;
-  margin-bottom: 34px;
+  /* Client: "sube un 50% mas el boton Join now hacia el texto" — halved. */
+  margin-bottom: 17px;
   font-size: var(--fs-lead);
   color: var(--ink);
 }
@@ -1831,7 +1832,12 @@
   .courses-hero-pin .courses-hero {
     position: sticky;
     top: 0;
-    min-height: min(64vh, 600px);
+    /* sophia_hero_dimension (2026-09-17, tokens.css/CLAUDE.md): a fixed
+       height, not the min-height this carried before — that let the photo
+       cluster + copy push the box to 732px against /sophia's 600px.
+       .gradient-card already clips overflow, so the photo cluster below is
+       sized to actually fit instead of relying on the clip to hide it. */
+    height: var(--sophia-hero-dimension-height);
   }
 }
 .courses-hero-pin .courses-hero {
@@ -1858,6 +1864,34 @@
   align-items: center;
   gap: clamp(24px, 4vw, 56px);
   padding-block: clamp(48px, 6vw, 96px);
+  /* Lets this actually shrink to the fixed-height flex parent's 600px
+     above 900px instead of forcing its own larger content height (the
+     classic flex-item "min-height: auto" trap) — same fix as
+     .hero--split .hero__inner. */
+  min-height: 0;
+}
+/* Found while testing the sophia_hero_dimension change on mobile
+   (2026-09-17) — a pre-existing bug, not something this pass introduced:
+   unlike .hero--split .hero__inner (which at least had a same-named,
+   losing entry in the shared max-width: 900px collapse list elsewhere in
+   this file), this rule had no mobile override at all, so the two-column
+   grid never collapsed below 900px — heading, paragraph and the photo
+   cluster all overlapped in the same ~390px-wide row (screenshotted, not
+   assumed). .courses-hero-pin's own sticky/fixed-height behavior was
+   already desktop-only; this brings the grid itself in line with that. */
+@media (max-width: 899px) {
+  .courses-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* sophia_hero_dimension (2026-09-17): tighter than the base padding so the
+   text column + the shrunk photo cluster (.courses-hero-photos, below)
+   actually total ≤600px instead of relying on the flex parent to hide the
+   excess. */
+@media (min-width: 900px) {
+  .courses-hero__inner {
+    padding-block: clamp(24px, 3vw, 40px);
+  }
 }
 /* Same call as the home hero's eyebrow (D13): this gold measures ~1.9:1 on
    the panel's blue stretch, but it's the design's own choice for gold-on-
@@ -1892,6 +1926,16 @@
   gap: clamp(12px, 1.6vw, 20px);
   height: clamp(360px, 42vw, 560px);
 }
+/* Client (2026-09-18): "el cortado de imagenes es parte del diseño" —
+   reverted the max-width/height overrides tried here for
+   sophia_hero_dimension (2026-09-17): this cluster spilling past the
+   fixed-height hero and getting clipped by .gradient-card's own
+   overflow:hidden is the intended interactive effect (see
+   CoursesHeroPhotos.tsx's own comment: "the drift is only ever visible
+   inside the hero's own frame, never past it"), not a bug to size around.
+   .courses-hero itself keeps its sophia_hero_dimension fixed height —
+   only this page-specific request to shrink the photos to avoid the crop
+   is undone. */
 /* Client (2026-09-11): "la imagen que esta mas abajo no se alcanza a
    mostrar completamente... que suban mas las de la derecha y bajen mas
    las de la izquierda" — each column now interpolates between its own
@@ -3252,6 +3296,20 @@
   height: auto;
   margin: 0 auto 12px;
 }
+/* Client (2026-09-18): tested directly and confirmed this look — the
+   centered block (logo/title/lead) still read as sitting too high inside
+   the fixed-height hero (sophia_hero_dimension), with visible slack left
+   at the bottom. justify-content: center on .page-hero__inner (base.css)
+   splits any leftover/short space evenly above and below the group;
+   nudging the logo down shifts the whole centered group down with it,
+   spending that bottom slack instead of leaving it empty. Desktop-only,
+   matching the fixed-height rule itself (min-width: 901px, above) — this
+   hero has no such asymmetry in its natural mobile flow. */
+@media (min-width: 901px) {
+  .foundation-hero__logo {
+    margin-top: 90px;
+  }
+}
 /* Client (2026-09-14): "establece este hero como base para todos los heros
    del sitio" — the inset margin, rounded corners and compact padding that
    were tuned here moved to the shared .page-hero/.page-hero__inner rules
@@ -3292,6 +3350,22 @@
 @media (min-width: 900px) {
   .foundation-title__accent {
     white-space: nowrap;
+  }
+}
+/* Client (2026-09-18): "reduce la distancia en un 50%... y procura que
+   quede en 2 lineas" — the base .page-hero .lead margin-top (10px) plus
+   ordinary line-height slack measured 43.4px between this paragraph and
+   the accent line above it; -12px roughly halves that. The 2-line request
+   needed both a wider column (803px → 900px) and a smaller size (17.28px
+   → 15px) together — neither alone got there without either running too
+   wide for the centered hero or too small to read comfortably (tested
+   directly, not guessed). Desktop-only: at phone widths this sentence has
+   nowhere near 900px to work with, so it wraps normally there instead. */
+@media (min-width: 900px) {
+  .foundation-hero .lead {
+    max-width: 900px;
+    margin-top: -12px;
+    font-size: 15px;
   }
 }
 
@@ -3634,6 +3708,41 @@
 
 /* ── Practitioner directory ───────────────────────────────────── */
 
+/* Client (2026-09-16, Figma): this hero used to be the shared .page-hero
+   card (white type on a boxed navy gradient); the design instead runs it
+   in plain flow on the page's own ambient gradient — same still-blue band
+   at the top, so the eyebrow needs the same white/ink treatment .page-hero
+   gave it for free, applied by hand here instead. */
+.directory-hero .eyebrow {
+  color: var(--white);
+}
+.directory-hero .breadcrumbs ol,
+.directory-hero .breadcrumbs__sep,
+.directory-hero .breadcrumbs a,
+.directory-hero .breadcrumbs span[aria-current="page"] {
+  color: var(--ink);
+}
+.directory-hero .breadcrumbs {
+  margin-bottom: clamp(20px, 2.6vw, 34px);
+}
+/* Client: "el copy debajo del titulo... esta muy despegado" — h1's own
+   browser-default bottom margin (~52px here) was the gap; .lead already
+   carries no top margin of its own (base.css resets it), so this is the
+   only knob. */
+.directory-hero h1 {
+  margin-bottom: 14px;
+}
+/* Client: "el buscador esta muy despegado" — .section's own padding-block
+   on both sides added up to ~137px between the lead paragraph and the
+   search bar; tightened to read as one continuous intro instead of two
+   separate blocks. */
+.directory-hero {
+  padding-bottom: clamp(16px, 2vw, 28px);
+}
+.directory-hero + .directory {
+  padding-top: 0;
+}
+
 .directory-search {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) auto;
@@ -3709,7 +3818,8 @@
   border-radius: var(--radius-lg);
   background: var(--cream-2);
   overflow: hidden;
-  /* Leaflet panes stack above the sticky header without this. */
+  /* The map library's own canvas/control panes stack above the sticky
+     header without this. */
   z-index: 0;
   isolation: isolate;
 }
@@ -3719,22 +3829,29 @@
   font-size: var(--fs-meta);
 }
 
-/* Leaflet's own chrome, retuned to the brand. */
-.leaflet-container {
+/* MapLibre GL's own chrome, retuned to the brand. Land/water colors (navy
+   land, near-white water) come from the client's own MapTiler style now,
+   not a CSS filter — see PractitionerMap.tsx for why this replaced the
+   Leaflet + raster-OSM setup (2026-09-16). */
+.maplibregl-map {
   font: inherit;
-  background: var(--cream-2);
 }
-.leaflet-control-attribution {
+.maplibregl-ctrl-attrib {
   font-size: 10px;
 }
-.map-pin span {
+.maplibregl-ctrl-attrib a {
+  color: inherit;
+}
+.map-pin {
   display: block;
   width: 16px;
   height: 16px;
   border: 2px solid var(--white);
   border-radius: 50%;
-  background: var(--brand);
+  /* Client (2026-09-16): exact swatch, no matching token in tokens.css. */
+  background: #3490a7;
   box-shadow: 0 1px 5px rgba(28, 25, 22, 0.4);
+  cursor: pointer;
 }
 .map-popup {
   display: grid;
@@ -4105,6 +4222,13 @@
   gap: 0;
   border-top: 1px solid var(--line);
 }
+/* Client: "el listado debajo Frequently Asked Questions hazlo mas angosto" —
+   scoped to Weekly Talks specifically (New Patients' FAQ list, also
+   .accordion--flat, stays full width). */
+.accordion--narrow {
+  max-width: 640px;
+  margin-inline: auto;
+}
 .accordion--flat .accordion__item {
   border-bottom: 1px solid var(--line);
   border-radius: 0;
@@ -4142,6 +4266,57 @@
 
 /* ── 5 Levels pyramid ─────────────────────────────────────────── */
 
+/* Client (2026-09-16, Figma): this hero used to be the shared .page-hero
+   card (centered white type on a boxed navy gradient, .page-hero--center);
+   the design runs it in plain flow on the page's own ambient gradient
+   instead, still centered. Same still-blue band at the top as the other
+   de-boxed heroes, so the eyebrow/breadcrumb need the same manual
+   legibility treatment .page-hero gave them for free. */
+.five-levels-hero {
+  text-align: center;
+}
+.five-levels-hero h1,
+.five-levels-hero .lead {
+  margin-inline: auto;
+}
+/* Client: "sube un 50% mas el texto ... al titulo" — h1's own browser-
+   default bottom margin (~52px) was the gap; halved. */
+.five-levels-hero h1 {
+  margin-bottom: 26px;
+}
+.five-levels-hero .breadcrumbs ol {
+  justify-content: center;
+}
+.five-levels-hero .eyebrow {
+  color: var(--white);
+}
+.five-levels-hero .breadcrumbs ol,
+.five-levels-hero .breadcrumbs__sep,
+.five-levels-hero .breadcrumbs a,
+.five-levels-hero .breadcrumbs span[aria-current="page"] {
+  color: var(--ink);
+}
+.five-levels-hero .breadcrumbs {
+  margin-bottom: clamp(20px, 2.6vw, 34px);
+}
+/* Client: "el video que esté más pegado al texto inmediato superior" /
+   "hazlo un 20% más pequeño" — .section's own padding-block on both sides
+   left ~137px above the video; tightened to sit right under the lead.
+   The video itself shrinks to 80% width, centered. */
+.five-levels-hero {
+  padding-bottom: clamp(16px, 2vw, 28px);
+}
+.five-levels-hero + .five-levels-video {
+  padding-top: 0;
+}
+.five-levels-video {
+  padding-bottom: clamp(16px, 2vw, 28px);
+}
+.five-levels-video .video-frame {
+  max-width: 80%;
+  margin-inline: auto;
+}
+
 /* ── The 5 Levels pyramid ─────────────────────────────────────────
    The apex is drawn as a real triangle and the four levels below it as bands
    that widen toward the base (387 → 480 → 574 → 667 of the design's 1440
@@ -4155,6 +4330,15 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
   gap: clamp(32px, 5vw, 80px);
+}
+/* Client (2026-09-16): the pyramid renders as a supplied image here instead
+   of the <Pyramid /> component. Capped near its native 556px so it doesn't
+   upscale past the source's own resolution and blur. */
+.levels__pyramid-image {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  justify-self: center;
 }
 
 .pyramid {
@@ -4897,6 +5081,17 @@
 .hero--split {
   position: relative;
 }
+/* Client (2026-09-16): "recuerda la base del tamaño del hero que estamos
+   utilizando para todo el sitio" — this hero predates the site-wide hero
+   standardization pass and was left full-bleed with the old, larger
+   --radius-lg corners (.gradient-card's own default) instead of the
+   inset-margin + --radius-sm every other page-hero got. Compound selector
+   to outrank plain .gradient-card (same specificity, but motion.css loads
+   after sections.css, so .gradient-card alone would still win). */
+.hero--split.gradient-card {
+  margin: 0 clamp(12px, 2.2vw, 34px);
+  border-radius: var(--radius-sm);
+}
 .hero--split .hero__inner {
   position: relative;
   z-index: 1;
@@ -4904,6 +5099,80 @@
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   align-items: center;
   gap: clamp(28px, 4vw, 64px);
+  padding-block: clamp(32px, 4vw, 64px);
+}
+/* Found while testing the sophia_hero_dimension change at mobile widths
+   (2026-09-17) — a pre-existing bug, not something this pass introduced:
+   the shared max-width: 900px collapse list earlier in this file already
+   names .hero--split .hero__inner, but this later, equal-specificity rule
+   re-declares grid-template-columns and silently won the cascade at every
+   width, mobile included (measured at 390px: two ~150px-wide columns
+   instead of one stacked column). Same fix as the .courses-hero overrides
+   above: a later, explicitly-scoped rule instead of relying on source
+   order across two unrelated blocks. */
+@media (max-width: 900px) {
+  .hero--split .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Client (2026-09-17): "sophia_hero_dimension... ni un tamaño mas ni
+   menos" — see tokens.css and CLAUDE.md. A fixed `height` (not
+   `min-height`) so content can never push this past /sophia's own box;
+   overflow:hidden is the safety net while the internal copy/live-mock are
+   sized to actually fit inside it (verified with Playwright, not assumed).
+   Desktop only: below 900px this hero collapses to one column (same
+   breakpoint as every other split hero) and needs its natural stacked
+   height instead — /sophia never restructures like that, so there is no
+   /sophia-mobile shape to match here. */
+@media (min-width: 901px) {
+  .hero--split.gradient-card {
+    height: var(--sophia-hero-dimension-height);
+    display: flex;
+    overflow: hidden;
+  }
+  .hero--split .hero__inner {
+    flex: 1;
+    min-height: 0;
+  }
+}
+/* Client (2026-09-17): "aplica sophia_hero_dimension" to /music, /about,
+   /foundation and /academy/art — unlike the split-column heroes above,
+   these are plain single-column .page-hero blocks (text only, or text +
+   logo), so there's no grid to collapse on mobile: min-height already
+   flexed with content at every width, a fixed height only needs to be
+   desktop-scoped because these don't restructure their layout below 900px
+   the way .hero--split/.courses-hero do — the content itself may still
+   wrap to more lines on a narrow phone, which is exactly why this stays
+   off below 901px. Three of the four already measured exactly 600px
+   under the old min-height (content already fit); .academy-art-hero
+   measured 631px and needed its own trim, below. */
+@media (min-width: 901px) {
+  .music-hero.gradient-card,
+  .about-hero.gradient-card,
+  .foundation-hero.gradient-card,
+  .academy-art-hero.gradient-card {
+    height: var(--sophia-hero-dimension-height);
+    overflow: hidden;
+  }
+  /* Client (2026-09-18): "el logotipo... se subió mucho, tienes mucho
+     espacio abajo" — .page-hero is display:flex (row), and .page-hero__
+     inner (flex:1, base.css) stretches to the outer's height via the
+     default cross-axis align-items:stretch. But a flex item's automatic
+     min-height is its own content size unless overridden — so with taller
+     content, .page-hero__inner grew past the outer's now-fixed height
+     instead of actually being constrained to it, and its own
+     justify-content: center then centered the logo/title/lead within that
+     oversized, off-position box rather than the visible frame. Same fix
+     already applied to .hero--split/.courses-hero's inner elements;
+     missed here when this batch was first done. Doesn't touch the outer
+     height at all — exactly what "no modifiques el tamaño del hero
+     principal" asked. */
+  .music-hero.gradient-card .page-hero__inner,
+  .about-hero.gradient-card .page-hero__inner,
+  .foundation-hero.gradient-card .page-hero__inner,
+  .academy-art-hero.gradient-card .page-hero__inner {
+    min-height: 0;
+  }
 }
 /* Oversized ghost of the page's own name, bleeding off the top-right corner
    behind the heading — same device as the footer's watermark, sized and
@@ -4927,6 +5196,9 @@
    compact, not the full-size button every other page uses. */
 .hero--split .hero__actions .btn {
   min-height: 42px;
+  /* Client: "aumenta el width del boton JOIN NOW un 100%" — was 115.19px
+     content-driven; min-width doubles it. */
+  min-width: 230px;
   padding: 0 22px;
   font-size: 11px;
 }
@@ -4950,7 +5222,8 @@
    a monogram avatar, not a photo, so there is no asset to short of. */
 .live-mock {
   width: 100%;
-  max-width: 340px;
+  /* Client (2026-09-16): "hazlo un 30% mas grande" — 340px × 1.3. */
+  max-width: 442px;
   margin-inline: auto;
   overflow: hidden;
   border-radius: var(--radius-md, 14px);
@@ -5184,30 +5457,16 @@
   max-width: 560px;
   color: var(--white);
 }
-.sophia-hero__title {
-  margin: 0 0 6px;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  line-height: 1.15;
-}
-.sophia-hero__title-main {
+/* Client (2026-09-17): replaces the text lockup (title + "by Dr.
+   Klinghardt™") with the real logo file — same lockup, as an asset instead
+   of type. Sized well short of .sophia-hero__content's own 560px cap so it
+   doesn't crowd the buttons below; the hero's own height is untouched
+   (min-height on .sophia-hero itself, not derived from this content). */
+.sophia-hero__logo {
   display: block;
-  font-size: clamp(30px, 5vw, 52px);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.sophia-hero__title-sub {
-  display: block;
-  margin-top: 2px;
-  font-size: clamp(15px, 1.8vw, 20px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.sophia-hero__subtitle {
-  margin: 8px 0 24px;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--fs-lead);
+  width: min(100%, 320px);
+  height: auto;
+  margin: 0 auto 24px;
 }
 .sophia-hero__actions {
   display: flex;
@@ -6020,6 +6279,13 @@
   stroke-linejoin: round;
 }
 
+/* Client: "la card de Membership subelo un 60% mas hacia el titulo" — the
+   shared .section-heading margin-bottom (~50px here) was the gap; scoped to
+   #pricing only, not the shared class every other section-heading uses. */
+#pricing .section-heading {
+  margin-bottom: 20px;
+}
+
 .plan {
   max-width: 400px;
   margin-inline: auto;
@@ -6078,14 +6344,21 @@
   color: var(--muted-2);
 }
 
-/* Display-face subtitle under a hero heading (Weekly Talks). */
+/* Display-face subtitle under a hero heading (Weekly Talks). Client
+   (2026-09-17, Figma): smaller than the display-sm size it carried —
+   reclaims the vertical room the hero's now-fixed height (sophia_hero_
+   dimension) needs to keep the Join Now button comfortably inside it. */
 .hero__subtitle {
-  max-width: 24ch;
-  margin: -8px 0 16px;
+  /* Client (2026-09-17): "una sola línea" — 24ch was forcing a wrap the
+     column had room to avoid (628px available vs. this text's ~540px at
+     the current size); a generous ch cap instead of removing max-width
+     outright, so a future, longer subtitle still wraps sanely. */
+  max-width: 46ch;
+  margin: -4px 0 12px;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: var(--fs-display-sm);
-  line-height: 1.2;
+  font-size: clamp(17px, 1.5vw, 20px);
+  line-height: 1.3;
   color: var(--muted);
 }
 

@@ -116,6 +116,23 @@
   --maxw: 1440px;
   --maxw-prose: 68ch;
 
+  /* ── sophia_hero_dimension ─────────────────────────────────────
+     Client (2026-09-17): "utiliza el mismo height y width de
+     .wrap.sophia-hero__inner de /sophia, declaralo como una constante...
+     ni un tamaño mas ni menos". Measured on /sophia at the 1440px
+     reference viewport: 1376.66px × 600px — i.e. min(64vh, 600px) tall
+     (the site's existing hero-height formula, already what /sophia uses)
+     and full width minus the standard hero inset margin
+     (0 clamp(12px, 2.2vw, 34px), same margin every hero already carries).
+     This is a FIXED height, not a floor — a hero declaring it must fit its
+     own content inside, not grow past it. Applied to /weekly-talks
+     (.hero--split) and /courses (.courses-hero) at desktop widths only;
+     below the site's 900px stacking breakpoint every split hero collapses
+     to one column and needs its natural, taller flow instead — /sophia
+     itself never restructures like that, so there's nothing to match
+     there. */
+  --sophia-hero-dimension-height: min(64vh, 600px);
+
   --radius-sm: 6px;
   --radius: 12px;
   --radius-lg: 20px;

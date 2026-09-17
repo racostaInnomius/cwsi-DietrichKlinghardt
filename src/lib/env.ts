@@ -31,4 +31,9 @@ export const env = {
   // No profile yet — placeholders until the client shares the real links.
   FACEBOOK_URL: value("VITE_PUBLIC_FACEBOOK_URL", "#newsletter"),
   TELEGRAM_URL: value("VITE_PUBLIC_TELEGRAM_URL", "#newsletter"),
+  // The client's own MapTiler style (custom navy/white colors) for the
+  // practitioner directory map — see PractitionerMap.tsx. The key inside
+  // this URL is a client-side map key (ships in every page load, not a
+  // server secret), scoped to this style.
+  MAPTILER_STYLE_URL: value("VITE_PUBLIC_MAPTILER_STYLE_URL"),
 };

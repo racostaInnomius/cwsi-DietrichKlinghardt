@@ -6,11 +6,9 @@ import {
   filterPractitioners,
   usePractitioners,
 } from "@/lib/practitioners";
-import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 // Leaflet only exists in the browser, so the map is split out of the static
 // build entirely and mounted after hydration.
@@ -73,18 +71,16 @@ export function DirectoryPage() {
         path="/academy/therapists"
       />
 
-      <AnimatedGradient variant="card" intensity="soft" className="page-hero">
-        <div className="wrap page-hero__inner">
-          <Breadcrumbs
-            items={[{ label: "Akademie", href: "/academy" }, { label: "Find a therapist" }]}
-          />
-          <Reveal>
-            <p className="eyebrow">Global practitioner directory</p>
-            <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
-          </Reveal>
-        </div>
-      </AnimatedGradient>
+      <section className="section wrap directory-hero">
+        <Breadcrumbs
+          items={[{ label: "Akademie", href: "/academy" }, { label: "Find a therapist" }]}
+        />
+        <Reveal>
+          <p className="eyebrow">Global practitioner directory</p>
+          <h1><Marked text={page.title} /></h1>
+          {page.lead ? <p className="lead">{page.lead}</p> : null}
+        </Reveal>
+      </section>
 
       <section className="section wrap directory">
         <form className="directory-search" onSubmit={search} role="search">
@@ -225,12 +221,10 @@ export function DirectoryPage() {
           <p className="empty-note">
             {people.length
               ? "No practitioners match that search. Try a city, a postcode, or clear the filters."
-              : "The directory is being prepared. Join the newsletter below and you’ll hear when it is available."}
+              : "The directory is being prepared. Join the newsletter and you’ll hear when it is available."}
           </p>
         )}
       </section>
-
-      <NewsletterSection />
     </>
   );
 }

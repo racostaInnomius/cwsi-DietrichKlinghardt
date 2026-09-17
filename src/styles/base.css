@@ -336,6 +336,29 @@ h3,
   border-color: var(--brand-3);
   color: var(--brand-3);
 }
+/* Client (2026-09-18): "Solo en /sophia y /sophia/* ... los botones de
+   color claro cambien a #F1F4F4" — exact swatch, scoped to the Sophia
+   theme only; every other page keeps --cream. */
+[data-theme="sophia"] .btn-light {
+  /* Designer (2026-09-18): "ahorita solo se mueve un poquito... el fondo
+     entra de izquierda a derecha y el boton se eleva, gesto claro y
+     directo" — the sweep-fill + lift mechanism (.btn, above) was already
+     there, just imperceptible here: 6% ink mixed into the same #f1f4f4
+     base is a few-percent lightness difference, so the left-to-right fill
+     had almost no color to reveal. Brand teal mixed in instead gives the
+     sweep real contrast to travel across; ink text stays legible at this
+     mix strength. */
+  --btn-fill: color-mix(in srgb, var(--brand) 22%, #f1f4f4);
+  background-color: #f1f4f4;
+}
+[data-theme="sophia"] .btn-light:hover,
+[data-theme="sophia"] .btn-light:focus-visible {
+  /* More than double the base .btn's -2px/--shadow-lift — a "claro y
+     directo" lift the designer can't miss, not the subtle default every
+     other button on the site still uses. */
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--brand) 30%, transparent);
+}
 
 .arrow-link {
   display: inline-flex;

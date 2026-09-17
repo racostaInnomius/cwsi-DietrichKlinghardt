@@ -10,7 +10,6 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { EventMetaIcon } from "@/components/Icons";
 import { Accordion } from "@/components/sections/Accordion";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /**
  * The plan, as the frame states it: label, amount, period, terms.
@@ -105,7 +104,7 @@ export function WeeklyTalksPage() {
         path="/weekly-talks"
       />
 
-      <AnimatedGradient variant="card" intensity="normal" className="hero hero--split">
+      <AnimatedGradient variant="card-warm" intensity="normal" className="hero hero--split">
         <p className="hero--split__watermark" aria-hidden="true">Weekly Talks</p>
         <div className="wrap hero__inner">
           <Reveal>
@@ -212,11 +211,12 @@ export function WeeklyTalksPage() {
               ))}
             </ul>
 
-            {/* No live Payment Link yet falls back to the newsletter anchor —
-                a real, working destination — rather than a dead checkout, but
-                still reads as the intended action (see Events for the same
-                pattern). */}
-            <a className="btn btn-primary plan__cta" href={joinHref || "#newsletter"}>
+            {/* No live Payment Link yet falls back to Contact — a real,
+                working destination now that this page no longer renders
+                <NewsletterSection> (2026-09-16, terminación plana) — rather
+                than a dead checkout, but still reads as the intended action
+                (see Events for the same pattern). */}
+            <a className="btn btn-primary plan__cta" href={joinHref || "/contact"}>
               {ctaLabel || "Join my talks"}
             </a>
             <p className="plan__note">Secure checkout · 7-day free trial</p>
@@ -229,10 +229,11 @@ export function WeeklyTalksPage() {
           <p className="eyebrow">FAQ</p>
           <h2>Frequently Asked Questions</h2>
         </Reveal>
-        <Accordion items={faqs.length ? faqs : FAQ_FALLBACK} className="accordion--flat" />
+        <Accordion
+          items={faqs.length ? faqs : FAQ_FALLBACK}
+          className="accordion--flat accordion--narrow"
+        />
       </section>
-
-      <NewsletterSection />
     </>
   );
 }

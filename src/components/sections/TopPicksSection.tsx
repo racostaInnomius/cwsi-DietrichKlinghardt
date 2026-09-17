@@ -26,7 +26,7 @@ export function TopPicksSection({ products }: { products: StoreProduct[] }) {
   }).format(new Date());
 
   return (
-    <AnimatedGradient variant="card" intensity="normal" className="top-picks">
+    <AnimatedGradient variant="card-warm" intensity="normal" className="top-picks">
       <div className="wrap top-picks__inner">
         <div className="top-picks__head">
           <Reveal>

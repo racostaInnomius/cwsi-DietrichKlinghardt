@@ -6,6 +6,19 @@ import { themeForPath } from "./navigation";
 import { usePageContent, text } from "@/lib/content";
 
 /**
+ * Pages that skip <NewsletterSection> and get /foundation's flat-navy
+ * footer instead of the amber fade — client-named "terminación plana"
+ * (2026-09-16).
+ */
+const FLAT_ENDING_PATHS = new Set([
+  "/foundation",
+  "/courses/art",
+  "/academy/therapists",
+  "/academy/five-levels",
+  "/weekly-talks",
+]);
+
+/**
  * The frame every page of the new site renders inside: announcement bar,
  * header, main, footer — plus the brand theme.
  *
@@ -34,14 +47,11 @@ export function SiteShell({
   // degradado naranja" — its own quote section already ends the page on
   // the amber tail on purpose (a separate, earlier request), so the
   // footer's fade would double up on the same transition right under it.
-  // Client (2026-09-16): "dejalo con la terminación baja - footer de
-  // /foundation" — /courses/art dropped its NewsletterSection too and
-  // wants that same flat-navy ending, no fade.
+  // Client (2026-09-16): named this "terminación plana" going forward —
+  // any page that drops its NewsletterSection and wants /foundation's same
+  // flat-navy ending (no fade) gets added to this list.
   const footerFade =
-    resolvedTheme === "dk" &&
-    pathname !== "/" &&
-    pathname !== "/foundation" &&
-    pathname !== "/courses/art";
+    resolvedTheme === "dk" && pathname !== "/" && !FLAT_ENDING_PATHS.has(pathname);
 
   // The announcement bar is editable from the CMS like any other copy; the
   // fallback keeps the bar meaningful when the CMS is unreachable.

@@ -255,7 +255,7 @@ export function AcademyPage() {
           panels further down are now real exported images, not drawn
           CSS/text — this hero's own wordmark is unaffected, still hand-set
           here.) */}
-      <AnimatedGradient variant="card" intensity="soft" className="page-hero academy-hero">
+      <AnimatedGradient variant="card-warm" intensity="soft" className="page-hero academy-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
             <h1 className="academy-hero__wordmark">

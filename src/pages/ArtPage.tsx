@@ -34,7 +34,7 @@ export function ArtPage() {
         path="/academy/art"
       />
 
-      <AnimatedGradient variant="card" intensity="soft" className="page-hero">
+      <AnimatedGradient variant="card" intensity="soft" className="page-hero academy-art-hero">
         <div className="wrap page-hero__inner">
           <Breadcrumbs
             items={[{ label: "Akademie", href: "/academy" }, { label: "A.R.T. Klinghardt" }]}

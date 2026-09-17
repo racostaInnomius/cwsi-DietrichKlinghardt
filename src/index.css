@@ -8,9 +8,13 @@
    rendered upright (2026-09-05: "no se ve en italica inclinada"). */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Libre+Baskerville:wght@400;700&family=Cormorant+Garamond:wght@400;500&display=swap');
 
-/* Leaflet's own stylesheet — required for the map panes to position at all.
-   Imported before ours so the directory rules can retune its chrome. */
-@import "leaflet/dist/leaflet.css";
+/* MapLibre GL's own stylesheet — required for the map canvas, controls and
+   popups to position at all. Imported before ours so the directory rules
+   can retune its chrome. Replaces Leaflet (2026-09-16): the client's
+   MapTiler plan only serves this map's custom style as vector tiles, not
+   raster PNG, which Leaflet's tile layer needs — MapLibre GL renders the
+   vector style directly. */
+@import "maplibre-gl/dist/maplibre-gl.css";
 
 /* Layer order matters: tokens → base → shell → sections → motion. */
 @import "./styles/tokens.css";

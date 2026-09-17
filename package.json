@@ -14,15 +14,14 @@
     "@mux/mux-player-react": "^3.13.2",
     "@stripe/react-stripe-js": "^3.10.0",
     "@stripe/stripe-js": "^5.10.0",
-    "leaflet": "^1.9.4",
     "lenis": "^1.3.26",
+    "maplibre-gl": "^6.10.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^6.28.0",
     "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.9.22",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
