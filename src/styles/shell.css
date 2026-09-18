@@ -273,7 +273,7 @@
   max-width: none;
   white-space: nowrap;
   opacity: 0.92;
-  transition: opacity var(--dur-fast) var(--ease);
+  transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
 }
 /* The shared .tm (base.css) sizes off the 12px sublabel/eyebrow scale —
    at the nav's own 16px it renders under 6px, unreadable next to
@@ -295,6 +295,17 @@
 .site-nav__link:hover,
 .site-nav__link[aria-current="page"] {
   opacity: 1;
+}
+/* A subtle colour shift on hover, not just the opacity bump above (client,
+   2026-09-18: "que se ilumine el texto de algun color muy sutil... utiliza
+   siempre colores dentro del espectro del sitio Dietrich") — --eyebrow-text
+   is the same warm gold every eyebrow on the site already uses, and it's
+   one flat value (not redefined per [data-theme]), so it reads as "this
+   site's gold" even on /sophia/* pages rather than picking up that theme's
+   teal. Left off [aria-current="page"], which already has its own distinct
+   underline treatment below. */
+.site-nav__link:hover {
+  color: var(--eyebrow-text);
 }
 .site-nav__link[aria-current="page"] {
   box-shadow: inset 0 -1px 0 currentColor;

@@ -175,7 +175,20 @@
   height: 100%;
   z-index: -1;
   object-fit: cover;
-  object-position: right center;
+  /* Client (2026-09-18): "sube la imagen" — desktop's container is wider
+     than the photo's own 16:9 ratio, so cover scales it to the container's
+     width and crops vertically (unlike the mobile 4:3 box, which has no
+     vertical crop room at all — verified separately there).
+     First pass here dropped this to 20% on the (wrong) assumption that a
+     lower Y raises the subject — verified after the fact, pixel by pixel
+     (screenshotting the same 10px-wide strip through the forehead and
+     finding the first skin-toned row): 20% actually pushed him DOWN
+     (skin started at row 319 vs the original 50%'s row 260 — client,
+     correctly: "ahora se ve mas abajo"). Measuring 50-100% in the same way
+     confirmed the real direction is the opposite — HIGHER Y raises him
+     (each +10 shaves ~20px off the headroom: 50%→row 260, 100%→row 160).
+     80% raises him a clear, deliberate amount without cropping the chin. */
+  object-position: right 80%;
   pointer-events: none;
   /* Client (2026-09-09): the pinned card holding still for its whole dwell
      read as "atorado" (stuck) even with the scroll-speed boost above —
@@ -187,7 +200,7 @@
      the reader stopped scrolling. transform-origin matches object-position
      so the zoom grows out from the subject, not off-centre. */
   transform: scale(calc(1 + var(--hero-scroll, 0) * 0.08));
-  transform-origin: right center;
+  transform-origin: right 80%;
 }
 /* Centred, not bottom-aligned: in the design the copy runs from about a quarter
    to two thirds down the panel — which is exactly the pale-blue stretch of the
@@ -5241,6 +5254,21 @@
     aspect-ratio: 4 / 3;
     object-fit: cover;
     object-position: 88% 22%;
+    /* 'Sube la imagen un 25% mas' (client, 2026-09-18), then 'sigo viendo
+       abajo la imagen... subela otro 15% mas' — the natural photo
+       (1920x1080) already fills this 4:3 box's full height with cover, so
+       there's no vertical crop room left for object-position's Y value to
+       move (verified: 0%, 22%, 47% all rendered identically). Shifting the
+       element itself instead. -30% here (not a fixed px) is 40% of the
+       photo's own height (25% + 15%), expressed against this rule's own
+       fixed aspect-ratio (height = width * 0.75, so 40% of height =
+       width * 0.3) — stays exactly 40% of the photo's own rendered height
+       at any viewport width, not just the one it was eyeballed at.
+       Negative margin, not transform: translateY, which only shifts the
+       image visually and leaves its old box (empty gradient) behind —
+       margin actually closes that space, pulling .home-academy up to meet
+       the photo's new bottom edge with nothing left over. */
+    margin-top: -30%;
   }
   .hero__inner {
     order: 1;
@@ -5346,6 +5374,21 @@
     aspect-ratio: 4 / 3;
     object-fit: cover;
     object-position: 88% 22%;
+    /* 'Sube la imagen un 25% mas' (client, 2026-09-18), then 'sigo viendo
+       abajo la imagen... subela otro 15% mas' — the natural photo
+       (1920x1080) already fills this 4:3 box's full height with cover, so
+       there's no vertical crop room left for object-position's Y value to
+       move (verified: 0%, 22%, 47% all rendered identically). Shifting the
+       element itself instead. -30% here (not a fixed px) is 40% of the
+       photo's own height (25% + 15%), expressed against this rule's own
+       fixed aspect-ratio (height = width * 0.75, so 40% of height =
+       width * 0.3) — stays exactly 40% of the photo's own rendered height
+       at any viewport width, not just the one it was eyeballed at.
+       Negative margin, not transform: translateY, which only shifts the
+       image visually and leaves its old box (empty gradient) behind —
+       margin actually closes that space, pulling .home-academy up to meet
+       the photo's new bottom edge with nothing left over. */
+    margin-top: -30%;
   }
   .hero__inner {
     order: 1;
