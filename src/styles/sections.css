@@ -606,6 +606,13 @@
    which /events' own tabs and the Store filters still use as a pill. */
 .home-events .tabs {
   gap: 32px;
+  /* The base .tabs rule's own margin-bottom (clamp 24-40px) left a visible
+     gap between each tab's underline and .event-list's border-top just
+     below — two separate lines instead of one (client, 2026-09-18: "deben
+     quedar encima de la primera línea que pinta ... > ul"). Zeroed so the
+     active tab's navy 2px border sits flush against — visually layered
+     directly on top of — that shared 1px line. */
+  margin-bottom: 0;
 }
 .home-events .tab {
   min-height: auto;
@@ -643,30 +650,28 @@
 .event-row__link:hover {
   background: color-mix(in srgb, var(--brand) 5%, transparent);
 }
-/* Plain stacked date instead of a card badge (client, 2026-09-18, against
-   a reference screenshot: bold day, italic month, no chrome) — the boxed
-   background/shadow/padding is gone; the distinction between day and month
-   now comes from weight and style, not a container. */
+/* Plain stacked date instead of a card badge (client, 2026-09-18, against a
+   reference screenshot) — the boxed background/shadow/padding is gone. Day
+   and month now share one voice — same family, same italic, same
+   --muted-2 ("meta, captions" — tokens.css) — and differ only in size and
+   weight, per the client's own DevTools mock-up (2026-09-18, second pass):
+   shared properties live here once instead of repeated on both children. */
 .event-row__date {
   display: grid;
   justify-items: center;
   gap: 0;
-  color: var(--ink);
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--muted-2);
 }
 .event-row__date b {
-  font-family: var(--font-display);
   font-size: 30px;
   font-weight: 600;
   line-height: 1;
 }
 .event-row__date span {
-  font-family: var(--font-display);
   font-size: 16px;
   font-weight: 400;
-  font-style: italic;
-  letter-spacing: normal;
-  text-transform: none;
-  color: var(--muted);
 }
 .event-row__body h3 {
   margin-bottom: 8px;
