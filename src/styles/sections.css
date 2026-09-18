@@ -482,7 +482,10 @@
 }
 .home-academy__copy {
   font-family: var(--font-serif);
-  font-weight: 400;
+  /* 400 → 300 (client, 2026-09-18: "utiliza el texto mas delgado" against a
+     reference of thin-weight Fraunces body copy) — the lightest weight the
+     site already loads, so no new Google Fonts weight needed. */
+  font-weight: 300;
   font-size: var(--fs-display-sm);
   line-height: 1.4;
   color: var(--ink);
@@ -597,6 +600,28 @@
   display: none;
 }
 
+/* "Upcoming events"/"Past events" as plain underlined text tabs instead of
+   the shared .tab's filled pill (client, 2026-09-18, against a reference
+   screenshot) — scoped here rather than changed on the shared .tab itself,
+   which /events' own tabs and the Store filters still use as a pill. */
+.home-events .tabs {
+  gap: 32px;
+}
+.home-events .tab {
+  min-height: auto;
+  padding: 0 0 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+}
+.home-events .tab[aria-selected="true"] {
+  border-color: var(--brand);
+  background: transparent;
+  color: var(--brand);
+}
+
 .event-list {
   margin: 0;
   padding: 0;
@@ -618,27 +643,30 @@
 .event-row__link:hover {
   background: color-mix(in srgb, var(--brand) 5%, transparent);
 }
+/* Plain stacked date instead of a card badge (client, 2026-09-18, against
+   a reference screenshot: bold day, italic month, no chrome) — the boxed
+   background/shadow/padding is gone; the distinction between day and month
+   now comes from weight and style, not a container. */
 .event-row__date {
   display: grid;
   justify-items: center;
-  gap: 2px;
-  padding: 12px 0;
-  border-radius: var(--radius);
-  background: var(--surface-2);
-  color: var(--brand);
-  box-shadow: var(--shadow-card);
+  gap: 0;
+  color: var(--ink);
 }
 .event-row__date b {
   font-family: var(--font-display);
   font-size: 30px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1;
 }
 .event-row__date span {
-  font-size: var(--fs-meta);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--muted);
 }
 .event-row__body h3 {
   margin-bottom: 8px;
@@ -649,6 +677,16 @@
   margin: 0;
   color: var(--muted);
   font-size: var(--fs-sm);
+}
+/* .event-row__body p above (a type+class selector, specificity 0,1,1) beat
+   the shared .eyebrow rule (0,1,0) for the location line, which is also a
+   <p> — painting it --muted grey instead of the gold every other eyebrow on
+   the site uses, including "Events & webinars" right above this same list
+   (client, 2026-09-18: "deben ser del mismo color"). Matches the site's own
+   established idiom for eyebrow-color overrides (.directory-hero .eyebrow,
+   .five-levels-hero .eyebrow, etc. — one per context, sections.css). */
+.event-row__body .eyebrow {
+  color: var(--eyebrow-text);
 }
 .event-row__meta {
   display: flex;
@@ -661,8 +699,28 @@
   font-size: 24px;
   color: var(--brand);
 }
+/* The category ("In Person / Wellness / A.R.T. Training") is plain text
+   here, not a pill badge (client, 2026-09-18: "no debe ser un tag, es solo
+   un texto") — strips .tag's chrome but keeps its type scale/tracking so
+   the label still reads the same size as everywhere else .tag appears. */
+.event-row__meta .tag {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+/* The arrow moves into a solid navy circle instead of a bare glyph (same
+   reference). Fixed box so the circle stays round regardless of the glyph's
+   own metrics. */
 .event-row__arrow {
-  color: var(--brand);
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--white);
   transition: transform var(--dur-fast) var(--ease);
 }
 .event-row__link:hover .event-row__arrow {

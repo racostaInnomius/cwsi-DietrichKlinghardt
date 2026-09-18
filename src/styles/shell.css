@@ -661,37 +661,39 @@
    cuando el boton de contact us esta presente"). 1600px clears that gap
    with room to spare, guaranteeing the CTA is only ever visible once the
    fluid nav has room to sit fully inside the margin next to it.
-   Raised again to 1900px, and gap/font tightened a step further (14px →
-   8px, 14px → 13px): adding the "Archives" nav item (2026-09-18) made
-   this an 8-item bar instead of 7, and the mobile/tablet audit found the
-   old 1600px ceiling left a real, uncontained overflow from 1601px to
-   ~1900px where the CTA reappeared and the nav fell back to its full
-   28px-gap/16px-font desktop sizing — that range no longer had enough
-   room for 8 items either. Site-wide (every page shares this header), not
-   a per-page bug. */
+   Raised again to 1900px (mobile/tablet audit, 2026-09-18): adding the
+   "Archives" nav item made this an 8-item bar instead of 7, and the old
+   1600px ceiling left a real, uncontained overflow from 1601px to ~1900px
+   where the CTA reappeared and the nav fell back to its full 28px-gap/
+   16px-font desktop sizing — that range no longer had enough room for 8
+   items either. Site-wide (every page shares this header), not a per-page
+   bug.
+   Gap/font were then tightened hard (down to 4px/13px/0.02em tracking) to
+   also close a *separate* overflow right above the hamburger breakpoint —
+   but that breakpoint has since moved up to 1500px (see below), which was
+   the actual fix for that lower range. Once that moved, this 1501-1900px
+   block only had to cover the range it was originally for, which has
+   plenty of room at far more comfortable values — the hard tightening was
+   no longer earning its keep and just read as cramped (client, 2026-09-18:
+   "el texto se ve muy pequeño... quiero un poco de espacio... pero no
+   exagerado"). Verified 0 overflow at 1501-1900px with these values. */
 @media (max-width: 1900px) {
   .site-header__cta {
     display: none;
   }
   .site-nav__list {
-    gap: 4px;
+    gap: 10px;
   }
   /* This block used to cover only much narrower widths, where 10px was
      needed just to fit at all — now that it runs up to 1900px too (see
      above), that read as too small on ordinary laptop screens (client,
      2026-09-09: "el texto del menu se ve muy pequeña... solo en pantalla
-     grande se ve bien"). Raised to 14px, then to 13px once the 8th item
-     ("Archives") needed the extra room back: with the CTA hidden here,
-     there's room for that without reopening the overflow this block
-     exists to prevent. Tighter tracking (0.04em → 0.02em) alongside the
-     narrower 4px gap closes the rest of that same room, right above the
-     1080px hamburger threshold (mobile/tablet audit, 2026-09-18) where
-     8 items still ran 20-55px over even at the previous 8px/13px/0.04em
-     step. */
+     grande se ve bien"). 14px with room to spare once the hamburger
+     breakpoint moved up to 1500px (see above). */
   .site-nav__link {
     max-width: 15ch;
-    font-size: 13px;
-    letter-spacing: 0.02em;
+    font-size: 14px;
+    letter-spacing: 0.04em;
     /* The desktop rule forces one line via nowrap; this range relies on
        max-width actually wrapping long labels ("Dr. Klinghardt Akademie")
        instead of overflowing into the next item. */

@@ -95,6 +95,23 @@ export function useSection(
 }
 
 /**
+ * Sophia team member bios have no field of their own in `board-members`
+ * (name/role/title/photo only — see TeamMemberPage.tsx and teamBios.ts) —
+ * each bio instead lives as its own `page-contents` row, one per person,
+ * keyed off the same name-derived slug the roster already uses to link to
+ * /sophia/team/<slug>.
+ *
+ * Not a fixed `SECTION.*` entry like the rest of this file: the roster is
+ * CMS data, not code, so the set of people (and slugs) isn't fixed either —
+ * a new hire needs a new row, not a code change. `useSection` already takes
+ * a plain string, so this is just that string built consistently instead of
+ * repeated inline at each call site.
+ */
+export function sophiaTeamBioSlug(personSlug: string): string {
+  return `sophia-team-bio-${personSlug}`;
+}
+
+/**
  * A few blocks are lists of small records — the About timeline, the four
  * contact cards, the five levels of the pyramid — and `page-contents` has no
  * repeater field.

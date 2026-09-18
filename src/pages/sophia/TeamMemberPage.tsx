@@ -2,6 +2,7 @@ import { Seo } from "@/components/Seo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
 import { mediaUrl } from "@/lib/cms";
+import { useSection, sophiaTeamBioSlug } from "@/lib/sections";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -11,19 +12,23 @@ import { CtaBand } from "@/components/sections/CtaBand";
 /**
  * "Learn more" page for one Sophia team member. Photo/name/role/title come
  * from the `board-members` CMS collection (same rows /sophia/team lists);
- * the full "About" bio has no CMS field of its own, so it comes from the
- * local `teamBios` data (client, 2026-09-18: "de ahí toma su info", sourced
- * from https://www.sophiahi.com/team), matched to a CMS row by slugifying
- * its name — see slugifyName.
+ * the full "About" bio has no CMS field of its own, so it reads from a
+ * `page-contents` row at `sophia-team-bio-<slug>` (see sophiaTeamBioSlug in
+ * sections.ts), falling back to the local `teamBios` data (client,
+ * 2026-09-18: "de ahí toma su info", sourced from
+ * https://www.sophiahi.com/team) until that row exists — matched to a CMS
+ * row by slugifying its name, see slugifyName.
  */
 export function TeamMemberPage() {
   const { slug } = useParams();
   const person = useCollection("board-members").find(
     (row) => slugifyName(text(row, "name")) === slug,
   );
-  const bio = slug ? teamBios[slug] : undefined;
+  const bio = useSection(sophiaTeamBioSlug(slug ?? ""), {
+    paragraphs: slug ? teamBios[slug]?.paragraphs : undefined,
+  });
 
-  if (!person || !bio) {
+  if (!person || !bio.paragraphs.length) {
     return (
       <>
         <Seo title={"Team member not found — Sophia Health Institute™"} noindex />

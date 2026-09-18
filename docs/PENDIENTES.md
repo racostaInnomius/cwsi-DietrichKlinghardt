@@ -76,7 +76,8 @@ y qué se queda bloqueado mientras no llegue.
 | # | Qué | Fase | Nota |
 |---|---|---|---|
 | B12 | Reescribir la fila `newsletter` de `page-contents` | F2 | Todavía trae el copy del landing temporal ("Stay informed" / "Klinghardt® Newsletter"); el sitio nuevo la usa para "Join Our Newsletter" |
-| B13 | Crear las filas de sección que faltan | F2 | El mapa completo está en `IMPLEMENTATION_PLAN.md` §7. Sin ellas cada bloque cae a su fallback, que es contenido real del diseño — no urge, pero no es editable |
+| B13 | Crear las filas de sección que faltan | F2 | El mapa completo está en `IMPLEMENTATION_PLAN.md` §7 — **reauditado 2026-09-18** contra el código real (llevaba fases sin actualizarse: le faltaban `about-chapters`, `courses`, `donate`, `foundation-purpose`, `store-intro`, `therapists`, los 3 slugs de `weekly-talks-*` sueltos, `music-discography`, `foundation-commitments` y los 5 nuevos de Archives). Sin fila, cada bloque cae a su fallback, que es contenido real del diseño — no urge, pero no es editable |
+| B13b | Sembrar los bios de `/sophia/team/<slug>` | F2 | **Ahora sembrable** (2026-09-18): cada bio ya lee de `page-contents` en `sophia-team-bio-<slug>` (ver `sophiaTeamBioSlug()`), con el texto de `teamBios.ts` como fallback mientras no exista la fila. Antes de este cambio no había forma de editar un bio desde el CMS aunque `board-members` ya estuviera sembrado (D16) — esa colección no tiene campo de bio propio. Los 8 slugs concretos están listados en `IMPLEMENTATION_PLAN.md` §7 |
 | B14 | Cargar las **fechas de curso** como filas de `events` con su `trainingPath` | F3 | Sin ellas `/courses/<slug>/dates` muestra estado vacío |
 | B15 | Geocodificar los **9 terapeutas sin coordenadas** o dejarlos solo en el listado | F4 | Hoy salen en la lista pero no en el mapa, y la página lo dice explícitamente |
 

@@ -604,22 +604,91 @@ publicable** (todo lo demás puede llegar por fases sobre el sitio vivo — SSG 
 
 ## 7. Mapa de slugs de `page-contents`
 
-Cerrado en F2 (era entregable de F0). La fuente de verdad en código es
-`src/lib/sections.ts`; esta tabla es su lectura para quien carga contenido.
+Cerrado en F2 (era entregable de F0), **reauditado por completo el 2026-09-18**
+contra el código real (la tabla anterior llevaba varias fases sin actualizarse:
+le faltaban `about-chapters` y media docena de slugs más, y le sobraban dos que
+nunca se llegaron a usar). La fuente de verdad sigue siendo el código — esta
+tabla es su lectura para quien carga contenido, no al revés; ante cualquier
+duda, lo que hay en `src/lib/sections.ts` y en cada página (`grep -rn
+"useSection(\|useRecords("  src/pages`) manda.
 
 **Regla:** *una fila por bloque*, no una fila por página. Una fila con toda la
 página adentro obliga a leer el copy por índice de bloque — el mismo acoplamiento
 posicional que rompió Iconic. Falta una fila ⇒ el bloque cae al fallback que vive
 junto a su markup; nunca queda en blanco ni corre el resto del texto.
 
+⚠️ **No todos los slugs pasan por `SECTION.*`.** La mayoría de las páginas
+importan la constante (`SECTION.about`, `SECTION.sophiaHome`...), pero varias
+—`academy`, `art`, `courses`, `donate`, `foundation-purpose`, `store-intro`,
+`therapists`, y los cuatro `useRecords` sueltos de abajo— pasan el string
+literal directo a `useSection`/`useRecords` sin pasar por el objeto `SECTION`.
+Funciona igual (la función solo pide un string), pero **esta tabla es hoy la
+única lista completa de los dos estilos juntos** — el objeto `SECTION` por sí
+solo se queda corto.
+
 | Slug | Dónde aparece |
 |---|---|
-| `announcement` | Barra dorada superior (todas las páginas). Lleva además `ctaLabel` + `ctaUrl` |
-| `home-hero` · `home-intro` · `home-events` · `home-art` · `home-shop` · `home-talks` | Bloques del Home, en ese orden |
+| `announcement` | Barra dorada superior (todas las páginas), vía `usePageContent` — no `useSection`. Lleva además `ctaLabel` + `ctaUrl` |
+| `home-intro` · `home-events` · `home-art` · `home-shop` · `home-talks` | Bloques del Home, en ese orden |
 | `newsletter` | Bloque de suscripción (Home, Events y el resto de páginas) |
-| `about` · `contact` · `academy` · `art` · `five-levels` · `music` · `foundation` · `weekly-talks` | Páginas propias |
-| `about-timeline` · `contact-cards` · `five-levels-list` · `music-links` · `accommodations-list` · `accommodations-map` · `weekly-talks-cta` | Listas: **una línea por registro, campos separados por `\|`** (ver `useRecords` en `src/lib/sections.ts`) |
+| `about` | Página About | `about-chapters` · `about-timeline` | Sus dos listas — capítulos de la bio y línea de tiempo (`useRecords`) |
+| `contact` | Página Contact | `contact-cards` | Las 4 tarjetas (`useRecords`) |
+| `academy` | Página Academy (Dr. Klinghardt Akademie) — slug literal, no `SECTION.*` |
+| `art` | Página A.R.T. Klinghardt™ — slug literal, no `SECTION.*` |
+| `five-levels` | Página The 5 Levels of Healing™ (inglés) |
+| `therapists` | Directorio de terapeutas (`/academy/therapists`) — slug literal |
+| `courses` | Landing de Online Courses — slug literal |
+| `music` | Página Music | `music-links` · `music-discography` | Enlaces (`useRecords`) y discografía (`useRecords`) — esta última slug literal |
+| `store-intro` | Página Store — slug literal |
+| `foundation` | Página Foundation | `foundation-purpose` · `foundation-commitments` | Bloque de propósito y compromisos (`useRecords`) — ambos slugs literales |
+| `donate` | Página de donación de la Fundación — slug literal |
+| `weekly-talks` | Página Weekly Talks | `weekly-talks-plan` · `weekly-talks-benefits` · `weekly-talks-cta` | Precio, beneficios (`useRecords`) y CTA (`useRecords`) — los tres slugs literales; ver A13 en `PENDIENTES.md` sobre el CTA |
 | `sophia-home` · `sophia-team` · `new-patients` · `accommodations` | Ramal Sophia (tema teal) |
+| `accommodations-list` · `accommodations-map` | Listas de Travel & Accommodations (`useRecords`) |
+| `sophia-team-bio-<slug>` | **Nuevo (2026-09-18).** Una fila por practicante de `/sophia/team/<slug>`, ver más abajo |
+| `archives-home` · `archives-art-klinghardt` · `archives-apn` · `archives-five-levels` | **Nuevo (2026-09-18).** Ramal Archives (contenido en alemán, migrado de klinghardt-akademie.de) |
+| `archives-five-levels-list` | Los 5 niveles de `archives-five-levels` (`useRecords`, 2 campos: encabezado \| cuerpo) |
+
+Listas de `useRecords` (**una línea por registro, campos separados por `\|`**,
+ver `useRecords` en `src/lib/sections.ts`): `about-chapters`, `about-timeline`,
+`contact-cards`, `music-links`, `music-discography`, `foundation-commitments`,
+`weekly-talks-benefits`, `weekly-talks-cta`, `weekly-talks-plan`,
+`accommodations-list`, `accommodations-map`, `archives-five-levels-list`.
+
+### `sophia-team-bio-<slug>` — slug dinámico, no fijo
+
+Los bios completos de `/sophia/team/<slug>` (el "Learn more" de cada
+practicante) no tienen campo propio en `board-members` — esa colección solo
+guarda `name`/`role`/`title`/`photo`. Cada bio vive en su propia fila de
+`page-contents`, con el slug construido como `sophia-team-bio-` + el mismo
+slug que ya usa la URL (`sophiaTeamBioSlug()` en `src/lib/sections.ts`). No es
+una entrada fija de la tabla de arriba porque el roster mismo es dato del CMS
+(`board-members`), no código — cambia con cada alta/baja de personal, y el
+slug cambia con él.
+
+Los 8 slugs concretos hoy (uno por fila de `board-members` ya sembrada, D16):
+
+| Slug | Persona |
+|---|---|
+| `sophia-team-bio-dietrich-klinghardt` | Dr. Dietrich Klinghardt |
+| `sophia-team-bio-jadie-ko` | Dr. Jadie Ko |
+| `sophia-team-bio-summer-beattie` | Dr. Summer Beattie |
+| `sophia-team-bio-kim-dines` | Kim Dines |
+| `sophia-team-bio-nava-wiegert` | Nava Wiegert |
+| `sophia-team-bio-terry-enriques` | Terry Enriques |
+| `sophia-team-bio-dominique-hilliard` | Dominique Hilliard |
+| `sophia-team-bio-andreanna-rainville` | Andreanna (Andi) Rainville |
+
+Hasta que existan estas filas, cada página sigue mostrando el bio empaquetado
+en `src/data/teamBios.ts` (texto real, transcrito de sophiahi.com/team, no
+inventado) — igual que cualquier otro bloque de esta tabla sin fila en el CMS.
+
+⚠️ **Dos slugs de `SECTION.*` sin uso real:** `SECTION.homeHero`
+(`home-hero`) y `SECTION.fiveLevelsList` (`five-levels-list`) están
+declarados en `sections.ts` pero ningún componente los llama — no aparecen en
+la tabla de arriba a propósito. No se tocó el código al reauditar esta tabla
+(no era parte del pedido); queda anotado para quien limpie `sections.ts` más
+adelante.
 
 ⚠️ **Colisión pendiente de contenido:** la fila `newsletter` ya existe en el CMS
 con el copy del landing temporal (título *"Stay informed"*, primer párrafo

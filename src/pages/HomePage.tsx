@@ -404,7 +404,7 @@ export function HomePage() {
               aria-selected={eventsTab === "upcoming"}
               onClick={() => setEventsTab("upcoming")}
             >
-              Upcoming <span>{upcoming.length}</span>
+              Upcoming Events
             </button>
             <button
               type="button"
@@ -413,7 +413,7 @@ export function HomePage() {
               aria-selected={eventsTab === "past"}
               onClick={() => setEventsTab("past")}
             >
-              Past <span>{past.length}</span>
+              Past Events
             </button>
           </div>
 
