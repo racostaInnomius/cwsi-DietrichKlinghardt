@@ -301,6 +301,29 @@
     #90a28f 92%,
     #cca256 100%
   );
+  /* Below 560px (and the squarer tablet range that shares its stacked hero
+     layout — sections.css) the hero card switches to position:static with
+     the photo stacked BELOW the copy instead of beside it, so the card gets
+     much taller (~725px vs desktop's ~600px). --grad-card's last two stops
+     (92%/100%, olive→amber) are tuned for a card that short — stretched
+     over the taller mobile card, that same 8% of the gradient's length
+     compresses into a thin amber sliver right at the photo's bottom edge,
+     immediately butting against .home-academy's teal opening colour (client,
+     2026-09-18, against a screenshot: "brinco de color"). Desktop is
+     unaffected — this token is mobile-only.
+     Fix mirrors .home-hero-pin's own wrapper gradient just above it in the
+     DOM (sections.css, line ~103), which solved the exact same clash the
+     same way: end on the same teal --home-academy already opens on
+     (#588ea0) instead of amber, so the two meet on one colour instead of
+     three. */
+  --grad-hero-mobile: linear-gradient(
+    180deg,
+    #023866 0%,
+    #467496 15%,
+    #9abbc9 30%,
+    #a9cad1 50%,
+    #588ea0 100%
+  );
   /* Client (2026-09-09, exact spec from their own Figma paint panel): "se ve
      un poco plain... mas pop" — replaces the sampled teal-to-olive journey
      with the same navy/light-blue/amber family the hero's own animated

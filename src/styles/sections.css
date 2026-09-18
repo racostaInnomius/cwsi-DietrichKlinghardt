@@ -5199,14 +5199,29 @@
   (min-width: 1025px) and (max-width: 1400px) and (max-aspect-ratio: 3/2) {
   .home-hero-pin {
     height: auto;
-    background: none;
+    /* Not none (client, 2026-09-18, second pass, against a screenshot: a
+       visible white stripe down both sides of the card). The card below
+       has its own horizontal margin (clamp(12px, 2.2vw, 34px)) with
+       rounded corners, so this wrapper's own background shows in that
+       gutter — at up to 34px wide, wide enough to read as a real stripe,
+       not a sliver. Left transparent, whatever showed through there was
+       main's own page gradient (shell.css), which has already faded to
+       near-white by this scroll depth — a flat white edge against the
+       card's own navy-to-teal gradient one edge in. Same gradient here
+       instead: the two now match in colour at every height instead of
+       just at the bottom. */
+    background: var(--grad-hero-mobile);
   }
   .plain-section.hero {
     position: static;
     height: auto;
     display: flex;
     flex-direction: column;
-    background: var(--grad-card);
+    /* --grad-hero-mobile, not --grad-card (mobile/tablet audit, 2026-09-18)
+       — see its own comment in tokens.css: this stacked layout makes the
+       card tall enough that --grad-card's amber ending compresses into a
+       visible seam against .home-academy's teal right below it. */
+    background: var(--grad-hero-mobile);
     /* Client (2026-09-15): /sophia's own margin/radius, matching the
        desktop rule above now instead of the old Foundation-based values. */
     margin: 0 clamp(12px, 2.2vw, 34px);
@@ -5231,6 +5246,38 @@
     order: 1;
     min-height: 0;
     padding-top: clamp(28px, 6vw, 40px);
+    /* The base rule (desktop, above) sets both with padding-block, sized
+       for centring copy inside a tall min-height card via
+       justify-content: center. This stacked layout doesn't centre
+       anything — it's a plain column flow — so the leftover 64-128px
+       bottom padding just sat as dead space between the buttons and the
+       photo below (client, 2026-09-18, against a screenshot: "quitaste el
+       Hero" / "disminuye el espacio entre la imagen y los botones" — read
+       as a blank gap large enough to look like a missing section, not
+       spacing). Cut a further 60% (24px -> 10px, client 2026-09-18, second
+       pass) once it was still noticeably more than the row-to-row spacing
+       used elsewhere on the page. */
+    padding-bottom: 10px;
+  }
+  /* The shared .eyebrow's 17px + 0.22em tracking (base.css) wraps "Dr.
+     Dietrich Klinghardt™" onto 2 lines at this width — client, 2026-09-18,
+     against a reference screenshot showing it on one. Tightened here only
+     (not the shared rule, which every eyebrow on the site reads from). */
+  .hero__eyebrow {
+    font-size: 14px;
+    letter-spacing: 0.14em;
+  }
+  /* Full-width, stacked buttons instead of side-by-side auto-width ones —
+     matches the reference exactly (client, 2026-09-18). flex-direction:
+     column rather than relying on flex-wrap: the auto-width buttons
+     wouldn't wrap onto their own line each until the viewport got much
+     narrower than this. */
+  .hero__actions {
+    flex-direction: column;
+  }
+  .hero__actions .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -5244,7 +5291,18 @@
      top of this stacked, static layout would just overflow/clip. */
   .home-hero-pin {
     height: auto;
-    background: none;
+    /* Not none (client, 2026-09-18, second pass, against a screenshot: a
+       visible white stripe down both sides of the card). The card below
+       has its own horizontal margin (clamp(12px, 2.2vw, 34px)) with
+       rounded corners, so this wrapper's own background shows in that
+       gutter — at up to 34px wide, wide enough to read as a real stripe,
+       not a sliver. Left transparent, whatever showed through there was
+       main's own page gradient (shell.css), which has already faded to
+       near-white by this scroll depth — a flat white edge against the
+       card's own navy-to-teal gradient one edge in. Same gradient here
+       instead: the two now match in colour at every height instead of
+       just at the bottom. */
+    background: var(--grad-hero-mobile);
   }
   /* .plain-section.hero, matching the two-class selector the base rule
      uses above 560px — a plain .hero here wouldn't be specific enough to
@@ -5258,7 +5316,11 @@
        the shorthand clears background-size/-position along with it — back
        to a plain, static --grad-card fill. The scroll-pin effect is
        desktop-only; below 560px the card just shows its usual gradient. */
-    background: var(--grad-card);
+    /* --grad-hero-mobile, not --grad-card (mobile/tablet audit, 2026-09-18)
+       — see its own comment in tokens.css: this stacked layout makes the
+       card tall enough that --grad-card's amber ending compresses into a
+       visible seam against .home-academy's teal right below it. */
+    background: var(--grad-hero-mobile);
     /* Client (2026-09-15): /sophia's own margin/radius, matching the other
        two .plain-section.hero rules now instead of the old Foundation-based
        values. */
@@ -5289,6 +5351,35 @@
     order: 1;
     min-height: 0;
     padding-top: clamp(28px, 6vw, 40px);
+    /* The base rule (desktop, above) sets both with padding-block, sized
+       for centring copy inside a tall min-height card via
+       justify-content: center. This stacked layout doesn't centre
+       anything — it's a plain column flow — so the leftover 64-128px
+       bottom padding just sat as dead space between the buttons and the
+       photo below (client, 2026-09-18, against a screenshot: "quitaste el
+       Hero" / "disminuye el espacio entre la imagen y los botones" — read
+       as a blank gap large enough to look like a missing section, not
+       spacing). Cut a further 60% (24px -> 10px, client 2026-09-18, second
+       pass) once it was still noticeably more than the row-to-row spacing
+       used elsewhere on the page. */
+    padding-bottom: 10px;
+  }
+  /* The shared .eyebrow's 17px + 0.22em tracking (base.css) wraps "Dr.
+     Dietrich Klinghardt™" onto 2 lines at this width — client, 2026-09-18,
+     against a reference screenshot showing it on one. Tightened here only
+     (not the shared rule, which every eyebrow on the site reads from). */
+  .hero__eyebrow {
+    font-size: 14px;
+    letter-spacing: 0.14em;
+  }
+  /* Full-width, stacked buttons instead of side-by-side auto-width ones —
+     matches the reference exactly (client, 2026-09-18). */
+  .hero__actions {
+    flex-direction: column;
+  }
+  .hero__actions .btn {
+    width: 100%;
+    justify-content: center;
   }
   /* Step the quote down so the authored line breaks survive a phone width —
      a line that wraps reads as a broken rhythm, not a pause. */

@@ -285,7 +285,12 @@
    client: "baja de altura el TM, se ve muy alto". */
 .site-nav__link .tm {
   font-size: 1.08em;
-  vertical-align: 0.05em;
+  /* 0.05em still read as floating above the text's own top edge (client,
+     2026-09-18: "baja los TM al margen superior del texto para que
+     queden nivelados en la parte superior") — pulled down further so the
+     mark's top lines up with the cap-height of the label next to it
+     instead of sitting above it. */
+  vertical-align: -0.15em;
 }
 .site-nav__link:hover,
 .site-nav__link[aria-current="page"] {
@@ -725,19 +730,28 @@
   }
 }
 
-/* Raised from 960px, then again from 1080px (mobile/tablet audit,
-   2026-09-18): adding "Archives" made this an 8-item nav. Even the
-   tightened compact styles above (1900px block, 4px gap / 13px font /
-   0.02em tracking — already as tight as stays legible, client has twice
-   pushed back on nav text reading too small) still ran 20-55px over from
-   1081px up to ~1490px: at 8 items, that band's own available width is
-   simply narrower than the labels need, not a spacing problem tighter
-   tracking can close. 1500px is exactly where it starts fitting on its
-   own (verified empty overflow from 1500px up), so this is the smallest
-   bump that actually closes the gap — covers real tablets in that band
-   too (e.g. iPad Pro landscape, 1366px) rather than stopping just short
-   of them. */
-@media (max-width: 1500px) {
+/* Client (2026-09-18): a two-row layout was tried here — nav on its own
+   row below brand/actions — to fix the overflow the shared single row had
+   below ~1500px. Reverted: the client wants the nav back inline with the
+   logo, not dropped onto a second line ("los items del menu se fueron
+   para abajo de la línea... debe estar arriba de la línea al nivel del
+   logo").
+   Re-measuring the shared single-row treatment (the 1900px block above)
+   on its own, without this block overriding it, turned up two things:
+   (1) the ~22px "overflow" it seemed to have at 1440px and up is the same
+   harmless constant gap already confirmed elsewhere on the site (checked
+   against /about at the same width — identical, unrelated to the nav);
+   the row itself renders perfectly clean there, one line, level with the
+   logo, exactly like the reference screenshot. (2) Below that, real (not
+   phantom) crowding only actually shows up once "Dr. Klinghardt Akademie™"
+   loses its 2-line wrap and drops to 3 (confirmed by screenshot, not just
+   scrollWidth math).
+   Client (2026-09-18, follow-up): asked for the item gap back to a
+   flat 10px instead of the 4px this was tightened to while still chasing
+   the phantom above — reasonable, there was room to spare. That gap moved
+   the real 2-line/3-line boundary out from 1080px to 1130px (each of the
+   7 gaps costing 6px), so this threshold moved with it. */
+@media (max-width: 1129px) {
   .site-header__burger {
     display: grid;
     place-items: center;
