@@ -414,8 +414,13 @@
 
 .site-header__burger {
   display: none;
-  width: 38px;
-  height: 38px;
+  /* 44x44, not 38x38 (mobile/tablet audit, 2026-09-18): the single
+     highest-frequency tap target on the whole mobile site, and this only
+     ever renders where `display` below flips it on (≤1500px) — desktop
+     never shows it, so the larger hit area is mobile-only by construction,
+     not a size change that reaches desktop. */
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: var(--radius-pill);
@@ -550,6 +555,21 @@
   border-radius: var(--radius-sm);
   transition: background var(--dur-fast) var(--ease);
 }
+/* 34px reads fine as a mouse target but is tight for a finger, and these
+   icons carry no text label to widen the effective hit area the way a
+   labelled link does (mobile/tablet audit, 2026-09-18) — every page shares
+   this footer. Scoped to ≤900px (the site's general mobile/tablet cutoff,
+   e.g. .feature-row's own collapse) so desktop keeps the original 34px. */
+@media (max-width: 900px) {
+  .site-footer__social a {
+    width: 44px;
+    height: 44px;
+  }
+  .site-footer__social svg {
+    width: 18px;
+    height: 18px;
+  }
+}
 .site-footer__social a:hover {
   background: rgba(255, 255, 255, 0.14);
 }
@@ -640,25 +660,38 @@
    margin (client, 2026-09-09: "en ocaciones lo dejas fuera del margen
    cuando el boton de contact us esta presente"). 1600px clears that gap
    with room to spare, guaranteeing the CTA is only ever visible once the
-   fluid nav has room to sit fully inside the margin next to it. */
-@media (max-width: 1600px) {
+   fluid nav has room to sit fully inside the margin next to it.
+   Raised again to 1900px, and gap/font tightened a step further (14px →
+   8px, 14px → 13px): adding the "Archives" nav item (2026-09-18) made
+   this an 8-item bar instead of 7, and the mobile/tablet audit found the
+   old 1600px ceiling left a real, uncontained overflow from 1601px to
+   ~1900px where the CTA reappeared and the nav fell back to its full
+   28px-gap/16px-font desktop sizing — that range no longer had enough
+   room for 8 items either. Site-wide (every page shares this header), not
+   a per-page bug. */
+@media (max-width: 1900px) {
   .site-header__cta {
     display: none;
   }
   .site-nav__list {
-    gap: 14px;
+    gap: 4px;
   }
   /* This block used to cover only much narrower widths, where 10px was
-     needed just to fit at all — now that it runs up to 1600px too (see
+     needed just to fit at all — now that it runs up to 1900px too (see
      above), that read as too small on ordinary laptop screens (client,
      2026-09-09: "el texto del menu se ve muy pequeña... solo en pantalla
-     grande se ve bien"). Raised to 14px: with the CTA hidden here, there's
-     room for that without reopening the overflow this block exists to
-     prevent. */
+     grande se ve bien"). Raised to 14px, then to 13px once the 8th item
+     ("Archives") needed the extra room back: with the CTA hidden here,
+     there's room for that without reopening the overflow this block
+     exists to prevent. Tighter tracking (0.04em → 0.02em) alongside the
+     narrower 4px gap closes the rest of that same room, right above the
+     1080px hamburger threshold (mobile/tablet audit, 2026-09-18) where
+     8 items still ran 20-55px over even at the previous 8px/13px/0.04em
+     step. */
   .site-nav__link {
     max-width: 15ch;
-    font-size: 14px;
-    letter-spacing: 0.04em;
+    font-size: 13px;
+    letter-spacing: 0.02em;
     /* The desktop rule forces one line via nowrap; this range relies on
        max-width actually wrapping long labels ("Dr. Klinghardt Akademie")
        instead of overflowing into the next item. */
@@ -690,7 +723,19 @@
   }
 }
 
-@media (max-width: 960px) {
+/* Raised from 960px, then again from 1080px (mobile/tablet audit,
+   2026-09-18): adding "Archives" made this an 8-item nav. Even the
+   tightened compact styles above (1900px block, 4px gap / 13px font /
+   0.02em tracking — already as tight as stays legible, client has twice
+   pushed back on nav text reading too small) still ran 20-55px over from
+   1081px up to ~1490px: at 8 items, that band's own available width is
+   simply narrower than the labels need, not a spacing problem tighter
+   tracking can close. 1500px is exactly where it starts fitting on its
+   own (verified empty overflow from 1500px up), so this is the smallest
+   bump that actually closes the gap — covers real tablets in that band
+   too (e.g. iPad Pro landscape, 1366px) rather than stopping just short
+   of them. */
+@media (max-width: 1500px) {
   .site-header__burger {
     display: grid;
     place-items: center;

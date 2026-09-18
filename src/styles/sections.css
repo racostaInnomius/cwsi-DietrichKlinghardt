@@ -354,23 +354,38 @@
    column's top via align-items: start (both are grid-row siblings
    starting at the same line), bottom edge landing within the client's own
    15% allowance rather than forced exact. */
-/* :has(.feature-row__media) added purely for specificity parity — the
-   base rule setting this row's default 1fr/1fr (sections.css, further
-   down) is itself a two-class selector via that same :has(), so a plain
-   two-class .feature-row.archives-square-row here would tie it and lose
-   on source order (this block loads first). Three class-level selectors
-   beats that regardless of which file position wins ties. */
-.feature-row.archives-square-row:has(.feature-row__media) {
-  align-items: start;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-}
-/* .feature-row__media's own order: 2 (the --right modifier, sections.css
-   above) moves the image to the second grid track visually without
-   changing which track is textually "wider" here — swapped back so the
-   15%-wider track always lands under the image, not whichever side it
-   happens to render on. */
-.feature-row.archives-square-row.feature-row--right:has(.feature-row__media) {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+/* Mobile audit (2026-09-18): both rules below are desktop-only now — they
+   weren't wrapped in a media query at all before, and their three
+   class-level selectors outrank the mobile single-column collapse
+   (.feature-row:has(.feature-row__media) { grid-template-columns:
+   minmax(0, 1fr) }, further down, inside @media (max-width: 900px)) on
+   pure specificity regardless of source order. That forced this row's
+   1.15fr/1fr two-column split even on a 375px phone, well past its own
+   :has(.feature-row__media) width, minus the 900px-collapse — never wide
+   enough to hold a photo column beside a text column, which is what
+   actually pushed the whole page 13–29px past the viewport. Restricting
+   this to the same ≥901px range the rest of the site's hero/grid
+   overrides already use lets the shared mobile collapse rule apply
+   underneath, unopposed. */
+@media (min-width: 901px) {
+  /* :has(.feature-row__media) added purely for specificity parity — the
+     base rule setting this row's default 1fr/1fr (sections.css, further
+     down) is itself a two-class selector via that same :has(), so a plain
+     two-class .feature-row.archives-square-row here would tie it and lose
+     on source order (this block loads first). Three class-level selectors
+     beats that regardless of which file position wins ties. */
+  .feature-row.archives-square-row:has(.feature-row__media) {
+    align-items: start;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+  /* .feature-row__media's own order: 2 (the --right modifier, sections.css
+     above) moves the image to the second grid track visually without
+     changing which track is textually "wider" here — swapped back so the
+     15%-wider track always lands under the image, not whichever side it
+     happens to render on. */
+  .feature-row.archives-square-row.feature-row--right:has(.feature-row__media) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  }
 }
 .archives-square-row .feature-row__media img {
   width: 100%;
@@ -1973,7 +1988,14 @@
   }
   .courses-hero-pin .courses-hero {
     position: sticky;
-    top: 0;
+    /* Client (2026-09-18): "ese pequeño gap de movimiento... no me gusta"
+       — was a flat 0, so the card only started sticking once scroll had
+       already covered the sticky header's own height, letting the whole
+       hero drift up that distance first instead of locking immediately.
+       Tracked live in CoursesHeroPhotos.tsx (the announcement bar's height
+       changes on scroll) rather than hardcoded, so this stays correct at
+       every breakpoint and banner state. */
+    top: var(--courses-hero-sticky-offset, 0px);
     /* sophia_hero_dimension (2026-09-17, tokens.css/CLAUDE.md): a fixed
        height, not the min-height this carried before — that let the photo
        cluster + copy push the box to 732px against /sophia's 600px.
@@ -4023,7 +4045,14 @@
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* min(300px, 100%), not a flat 300px (mobile/tablet audit, 2026-09-18):
+     the flat floor doesn't shrink below 300px even when the container
+     itself is narrower — at 320px viewport width the wrap gutter leaves
+     only ~272px, so the column stayed 300px and overflowed the page by a
+     few px. min() lets the column also shrink to fill 100% of that
+     narrower container; every wider screen still gets the full 300px
+     since 100% there exceeds it. */
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: clamp(18px, 2.2vw, 28px);
 }
 .practitioner {
@@ -5074,6 +5103,17 @@
   }
   .event-row__meta {
     grid-column: 2;
+    /* Mobile audit (2026-09-18): this cell already collapses to the grid's
+       own minmax(0, 1fr) column above, but .event-row__meta's shared
+       white-space: nowrap (sections.css, base rule) is inherited by its
+       .tag child — a long, CMS-supplied category string ("In Person /
+       Wellness / A.R.T. Training") doesn't wrap, so the flex row grew to
+       fit that single unbroken line instead of shrinking to the column,
+       pushing the whole page 83px wider than the viewport. flex-wrap lets
+       price/tag/arrow drop to their own line instead of forcing one more
+       squeeze if wrapped text still doesn't leave room for all three. */
+    flex-wrap: wrap;
+    white-space: normal;
     padding-top: 4px;
   }
 }
@@ -5310,6 +5350,24 @@
 }
 .feature-row:has(.feature-row__media) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+/* Mobile audit (2026-09-18): pre-existing bug, not introduced by any of
+   today's changes — .feature-row:has(.feature-row__media) is one of the
+   selectors the shared mobile single-column collapse (@media (max-width:
+   900px), much earlier in this file) already listed, but that shared
+   block sits BEFORE this rule in the file, so on the exact same (0,2,0)
+   specificity, THIS rule always won the tie regardless of viewport width
+   — every feature-row with a media side (Sophia's "Who we are", Academy's
+   six branches, Foundation, Archives, …) kept rendering two columns on
+   phones instead of collapsing, several of them narrow enough to overflow
+   the page horizontally once the columns got tight enough (confirmed on
+   Archives). Re-declared here, after the rule that was beating it, so the
+   collapse actually wins below 900px without changing anything at or
+   above it. */
+@media (max-width: 900px) {
+  .feature-row:has(.feature-row__media) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .feature-row--right:has(.feature-row__media) .feature-row__media {
   order: 2;

@@ -61,7 +61,24 @@ export function CoursesHeroPhotos() {
       // nudging back and forth as the whole page scrolls past.
       const wrapper = document.querySelector<HTMLElement>(".courses-hero-pin");
       const card = document.querySelector<HTMLElement>(".courses-hero-pin .courses-hero");
+      const stickyHeader = document.querySelector<HTMLElement>(".site-shell__sticky-top");
       if (el && wrapper && card) {
+        // Client (2026-09-18): "ese pequeño gap de movimiento en la página
+        // es la que no me gusta" — .courses-hero's sticky top was a flat 0,
+        // so scrolling had to cover the sticky header's own height (~127px)
+        // before the card's static position even reached that threshold and
+        // actually stuck; until then, the whole hero (copy and photos
+        // together) just scrolled normally like any other section, which
+        // read as a stray jolt before the pin/drift took over. Tracked live
+        // (the announcement bar's own height changes on scroll) rather than
+        // a hardcoded px, and shared with sections.css via this custom
+        // property so the card's `top` always matches exactly what's
+        // actually stuck above it.
+        const headerOffset = stickyHeader?.getBoundingClientRect().height ?? 0;
+        document.documentElement.style.setProperty(
+          "--courses-hero-sticky-offset",
+          `${headerOffset}px`,
+        );
         // The card's own height (80vh, sections.css), not window.innerHeight
         // — sticky actually releases at wrapperHeight - cardHeight, and the
         // card here is shorter than the viewport (client, 2026-09-11: "el
@@ -69,7 +86,17 @@ export function CoursesHeroPhotos() {
         // full window height would release the pin too early and desync
         // this progress from where it actually unsticks.
         const dwell = wrapper.getBoundingClientRect().height - card.getBoundingClientRect().height;
-        const progress = dwell > 0 ? Math.min(1, Math.max(0, -wrapper.getBoundingClientRect().top / dwell)) : 0;
+        // Offset by the same headerOffset the card's own sticky `top` now
+        // uses, so the drift starts counting from the instant the card
+        // actually locks (scroll ≈ 0) instead of from wherever it would
+        // have stuck under the old top: 0 (scroll ≈ headerOffset) — without
+        // this, the first headerOffset px of the dwell would hold the photos
+        // still (already pinned, just not yet drifting) before anything
+        // visibly moved.
+        const progress =
+          dwell > 0
+            ? Math.min(1, Math.max(0, (headerOffset - wrapper.getBoundingClientRect().top) / dwell))
+            : 0;
         // Raw 0→1: each column (sections.css) interpolates its own
         // --from/--to across this directly, rather than both sharing one
         // pre-scaled pixel value.
