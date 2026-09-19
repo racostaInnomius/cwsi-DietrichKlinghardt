@@ -1,8 +1,7 @@
 import { Seo } from "@/components/Seo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
-import { mediaUrl } from "@/lib/cms";
-import { useSection, sophiaTeamBioSlug } from "@/lib/sections";
+import { mediaUrl, richTextBlocks } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -10,25 +9,30 @@ import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
 
 /**
- * "Learn more" page for one Sophia team member. Photo/name/role/title come
- * from the `board-members` CMS collection (same rows /sophia/team lists);
- * the full "About" bio has no CMS field of its own, so it reads from a
- * `page-contents` row at `sophia-team-bio-<slug>` (see sophiaTeamBioSlug in
- * sections.ts), falling back to the local `teamBios` data (client,
- * 2026-09-18: "de ahí toma su info", sourced from
- * https://www.sophiahi.com/team) until that row exists — matched to a CMS
- * row by slugifying its name, see slugifyName.
+ * "Learn more" page for one Sophia team member. Photo/name/role/title/bio
+ * all come from the same `board-members` CMS row (same rows /sophia/team
+ * lists) — `bio` is a shared field on that collection now (2026-09-19,
+ * added for Sistworld's own board bios, board-members being a CMS
+ * collection shared across tenants), read here the same way name/role/
+ * title already are, no separate fetch needed.
+ * Falls back to the local `teamBios` data (client, 2026-09-18: "de ahí
+ * toma su info", sourced from https://www.sophiahi.com/team) until a
+ * row's `bio` field is actually filled in — matched by slugifying the
+ * row's name, see slugifyName. This replaces the earlier `page-contents`-
+ * at-`sophia-team-bio-<slug>` workaround (sections.ts's sophiaTeamBioSlug,
+ * now removed) built before `board-members` had a bio field of its own.
  */
 export function TeamMemberPage() {
   const { slug } = useParams();
   const person = useCollection("board-members").find(
     (row) => slugifyName(text(row, "name")) === slug,
   );
-  const bio = useSection(sophiaTeamBioSlug(slug ?? ""), {
-    paragraphs: slug ? teamBios[slug]?.paragraphs : undefined,
-  });
+  const cmsParagraphs = person ? richTextBlocks(person.bio) : [];
+  const paragraphs = cmsParagraphs.length
+    ? cmsParagraphs
+    : (slug ? teamBios[slug]?.paragraphs : undefined) ?? [];
 
-  if (!person || !bio.paragraphs.length) {
+  if (!person || !paragraphs.length) {
     return (
       <>
         <Seo title={"Team member not found — Sophia Health Institute™"} noindex />
@@ -55,7 +59,7 @@ export function TeamMemberPage() {
     <>
       <Seo
         title={`${name} — Sophia Health Institute™`}
-        description={bio.paragraphs[0]}
+        description={paragraphs[0]}
         path={`/sophia/team/${slug}`}
       />
 
@@ -84,7 +88,7 @@ export function TeamMemberPage() {
                   ))}
                 </ul>
               ) : null}
-              <p className="lead">{bio.paragraphs[0]}</p>
+              <p className="lead">{paragraphs[0]}</p>
               <Link className="btn btn-primary team-member-header__cta" to="/contact">
                 Contact us <span aria-hidden="true">→</span>
               </Link>
@@ -96,7 +100,7 @@ export function TeamMemberPage() {
       <section className="section wrap">
         <Reveal className="prose team-member-about">
           <p className="eyebrow">About</p>
-          {bio.paragraphs.slice(1).map((paragraph) => (
+          {paragraphs.slice(1).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </Reveal>

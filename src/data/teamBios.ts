@@ -1,15 +1,16 @@
 /**
  * Full "About" bios for the Sophia team, one Learn More page each — the
- * fallback `TeamMemberPage.tsx` renders until a `page-contents` row exists
- * at `sophiaTeamBioSlug(slug)` (see sections.ts), same as every other
- * section's bundled default.
+ * fallback `TeamMemberPage.tsx` renders until the matching `board-members`
+ * row's own `bio` field is filled in in the CMS.
  *
  * Source: https://www.sophiahi.com/team and each practitioner's own bio
- * page there (client, 2026-09-18: "de ahí toma su info"). The `board-members`
- * CMS collection has no bio field of its own — only name/role/title/photo —
- * which is why the bio needed a home of its own instead of another field on
- * that collection. `slugifyName(row.name)` is what ties a bio here (and its
- * CMS row) to the matching `board-members` person.
+ * page there (client, 2026-09-18: "de ahí toma su info"). `board-members`
+ * didn't have a `bio` field at all when this was first written; one was
+ * added (2026-09-19, for Sistworld's own board bios — board-members is a
+ * CMS collection shared across tenants) and TeamMemberPage.tsx now reads
+ * that field first, falling back to this file until a row's bio is
+ * actually filled in. `slugifyName(row.name)` is what ties a bio here to
+ * the matching `board-members` person.
  */
 
 /** "Dr. Jadie Ko" -> "jadie-ko"; "Andreanna (Andi) Rainville" -> "andreanna-rainville". */

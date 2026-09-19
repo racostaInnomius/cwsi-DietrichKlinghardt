@@ -645,7 +645,6 @@ solo se queda corto.
 | `weekly-talks` | Página Weekly Talks | `weekly-talks-plan` · `weekly-talks-benefits` · `weekly-talks-cta` | Precio, beneficios (`useRecords`) y CTA (`useRecords`) — los tres slugs literales; ver A13 en `PENDIENTES.md` sobre el CTA |
 | `sophia-home` · `sophia-team` · `new-patients` · `accommodations` | Ramal Sophia (tema teal) |
 | `accommodations-list` · `accommodations-map` | Listas de Travel & Accommodations (`useRecords`) |
-| `sophia-team-bio-<slug>` | **Nuevo (2026-09-18).** Una fila por practicante de `/sophia/team/<slug>`, ver más abajo |
 | `archives-home` · `archives-art-klinghardt` · `archives-apn` · `archives-five-levels` | **Nuevo (2026-09-18).** Ramal Archives (contenido en alemán, migrado de klinghardt-akademie.de) |
 | `archives-five-levels-list` | Los 5 niveles de `archives-five-levels` (`useRecords`, 2 campos: encabezado \| cuerpo) |
 
@@ -655,33 +654,23 @@ ver `useRecords` en `src/lib/sections.ts`): `about-chapters`, `about-timeline`,
 `weekly-talks-benefits`, `weekly-talks-cta`, `weekly-talks-plan`,
 `accommodations-list`, `accommodations-map`, `archives-five-levels-list`.
 
-### `sophia-team-bio-<slug>` — slug dinámico, no fijo
+### Bios de `/sophia/team/<slug>` — campo `bio` de `board-members`, no `page-contents`
 
-Los bios completos de `/sophia/team/<slug>` (el "Learn more" de cada
-practicante) no tienen campo propio en `board-members` — esa colección solo
-guarda `name`/`role`/`title`/`photo`. Cada bio vive en su propia fila de
-`page-contents`, con el slug construido como `sophia-team-bio-` + el mismo
-slug que ya usa la URL (`sophiaTeamBioSlug()` en `src/lib/sections.ts`). No es
-una entrada fija de la tabla de arriba porque el roster mismo es dato del CMS
-(`board-members`), no código — cambia con cada alta/baja de personal, y el
-slug cambia con él.
+**Actualizado (2026-09-19).** Hasta esta fecha, cada bio vivía en su propia
+fila de `page-contents` (`sophia-team-bio-<slug>`), porque `board-members`
+solo guardaba `name`/`role`/`title`/`photo`. Esa colección es compartida
+entre tenants (Beytrax), y al pedir Sistworld lo mismo para su propio
+Board of Directors, se agregó un campo `bio` (richText) directo a
+`board-members` en `cwsf-beytrax` — migración `20260919_052624_add_board_
+member_bio`, aditiva. `TeamMemberPage.tsx` ahora lee `person.bio` de la
+misma fila que ya trae name/role/title/photo (sin fetch adicional) en vez
+del slug dinámico; ese mecanismo (`sophiaTeamBioSlug()`) se eliminó de
+`sections.ts` por quedar sin uso.
 
-Los 8 slugs concretos hoy (uno por fila de `board-members` ya sembrada, D16):
-
-| Slug | Persona |
-|---|---|
-| `sophia-team-bio-dietrich-klinghardt` | Dr. Dietrich Klinghardt |
-| `sophia-team-bio-jadie-ko` | Dr. Jadie Ko |
-| `sophia-team-bio-summer-beattie` | Dr. Summer Beattie |
-| `sophia-team-bio-kim-dines` | Kim Dines |
-| `sophia-team-bio-nava-wiegert` | Nava Wiegert |
-| `sophia-team-bio-terry-enriques` | Terry Enriques |
-| `sophia-team-bio-dominique-hilliard` | Dominique Hilliard |
-| `sophia-team-bio-andreanna-rainville` | Andreanna (Andi) Rainville |
-
-Hasta que existan estas filas, cada página sigue mostrando el bio empaquetado
-en `src/data/teamBios.ts` (texto real, transcrito de sophiahi.com/team, no
-inventado) — igual que cualquier otro bloque de esta tabla sin fila en el CMS.
+Hasta que el campo `bio` de una fila se llene en el CMS, la página sigue
+mostrando el bio empaquetado en `src/data/teamBios.ts` (texto real,
+transcrito de sophiahi.com/team, no inventado) — igual que cualquier otro
+bloque de esta tabla sin contenido en el CMS.
 
 ⚠️ **Dos slugs de `SECTION.*` sin uso real:** `SECTION.homeHero`
 (`home-hero`) y `SECTION.fiveLevelsList` (`five-levels-list`) están
