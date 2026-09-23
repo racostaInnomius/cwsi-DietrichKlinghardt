@@ -5,6 +5,8 @@ import { Reveal } from "@/components/motion/Reveal";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Marked } from "@/components/Marked";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { InViewVideo } from "@/components/sections/InViewVideo";
+import { SOPHIA_WELCOME_VIDEO } from "@/data/media";
 import {
   ShieldIcon,
   TargetIcon,
@@ -183,14 +185,7 @@ export function SophiaPage() {
       {/* Who we are — the campus photo, the claim and the copy. */}
       <section className="section wrap feature-row feature-row--right">
         <Reveal className="feature-row__media feature-row__media--match-copy">
-          <img
-            src="/images/sophia-clinic.webp"
-            alt="Sophia Health Institute campus"
-            width={1024}
-            height={683}
-            loading="lazy"
-            decoding="async"
-          />
+          <InViewVideo {...SOPHIA_WELCOME_VIDEO} width={848} height={480} />
         </Reveal>
 
         <Reveal className="feature-row__body" delay={90}>

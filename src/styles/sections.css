@@ -5558,7 +5558,11 @@
 .feature-row--right:has(.feature-row__media) .feature-row__media {
   order: 2;
 }
-.feature-row__media img {
+/* `video` added (2026-09-22, /sophia "Who we are" row) alongside `img` —
+   InViewVideo renders a bare <video>, no extra wrapper, so it needs the
+   exact same treatment as the photo it replaced there. */
+.feature-row__media img,
+.feature-row__media video {
   display: block;
   width: 100%;
   aspect-ratio: 558 / 457;
@@ -5580,7 +5584,8 @@
 .feature-row:has(.feature-row__media--match-copy) {
   align-items: stretch;
 }
-.feature-row__media.feature-row__media--match-copy img {
+.feature-row__media.feature-row__media--match-copy img,
+.feature-row__media.feature-row__media--match-copy video {
   height: 100%;
   aspect-ratio: auto;
 }
@@ -5591,7 +5596,8 @@
    with no row height to resolve against blew this up to ~862px (measured,
    not assumed). Reverts to the shared photo ratio there. */
 @media (max-width: 900px) {
-  .feature-row__media.feature-row__media--match-copy img {
+  .feature-row__media.feature-row__media--match-copy img,
+  .feature-row__media.feature-row__media--match-copy video {
     height: auto;
     aspect-ratio: 558 / 457;
   }

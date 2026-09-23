@@ -37,3 +37,17 @@ export const PYRAMID_VIDEO = {
   poster: "/images/5_levels.png",
   title: "The 5 Levels of Healing, from base to apex: 1st Physical Body, 2nd Energy Body, 3rd Mental, 4th Intuitive, 5th Spiritual",
 } as const;
+
+/**
+ * The "Who we are" row on /sophia (client, 2026-09-22), replacing the
+ * `sophia-clinic.webp` photo in `.feature-row__media--match-copy`. Same
+ * InViewVideo pattern as PYRAMID_VIDEO — plays once, muted, the moment it
+ * scrolls into view. 848×480 real source dimensions (not the 1024×683 of
+ * the photo it replaces); `sophia-clinic.webp` stays as the poster frame
+ * and is still used elsewhere on this page and on Home.
+ */
+export const SOPHIA_WELCOME_VIDEO = {
+  src: `${BLOB}/${TENANT}/sophia-welcome.mp4`,
+  poster: "/images/sophia-clinic.webp",
+  title: "Sophia Health Institute campus",
+} as const;
