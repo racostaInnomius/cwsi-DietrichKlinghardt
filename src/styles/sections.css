@@ -4577,16 +4577,20 @@
   justify-content: center;
 }
 /* Client (2026-09-16): the pyramid renders as a supplied image here instead
-   of the <Pyramid /> component; (2026-09-22) that image became a looping
-   video (LoopingVideo, replacing an <img>); (same day, follow-up) the text
-   legend beside it was removed so the video fills the section on its own —
-   full .wrap width instead of capped at half a two-column grid.
-   `aspect-ratio` matches the source's real 1920×1080 so the reserved space
-   is correct before the video's own metadata loads (no layout shift). */
+   of the <Pyramid /> component; (2026-09-22) that image became a video
+   (InViewVideo, replacing an <img>); (same day, follow-up ×2) the text
+   legend beside it was removed, then the video's own size was pulled back
+   down to match `.five-levels-video .video-frame` right above it — same
+   80%-of-.wrap cap, both being the same 16:9 source shape, rather than
+   filling the section's full width. `aspect-ratio` matches the source's
+   real 1920×1080 so the reserved space is correct before the video's own
+   metadata loads (no layout shift). */
 .levels__pyramid-image {
   width: 100%;
+  max-width: 80%;
   aspect-ratio: 16 / 9;
   height: auto;
+  margin-inline: auto;
 }
 
 .pyramid {
@@ -4671,8 +4675,12 @@
   transform-origin: right bottom;
 }
 
+/* Client (2026-09-22): same left/right margin as the two videos above —
+   same 80%-of-.wrap cap, centered, instead of running the full .wrap width
+   with only the inner <p>'s 46ch capping where the text itself wraps. */
 .levels__quote {
-  margin: 0;
+  max-width: 80%;
+  margin: 0 auto;
 }
 .levels__quote p {
   max-width: 46ch;

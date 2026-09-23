@@ -6,7 +6,7 @@ import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { VideoPlayer } from "@/components/sections/VideoPlayer";
 import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
-import { LoopingVideo } from "@/components/sections/LoopingVideo";
+import { InViewVideo } from "@/components/sections/InViewVideo";
 import { FIVE_LEVELS_VIDEO, PYRAMID_VIDEO } from "@/data/media";
 
 /**
@@ -16,10 +16,11 @@ import { FIVE_LEVELS_VIDEO, PYRAMID_VIDEO } from "@/data/media";
  * request 2026-09-16) beside a text legend (heading + body per level, from
  * `FIVE_LEVELS`), before that the `<Pyramid />` component this page's
  * /academy hub card slot still uses (`<Pyramid compact />`, untouched). Now
- * (client, 2026-09-22) it's a short looping animation, `LoopingVideo` +
- * `PYRAMID_VIDEO` — and (same day, follow-up) the legend is gone entirely so
- * the video can fill the whole section instead of sharing it with text.
- * `5_levels.png` stays on as the video's poster frame.
+ * (client, 2026-09-22) it's a short animation that plays once, `InViewVideo`
+ * + `PYRAMID_VIDEO` — the legend is gone entirely, and the video is sized to
+ * match `.five-levels-video` above it (same 80%-of-.wrap cap) rather than
+ * filling the section edge to edge. `5_levels.png` stays on as the video's
+ * poster frame.
  */
 export function FiveLevelsPage() {
   const page = useSection(SECTION.fiveLevels, {
@@ -63,7 +64,7 @@ export function FiveLevelsPage() {
       </section>
 
       <section className="section wrap levels">
-        <LoopingVideo
+        <InViewVideo
           className="levels__pyramid-image"
           {...PYRAMID_VIDEO}
           width={1920}

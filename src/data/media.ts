@@ -28,8 +28,8 @@ export const FIVE_LEVELS_VIDEO = {
  * The pyramid animation on /academy/five-levels (client, 2026-09-22),
  * replacing the static `5_levels.png` in `.levels`. Same hosting rationale
  * as above — uploaded the same way, same container and tenant prefix — but
- * this one autoplays, muted and looped, the moment it scrolls into view
- * (LoopingVideo), unlike FIVE_LEVELS_VIDEO's click-to-play SelfHostedVideo:
+ * this one autoplays once, muted, the moment it scrolls into view
+ * (InViewVideo), unlike FIVE_LEVELS_VIDEO's click-to-play SelfHostedVideo:
  * 8 seconds and 12.2 MB, there's nothing to preload="none" against.
  */
 export const PYRAMID_VIDEO = {

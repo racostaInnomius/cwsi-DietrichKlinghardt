@@ -5,15 +5,15 @@ import { useEffect, useRef } from "react";
  * /academy/five-levels, standing in for what used to be a static image.
  * Unlike `SelfHostedVideo` (a long film, `preload="none"`, click to play),
  * this is a handful of seconds and a few MB: nothing to gate behind a poster
- * and a play button. It starts the moment it scrolls into view and pauses
- * when it scrolls back out, rather than autoplaying the instant the page
- * mounts somewhere off-screen.
+ * and a play button. It plays once, the moment it first scrolls into view
+ * (client, 2026-09-22: "solo que se ejecute una sola vez cuando aparezca a
+ * la vista" — no loop), then leaves its last frame on screen.
  *
- * Muted and looped because that's what browsers require to autoplay at all;
- * there is no audio track to lose. `prefers-reduced-motion` skips the
- * autoplay entirely and leaves the poster frame in place, same as `Reveal`.
+ * Muted because that's what browsers require to autoplay at all; there is no
+ * audio track to lose. `prefers-reduced-motion` skips the autoplay entirely
+ * and leaves the poster frame in place, same as `Reveal`.
  */
-export function LoopingVideo({
+export function InViewVideo({
   src,
   poster,
   title,
@@ -46,8 +46,7 @@ export function LoopingVideo({
         for (const entry of entries) {
           if (entry.isIntersecting) {
             node.play().catch(() => {});
-          } else {
-            node.pause();
+            observer.unobserve(entry.target);
           }
         }
       },
@@ -62,7 +61,6 @@ export function LoopingVideo({
       ref={ref}
       className={className}
       muted
-      loop
       playsInline
       preload="auto"
       poster={poster}
