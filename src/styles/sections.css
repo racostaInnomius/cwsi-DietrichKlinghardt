@@ -4573,21 +4573,20 @@
    that level, and the paragraph beside it takes the same one — that pairing is
    what lets a reader match band to text without counting positions. */
 .levels {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(32px, 5vw, 80px);
+  display: flex;
+  justify-content: center;
 }
 /* Client (2026-09-16): the pyramid renders as a supplied image here instead
    of the <Pyramid /> component; (2026-09-22) that image became a looping
-   video, same element role (LoopingVideo, replacing an <img>) so this rule
-   needed no changes. Capped near its native 556px so it doesn't upscale past
-   the source's own resolution and blur. */
+   video (LoopingVideo, replacing an <img>); (same day, follow-up) the text
+   legend beside it was removed so the video fills the section on its own —
+   full .wrap width instead of capped at half a two-column grid.
+   `aspect-ratio` matches the source's real 1920×1080 so the reserved space
+   is correct before the video's own metadata loads (no layout shift). */
 .levels__pyramid-image {
   width: 100%;
-  max-width: 480px;
+  aspect-ratio: 16 / 9;
   height: auto;
-  justify-self: center;
 }
 
 .pyramid {
@@ -4670,26 +4669,6 @@
   right: 0;
   transform: rotate(62deg);
   transform-origin: right bottom;
-}
-
-.levels__legend {
-  display: grid;
-  gap: clamp(18px, 2.4vw, 30px);
-}
-.levels__item h2 {
-  margin-bottom: 6px;
-  font-family: var(--font-sans);
-  font-size: var(--fs-lead);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  /* Same darkening as the ordinals — the raw accents sit at 2.5–3:1 on white. */
-  color: color-mix(in srgb, var(--accent) 68%, var(--ink));
-}
-.levels__item p {
-  max-width: 46ch;
-  font-style: italic;
-  color: var(--muted);
 }
 
 .levels__quote {

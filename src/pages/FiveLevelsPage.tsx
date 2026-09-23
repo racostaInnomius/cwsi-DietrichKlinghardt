@@ -8,18 +8,18 @@ import { VideoPlayer } from "@/components/sections/VideoPlayer";
 import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
 import { LoopingVideo } from "@/components/sections/LoopingVideo";
 import { FIVE_LEVELS_VIDEO, PYRAMID_VIDEO } from "@/data/media";
-import { FIVE_LEVELS as LEVELS } from "@/data/fiveLevels";
 
 /**
  * The 5 Levels of Healing.
  *
  * The pyramid used to be a static image (`/images/5_levels.png`, client
- * request 2026-09-16), before that the `<Pyramid />` component this page's
- * /academy hub card slot still uses (`<Pyramid compact />`, untouched); now
+ * request 2026-09-16) beside a text legend (heading + body per level, from
+ * `FIVE_LEVELS`), before that the `<Pyramid />` component this page's
+ * /academy hub card slot still uses (`<Pyramid compact />`, untouched). Now
  * (client, 2026-09-22) it's a short looping animation, `LoopingVideo` +
- * `PYRAMID_VIDEO`. `5_levels.png` stays on as the video's poster frame. The
- * legend beside it (heading + body per level) stays a real list, driven by
- * `FIVE_LEVELS`.
+ * `PYRAMID_VIDEO` — and (same day, follow-up) the legend is gone entirely so
+ * the video can fill the whole section instead of sharing it with text.
+ * `5_levels.png` stays on as the video's poster frame.
  */
 export function FiveLevelsPage() {
   const page = useSection(SECTION.fiveLevels, {
@@ -66,24 +66,9 @@ export function FiveLevelsPage() {
         <LoopingVideo
           className="levels__pyramid-image"
           {...PYRAMID_VIDEO}
-          width={556}
-          height={458}
+          width={1920}
+          height={1080}
         />
-
-        <div className="levels__legend">
-          {LEVELS.map((level, index) => (
-            <Reveal
-              key={level.heading}
-              className="levels__item"
-              delay={index * 70}
-              shift={12}
-              style={{ "--accent": level.accent } as React.CSSProperties}
-            >
-              <h2>{level.heading}</h2>
-              <p>{level.body}</p>
-            </Reveal>
-          ))}
-        </div>
       </section>
 
       <section className="section wrap">
