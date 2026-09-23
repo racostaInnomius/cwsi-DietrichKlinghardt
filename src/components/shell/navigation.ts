@@ -19,6 +19,10 @@ export interface NavItem {
   sublabel?: string;
   children?: NavItem[];
   theme?: Brand;
+  /** True for a link off this site — SiteHeader renders a plain <a
+   *  target="_blank"> instead of a router <Link>, since react-router's
+   *  <Link> assumes an internal route. */
+  external?: boolean;
 }
 
 export const PRIMARY_NAV: NavItem[] = [
@@ -54,7 +58,9 @@ export const PRIMARY_NAV: NavItem[] = [
       { label: "A.R.T. Klinghardt", href: "/academy/art", mark: "™" },
       { label: "The 5 Levels of Healing", href: "/academy/five-levels", mark: "™" },
       { label: "Publications", href: "/academy/publications" },
-      { label: "Klinghardt Akademie", href: "/academy/akademie" },
+      // Client (2026-09-23): links out to the real (German) Akademie site
+      // rather than the internal /academy/akademie page.
+      { label: "Klinghardt Akademie", href: "https://klinghardt-akademie.de/", external: true },
       { label: "Dr. Klinghardt Foundation", href: "/foundation", mark: "™" },
     ],
   },

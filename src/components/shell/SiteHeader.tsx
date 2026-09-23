@@ -128,12 +128,18 @@ export function SiteHeader() {
                     <ul className={`site-nav__menu${isOpen ? " is-open" : ""}`}>
                       {item.children!.map((child) => (
                         <li key={child.href}>
-                          <Link
-                            to={child.href}
-                            aria-current={isChildCurrent(pathname, child.href) ? "page" : undefined}
-                          >
-                            <Label item={child} />
-                          </Link>
+                          {child.external ? (
+                            <a href={child.href} target="_blank" rel="noopener noreferrer">
+                              <Label item={child} />
+                            </a>
+                          ) : (
+                            <Link
+                              to={child.href}
+                              aria-current={isChildCurrent(pathname, child.href) ? "page" : undefined}
+                            >
+                              <Label item={child} />
+                            </Link>
+                          )}
                         </li>
                       ))}
                     </ul>
