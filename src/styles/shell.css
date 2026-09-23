@@ -619,13 +619,17 @@
 .site-footer nav a:hover {
   opacity: 1;
 }
-/* Client (2026-09-22): "los TMs en el footer hacerlos un 50% mas grandes."
-   Same fix as .site-nav__link .tm above: the shared .tm's vertical-align is
-   a length in its own font-size, so it floats higher once font-size grows —
-   pulled back down to keep the mark sitting near the label's cap-height. */
+/* Client (2026-09-22): "los TMs en el footer hacerlos un 50% mas grandes",
+   then (same day, follow-up): "siguen siendo muy pequeños, hazlos mucho mas
+   notorios" — the +50% pass (0.48em) still read as a barely-there
+   afterthought, so this jumps close to the label's own size instead of a
+   modest bump. Same fix as .site-nav__link .tm above: the shared .tm's
+   vertical-align is a length in its own font-size, so it floats higher once
+   font-size grows — pulled back down to keep the mark sitting near the
+   label's cap-height rather than above it. */
 .site-footer .tm {
-  font-size: 0.48em;
-  vertical-align: 0.55em;
+  font-size: 0.85em;
+  vertical-align: 0.28em;
 }
 
 /* Oversized signature bleeding off the bottom edge, as in every frame. */
