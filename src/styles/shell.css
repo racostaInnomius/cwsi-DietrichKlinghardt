@@ -117,20 +117,18 @@
 
 .announcement {
   background: var(--gold-bright);
-  /* Navy, not the design's white. The amber is the design's exact #e9a43f and
-     stays — it is the part of this bar anyone notices — but white on it
-     measures 2.13:1, far under AA for 12px. Navy on the same amber clears
-     5.59:1 and keeps the bar in the brand's own colours rather than defaulting
-     to black. --brand-text (not --brand itself) so Sophia's override below
-     gets the darker teal ramp step automatically — same reason --brand-text
-     exists at all: plain --brand only reaches 3.61:1 on the cream below. */
-  color: var(--brand-text);
+  /* Black (client, 2026-09-22: "el texto del sintillo a negro, en todo el
+     sitio menos /sophia") — clears AA easily on the amber, same as the navy
+     it replaces. Sophia keeps the previous --brand-text colour below. */
+  color: #000;
   text-align: center;
 }
 /* Sophia-only bar colour (2026-09-07) — every other page keeps the amber
-   above. */
+   above. Text stays the original --brand-text here (client, 2026-09-22:
+   the site-wide switch to black excludes /sophia). */
 [data-theme="sophia"] .announcement {
   background: #ede8db;
+  color: var(--brand-text);
 }
 .announcement p {
   margin: 0;
@@ -620,6 +618,14 @@
 }
 .site-footer nav a:hover {
   opacity: 1;
+}
+/* Client (2026-09-22): "los TMs en el footer hacerlos un 50% mas grandes."
+   Same fix as .site-nav__link .tm above: the shared .tm's vertical-align is
+   a length in its own font-size, so it floats higher once font-size grows —
+   pulled back down to keep the mark sitting near the label's cap-height. */
+.site-footer .tm {
+  font-size: 0.48em;
+  vertical-align: 0.55em;
 }
 
 /* Oversized signature bleeding off the bottom edge, as in every frame. */

@@ -7086,9 +7086,19 @@ ul.sophia-therapies-grid h3 {
   margin-bottom: 20px;
 }
 
+/* Client (2026-09-22): "agregar una tarjeta de cobro anual... al lado
+   derecho de la mensual" — was a single centred .plan; now a row of up to
+   two, still centring one alone if the annual card's content is ever empty. */
+.plan-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(20px, 3vw, 32px);
+}
 .plan {
+  flex: 1 1 340px;
   max-width: 400px;
-  margin-inline: auto;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);

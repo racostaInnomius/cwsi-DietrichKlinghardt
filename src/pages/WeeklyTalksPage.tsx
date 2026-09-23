@@ -30,6 +30,18 @@ const BENEFITS_FALLBACK = [
 ];
 
 /**
+ * Second card, same pattern as the monthly plan above (client, 2026-09-22:
+ * "agregar una tarjeta de cobro anual $279.00 al lado derecho de la tarjeta
+ * de cobro mensual"). Its own page-contents rows (`weekly-talks-plan-annual`,
+ * `weekly-talks-benefits-annual`, `weekly-talks-cta-annual`) so it's editable
+ * from the CMS independently of the monthly card — same ⚠️ price/Payment
+ * Link caveat as above applies here too.
+ */
+const ANNUAL_PLAN_FALLBACK = [["Membership", "$279", "/ year", "Billed annually · cancel anytime"]];
+
+const ANNUAL_BENEFITS_FALLBACK = BENEFITS_FALLBACK;
+
+/**
  * The five questions the frame lists. It draws them closed, with no answers
  * written, so the answers are the client's (A13/A2) — until they arrive each row
  * says so rather than opening onto nothing.
@@ -71,6 +83,10 @@ export function WeeklyTalksPage() {
   const [ctaLabel, ctaUrl] = useRecords("weekly-talks-cta", 2, [])[0] ?? [];
   const joinHref = checkoutHref(ctaUrl);
 
+  const [annualCtaLabel, annualCtaUrl] =
+    useRecords("weekly-talks-cta-annual", 2, [])[0] ?? [];
+  const annualJoinHref = checkoutHref(annualCtaUrl);
+
   // The next live session, taken from the events the CMS already publishes.
   // `liveMode` is the CMS select ("mux"), not a boolean — anything truthy other
   // than "off" means this event streams.
@@ -86,6 +102,14 @@ export function WeeklyTalksPage() {
   const [planLabel, planAmount, planPeriod, planTerms] =
     useRecords("weekly-talks-plan", 4, PLAN_FALLBACK)[0] ?? [];
   const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
+
+  const [annualPlanLabel, annualPlanAmount, annualPlanPeriod, annualPlanTerms] =
+    useRecords("weekly-talks-plan-annual", 4, ANNUAL_PLAN_FALLBACK)[0] ?? [];
+  const annualBenefits = useRecords(
+    "weekly-talks-benefits-annual",
+    1,
+    ANNUAL_BENEFITS_FALLBACK,
+  );
 
   const faqs = [...useCollection("faqs")]
     .sort((a, b) => number(a, "order") - number(b, "order"))
@@ -194,34 +218,67 @@ export function WeeklyTalksPage() {
           <h2>Learn, Connect, Grow Together</h2>
         </Reveal>
 
-        <Reveal className="plan" delay={90}>
-          <div className="plan__head">
-            <p className="eyebrow">{planLabel}</p>
-            <p className="plan__price">
-              <span className="plan__amount">{planAmount}</span>
-              <span className="plan__period">{planPeriod}</span>
-            </p>
-            <p className="plan__terms">{planTerms}</p>
-          </div>
+        <div className="plan-grid">
+          <Reveal className="plan" delay={90}>
+            <div className="plan__head">
+              <p className="eyebrow">{planLabel}</p>
+              <p className="plan__price">
+                <span className="plan__amount">{planAmount}</span>
+                <span className="plan__period">{planPeriod}</span>
+              </p>
+              <p className="plan__terms">{planTerms}</p>
+            </div>
 
-          <div className="plan__body">
-            <ul className="tick-list plan__benefits">
-              {benefits.map(([benefit]) => (
-                <li key={benefit}>{benefit}</li>
-              ))}
-            </ul>
+            <div className="plan__body">
+              <ul className="tick-list plan__benefits">
+                {benefits.map(([benefit]) => (
+                  <li key={benefit}>{benefit}</li>
+                ))}
+              </ul>
 
-            {/* No live Payment Link yet falls back to Contact — a real,
-                working destination now that this page no longer renders
-                <NewsletterSection> (2026-09-16, terminación plana) — rather
-                than a dead checkout, but still reads as the intended action
-                (see Events for the same pattern). */}
-            <a className="btn btn-primary plan__cta" href={joinHref || "/contact"}>
-              {ctaLabel || "Join my talks"}
-            </a>
-            <p className="plan__note">Secure checkout · 7-day free trial</p>
-          </div>
-        </Reveal>
+              {/* No live Payment Link yet falls back to Contact — a real,
+                  working destination now that this page no longer renders
+                  <NewsletterSection> (2026-09-16, terminación plana) — rather
+                  than a dead checkout, but still reads as the intended action
+                  (see Events for the same pattern). */}
+              <a className="btn btn-primary plan__cta" href={joinHref || "/contact"}>
+                {ctaLabel || "Join my talks"}
+              </a>
+              <p className="plan__note">Secure checkout · 7-day free trial</p>
+            </div>
+          </Reveal>
+
+          {/* Annual plan, same shape as the monthly card (client, 2026-09-22).
+              Its own CTA/Payment Link — an annual charge should not share the
+              monthly one — falls back to Contact for the same reason as
+              above until a real link is set. */}
+          <Reveal className="plan" delay={140}>
+            <div className="plan__head">
+              <p className="eyebrow">{annualPlanLabel}</p>
+              <p className="plan__price">
+                <span className="plan__amount">{annualPlanAmount}</span>
+                <span className="plan__period">{annualPlanPeriod}</span>
+              </p>
+              <p className="plan__terms">{annualPlanTerms}</p>
+            </div>
+
+            <div className="plan__body">
+              <ul className="tick-list plan__benefits">
+                {annualBenefits.map(([benefit]) => (
+                  <li key={benefit}>{benefit}</li>
+                ))}
+              </ul>
+
+              <a
+                className="btn btn-primary plan__cta"
+                href={annualJoinHref || "/contact"}
+              >
+                {annualCtaLabel || "Join my talks"}
+              </a>
+              <p className="plan__note">Secure checkout · cancel anytime</p>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       <section className="section wrap" id="faq">
