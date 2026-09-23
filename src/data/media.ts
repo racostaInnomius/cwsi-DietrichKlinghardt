@@ -23,3 +23,17 @@ export const FIVE_LEVELS_VIDEO = {
   poster: "/images/five-levels-poster.webp",
   title: "Dr. Klinghardt on the 5 Levels of Healing",
 } as const;
+
+/**
+ * The pyramid animation on /academy/five-levels (client, 2026-09-22),
+ * replacing the static `5_levels.png` in `.levels`. Same hosting rationale
+ * as above — uploaded the same way, same container and tenant prefix — but
+ * this one autoplays, muted and looped, the moment it scrolls into view
+ * (LoopingVideo), unlike FIVE_LEVELS_VIDEO's click-to-play SelfHostedVideo:
+ * 8 seconds and 12.2 MB, there's nothing to preload="none" against.
+ */
+export const PYRAMID_VIDEO = {
+  src: `${BLOB}/${TENANT}/five-levels-pyramid-animation.mp4`,
+  poster: "/images/5_levels.png",
+  title: "The 5 Levels of Healing, from base to apex: 1st Physical Body, 2nd Energy Body, 3rd Mental, 4th Intuitive, 5th Spiritual",
+} as const;

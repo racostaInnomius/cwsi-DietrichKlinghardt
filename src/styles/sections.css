@@ -4579,8 +4579,10 @@
   gap: clamp(32px, 5vw, 80px);
 }
 /* Client (2026-09-16): the pyramid renders as a supplied image here instead
-   of the <Pyramid /> component. Capped near its native 556px so it doesn't
-   upscale past the source's own resolution and blur. */
+   of the <Pyramid /> component; (2026-09-22) that image became a looping
+   video, same element role (LoopingVideo, replacing an <img>) so this rule
+   needed no changes. Capped near its native 556px so it doesn't upscale past
+   the source's own resolution and blur. */
 .levels__pyramid-image {
   width: 100%;
   max-width: 480px;

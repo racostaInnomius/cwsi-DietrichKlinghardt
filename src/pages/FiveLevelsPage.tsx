@@ -6,17 +6,20 @@ import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { VideoPlayer } from "@/components/sections/VideoPlayer";
 import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
-import { FIVE_LEVELS_VIDEO } from "@/data/media";
+import { LoopingVideo } from "@/components/sections/LoopingVideo";
+import { FIVE_LEVELS_VIDEO, PYRAMID_VIDEO } from "@/data/media";
 import { FIVE_LEVELS as LEVELS } from "@/data/fiveLevels";
 
 /**
  * The 5 Levels of Healing.
  *
- * The pyramid itself renders as a static image (`/images/5_levels.png`,
- * client request 2026-09-16) rather than the `<Pyramid />` component this
- * page used before — that component is still what the /academy hub's card
- * slot uses (`<Pyramid compact />`), untouched. The legend beside the image
- * (heading + body per level) stays a real list, driven by `FIVE_LEVELS`.
+ * The pyramid used to be a static image (`/images/5_levels.png`, client
+ * request 2026-09-16), before that the `<Pyramid />` component this page's
+ * /academy hub card slot still uses (`<Pyramid compact />`, untouched); now
+ * (client, 2026-09-22) it's a short looping animation, `LoopingVideo` +
+ * `PYRAMID_VIDEO`. `5_levels.png` stays on as the video's poster frame. The
+ * legend beside it (heading + body per level) stays a real list, driven by
+ * `FIVE_LEVELS`.
  */
 export function FiveLevelsPage() {
   const page = useSection(SECTION.fiveLevels, {
@@ -60,10 +63,9 @@ export function FiveLevelsPage() {
       </section>
 
       <section className="section wrap levels">
-        <img
+        <LoopingVideo
           className="levels__pyramid-image"
-          src="/images/5_levels.png"
-          alt="The 5 Levels of Healing, from base to apex: 1st Physical Body, 2nd Energy Body, 3rd Mental, 4th Intuitive, 5th Spiritual"
+          {...PYRAMID_VIDEO}
           width={556}
           height={458}
         />
