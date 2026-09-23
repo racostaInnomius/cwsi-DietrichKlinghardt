@@ -5248,16 +5248,20 @@
        (1920x1080) already fills this 4:3 box's full height with cover, so
        there's no vertical crop room left for object-position's Y value to
        move (verified: 0%, 22%, 47% all rendered identically). Shifting the
-       element itself instead. -30% here (not a fixed px) is 40% of the
-       photo's own height (25% + 15%), expressed against this rule's own
-       fixed aspect-ratio (height = width * 0.75, so 40% of height =
-       width * 0.3) — stays exactly 40% of the photo's own rendered height
-       at any viewport width, not just the one it was eyeballed at.
-       Negative margin, not transform: translateY, which only shifts the
-       image visually and leaves its old box (empty gradient) behind —
+       element itself instead.
+       Client (2026-09-23, against a screenshot): "el botón invade la cara
+       del Dr. Klinghardt" — the original -30% pulled the photo up by a
+       fixed 40% of its own height regardless of how tall the copy+buttons
+       above it actually render; at this breakpoint it overlapped
+       .hero__actions by ~210px (measured). 3% is the same value that
+       leaves real clearance (~20px, measured) at the phone breakpoint
+       below — a small downward nudge rather than the large upward pull,
+       since there's no crop-room workaround left once overlap is ruled
+       out. Negative margin, not transform: translateY, which only shifts
+       the image visually and leaves its old box (empty gradient) behind —
        margin actually closes that space, pulling .home-academy up to meet
        the photo's new bottom edge with nothing left over. */
-    margin-top: -30%;
+    margin-top: 3%;
   }
   .hero__inner {
     order: 1;
@@ -5377,7 +5381,14 @@
        image visually and leaves its old box (empty gradient) behind —
        margin actually closes that space, pulling .home-academy up to meet
        the photo's new bottom edge with nothing left over. */
-    margin-top: -30%;
+    /* Client (2026-09-23, against a screenshot): "el botón invade la cara
+       del Dr. Klinghardt" — -30% pulled the photo up by a fixed 40% of its
+       own height regardless of how tall the copy+buttons above it actually
+       render, so it overlapped .hero__actions by ~100px (measured). -6% is
+       the largest pull that still leaves real clearance below the buttons
+       at this breakpoint (measured ~20px gap) rather than a value tied to
+       one specific heading line count. */
+    margin-top: 3%;
   }
   .hero__inner {
     order: 1;
