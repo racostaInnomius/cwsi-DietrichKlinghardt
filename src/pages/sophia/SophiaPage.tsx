@@ -150,10 +150,10 @@ export function SophiaPage() {
       <section className="sophia-hero">
         <img
           className="sophia-hero__photo"
-          src="/images/sophia-clinic.webp"
+          src="/images/sophia-welcome.webp"
           alt="Sophia Health Institute campus"
-          width={1024}
-          height={683}
+          width={1600}
+          height={900}
           fetchPriority="high"
           decoding="async"
         />
