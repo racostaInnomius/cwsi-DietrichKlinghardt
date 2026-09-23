@@ -621,15 +621,15 @@
 }
 /* Client (2026-09-22): "los TMs en el footer hacerlos un 50% mas grandes",
    then (same day, follow-up): "siguen siendo muy pequeños, hazlos mucho mas
-   notorios" — the +50% pass (0.48em) still read as a barely-there
-   afterthought, so this jumps close to the label's own size instead of a
-   modest bump. Same fix as .site-nav__link .tm above: the shared .tm's
-   vertical-align is a length in its own font-size, so it floats higher once
-   font-size grows — pulled back down to keep the mark sitting near the
-   label's cap-height rather than above it. */
+   notorios" (0.48em -> 0.85em), then (2026-09-23, another follow-up): "20%
+   mas grandes" on top of that (0.85 * 1.2 = 1.02em). Same fix as
+   .site-nav__link .tm above each time: the shared .tm's vertical-align is
+   a length in its own font-size, so it floats higher once font-size grows —
+   pulled back down to keep the mark sitting near the label's cap-height
+   rather than above it. */
 .site-footer .tm {
-  font-size: 0.85em;
-  vertical-align: 0.28em;
+  font-size: 1.02em;
+  vertical-align: 0.24em;
 }
 
 /* Oversized signature bleeding off the bottom edge, as in every frame. */
