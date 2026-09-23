@@ -4873,8 +4873,19 @@
   background: var(--white);
   box-shadow: 0 1px 2px rgba(28, 25, 22, 0.06), 0 12px 28px rgba(28, 25, 22, 0.08);
 }
+/* overflow: hidden (not just aspect-ratio) matters here: a flex item's
+   automatic min-height only ignores its content's intrinsic size once
+   overflow isn't visible (CSS Flexbox §4.5). Without it, a replaced
+   element (the <img> below) with no width/height HTML attributes let its
+   own natural aspect ratio leak into this box's flex-computed height —
+   confirmed: three photos with unusually square or tall source images
+   (Kim Dines 845×1024, Terry Enriques 3074×4160, Dominique Hilliard
+   2979×4160) rendered at 353/358/370px instead of the 397px every other
+   (2:3-ish source) photo in the same grid row resolved to, despite every
+   box sharing the same aspect-ratio: 3/4 and the same measured width. */
 .team-card__photo {
   aspect-ratio: 3 / 4;
+  overflow: hidden;
   background: var(--brand-soft);
 }
 .team-card__photo img {
