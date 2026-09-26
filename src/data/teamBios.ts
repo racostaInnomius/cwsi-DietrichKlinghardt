@@ -43,12 +43,16 @@ export const teamBios: Record<string, TeamBio> = {
       "Dr. Ko brings strong diagnostic skills and individualized treatment planning to every case, with a genuine dedication to improving the quality of life for those living with chronic health conditions — bridging conventional and naturopathic approaches while maintaining an ongoing commitment to professional development and patient education.",
     ],
   },
-  "summer-beattie": {
+  // Client (2026-09-26): Dr. Summer Beattie's board-members row was
+  // repurposed for Michaela Jezzard — same row/order, new person, so this
+  // key is renamed rather than left orphaned (SophiaTeamPage's `hasBio`
+  // check only looks at this file's keys, not the CMS bio field, to decide
+  // whether a team card's "Learn more" button links anywhere).
+  "michaela-jezzard": {
     paragraphs: [
-      "Dr. Summer Beattie is a Naturopathic Doctor with a unique specialty in Procedural and Regenerative Medicine. Born and raised in rural Alaska, she carries that grounded, nature-connected spirit into every aspect of her healing work. She earned her Doctorate in Naturopathic Medicine from Bastyr University in Seattle in 2004.",
-      "After nearly a decade in family practice, Dr. Beattie served two terms on the Board of Directors for the Washington Association of Naturopathic Physicians. She then returned to Alaska to work at a specialty surgery center before settling back in Washington in 2015 to deepen her work in regenerative and integrative medicine.",
-      "Her clinical focus includes injection-based therapies, IV treatments, ozone and photodynamic therapies, and hormone optimization, alongside advanced training in the treatment of chronic illness — including vector-borne infections, mold and environmental toxicity, autoimmune disease, and neurodegenerative conditions.",
-      "At Sophia Health Institute, Dr. Beattie works alongside Dr. Dietrich Klinghardt to support patients with chronic and complex illness, blending advanced diagnostics with compassionate, whole-person care. A hallmark of her approach is bioregulatory medicine — personalized protocols addressing root causes with both modern diagnostics and energetic modalities, including sound, light, and frequency-based therapies, with particular focus on brain health and complementary oncology.",
+      "Michaela is an award-winning Registered Nutritional Therapist, having completed further training with the IFM and British Society for Ecological Medicine, and has specialist training in integrative cancer. She has studied extensively with Daniela Deiosso, keeping up to date with the latest advances and A.R.T. techniques.",
+      "She specialises in finding the missing pieces to unravel complex cases, identifying the underlying root causes and imbalances and bringing together various modalities to bring back balance and support the body's innate ability to heal.",
+      "Michaela leads the Klinghardt Institute teaching team.",
     ],
   },
   "kim-dines": {
