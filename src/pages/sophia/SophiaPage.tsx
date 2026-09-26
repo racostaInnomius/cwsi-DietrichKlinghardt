@@ -185,7 +185,7 @@ export function SophiaPage() {
       {/* Who we are — the campus photo, the claim and the copy. */}
       <section className="section wrap feature-row feature-row--right">
         <Reveal className="feature-row__media feature-row__media--match-copy">
-          <InViewVideo {...SOPHIA_WELCOME_VIDEO} width={848} height={480} />
+          <InViewVideo {...SOPHIA_WELCOME_VIDEO} width={848} height={480} loop />
         </Reveal>
 
         <Reveal className="feature-row__body" delay={90}>

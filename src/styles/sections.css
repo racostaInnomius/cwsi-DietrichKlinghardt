@@ -5765,8 +5765,12 @@ ul.sophia-therapies-grid h3 {
 }
 /* Home's "Our clinic" row: a shorter, wider crop than the shared default,
    per the client's Figma. height: auto for the same reason as above — the
-   <img> carries width/height attributes for CLS. */
-#our-clinic .feature-row__media img {
+   <img> (now the Sophia-welcome video replacing it, 2026-09-26) carries
+   width/height attributes for CLS. `video` added alongside `img` so the
+   clip keeps this row's own 4:3 crop instead of falling back to the
+   generic .feature-row__media video rule's 558:457. */
+#our-clinic .feature-row__media img,
+#our-clinic .feature-row__media video {
   aspect-ratio: 4 / 3;
   height: auto;
 }

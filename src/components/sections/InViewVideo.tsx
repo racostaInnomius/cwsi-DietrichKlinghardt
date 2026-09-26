@@ -5,9 +5,11 @@ import { useEffect, useRef } from "react";
  * /academy/five-levels, standing in for what used to be a static image.
  * Unlike `SelfHostedVideo` (a long film, `preload="none"`, click to play),
  * this is a handful of seconds and a few MB: nothing to gate behind a poster
- * and a play button. It plays once, the moment it first scrolls into view
- * (client, 2026-09-22: "solo que se ejecute una sola vez cuando aparezca a
- * la vista" — no loop), then leaves its last frame on screen.
+ * and a play button. By default it plays once, the moment it first scrolls
+ * into view (client, 2026-09-22: "solo que se ejecute una sola vez cuando
+ * aparezca a la vista" — no loop), then leaves its last frame on screen;
+ * pass `loop` for the sites that later asked for it to repeat instead
+ * (client, 2026-09-26: /home and /sophia's Sophia-welcome clip).
  *
  * Muted because that's what browsers require to autoplay at all; there is no
  * audio track to lose. `prefers-reduced-motion` skips the autoplay entirely
@@ -20,6 +22,7 @@ export function InViewVideo({
   className = "",
   width,
   height,
+  loop = false,
 }: {
   src: string;
   poster: string;
@@ -29,6 +32,7 @@ export function InViewVideo({
   className?: string;
   width?: number;
   height?: number;
+  loop?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement | null>(null);
 
@@ -62,6 +66,7 @@ export function InViewVideo({
       className={className}
       muted
       playsInline
+      loop={loop}
       preload="auto"
       poster={poster}
       aria-label={title}

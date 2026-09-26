@@ -15,7 +15,8 @@ import { EventRow } from "@/components/sections/EventRow";
 import { ProductCard } from "@/components/sections/ProductCard";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
-import { FIVE_LEVELS_VIDEO } from "@/data/media";
+import { InViewVideo } from "@/components/sections/InViewVideo";
+import { FIVE_LEVELS_VIDEO, SOPHIA_WELCOME_VIDEO } from "@/data/media";
 
 /**
  * Home — the frame the rest of the site is measured against.
@@ -473,14 +474,17 @@ export function HomePage() {
 
       {/* ── The clinic ───────────────────────────────────────────── */}
       <section className="section wrap feature-row feature-row--right" id="our-clinic">
+        {/* Client (2026-09-26): "reemplaza la imagen ... por el video ...
+            que se reproduzca en loop infinito" — same clip and poster as
+            /sophia's "Who we are" row (SophiaPage.tsx), also looping.
+            Sized by the shared .feature-row__media video rule (sections.css),
+            the same 558:457 box the photo it replaces already sat in. */}
         <Reveal className="feature-row__media">
-          <img
-            src="/images/sophia-clinic.webp"
-            alt="The Sophia Health Institute, seen from the garden"
+          <InViewVideo
+            {...SOPHIA_WELCOME_VIDEO}
             width={1024}
             height={683}
-            loading="lazy"
-            decoding="async"
+            loop
           />
         </Reveal>
         <Reveal className="feature-row__body" delay={90}>
