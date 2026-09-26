@@ -801,8 +801,13 @@
   .site-nav__item {
     border-bottom: 1px solid rgba(255, 255, 255, 0.14);
   }
+  /* Client (2026-09-23): "el espacio [entre el label y la flecha] está muy
+     separado, reduce ese espacio un 65%". space-between stretched the gap to
+     fill the row's full width (measured ~124px on "Dr. Klinghardt Akademie");
+     a fixed gap keeps the toggle right after the label instead. */
   .site-nav__row {
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 43px;
     width: 100%;
   }
   .site-nav__link {
