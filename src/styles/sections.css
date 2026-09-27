@@ -7220,15 +7220,15 @@ ul.sophia-therapies-grid h3 {
 }
 
 /* Discography cards, while the CMS has no `digital-products` for these three
-   albums (client reference, 2026-09-27) — a photographed-CD-case cover (dark
-   case edges with a thin rainbow refraction line where the clear plastic
-   catches the light, CSS-only: no real cover art exists yet for these three,
-   see DISCOGRAPHY_FALLBACK's comment in MusicPage.tsx), title + format
-   badge, credits, price and an Add button, all on the card's own white
-   surface — matched closely against the client's reference screenshot, down
-   to that surface (most other cards on this site sit directly on the page
-   background; this one deliberately doesn't, because the reference shows a
-   distinct card edge against the page's own warm gradient). */
+   albums (client reference, 2026-09-27) — a real photographed CD-case cover
+   (supplied directly, the rainbow case-edge reflection already baked into
+   the shot — see DISCOGRAPHY_FALLBACK's comment in MusicPage.tsx for the
+   CSS-drawn approximation this replaced), title + format badge, credits,
+   price and an Add button, all on the card's own white surface — matched
+   closely against the client's reference screenshot, down to that surface
+   (most other cards on this site sit directly on the page background; this
+   one deliberately doesn't, because the reference shows a distinct card
+   edge against the page's own warm gradient). */
 .discography-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -7246,55 +7246,16 @@ ul.sophia-therapies-grid h3 {
   box-shadow: var(--shadow-card);
 }
 .discography-card__case {
-  display: flex;
-  align-items: stretch;
   aspect-ratio: 1 / 1;
   margin-bottom: 16px;
-  padding: 9%;
   border-radius: var(--radius-sm);
   background: var(--cream-2);
+  overflow: hidden;
 }
-.discography-card__spine {
-  position: relative;
-  flex: 0 0 8%;
-  background: #29271f;
-}
-.discography-card__spine--left {
-  border-radius: 3px 0 0 3px;
-}
-.discography-card__spine--right {
-  border-radius: 0 3px 3px 0;
-}
-/* The refraction line: a thin bright stripe right at the inner edge of the
-   dark spine, where a real jewel case's clear plastic catches the light —
-   not a rainbow-filled bar across the whole spine (the first pass here),
-   which read as a colourful frame rather than a case. */
-.discography-card__spine::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(
-    180deg,
-    #ff3b30,
-    #ffcc00,
-    #34c759,
-    #007aff,
-    #af52de,
-    #ff3b30
-  );
-}
-.discography-card__spine--left::after {
-  right: 0;
-}
-.discography-card__spine--right::after {
-  left: 0;
-}
-.discography-card__cover {
-  flex: 1;
-  background: var(--surface-2);
-  box-shadow: 0 6px 14px rgba(20, 16, 10, 0.22);
+.discography-card__case img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .discography-card__title {
   display: flex;

@@ -13,9 +13,9 @@ import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 /** label | url */
 /**
- * The three albums the frame lists, with the credits and price the client's
- * own reference design shows for each. `title | format | credits | price`,
- * price in cents (matches `money()`, lib/format.ts).
+ * The three albums the frame lists, with the credits, price and cover the
+ * client's own reference shows for each. `title | format | credits | price
+ * | image`, price in cents (matches `money()`, lib/format.ts).
  *
  * Client (2026-09-27): rebuilt this fallback as cards matching a reference
  * screenshot, price and an "Add" button included — a deliberate reversal of
@@ -26,11 +26,17 @@ import { NewsletterSection } from "@/components/sections/NewsletterSection";
  * three albums exist as real `digital-products` rows with their own Stripe
  * price — wiring `useCart` against fabricated products now would let a
  * shopper add something checkout can't actually resolve.
+ *
+ * Covers supplied directly (2026-09-27, /Users/rodrigo/Desktop/Album1-3.png)
+ * — real photographed CD cases, rainbow case-edge reflection included in the
+ * shot itself, so the CSS-drawn spine/refraction-line approximation this
+ * fallback used before real covers existed is gone (see git history if it's
+ * ever needed for a fourth album with no cover yet).
  */
 const DISCOGRAPHY_FALLBACK: string[][] = [
-  ["Just the way I am", "CD", "Guitar: Jürgen Schröder · Djembe: Stefan Bretscher · Choir: PK IV, Wildhaus/Schweiz", "1800"],
-  ["Depths and Heights", "CD", "Dietrich Klinghardt & Jürgen Schröder — live mit den ART-Artists & Melanie", "2500"],
-  ["Unplugged", "CD", "Guitar: Jürgen Schröder · Percussion: Jürgen Bayer · Choir: PK IV, St. Oswald 2010", "1800"],
+  ["Just the way I am", "CD", "Guitar: Jürgen Schröder · Djembe: Stefan Bretscher · Choir: PK IV, Wildhaus/Schweiz", "1800", "/images/discography/just-the-way-i-am.png"],
+  ["Depths and Heights", "CD", "Dietrich Klinghardt & Jürgen Schröder — live mit den ART-Artists & Melanie", "2500", "/images/discography/depths-and-heights.png"],
+  ["Unplugged", "CD", "Guitar: Jürgen Schröder · Percussion: Jürgen Bayer · Choir: PK IV, St. Oswald 2010", "1800", "/images/discography/unplugged.png"],
 ];
 
 const LINKS_FALLBACK: string[][] = [
@@ -74,7 +80,7 @@ export function MusicPage() {
 
   // Recordings sold as digital products — the discography. F6 moves these into
   // the cart; until then each one links straight to its own Stripe link.
-  const albums = useRecords("music-discography", 4, DISCOGRAPHY_FALLBACK);
+  const albums = useRecords("music-discography", 5, DISCOGRAPHY_FALLBACK);
 
   const records = useCollection("digital-products").filter(
     (product) => product.status === "active" && Boolean(product.accessTrack),
@@ -173,12 +179,10 @@ export function MusicPage() {
              visual-only until these exist as real digital-products rows
              (see DISCOGRAPHY_FALLBACK's own comment, above). */
           <ul className="discography-grid">
-            {albums.map(([title, format, credits, price], index) => (
+            {albums.map(([title, format, credits, price, image], index) => (
               <Reveal as="li" key={title} className="discography-card" delay={index * 70}>
                 <div className="discography-card__case">
-                  <div className="discography-card__spine discography-card__spine--left" />
-                  <div className="discography-card__cover" />
-                  <div className="discography-card__spine discography-card__spine--right" />
+                  {image ? <img src={image} alt={`${title} CD case`} loading="lazy" /> : null}
                 </div>
                 <div className="discography-card__title">
                   <h3>{title}</h3>
