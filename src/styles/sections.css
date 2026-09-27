@@ -4788,6 +4788,13 @@
   gap: 20px;
   margin-top: 22px;
 }
+/* page-hero--center's text-align: center (sections.css) only centres inline
+   content — .music-links is a block-level flex container, so it stays
+   left-edge-anchored regardless. Centred explicitly to match the now-
+   centred eyebrow/title/lead above it. */
+.music-hero .music-links {
+  justify-content: center;
+}
 .music-stack {
   display: grid;
   gap: clamp(32px, 4vw, 60px);
@@ -5921,6 +5928,16 @@ ul.sophia-therapies-grid h3 {
   .academy-hero.gradient-card .page-hero__inner {
     min-height: 0;
   }
+}
+/* Client (2026-09-26): "/music" — centre the hero (page-hero--center, added
+   alongside this class in the JSX) and bring the title closer to the lead.
+   Same root cause as .sophia-team-hero below: base.css zeroes every
+   heading's margin-top but never its margin-bottom, so h1 was still
+   carrying the browser default (measured 52px) which margin-collapse let
+   win over .page-hero .lead's own tighter 10px. Scoped to this hero only,
+   for the same reason as that fix. */
+.music-hero h1 {
+  margin-bottom: 0;
 }
 /* Oversized ghost of the page's own name, bleeding off the top-right corner
    behind the heading — same device as the footer's watermark, sized and
