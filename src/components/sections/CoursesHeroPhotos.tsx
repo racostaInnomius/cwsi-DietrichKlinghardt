@@ -34,9 +34,9 @@ const PEOPLE = [
     column: "b" as const,
   },
   {
-    name: "Summer Beattie",
-    title: "Medicine Doctor",
-    image: "/images/summer-beattie.webp",
+    name: "Dr. Jadie Ko",
+    title: "Naturopathic Doctor",
+    image: "/images/jadie-ko.webp",
     column: "b" as const,
   },
 ];
