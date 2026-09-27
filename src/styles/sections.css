@@ -2060,7 +2060,13 @@
 @media (min-width: 900px) {
   .courses-hero-pin {
     position: relative;
-    height: 160vh;
+    /* Client (2026-09-26): "mantener al usuario un poco mas de tiempo ahi
+       para que las imagenes suban y bajen mas" — was 160vh; more dwell
+       height (same card height, more wrapper scroll distance) both holds
+       the pin longer and, since the drift below now covers a wider
+       --from/--to range over that same 0→1 progress, moves the photos
+       further without speeding up how fast they cross the frame. */
+    height: 210vh;
   }
   .courses-hero-pin .courses-hero {
     position: sticky;
@@ -2195,13 +2201,19 @@
     calc(var(--from) + (var(--to) - var(--from)) * var(--courses-photos-progress, 0))
   );
 }
+/* Client (2026-09-26): wider travel to match the longer dwell above
+   (was -30px/70px, a 100px sweep) — same direction/proportions, just
+   further, so the extra scroll distance reads as more movement instead
+   of the same movement stretched out slower. --from tuned again the same
+   day (client, via devtools) from -50px to -129px — a longer upward
+   sweep, --to left as-is. */
 .courses-hero-photos__col--a {
-  --from: -30px;
-  --to: 70px;
+  --from: -129px;
+  --to: 110px;
 }
 .courses-hero-photos__col--b {
-  --from: 60px;
-  --to: -110px;
+  --from: 90px;
+  --to: -170px;
   margin-top: 18%;
 }
 .courses-hero-photos__card {
