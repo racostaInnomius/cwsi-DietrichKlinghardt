@@ -836,6 +836,9 @@
 .events-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Client (2026-09-27, follow-up): back to touching cards (column-gap 0)
+     — the border below does the separating again, just recoloured instead
+     of removed. */
   gap: clamp(16px, 2vw, 28px) 0;
   margin: 0;
   padding: 0;
@@ -845,7 +848,13 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
-  border: 1px solid var(--line);
+  /* Client (2026-09-27, follow-up): didn't like #6B8CA2, asked for "el
+     tono mas claro de azul que tengamos" instead — #c0dbde, already in the
+     palette as the DK page gradient's own "baby blue" stop (tokens.css,
+     --grad-page-home/--grad-page-full/--grad-page-directory), just never
+     exposed as its own named token. No token reference here for the same
+     reason the previous colour had none: it isn't one. */
+  border: 1px solid #c0dbde;
   background: var(--surface-2);
   list-style: none;
 }
