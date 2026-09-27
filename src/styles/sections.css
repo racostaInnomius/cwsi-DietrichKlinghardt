@@ -2932,6 +2932,10 @@
   max-width: 52ch;
   margin-top: 10px;
   font-size: var(--fs-sm);
+  /* Client (2026-09-27): white, like .top-picks__head h2 em already is —
+     was inheriting .top-picks' own --ink (dark), hard to read against this
+     card's navy top. */
+  color: var(--white);
 }
 /* Client: "cambiar el estilo que dice current selection, no poner el
    texto sobre fondo azul. Es stroke y letras blancas y negro el mes y
