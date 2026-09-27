@@ -185,6 +185,25 @@ export function ArrowIcon() {
   return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>;
 }
 
+/** Same mark as the nav's cart button (shell/CartButton.tsx) — reused here
+    for the Music discography cards' "Add" button. */
+export function CartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M3 4h2.2l2.2 11.2a1.6 1.6 0 0 0 1.6 1.3h8.4a1.6 1.6 0 0 0 1.6-1.3L21 7H6.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="10" cy="20" r="1.4" fill="currentColor" />
+      <circle cx="17" cy="20" r="1.4" fill="currentColor" />
+    </svg>
+  );
+}
+
 /** Small stroke checkmark — the training-path panel's target group / language /
     diploma bullets and the exam-requirement chips (Figma draws these in a
     generic UI-kit green; this site has no green anywhere else in its palette,

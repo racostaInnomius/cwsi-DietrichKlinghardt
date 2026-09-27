@@ -7359,41 +7359,124 @@ ul.sophia-therapies-grid h3 {
   margin-top: 12px;
 }
 
-/* Discography listed rather than sold, while the CMS has no products for it. */
-.record-list {
+/* Discography cards, while the CMS has no `digital-products` for these three
+   albums (client reference, 2026-09-27) — a photographed-CD-case cover (dark
+   case edges with a thin rainbow refraction line where the clear plastic
+   catches the light, CSS-only: no real cover art exists yet for these three,
+   see DISCOGRAPHY_FALLBACK's comment in MusicPage.tsx), title + format
+   badge, credits, price and an Add button, all on the card's own white
+   surface — matched closely against the client's reference screenshot, down
+   to that surface (most other cards on this site sit directly on the page
+   background; this one deliberately doesn't, because the reference shows a
+   distinct card edge against the page's own warm gradient). */
+.discography-grid {
   display: grid;
-  gap: 0;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: clamp(20px, 2.4vw, 32px);
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.record-line {
+.discography-card {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  border-radius: var(--radius-lg, 22px);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-card);
+}
+.discography-card__case {
+  display: flex;
+  align-items: stretch;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 16px;
+  padding: 9%;
+  border-radius: var(--radius-sm);
+  background: var(--cream-2);
+}
+.discography-card__spine {
+  position: relative;
+  flex: 0 0 8%;
+  background: #29271f;
+}
+.discography-card__spine--left {
+  border-radius: 3px 0 0 3px;
+}
+.discography-card__spine--right {
+  border-radius: 0 3px 3px 0;
+}
+/* The refraction line: a thin bright stripe right at the inner edge of the
+   dark spine, where a real jewel case's clear plastic catches the light —
+   not a rainbow-filled bar across the whole spine (the first pass here),
+   which read as a colourful frame rather than a case. */
+.discography-card__spine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    #ff3b30,
+    #ffcc00,
+    #34c759,
+    #007aff,
+    #af52de,
+    #ff3b30
+  );
+}
+.discography-card__spine--left::after {
+  right: 0;
+}
+.discography-card__spine--right::after {
+  left: 0;
+}
+.discography-card__cover {
+  flex: 1;
+  background: var(--surface-2);
+  box-shadow: 0 6px 14px rgba(20, 16, 10, 0.22);
+}
+.discography-card__title {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 20px;
-  padding-block: clamp(16px, 2vw, 24px);
-  border-bottom: 1px solid var(--line);
+  gap: 8px;
 }
-.record-line:last-child {
-  border-bottom: 0;
-}
-.record-line h3 {
-  margin-bottom: 4px;
+.discography-card__title h3 {
+  margin: 0;
   font-size: var(--fs-lead);
   font-family: var(--font-serif);
   color: var(--on-surface);
 }
-.record-line__credits {
-  margin: 0;
-  max-width: 64ch;
-  font-size: var(--fs-sm);
-  color: var(--muted);
-}
-.record-line__format {
+.discography-card__format {
   flex: none;
   font-size: var(--fs-eyebrow);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted-2);
+}
+.discography-card__credits {
+  margin: 6px 0 16px;
+  max-width: 64ch;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.discography-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+}
+.discography-card__price {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--on-surface);
+}
+.discography-card__add {
+  min-height: 40px;
+  padding: 0 18px;
+}
+.discography-card__add svg {
+  width: 16px;
+  height: 16px;
 }
