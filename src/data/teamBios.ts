@@ -55,6 +55,21 @@ export const teamBios: Record<string, TeamBio> = {
       "Michaela leads the Klinghardt Institute teaching team.",
     ],
   },
+  // Client (2026-09-27): added via the CMS API, sourced from
+  // https://klinghardtinstitute.com/our-team/ ("de ahi toma su info").
+  "gilian-crowther": {
+    paragraphs: [
+      "Gilian is a Naturopath and registered Nutritional Therapist with a clinic in London. She gained qualifications in complementary therapy in Germany for many years, studying the mitochondria in particular, before taking up further training in the UK.",
+      "She is much sought after for her knowledge of mitochondrial function. Gilian is Scientific Advisor to the Klinghardt Institute, Director of Research for the Academy of Nutritional Medicine (www.aonm.org), as well as being a core member of the BSEM (British Society for Ecological Medicine).",
+    ],
+  },
+  // Client (2026-09-27): added via the CMS API, bio text supplied directly.
+  "daniela-deiosso": {
+    paragraphs: [
+      "Founder of the Klinghardt Institute, with a Masters degree in Neuroscience and specialising in Anthroposophic Medicine and Education, with 14 years of clinic experience focusing on autism and brain research.",
+      "Klinghardt Institute is the official training body for teaching the Autonomic Response Testing® (A.R.T.) technique worldwide. Daniela has been developing A.R.T. alongside Dr Klinghardt, contributing to the validity and effectiveness of this unique diagnostic and healing method and opening up their teachings to physicians, students, practitioners and patients worldwide.",
+    ],
+  },
   "kim-dines": {
     paragraphs: [
       "Kim Dines is an integrative manual therapist whose work bridges advanced physical rehabilitation with mind–body therapeutics, cranial and visceral approaches, and autonomic nervous system regulation.",
