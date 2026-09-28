@@ -15,6 +15,7 @@ import {
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
+import { LiveNotice } from "@/components/LiveNotice";
 
 // The two heaviest dependencies on the site, and only this page uses them:
 // loaded on demand so no other page pays for a video player and a websocket
@@ -267,26 +268,5 @@ export function LiveTalkPage() {
         </footer>
       </section>
     </>
-  );
-}
-
-function LiveNotice({
-  eyebrow,
-  title,
-  body,
-  children,
-}: {
-  eyebrow: string;
-  title: string;
-  body?: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div className="live-notice" role="status">
-      <p className="eyebrow">{eyebrow}</p>
-      <h2>{title}</h2>
-      {body ? <p>{body}</p> : null}
-      {children}
-    </div>
   );
 }
