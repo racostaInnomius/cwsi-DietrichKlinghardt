@@ -30,43 +30,53 @@ export function AccountPage() {
 
       <section className="section wrap">
         <Reveal className="account-card">
-          {status === "loading" ? <p>Loading your account…</p> : null}
+          {status === "loading" ? (
+            <p className="account-card__loading">Loading your account…</p>
+          ) : null}
 
           {status === "anonymous" ? (
             <>
-              <h2>Sign in</h2>
-              <p className="lead">
-                Sign in to manage your account and access member-only content, like the
-                Weekly Talks membership.
-              </p>
-              <div className="account-card__actions">
-                <button type="button" className="btn btn-primary" onClick={() => signIn()}>
-                  Sign In
-                </button>
-                <button type="button" className="btn btn-outline" onClick={() => signUp()}>
-                  Create an account
-                </button>
+              <div className="account-card__header">
+                <h2>Sign in</h2>
+              </div>
+              <div className="account-card__body">
+                <p className="lead">
+                  Sign in to manage your account and access member-only content, like the
+                  Weekly Talks membership.
+                </p>
+                <div className="account-card__actions">
+                  <button type="button" className="btn btn-primary" onClick={() => signIn()}>
+                    Sign In
+                  </button>
+                  <button type="button" className="btn btn-outline" onClick={() => signUp()}>
+                    Create an account
+                  </button>
+                </div>
               </div>
             </>
           ) : null}
 
           {status === "authenticated" && me ? (
             <>
-              <h2>Hi {me.user.fullName.split(" ")[0] || me.user.fullName},</h2>
-              <dl className="account-card__details">
-                <div>
-                  <dt>Name</dt>
-                  <dd>{me.user.fullName}</dd>
+              <div className="account-card__header">
+                <h2>Hi {me.user.fullName.split(" ")[0] || me.user.fullName},</h2>
+              </div>
+              <div className="account-card__body">
+                <dl className="account-card__details">
+                  <div>
+                    <dt>Name</dt>
+                    <dd>{me.user.fullName}</dd>
+                  </div>
+                  <div>
+                    <dt>Email</dt>
+                    <dd>{me.user.email}</dd>
+                  </div>
+                </dl>
+                <div className="account-card__actions">
+                  <button type="button" className="btn btn-outline" onClick={() => void signOut()}>
+                    Sign out
+                  </button>
                 </div>
-                <div>
-                  <dt>Email</dt>
-                  <dd>{me.user.email}</dd>
-                </div>
-              </dl>
-              <div className="account-card__actions">
-                <button type="button" className="btn btn-outline" onClick={() => void signOut()}>
-                  Sign out
-                </button>
               </div>
             </>
           ) : null}

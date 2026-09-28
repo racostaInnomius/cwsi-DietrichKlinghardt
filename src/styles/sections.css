@@ -1653,16 +1653,35 @@
 
 /* ── Account page ──────────────────────────────────────────────── */
 
+/* Client (2026-09-28): reuse the /courses "ANK – Master of ANK" card
+   treatment (gold-tinted header zone over a white body, see
+   .course-path-card--ank) for the sign-in card — buttons keep their own
+   .btn styles untouched. */
 .account-card {
   max-width: 560px;
   margin-inline: auto;
-  padding: clamp(28px, 4vw, 44px);
-  background: var(--cream-2);
+  overflow: hidden;
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
+  background: var(--surface-2);
   text-align: center;
 }
-.account-card h2 {
-  margin-bottom: 10px;
+.account-card__loading {
+  padding: clamp(28px, 4vw, 44px);
+}
+.account-card__header {
+  padding: clamp(28px, 4vw, 40px) clamp(28px, 4vw, 40px) clamp(16px, 2vw, 20px);
+  background: color-mix(in srgb, var(--gold) 12%, var(--white));
+}
+.account-card__header h2 {
+  margin: 0;
+  color: var(--ink);
+}
+.account-card__body {
+  padding: clamp(16px, 2vw, 20px) clamp(28px, 4vw, 40px) clamp(28px, 4vw, 40px);
+}
+.account-card__body .lead {
+  margin: 0;
 }
 .account-card__details {
   margin: 22px 0 0;
