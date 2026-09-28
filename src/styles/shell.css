@@ -394,7 +394,8 @@
   background: #e0e7e1;
 }
 
-.cart-button {
+.cart-button,
+.account-button {
   position: relative;
   display: grid;
   place-items: center;
@@ -404,10 +405,12 @@
   color: var(--brand-ink);
   transition: background var(--dur-fast) var(--ease);
 }
-.cart-button:hover {
+.cart-button:hover,
+.account-button:hover {
   background: rgba(255, 255, 255, 0.14);
 }
-.cart-button svg {
+.cart-button svg,
+.account-button svg {
   width: 23px;
 }
 .cart-button__count {

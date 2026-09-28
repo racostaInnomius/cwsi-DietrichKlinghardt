@@ -1651,6 +1651,47 @@
   background: var(--error);
 }
 
+/* ── Account page ──────────────────────────────────────────────── */
+
+.account-card {
+  max-width: 560px;
+  margin-inline: auto;
+  padding: clamp(28px, 4vw, 44px);
+  background: var(--cream-2);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.account-card h2 {
+  margin-bottom: 10px;
+}
+.account-card__details {
+  margin: 22px 0 0;
+  text-align: left;
+  display: grid;
+  gap: 10px;
+}
+.account-card__details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.account-card__details dt {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.account-card__details dd {
+  font-weight: 600;
+}
+.account-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 26px;
+}
+
 /* ── Music player (SoundCloud, consent-gated) ─────────────────── */
 
 .music-player {

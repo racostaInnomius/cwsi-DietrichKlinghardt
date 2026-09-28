@@ -2,6 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import type { RouteRecord } from "vite-react-ssg";
 import { ContentProvider, loadSiteContent } from "@/lib/content";
 import { CartProvider } from "@/lib/cart";
+import { AuthProvider } from "@/features/auth/AuthProvider";
 import { fetchCollection, fetchEvents } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { trainingPaths } from "@/data/trainingPaths";
@@ -40,6 +41,8 @@ import { AcademyPage } from "@/pages/AcademyPage";
 import { ArtPage } from "@/pages/ArtPage";
 import { LegalPage } from "@/pages/LegalPage";
 import { SubscriptionStatusPage } from "@/pages/SubscriptionStatusPage";
+import { AccountPage } from "@/pages/AccountPage";
+import { AuthReturnPage } from "@/pages/AuthReturnPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
 
 /**
@@ -50,11 +53,13 @@ import { PlaceholderPage } from "@/pages/PlaceholderPage";
  */
 function Root() {
   return (
-    <CartProvider>
-      <ContentProvider>
-        <Outlet />
-      </ContentProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <ContentProvider>
+          <Outlet />
+        </ContentProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
@@ -189,6 +194,10 @@ export const routes: RouteRecord[] = [
           { path: "foundation/donate", element: <DonatePage /> },
           { path: "foundation/donate/return", element: <DonateReturnPage /> },
           { path: "contact", element: <ContactPage /> },
+          { path: "account", element: <AccountPage /> },
+          // Per-viewer OAuth hop, never pre-rendered with content — see
+          // AuthReturnPage for why it's marked noindex.
+          { path: "auth/return", element: <AuthReturnPage /> },
           { path: "privacy", element: <LegalPage type="privacy" /> },
           { path: "terms", element: <LegalPage type="terms" /> },
 

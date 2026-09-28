@@ -177,6 +177,26 @@ export function LiveTalkPage() {
               }
             />
             </Suspense>
+          ) : error?.code === "membership_required" ? (
+            <LiveNotice
+              eyebrow="Members only"
+              title="This talk is part of the membership."
+              body={
+                error.requiresLogin
+                  ? "Sign in to your account — your membership unlocks this talk."
+                  : "You're signed in, but this talk needs an active membership."
+              }
+            >
+              {error.requiresLogin ? (
+                <Link className="btn btn-primary" to="/account">
+                  Sign in
+                </Link>
+              ) : (
+                <Link className="btn btn-primary" to="/weekly-talks">
+                  Become a member
+                </Link>
+              )}
+            </LiveNotice>
           ) : error?.code === "purchase_required" ? (
             <LiveNotice
               eyebrow="Members only"

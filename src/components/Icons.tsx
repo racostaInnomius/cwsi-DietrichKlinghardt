@@ -204,6 +204,21 @@ export function CartIcon() {
   );
 }
 
+export function AccountIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="8" r="3.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M4.5 20c1.1-3.7 4.2-5.8 7.5-5.8s6.4 2.1 7.5 5.8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 /** Small stroke checkmark — the training-path panel's target group / language /
     diploma bullets and the exam-requirement chips (Figma draws these in a
     generic UI-kit green; this site has no green anywhere else in its palette,

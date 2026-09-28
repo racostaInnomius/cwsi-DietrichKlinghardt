@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, type NavItem } from "./navigation";
 import { CartButton } from "./CartButton";
+import { AccountButton } from "./AccountButton";
 
 // Hash-anchor children (e.g. "/sophia#chronic-illness") share a pathname with
 // their parent page and several siblings, so pathname alone can't tell which
@@ -155,6 +156,7 @@ export function SiteHeader() {
             Contact us
           </Link>
           <CartButton />
+          <AccountButton />
           <button
             type="button"
             className="site-header__burger"

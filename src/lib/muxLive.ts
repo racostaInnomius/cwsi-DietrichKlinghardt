@@ -1,5 +1,6 @@
 import { env } from "./env";
 import { muxPlaybackSessionId } from "./muxSession";
+import { getAccessToken } from "@/features/auth/tokenStore";
 
 const TOKEN_PATTERN = /^[a-f0-9]{64}$/i;
 
@@ -17,7 +18,7 @@ export interface PublicMuxLiveSession {
   } | null;
   startDateTime: string | null;
   endDateTime: string | null;
-  accessMode: "free" | "paid";
+  accessMode: "free" | "paid" | "membership";
   /**
    * Shape the broadcaster locked in before going live. Lets us size the player
    * BEFORE the first frame instead of assuming 16:9 — a phone broadcast is
@@ -41,6 +42,10 @@ export class MuxLiveError extends Error {
     message: string,
     public readonly code: string,
     public readonly checkoutUrl: string | null = null,
+    /** Only meaningful for code === "membership_required": true means the
+     * visitor has no session at all (send them to sign in), false means
+     * they're signed in but not an active member (send them to join). */
+    public readonly requiresLogin: boolean = false,
   ) {
     super(message);
     this.name = "MuxLiveError";
@@ -82,9 +87,17 @@ export async function requestMuxLive(args: {
   /** State polls omit playback so the API does not sign three fresh JWTs. */
   includePlayback?: boolean;
 }): Promise<PublicMuxLiveSession> {
+  // A signed-in member's bearer token, if any — read fresh on every call
+  // (never cached) since AuthProvider can mint it after this module loads.
+  // Absent for an anonymous visitor or an "open"/"paid" event, where the API
+  // ignores req.user entirely.
+  const accessToken = getAccessToken();
   const response = await fetch(`${env.API_URL.replace(/\/$/, "")}/api/public/mux/live-playback`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
     body: JSON.stringify({
       tenantId: env.TENANT_ID,
       siteId: env.SITE_ID,
@@ -96,13 +109,14 @@ export async function requestMuxLive(args: {
   });
   const result = await response.json().catch(() => null) as {
     data?: PublicMuxLiveSession;
-    error?: { code?: string; message?: string; checkoutUrl?: string | null };
+    error?: { code?: string; message?: string; checkoutUrl?: string | null; requiresLogin?: boolean };
   } | null;
   if (!response.ok) {
     throw new MuxLiveError(
       result?.error?.message || "No pudimos autorizar la transmisión.",
       result?.error?.code || "live_failed",
       result?.error?.checkoutUrl || null,
+      result?.error?.requiresLogin ?? false,
     );
   }
   if (!result?.data) throw new MuxLiveError("La sesión Live está incompleta.", "invalid_response");
