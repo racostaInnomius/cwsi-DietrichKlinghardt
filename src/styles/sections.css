@@ -1657,6 +1657,9 @@
    treatment (gold-tinted header zone over a white body, see
    .course-path-card--ank) for the sign-in card — buttons keep their own
    .btn styles untouched. */
+.account-card--membership {
+  margin-top: clamp(20px, 3vw, 32px);
+}
 .account-card {
   max-width: 560px;
   margin-inline: auto;
