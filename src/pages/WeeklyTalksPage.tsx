@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
@@ -6,7 +6,7 @@ import { eventLongDate, splitByTime } from "@/lib/format";
 import { calendarHref } from "@/lib/calendar";
 import { env } from "@/lib/env";
 import { useAuth } from "@/features/auth/useAuth";
-import { startMembershipCheckout } from "@/lib/membership";
+import { fetchMembershipStatus, startMembershipCheckout, type MembershipStatus } from "@/lib/membership";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -99,6 +99,35 @@ export function WeeklyTalksPage() {
   const [checkoutState, setCheckoutState] = useState<
     Record<string, "idle" | "loading" | "error">
   >({});
+
+  // The member's current plan, so an already-subscribed interval shows
+  // "Subscribed" instead of a Join button that would double-charge them.
+  const [membership, setMembership] = useState<MembershipStatus | null>(null);
+  useEffect(() => {
+    if (authStatus !== "authenticated") {
+      setMembership(null);
+      return;
+    }
+    let cancelled = false;
+    fetchMembershipStatus()
+      .then((result) => {
+        if (!cancelled) setMembership(result);
+      })
+      .catch(() => {
+        // Non-fatal here — worst case the Join button stays active and
+        // create-checkout-session itself blocks a duplicate subscription.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [authStatus]);
+
+  const subscribedInterval =
+    membership?.active && membership.planKey === "annual"
+      ? "year"
+      : membership?.active && membership.planKey === "monthly"
+        ? "month"
+        : null;
 
   const handleJoin = (planId: string) => {
     if (authStatus !== "authenticated") {
@@ -240,15 +269,23 @@ export function WeeklyTalksPage() {
                       ))}
                     </ul>
 
-                    <button
-                      type="button"
-                      className="btn btn-primary plan__cta"
-                      onClick={() => handleJoin(planId)}
-                      disabled={state === "loading"}
-                    >
-                      {state === "loading" ? "Redirecting…" : "Join my talks"}
-                    </button>
-                    {state === "error" ? (
+                    {subscribedInterval === interval ? (
+                      <button type="button" className="btn btn-primary plan__cta" disabled>
+                        Subscribed
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary plan__cta"
+                        onClick={() => handleJoin(planId)}
+                        disabled={state === "loading"}
+                      >
+                        {state === "loading" ? "Redirecting…" : "Join my talks"}
+                      </button>
+                    )}
+                    {subscribedInterval === interval ? (
+                      <p className="plan__note">You're subscribed to this plan.</p>
+                    ) : state === "error" ? (
                       <p className="plan__note" style={{ color: "var(--error)" }}>
                         We could not start checkout. Please try again.
                       </p>
