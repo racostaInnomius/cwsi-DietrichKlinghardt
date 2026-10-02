@@ -48,7 +48,7 @@ const ContentContext = createContext<ContentMap>(demoContent);
  * a full course curriculum it never renders.
  */
 export async function loadSiteContent(): Promise<LoaderContent> {
-  const [pages, events, faqs, board, products, videos, music, legal] =
+  const [pages, events, faqs, board, products, videos, music, legal, membershipPlans] =
     await Promise.all([
       fetchPageContents(),
       fetchEvents(),
@@ -58,6 +58,9 @@ export async function loadSiteContent(): Promise<LoaderContent> {
       fetchCollection("video-embeds", { scopeToSite: false }),
       fetchMusicEmbeds(),
       fetchCollection("legal-pages"),
+      fetchCollection("membership-plans", {
+        where: { "where[status][equals]": "published" },
+      }),
     ]);
   return {
     "page-contents": pages,
@@ -68,6 +71,7 @@ export async function loadSiteContent(): Promise<LoaderContent> {
     "video-embeds": videos,
     "music-embeds": music,
     "legal-pages": legal,
+    "membership-plans": membershipPlans,
   };
 }
 

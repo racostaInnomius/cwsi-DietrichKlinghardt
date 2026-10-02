@@ -1,45 +1,40 @@
+import { useState } from "react";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
-import { checkoutHref } from "@/lib/checkout";
 import { eventLongDate, splitByTime } from "@/lib/format";
 import { calendarHref } from "@/lib/calendar";
 import { env } from "@/lib/env";
+import { useAuth } from "@/features/auth/useAuth";
+import { startMembershipCheckout } from "@/lib/membership";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { EventMetaIcon } from "@/components/Icons";
 import { Accordion } from "@/components/sections/Accordion";
 
-/**
- * The plan, as the frame states it: label, amount, period, terms.
- *
- * ⚠️ This price and the Stripe Payment Link behind the button are two separate
- * pieces of content, and nothing checks that they agree. If the link is ever
- * changed to charge something else, THIS is where the site would keep telling
- * people the old number. Whoever sets the link should set this row in the same
- * sitting. See PENDIENTES A13.
- */
-const PLAN_FALLBACK = [["Membership", "$25", "/ month", "Billed monthly · cancel anytime"]];
+/** "2500" cents + "usd" → "$25". Whole-dollar plans only (none of DKK's are cents-precise). */
+function formatPlanPrice(cents: number, currency: string): string {
+  const amount = cents / 100;
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency.toUpperCase(),
+    minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+  }).format(amount);
+  return formatted;
+}
 
+/**
+ * Benefits list shown on every plan card. Not plan-specific data in the
+ * membership_plans schema (title/description/interval/price only), so it
+ * stays a shared CMS-editable row rather than per-plan content.
+ */
 const BENEFITS_FALLBACK = [
   ["Live weekly talks every Wednesday"],
   ["Full recordings archive (all past sessions)"],
   ["Live Q&A with Dr. Dietrich Klinghardt™"],
   ["Priority access to special guest sessions"],
 ];
-
-/**
- * Second card, same pattern as the monthly plan above (client, 2026-09-22:
- * "agregar una tarjeta de cobro anual $279.00 al lado derecho de la tarjeta
- * de cobro mensual"). Its own page-contents rows (`weekly-talks-plan-annual`,
- * `weekly-talks-benefits-annual`, `weekly-talks-cta-annual`) so it's editable
- * from the CMS independently of the monthly card — same ⚠️ price/Payment
- * Link caveat as above applies here too.
- */
-const ANNUAL_PLAN_FALLBACK = [["Membership", "$279", "/ year", "Billed annually · cancel anytime"]];
-
-const ANNUAL_BENEFITS_FALLBACK = BENEFITS_FALLBACK;
 
 /**
  * The five questions the frame lists. It draws them closed, with no answers
@@ -80,13 +75,6 @@ export function WeeklyTalksPage() {
     ],
   });
 
-  const [ctaLabel, ctaUrl] = useRecords("weekly-talks-cta", 2, [])[0] ?? [];
-  const joinHref = checkoutHref(ctaUrl);
-
-  const [annualCtaLabel, annualCtaUrl] =
-    useRecords("weekly-talks-cta-annual", 2, [])[0] ?? [];
-  const annualJoinHref = checkoutHref(annualCtaUrl);
-
   // The next live session, taken from the events the CMS already publishes.
   // `liveMode` is the CMS select ("mux"), not a boolean — anything truthy other
   // than "off" means this event streams.
@@ -99,17 +87,29 @@ export function WeeklyTalksPage() {
     url: `${env.SITE_URL}/weekly-talks`,
   });
 
-  const [planLabel, planAmount, planPeriod, planTerms] =
-    useRecords("weekly-talks-plan", 4, PLAN_FALLBACK)[0] ?? [];
   const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
 
-  const [annualPlanLabel, annualPlanAmount, annualPlanPeriod, annualPlanTerms] =
-    useRecords("weekly-talks-plan-annual", 4, ANNUAL_PLAN_FALLBACK)[0] ?? [];
-  const annualBenefits = useRecords(
-    "weekly-talks-benefits-annual",
-    1,
-    ANNUAL_BENEFITS_FALLBACK,
+  // Real membership plans (Stripe-backed), published for this site, cheapest
+  // interval first — replaces the old hardcoded price/CTA page-contents rows.
+  const plans = [...useCollection("membership-plans")].sort(
+    (a, b) => number(a, "order") - number(b, "order"),
   );
+
+  const { status: authStatus, signIn } = useAuth();
+  const [checkoutState, setCheckoutState] = useState<
+    Record<string, "idle" | "loading" | "error">
+  >({});
+
+  const handleJoin = (planId: string) => {
+    if (authStatus !== "authenticated") {
+      signIn("/weekly-talks");
+      return;
+    }
+    setCheckoutState((s) => ({ ...s, [planId]: "loading" }));
+    startMembershipCheckout(planId, "/weekly-talks").catch(() => {
+      setCheckoutState((s) => ({ ...s, [planId]: "error" }));
+    });
+  };
 
   const faqs = [...useCollection("faqs")]
     .sort((a, b) => number(a, "order") - number(b, "order"))
@@ -144,15 +144,11 @@ export function WeeklyTalksPage() {
                 they are not repeated here. One button, matching the frame —
                 "Watch live" moved down beside the date it actually refers to. */}
             <div className="hero__actions">
-              {joinHref ? (
-                <a className="btn btn-primary" href={joinHref}>
-                  {ctaLabel || "Join now"}
-                </a>
-              ) : (
-                <a className="btn btn-primary" href="#pricing">
-                  Join now
-                </a>
-              )}
+              {/* Scrolls to the real plan cards below — pricing/checkout
+                  lives in one place (membership_plans), not duplicated here. */}
+              <a className="btn btn-primary" href="#pricing">
+                Join now
+              </a>
             </div>
           </Reveal>
 
@@ -219,65 +215,62 @@ export function WeeklyTalksPage() {
         </Reveal>
 
         <div className="plan-grid">
-          <Reveal className="plan" delay={90}>
-            <div className="plan__head">
-              <p className="eyebrow">{planLabel}</p>
-              <p className="plan__price">
-                <span className="plan__amount">{planAmount}</span>
-                <span className="plan__period">{planPeriod}</span>
-              </p>
-              <p className="plan__terms">{planTerms}</p>
-            </div>
+          {plans.length ? (
+            plans.map((plan, index) => {
+              const planId = String(plan.id);
+              const interval = text(plan, "interval");
+              const state = checkoutState[planId] ?? "idle";
+              return (
+                <Reveal className="plan" delay={90 + index * 50} key={planId}>
+                  <div className="plan__head">
+                    <p className="eyebrow">{text(plan, "title")}</p>
+                    <p className="plan__price">
+                      <span className="plan__amount">
+                        {formatPlanPrice(number(plan, "price"), text(plan, "currency", "usd"))}
+                      </span>
+                      <span className="plan__period">{interval === "year" ? "/ year" : "/ month"}</span>
+                    </p>
+                    <p className="plan__terms">{text(plan, "description")}</p>
+                  </div>
 
-            <div className="plan__body">
-              <ul className="tick-list plan__benefits">
-                {benefits.map(([benefit]) => (
-                  <li key={benefit}>{benefit}</li>
-                ))}
-              </ul>
+                  <div className="plan__body">
+                    <ul className="tick-list plan__benefits">
+                      {benefits.map(([benefit]) => (
+                        <li key={benefit}>{benefit}</li>
+                      ))}
+                    </ul>
 
-              {/* No live Payment Link yet falls back to Contact — a real,
-                  working destination now that this page no longer renders
-                  <NewsletterSection> (2026-09-16, terminación plana) — rather
-                  than a dead checkout, but still reads as the intended action
-                  (see Events for the same pattern). */}
-              <a className="btn btn-primary plan__cta" href={joinHref || "/contact"}>
-                {ctaLabel || "Join my talks"}
-              </a>
-              <p className="plan__note">Secure checkout · 7-day free trial</p>
-            </div>
-          </Reveal>
-
-          {/* Annual plan, same shape as the monthly card (client, 2026-09-22).
-              Its own CTA/Payment Link — an annual charge should not share the
-              monthly one — falls back to Contact for the same reason as
-              above until a real link is set. */}
-          <Reveal className="plan" delay={140}>
-            <div className="plan__head">
-              <p className="eyebrow">{annualPlanLabel}</p>
-              <p className="plan__price">
-                <span className="plan__amount">{annualPlanAmount}</span>
-                <span className="plan__period">{annualPlanPeriod}</span>
-              </p>
-              <p className="plan__terms">{annualPlanTerms}</p>
-            </div>
-
-            <div className="plan__body">
-              <ul className="tick-list plan__benefits">
-                {annualBenefits.map(([benefit]) => (
-                  <li key={benefit}>{benefit}</li>
-                ))}
-              </ul>
-
-              <a
-                className="btn btn-primary plan__cta"
-                href={annualJoinHref || "/contact"}
-              >
-                {annualCtaLabel || "Join my talks"}
-              </a>
-              <p className="plan__note">Secure checkout · cancel anytime</p>
-            </div>
-          </Reveal>
+                    <button
+                      type="button"
+                      className="btn btn-primary plan__cta"
+                      onClick={() => handleJoin(planId)}
+                      disabled={state === "loading"}
+                    >
+                      {state === "loading" ? "Redirecting…" : "Join my talks"}
+                    </button>
+                    {state === "error" ? (
+                      <p className="plan__note" style={{ color: "var(--error)" }}>
+                        We could not start checkout. Please try again.
+                      </p>
+                    ) : (
+                      <p className="plan__note">
+                        Secure checkout · {interval === "year" ? "cancel anytime" : "7-day free trial"}
+                      </p>
+                    )}
+                  </div>
+                </Reveal>
+              );
+            })
+          ) : (
+            <Reveal className="plan">
+              <div className="plan__body">
+                <p className="plan__terms">
+                  Membership plans are being set up. Please check back soon, or{" "}
+                  <a href="/contact">contact us</a> for details.
+                </p>
+              </div>
+            </Reveal>
+          )}
         </div>
       </section>
 
