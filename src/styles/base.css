@@ -307,6 +307,13 @@ h3,
   color: var(--brand-ink);
 }
 
+.btn-primary:disabled {
+  --btn-fill: transparent;
+  background-color: #9CA3AF;
+  color: #F3F4F6;
+  cursor: not-allowed;
+}
+
 .btn-outline {
   --btn-fill: color-mix(in srgb, var(--brand) 8%, transparent);
   border-color: color-mix(in srgb, var(--brand) 35%, transparent);

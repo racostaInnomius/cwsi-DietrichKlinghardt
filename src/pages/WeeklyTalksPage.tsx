@@ -6,7 +6,12 @@ import { eventLongDate, splitByTime } from "@/lib/format";
 import { calendarHref } from "@/lib/calendar";
 import { env } from "@/lib/env";
 import { useAuth } from "@/features/auth/useAuth";
-import { fetchMembershipStatus, startMembershipCheckout, type MembershipStatus } from "@/lib/membership";
+import {
+  fetchMembershipStatus,
+  openMembershipPortal,
+  startMembershipCheckout,
+  type MembershipStatus,
+} from "@/lib/membership";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -129,6 +134,16 @@ export function WeeklyTalksPage() {
         ? "month"
         : null;
 
+  // Site-wide: one active membership at a time (the backend's own rule —
+  // create-checkout-session 409s "already have an active membership on this
+  // site" for ANY plan once one is active). So a signed-in member looking at
+  // a plan that ISN'T theirs can't start a second checkout; the Billing
+  // Portal is where they actually change plans (Stripe's own "Update
+  // subscription" flow, already enabled on this account, proration and all)
+  // — generalizes to however many plans/intervals exist later, no new
+  // backend endpoint needed.
+  const hasOtherActiveMembership = Boolean(membership?.active) && !subscribedInterval;
+
   const handleJoin = (planId: string) => {
     if (authStatus !== "authenticated") {
       signIn("/weekly-talks");
@@ -136,6 +151,13 @@ export function WeeklyTalksPage() {
     }
     setCheckoutState((s) => ({ ...s, [planId]: "loading" }));
     startMembershipCheckout(planId, "/weekly-talks").catch(() => {
+      setCheckoutState((s) => ({ ...s, [planId]: "error" }));
+    });
+  };
+
+  const handleSwitch = (planId: string) => {
+    setCheckoutState((s) => ({ ...s, [planId]: "loading" }));
+    openMembershipPortal().catch(() => {
       setCheckoutState((s) => ({ ...s, [planId]: "error" }));
     });
   };
@@ -273,6 +295,15 @@ export function WeeklyTalksPage() {
                       <button type="button" className="btn btn-primary plan__cta" disabled>
                         Subscribed
                       </button>
+                    ) : hasOtherActiveMembership ? (
+                      <button
+                        type="button"
+                        className="btn btn-primary plan__cta"
+                        onClick={() => handleSwitch(planId)}
+                        disabled={state === "loading"}
+                      >
+                        {state === "loading" ? "Opening…" : "Switch to this plan"}
+                      </button>
                     ) : (
                       <button
                         type="button"
@@ -287,8 +318,12 @@ export function WeeklyTalksPage() {
                       <p className="plan__note">You're subscribed to this plan.</p>
                     ) : state === "error" ? (
                       <p className="plan__note" style={{ color: "var(--error)" }}>
-                        We could not start checkout. Please try again.
+                        {hasOtherActiveMembership
+                          ? "We could not open the membership portal. Please try again."
+                          : "We could not start checkout. Please try again."}
                       </p>
+                    ) : hasOtherActiveMembership ? (
+                      <p className="plan__note">Manage your plan change in the billing portal.</p>
                     ) : (
                       <p className="plan__note">
                         Secure checkout · {interval === "year" ? "cancel anytime" : "7-day free trial"}
