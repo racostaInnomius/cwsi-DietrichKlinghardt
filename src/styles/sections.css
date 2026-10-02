@@ -7136,6 +7136,16 @@ ul.sophia-therapies-grid h3 {
   margin-bottom: 20px;
 }
 
+/* The signed-in member's current plan/renewal state, read above the cards
+   themselves (not per-card) since it's one fact about the visitor, not
+   about any single plan. */
+.plan-status-note {
+  text-align: center;
+  color: var(--muted);
+  margin: 0 0 24px;
+  font-size: 0.95rem;
+}
+
 /* Client (2026-09-22): "agregar una tarjeta de cobro anual... al lado
    derecho de la mensual" — was a single centred .plan; now a row of up to
    two, still centring one alone if the annual card's content is ever empty. */

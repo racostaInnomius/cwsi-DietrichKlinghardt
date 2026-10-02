@@ -142,7 +142,12 @@ export function WeeklyTalksPage() {
   // subscription" flow, already enabled on this account, proration and all)
   // — generalizes to however many plans/intervals exist later, no new
   // backend endpoint needed.
-  const hasOtherActiveMembership = Boolean(membership?.active) && !subscribedInterval;
+  //
+  // Per-card, not a single flag: "active elsewhere" means active AND not
+  // this card's own interval (the bug this replaced compared against
+  // subscribedInterval being falsy, which is never true once subscribed).
+  const isOtherActivePlan = (interval: string) =>
+    Boolean(membership?.active) && subscribedInterval !== interval;
 
   const handleJoin = (planId: string) => {
     if (authStatus !== "authenticated") {
@@ -265,6 +270,56 @@ export function WeeklyTalksPage() {
           <h2>Learn, Connect, Grow Together</h2>
         </Reveal>
 
+        {authStatus === "authenticated" ? (
+          <p className="plan-status-note">
+            {!membership ? (
+              "Checking your membership…"
+            ) : membership.active ? (
+              <>
+                You're subscribed to the{" "}
+                <strong>
+                  {text(
+                    plans.find((p) => text(p, "interval") === subscribedInterval),
+                    "title",
+                    "Membership",
+                  )}
+                </strong>{" "}
+                plan
+                {membership.cancelAtPeriodEnd ? (
+                  <>
+                    {" "}
+                    — ends on{" "}
+                    {membership.currentPeriodEnd
+                      ? new Intl.DateTimeFormat("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }).format(new Date(membership.currentPeriodEnd))
+                      : "the end of this period"}{" "}
+                    and won't renew.
+                  </>
+                ) : membership.status === "past_due" ? (
+                  <> — your last payment failed. Update your payment method to avoid losing access.</>
+                ) : membership.currentPeriodEnd ? (
+                  <>
+                    , renews on{" "}
+                    {new Intl.DateTimeFormat("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }).format(new Date(membership.currentPeriodEnd))}
+                    .
+                  </>
+                ) : (
+                  "."
+                )}
+              </>
+            ) : (
+              "You don't have an active membership yet."
+            )}
+          </p>
+        ) : null}
+
         <div className="plan-grid">
           {plans.length ? (
             plans.map((plan, index) => {
@@ -295,7 +350,7 @@ export function WeeklyTalksPage() {
                       <button type="button" className="btn btn-primary plan__cta" disabled>
                         Subscribed
                       </button>
-                    ) : hasOtherActiveMembership ? (
+                    ) : isOtherActivePlan(interval) ? (
                       <button
                         type="button"
                         className="btn btn-primary plan__cta"
@@ -318,11 +373,11 @@ export function WeeklyTalksPage() {
                       <p className="plan__note">You're subscribed to this plan.</p>
                     ) : state === "error" ? (
                       <p className="plan__note" style={{ color: "var(--error)" }}>
-                        {hasOtherActiveMembership
+                        {isOtherActivePlan(interval)
                           ? "We could not open the membership portal. Please try again."
                           : "We could not start checkout. Please try again."}
                       </p>
-                    ) : hasOtherActiveMembership ? (
+                    ) : isOtherActivePlan(interval) ? (
                       <p className="plan__note">Manage your plan change in the billing portal.</p>
                     ) : (
                       <p className="plan__note">
