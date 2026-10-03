@@ -3161,6 +3161,32 @@
 }
 /* ── Archives grid (Phase 5) ──────────────────────────────────── */
 
+/* The locked Archives state borrows the exact three-zone treatment from
+   the standard (navy) course-path cards on /courses. The wrapper keeps the
+   single card at the same visual scale instead of stretching it full-width. */
+.archive-membership-gate {
+  display: grid;
+  place-items: center;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+.archive-membership-card {
+  width: min(100%, 620px);
+}
+.archive-membership-card .course-path-card__header {
+  padding-bottom: clamp(16px, 2vw, 20px);
+}
+.archive-membership-card .course-path-card__body {
+  padding-top: clamp(20px, 2.4vw, 28px);
+}
+.archive-membership-card .course-path-card__body p {
+  margin: 0;
+  font-size: var(--fs-base);
+}
+.archive-membership-card button.course-path-card__cta {
+  border: 0;
+  cursor: pointer;
+}
+
 .archive-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

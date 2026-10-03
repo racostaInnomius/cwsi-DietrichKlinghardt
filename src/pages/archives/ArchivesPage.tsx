@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
-import { LiveNotice } from "@/components/LiveNotice";
 import { useAuth } from "@/features/auth/useAuth";
 import {
   ArchivesError,
@@ -84,35 +83,53 @@ export function ArchivesPage() {
         {authStatus === "loading" || (!items && !error) ? (
           <p className="empty-note">Loading the Archives…</p>
         ) : error?.code === "membership_required" ? (
-          <div className="live-stage">
-            <LiveNotice
-              eyebrow="Members only"
-              title="The Archives are part of the membership."
-              body={
-                error.requiresLogin
-                  ? "Sign in to your account — your membership unlocks the Archives."
-                  : membership?.status === "incomplete"
-                    ? "Your membership checkout was not completed. Choose a plan to finish joining."
-                    : membership?.status === "canceled" || membership?.status === "incomplete_expired"
-                      ? "Your previous membership has ended. Rejoin to unlock the Archives again."
-                      : membership?.status === "unpaid"
-                        ? "Your membership needs payment before the Archives can be unlocked."
-                        : "You're signed in, but the Archives need an active membership."
-              }
-            >
-              {error.requiresLogin ? (
-                <button className="btn btn-primary" type="button" onClick={() => signIn("/archives")}>
-                  Sign in
-                </button>
-              ) : (
-                <>
-                  <Link className="btn btn-primary" to="/weekly-talks">
-                    {membership?.status ? "Rejoin the membership" : "Become a member"}
-                  </Link>
-                  <Link className="btn btn-outline" to="/account">View account</Link>
-                </>
-              )}
-            </LiveNotice>
+          <div className="archive-membership-gate">
+            <div className="course-path-card archive-membership-card" role="status">
+              <div className="course-path-card__header">
+                <span className="course-path-card__badge">Members only</span>
+                <h2>The Archives are part of the membership.</h2>
+              </div>
+              <div className="course-path-card__body">
+                <p>
+                  {error.requiresLogin
+                    ? "Sign in to your account — your membership unlocks the Archives."
+                    : membership?.status === "incomplete"
+                      ? "Your membership checkout was not completed. Choose a plan to finish joining."
+                      : membership?.status === "canceled" || membership?.status === "incomplete_expired"
+                        ? "Your previous membership has ended. Rejoin to unlock the Archives again."
+                        : membership?.status === "unpaid"
+                          ? "Your membership needs payment before the Archives can be unlocked."
+                          : "You're signed in, but the Archives need an active membership."}
+                </p>
+              </div>
+              <div className="course-path-card__footer">
+                {error.requiresLogin ? (
+                  <button
+                    className="course-path-card__cta course-path-card__cta--primary"
+                    type="button"
+                    onClick={() => signIn("/archives")}
+                  >
+                    Sign in <span aria-hidden="true">↗</span>
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      className="course-path-card__cta course-path-card__cta--primary"
+                      to="/weekly-talks"
+                    >
+                      {membership?.status ? "Rejoin membership" : "Become a member"}{" "}
+                      <span aria-hidden="true">↗</span>
+                    </Link>
+                    <Link
+                      className="course-path-card__cta course-path-card__cta--secondary"
+                      to="/account"
+                    >
+                      View account <span aria-hidden="true">↗</span>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         ) : error ? (
           <p className="empty-note">{error.message}</p>
