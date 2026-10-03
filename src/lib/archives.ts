@@ -1,5 +1,5 @@
 import { env } from "./env";
-import { getAccessToken } from "@/features/auth/tokenStore";
+import { authedFetch } from "./auth";
 
 export interface ArchiveListItem {
   id: string;
@@ -22,13 +22,10 @@ export class ArchivesError extends Error {
 }
 
 async function postArchives<T>(path: string, body: Record<string, unknown>): Promise<T> {
-  const accessToken = getAccessToken();
-  const response = await fetch(`${env.API_URL.replace(/\/$/, "")}${path}`, {
+  // Refreshes an expired bearer token once before deciding the visitor is not
+  // a member; without this, a still-signed-in member could see a false lock.
+  const response = await authedFetch(path, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-    },
     body: JSON.stringify(body),
   });
   const result = (await response.json().catch(() => null)) as {

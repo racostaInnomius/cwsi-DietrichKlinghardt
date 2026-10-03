@@ -1,6 +1,6 @@
 import { env } from "./env";
 import { muxPlaybackSessionId } from "./muxSession";
-import { getAccessToken } from "@/features/auth/tokenStore";
+import { authedFetch } from "./auth";
 
 const TOKEN_PATTERN = /^[a-f0-9]{64}$/i;
 
@@ -87,17 +87,10 @@ export async function requestMuxLive(args: {
   /** State polls omit playback so the API does not sign three fresh JWTs. */
   includePlayback?: boolean;
 }): Promise<PublicMuxLiveSession> {
-  // A signed-in member's bearer token, if any — read fresh on every call
-  // (never cached) since AuthProvider can mint it after this module loads.
-  // Absent for an anonymous visitor or an "open"/"paid" event, where the API
-  // ignores req.user entirely.
-  const accessToken = getAccessToken();
-  const response = await fetch(`${env.API_URL.replace(/\/$/, "")}/api/public/mux/live-playback`, {
+  // authedFetch is still a plain anonymous request without stored tokens, but
+  // refreshes a signed-in member once before the API evaluates the gate.
+  const response = await authedFetch("/api/public/mux/live-playback", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-    },
     body: JSON.stringify({
       tenantId: env.TENANT_ID,
       siteId: env.SITE_ID,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
 import { env } from "./env";
+import { authedFetch } from "./auth";
 
 /**
  * Donation plumbing for the Foundation page.
@@ -117,7 +118,9 @@ export async function createDonationIntent(input: {
   name: string;
   email: string;
 }): Promise<DonationIntent> {
-  const response = await fetch(`${env.API_URL}/api/donations/create-intent`, {
+  // authedFetch remains anonymous when there is no token, but when a signed-in
+  // donor gives it lets the API attach user_id so the gift appears in Account.
+  const response = await authedFetch("/api/donations/create-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ currency: "USD", ...input }),

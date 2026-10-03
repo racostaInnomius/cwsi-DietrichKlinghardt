@@ -1714,6 +1714,358 @@
   margin-top: 26px;
 }
 
+/* Signed-in account: identity stays quiet at the top, while the member's
+   actual access and activity carry the page. */
+.account-page {
+  display: grid;
+  gap: clamp(22px, 3vw, 36px);
+}
+.account-card--signin {
+  width: min(100%, 620px);
+}
+.account-card__header .eyebrow {
+  margin-bottom: 8px;
+}
+.account-profile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(16px, 2vw, 24px);
+  align-items: center;
+  padding: clamp(18px, 2.5vw, 28px);
+  border-bottom: 1px solid var(--line);
+}
+.account-profile__monogram {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 26px;
+}
+.account-profile .eyebrow,
+.account-profile h2,
+.account-profile p {
+  margin: 0;
+}
+.account-profile h2 {
+  margin-top: 3px;
+  font-size: clamp(22px, 2.4vw, 30px);
+}
+.account-profile > div:nth-child(2) > p:last-child {
+  margin-top: 3px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.account-membership {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, auto);
+  gap: clamp(24px, 4vw, 52px);
+  align-items: center;
+  overflow: hidden;
+  padding: clamp(28px, 4.5vw, 54px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-card);
+}
+.account-membership::after {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  top: -150px;
+  right: -80px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--gold) 18%, transparent);
+  pointer-events: none;
+}
+.account-membership--active {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--line));
+  background:
+    linear-gradient(125deg, color-mix(in srgb, var(--gold) 10%, var(--white)), var(--surface-2) 58%);
+}
+.account-membership__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.account-membership__heading .eyebrow,
+.account-membership h2,
+.account-membership p {
+  margin: 0;
+}
+.account-membership h2 {
+  max-width: 18ch;
+  color: var(--ink);
+  font-size: clamp(30px, 4vw, 48px);
+}
+.account-membership__copy > p:not(.account-membership__date) {
+  max-width: 64ch;
+  margin-top: 14px;
+  color: var(--muted);
+}
+.account-membership__date {
+  margin-top: 18px !important;
+  color: var(--ink-soft);
+  font-size: var(--fs-sm);
+}
+.account-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--cream-2);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.account-status--active,
+.account-status--trialing {
+  background: color-mix(in srgb, #2f7d58 14%, var(--white));
+  color: #245f45;
+}
+.account-status--past_due,
+.account-status--unpaid,
+.account-status--incomplete {
+  background: color-mix(in srgb, var(--gold) 18%, var(--white));
+  color: var(--gold-deep);
+}
+.account-membership__actions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 11px;
+  min-width: min(100%, 230px);
+}
+.account-membership__actions .btn {
+  width: 100%;
+  justify-content: center;
+}
+.account-text-action {
+  padding: 7px;
+  border: 0;
+  background: none;
+  color: var(--brand);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.account-text-action:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.account-inline-error {
+  color: var(--error) !important;
+  font-size: var(--fs-xs);
+  text-align: center;
+}
+.account-access-strip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(16px, 2.5vw, 28px);
+  align-items: center;
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--brand) 4%, var(--white));
+}
+.account-access-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--cream-2);
+  color: var(--muted);
+  font-size: 22px;
+}
+.account-access-icon.is-unlocked {
+  background: var(--brand);
+  color: var(--white);
+}
+.account-access-strip .eyebrow,
+.account-access-strip h2,
+.account-access-strip p {
+  margin: 0;
+}
+.account-access-strip h2 {
+  margin-top: 3px;
+  color: var(--ink);
+  font-size: clamp(22px, 2.4vw, 30px);
+}
+.account-access-strip > div > p:last-child {
+  margin-top: 5px;
+  color: var(--muted);
+}
+.account-history {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+.account-history__heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: end;
+  padding: clamp(24px, 3.5vw, 40px);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--gold) 8%, var(--white));
+}
+.account-history__heading .eyebrow,
+.account-history__heading h2 {
+  margin: 0;
+}
+.account-history__heading h2 {
+  margin-top: 4px;
+  color: var(--ink);
+}
+.account-history__heading > span {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+.account-activity {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.account-activity__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  padding: clamp(22px, 3vw, 32px) clamp(24px, 3.5vw, 40px);
+  border-bottom: 1px solid var(--line);
+}
+.account-activity__item:last-child {
+  border-bottom: 0;
+}
+.account-activity__mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--brand) 10%, var(--white));
+  color: var(--brand);
+  font-weight: 750;
+}
+.account-activity__mark--donation {
+  background: color-mix(in srgb, var(--gold) 16%, var(--white));
+  color: var(--gold-deep);
+}
+.account-activity__mark--booking {
+  background: color-mix(in srgb, #2f7d58 12%, var(--white));
+  color: #245f45;
+}
+.account-activity__title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: start;
+}
+.account-activity__kind {
+  color: var(--muted-2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.account-activity h3 {
+  margin: 3px 0 0;
+  color: var(--ink);
+  font-size: clamp(18px, 1.8vw, 23px);
+}
+.account-activity__title-row > strong {
+  color: var(--ink);
+  font-size: var(--fs-lead);
+  white-space: nowrap;
+}
+.account-activity__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 8px;
+  color: var(--muted-2);
+  font-size: var(--fs-xs);
+}
+.account-activity__meta span + span::before {
+  content: "·";
+  margin-right: 16px;
+}
+.account-activity__main > p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.account-history__empty,
+.account-load-error {
+  padding: clamp(34px, 5vw, 64px);
+  text-align: center;
+}
+.account-history__empty h3,
+.account-load-error h2 {
+  margin: 0;
+  color: var(--ink);
+}
+.account-history__empty p,
+.account-load-error p {
+  max-width: 58ch;
+  margin: 10px auto 0;
+  color: var(--muted);
+}
+.account-load-error {
+  border: 1px solid color-mix(in srgb, var(--error) 25%, var(--line));
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+.account-load-error .btn {
+  margin-top: 22px;
+}
+
+@media (max-width: 720px) {
+  .account-profile {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .account-profile > .btn {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+  .account-membership {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .account-membership__actions {
+    width: 100%;
+  }
+  .account-access-strip {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .account-access-strip > .btn {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+  .account-history__heading,
+  .account-activity__title-row {
+    align-items: start;
+    flex-direction: column;
+  }
+  .account-activity__item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* ── Music player (SoundCloud, consent-gated) ─────────────────── */
 
 .music-player {
@@ -2875,6 +3227,9 @@
   width: 100%;
   max-height: 70vh;
   border-radius: var(--radius);
+}
+.archive-viewer__error .btn {
+  margin-top: 16px;
 }
 img.archive-viewer__media {
   object-fit: contain;

@@ -12,6 +12,7 @@ import {
   fetchArchivesList,
   type ArchiveListItem,
 } from "@/lib/archives";
+import { fetchMembershipStatus, type MembershipStatus } from "@/lib/membership";
 
 /**
  * Archives — Phase 5 of the membership feature. Real content at last: a
@@ -26,15 +27,28 @@ import {
  * signed one, only at the moment the visitor actually wants to see it.
  */
 export function ArchivesPage() {
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, signIn } = useAuth();
   const [items, setItems] = useState<ArchiveListItem[] | null>(null);
   const [error, setError] = useState<ArchivesError | null>(null);
+  const [membership, setMembership] = useState<MembershipStatus | null>(null);
   const [viewing, setViewing] = useState<ArchiveListItem | null>(null);
 
   useEffect(() => {
     if (authStatus === "loading") return;
     let cancelled = false;
+    setItems(null);
     setError(null);
+    if (authStatus === "authenticated") {
+      fetchMembershipStatus()
+        .then((result) => {
+          if (!cancelled) setMembership(result);
+        })
+        .catch(() => {
+          if (!cancelled) setMembership(null);
+        });
+    } else {
+      setMembership(null);
+    }
     fetchArchivesList()
       .then((result) => {
         if (!cancelled) setItems(result.items);
@@ -77,17 +91,26 @@ export function ArchivesPage() {
               body={
                 error.requiresLogin
                   ? "Sign in to your account — your membership unlocks the Archives."
-                  : "You're signed in, but the Archives need an active membership."
+                  : membership?.status === "incomplete"
+                    ? "Your membership checkout was not completed. Choose a plan to finish joining."
+                    : membership?.status === "canceled" || membership?.status === "incomplete_expired"
+                      ? "Your previous membership has ended. Rejoin to unlock the Archives again."
+                      : membership?.status === "unpaid"
+                        ? "Your membership needs payment before the Archives can be unlocked."
+                        : "You're signed in, but the Archives need an active membership."
               }
             >
               {error.requiresLogin ? (
-                <Link className="btn btn-primary" to="/account">
+                <button className="btn btn-primary" type="button" onClick={() => signIn("/archives")}>
                   Sign in
-                </Link>
+                </button>
               ) : (
-                <Link className="btn btn-primary" to="/weekly-talks">
-                  Become a member
-                </Link>
+                <>
+                  <Link className="btn btn-primary" to="/weekly-talks">
+                    {membership?.status ? "Rejoin the membership" : "Become a member"}
+                  </Link>
+                  <Link className="btn btn-outline" to="/account">View account</Link>
+                </>
               )}
             </LiveNotice>
           </div>
@@ -123,24 +146,17 @@ export function ArchivesPage() {
 
 function ArchiveViewer({ item, onClose }: { item: ArchiveListItem; onClose: () => void }) {
   const [url, setUrl] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     fetchArchiveAccess({ source: item.source, id: item.id })
       .then((result) => {
         if (cancelled) return;
-        // A PDF has no inline viewer here — open it in its own tab and close
-        // the modal immediately rather than showing an empty dialog.
-        if (item.kind === "pdf") {
-          window.open(result.url, "_blank", "noopener,noreferrer");
-          onClose();
-          return;
-        }
         setUrl(result.url);
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : "We could not open this item.");
+        if (!cancelled) setError(err instanceof Error ? err : new Error("We could not open this item."));
       });
     return () => {
       cancelled = true;
@@ -156,8 +172,6 @@ function ArchiveViewer({ item, onClose }: { item: ArchiveListItem; onClose: () =
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  if (item.kind === "pdf") return null;
-
   return createPortal(
     <div
       className="feedback-backdrop archive-viewer-backdrop"
@@ -171,9 +185,18 @@ function ArchiveViewer({ item, onClose }: { item: ArchiveListItem; onClose: () =
         </button>
         <h2>{item.title}</h2>
         {error ? (
-          <p className="empty-note">{error}</p>
+          <div className="archive-viewer__error">
+            <p className="empty-note">{error.message}</p>
+            {error instanceof ArchivesError && error.code === "membership_required" ? (
+              <a className="btn btn-primary" href="/account">Review membership</a>
+            ) : null}
+          </div>
         ) : !url ? (
           <p className="empty-note">Loading…</p>
+        ) : item.kind === "pdf" ? (
+          <a className="btn btn-primary" href={url} target="_blank" rel="noopener noreferrer">
+            Open PDF in a new tab
+          </a>
         ) : item.kind === "video" ? (
           // eslint-disable-next-line jsx-a11y/media-has-caption
           <video className="archive-viewer__media" src={url} controls autoPlay />

@@ -7,6 +7,7 @@ export interface MembershipStatus {
   planKey?: string | null;
   currentPeriodEnd?: string | null;
   cancelAtPeriodEnd?: boolean;
+  createdAt?: string | null;
 }
 
 /** /account's own read of "am I a member here" — no Stripe call, just the DB row. */
