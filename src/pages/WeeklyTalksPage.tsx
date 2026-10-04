@@ -84,6 +84,10 @@ export function WeeklyTalksPage() {
     ],
   });
 
+  // Read early: the next-live poll below needs to wait for this to settle
+  // before its first request (see nextLiveSession).
+  const { status: authStatus, signIn } = useAuth();
+
   // The next live session, taken from the events the CMS already publishes.
   // `liveMode` is the CMS select with values "none" | "mux" — only "mux"
   // means this event actually streams. Excludes "open" (no-charge) talks:
@@ -124,10 +128,15 @@ export function WeeklyTalksPage() {
   // so the "Live Now" badge appears the instant the broadcast actually
   // starts rather than just whenever the scheduled time has passed.
   const nextLiveIsGated = nextLive && text(nextLive, "registrationType", "open") !== "open";
+  // Waits for authStatus to leave "loading": the access token lives in
+  // memory only and is refreshed from the stored refresh token on mount, so
+  // polling immediately would send an unauthenticated request — a
+  // membership event returns 403, not 401, so authedFetch's retry-on-401
+  // never recovers it, and a signed-in member would see the wrong state.
   const { session: nextLiveSession, error: nextLiveError } = useLiveTalkSession(
     nextLive && nextLiveIsGated ? String(nextLive.id) : "",
     nextLive ? readStoredMuxLiveToken(String(nextLive.id)) ?? undefined : undefined,
-    Boolean(nextLive && nextLiveIsGated),
+    Boolean(nextLive && nextLiveIsGated) && authStatus !== "loading",
   );
   // A visitor without access still gets `error.mode` from the gate (see
   // publicMuxLiveHandler) — without it the badge could only ever appear for
@@ -143,7 +152,6 @@ export function WeeklyTalksPage() {
     (a, b) => number(a, "order") - number(b, "order"),
   );
 
-  const { status: authStatus, signIn } = useAuth();
   const [checkoutState, setCheckoutState] = useState<
     Record<string, "idle" | "loading" | "error">
   >({});

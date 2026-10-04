@@ -5,6 +5,7 @@ import { useCollection, text } from "@/lib/content";
 import { eventLongDate } from "@/lib/format";
 import { clearStoredMuxLiveToken, readStoredMuxLiveToken, storeMuxLiveToken } from "@/lib/muxLive";
 import { INVALID_TOKEN_CODES, useLiveTalkSession } from "@/lib/useLiveTalkSession";
+import { useAuth } from "@/features/auth/useAuth";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
@@ -60,7 +61,17 @@ export function LiveTalkPage() {
     setParams(sanitized, { replace: true });
   }, [eventId, params, queryToken, setParams]);
 
-  const { session, error, retry } = useLiveTalkSession(eventId, accessToken, tokenReady);
+  // Waits for the global auth refresh to settle before the first poll: the
+  // access token lives in memory only (never localStorage) and is refreshed
+  // from the stored refresh token on mount, so firing immediately would send
+  // an unauthenticated request — a membership event returns 403, not 401,
+  // so authedFetch's own retry-on-401 never kicks in to recover it.
+  const { status: authStatus } = useAuth();
+  const { session, error, retry } = useLiveTalkSession(
+    eventId,
+    accessToken,
+    tokenReady && authStatus !== "loading",
+  );
 
   // A token the API rejects is worse than none: drop it (storage + local
   // state) so the page shows the purchase/membership gate instead of
