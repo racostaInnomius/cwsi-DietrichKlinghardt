@@ -308,7 +308,7 @@ export function WeeklyTalksPage() {
                 <span className="next-live__time"> · {eventTimeLabel(nextLive)}</span>
               ) : null}
               {nextLiveBadgeOn ? (
-                <Link className="live-now-badge" to={`/live/${nextLive.id}`}>
+                <Link className="live-now-badge" to={`/weekly-talks/live/${nextLive.id}`}>
                   <span className="live-now-badge__dot" aria-hidden="true" /> Live Now
                 </Link>
               ) : null}
