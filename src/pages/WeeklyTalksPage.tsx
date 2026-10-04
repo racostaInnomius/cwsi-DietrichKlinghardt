@@ -124,12 +124,16 @@ export function WeeklyTalksPage() {
   // so the "Live Now" badge appears the instant the broadcast actually
   // starts rather than just whenever the scheduled time has passed.
   const nextLiveIsGated = nextLive && text(nextLive, "registrationType", "open") !== "open";
-  const { session: nextLiveSession } = useLiveTalkSession(
+  const { session: nextLiveSession, error: nextLiveError } = useLiveTalkSession(
     nextLive && nextLiveIsGated ? String(nextLive.id) : "",
     nextLive ? readStoredMuxLiveToken(String(nextLive.id)) ?? undefined : undefined,
     Boolean(nextLive && nextLiveIsGated),
   );
-  const nextLiveBadgeOn = nextLiveSession?.mode === "live";
+  // A visitor without access still gets `error.mode` from the gate (see
+  // publicMuxLiveHandler) — without it the badge could only ever appear for
+  // an already-entitled member, defeating its whole point as a public
+  // "it's starting" signal.
+  const nextLiveBadgeOn = nextLiveSession?.mode === "live" || nextLiveError?.mode === "live";
 
   const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
 

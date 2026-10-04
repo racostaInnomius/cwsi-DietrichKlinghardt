@@ -46,6 +46,10 @@ export class MuxLiveError extends Error {
      * visitor has no session at all (send them to sign in), false means
      * they're signed in but not an active member (send them to join). */
     public readonly requiresLogin: boolean = false,
+    /** The event's real live/replay/ended state, sent even to a visitor the
+     * gate just rejected — lets a "Live Now" indicator work for anyone,
+     * while playbackId/tokens stay withheld until they're actually entitled. */
+    public readonly mode: PublicMuxLiveSession["mode"] | null = null,
   ) {
     super(message);
     this.name = "MuxLiveError";
@@ -102,7 +106,13 @@ export async function requestMuxLive(args: {
   });
   const result = await response.json().catch(() => null) as {
     data?: PublicMuxLiveSession;
-    error?: { code?: string; message?: string; checkoutUrl?: string | null; requiresLogin?: boolean };
+    error?: {
+      code?: string;
+      message?: string;
+      checkoutUrl?: string | null;
+      requiresLogin?: boolean;
+      mode?: PublicMuxLiveSession["mode"];
+    };
   } | null;
   if (!response.ok) {
     throw new MuxLiveError(
@@ -110,6 +120,7 @@ export async function requestMuxLive(args: {
       result?.error?.code || "live_failed",
       result?.error?.checkoutUrl || null,
       result?.error?.requiresLogin ?? false,
+      result?.error?.mode ?? null,
     );
   }
   if (!result?.data) throw new MuxLiveError("La sesión Live está incompleta.", "invalid_response");
