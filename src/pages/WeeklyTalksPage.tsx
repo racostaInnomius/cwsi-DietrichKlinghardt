@@ -85,12 +85,10 @@ export function WeeklyTalksPage() {
   });
 
   // The next live session, taken from the events the CMS already publishes.
-  // `liveMode` is the CMS select ("mux"), not a boolean — anything truthy other
-  // than "off" means this event streams.
+  // `liveMode` is the CMS select with values "none" | "mux" — only "mux"
+  // means this event actually streams.
   const nextLive = splitByTime(
-    useCollection("events").filter(
-      (event) => typeof event.liveMode === "string" && event.liveMode !== "off",
-    ),
+    useCollection("events").filter((event) => event.liveMode === "mux"),
   ).upcoming[0];
   const addToCalendar = calendarHref(nextLive, {
     url: `${env.SITE_URL}/weekly-talks`,
@@ -104,9 +102,7 @@ export function WeeklyTalksPage() {
   const freeEvents = splitByTime(
     useCollection("events").filter(
       (event) =>
-        typeof event.liveMode === "string" &&
-        event.liveMode !== "off" &&
-        text(event, "registrationType", "open") === "open",
+        event.liveMode === "mux" && text(event, "registrationType", "open") === "open",
     ),
   );
   const freeEvent = freeEvents.upcoming[0] ?? freeEvents.past[0];
