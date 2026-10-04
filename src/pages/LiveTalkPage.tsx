@@ -2,25 +2,17 @@ import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { Seo } from "@/components/Seo";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
-import { checkoutHref } from "@/lib/checkout";
 import { eventLongDate } from "@/lib/format";
-import {
-  MuxLiveError,
-  clearStoredMuxLiveToken,
-  readStoredMuxLiveToken,
-  requestMuxLive,
-  storeMuxLiveToken,
-  type PublicMuxLiveSession,
-} from "@/lib/muxLive";
+import { clearStoredMuxLiveToken, readStoredMuxLiveToken, storeMuxLiveToken } from "@/lib/muxLive";
+import { INVALID_TOKEN_CODES, useLiveTalkSession } from "@/lib/useLiveTalkSession";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
-import { LiveNotice } from "@/components/LiveNotice";
+import { LiveTalkStage } from "@/components/live/LiveTalkStage";
 
-// The two heaviest dependencies on the site, and only this page uses them:
-// loaded on demand so no other page pays for a video player and a websocket
-// client it never touches.
-const MuxPlayer = lazy(() => import("@mux/mux-player-react"));
+// The heaviest dependency on the site, loaded on demand so no other page
+// pays for a websocket client it never touches. (MuxPlayer itself is
+// lazy-loaded inside LiveTalkStage.)
 const LiveChatWidget = lazy(() =>
   import("@/components/live/LiveChatWidget").then((m) => ({ default: m.LiveChatWidget })),
 );
@@ -50,10 +42,6 @@ export function LiveTalkPage() {
   const tokenReady = tokenState?.eventId === eventId;
   const accessToken = tokenReady ? tokenState.token : undefined;
 
-  const [session, setSession] = useState<PublicMuxLiveSession | null>(null);
-  const [error, setError] = useState<MuxLiveError | null>(null);
-  const [attempt, setAttempt] = useState(0);
-
   // The access link arrives by email once; remember it so a reload still works.
   useEffect(() => {
     if (!eventId) return;
@@ -72,69 +60,18 @@ export function LiveTalkPage() {
     setParams(sanitized, { replace: true });
   }, [eventId, params, queryToken, setParams]);
 
+  const { session, error, retry } = useLiveTalkSession(eventId, accessToken, tokenReady);
+
+  // A token the API rejects is worse than none: drop it (storage + local
+  // state) so the page shows the purchase/membership gate instead of
+  // retrying with a dead credential on the next poll.
   useEffect(() => {
-    if (!eventId || !tokenReady) return;
-    let active = true;
-    let timer: number | undefined;
-    let current: PublicMuxLiveSession | null = null;
-
-    const load = async (includePlayback: boolean) => {
-      try {
-        let next = await requestMuxLive({ eventId, accessToken, includePlayback });
-        if (!active) return;
-
-        if (!includePlayback && next.playbackId) {
-          if (current?.playbackId === next.playbackId && current.tokens) {
-            // Keep the original token object: replacing it would change the
-            // player's HLS URL and rebuffer the stream on every state poll.
-            next = { ...next, tokens: current.tokens };
-          } else {
-            // waiting→live or live→replay: the playback id changed, so mint.
-            next = await requestMuxLive({ eventId, accessToken, includePlayback: true });
-            if (!active) return;
-          }
-        }
-
-        current = next;
-        setSession(next);
-        setError(null);
-
-        if (next.mode !== "replay" && next.mode !== "ended") {
-          const seconds = next.mode === "live" ? 10 : next.retryAfterSeconds || 15;
-          timer = window.setTimeout(() => void load(false), seconds * 1000);
-        }
-      } catch (reason) {
-        if (!active) return;
-        const failure =
-          reason instanceof MuxLiveError
-            ? reason
-            : new MuxLiveError("We could not load the broadcast.", "live_failed");
-        // A token the API rejects is worse than none: drop it so the page can
-        // show the purchase gate instead of retrying with a dead credential.
-        if (
-          accessToken &&
-          ["purchase_required", "access_link_invalid", "access_session_mismatch"].includes(
-            failure.code,
-          )
-        ) {
-          clearStoredMuxLiveToken(eventId);
-          setTokenState({ eventId, token: undefined });
-        }
-        setError(failure);
-      }
-    };
-
-    void load(true);
-    return () => {
-      active = false;
-      if (timer !== undefined) window.clearTimeout(timer);
-    };
-  }, [accessToken, attempt, eventId, tokenReady]);
+    if (!error || !accessToken || !INVALID_TOKEN_CODES.includes(error.code)) return;
+    clearStoredMuxLiveToken(eventId);
+    setTokenState({ eventId, token: undefined });
+  }, [error, accessToken, eventId]);
 
   const title = event ? text(event, "title", "Weekly talk") : (session?.title ?? "Weekly talk");
-  const buyHref = error?.checkoutUrl
-    ? checkoutHref(error.checkoutUrl)
-    : checkoutHref(event?.checkoutUrl);
 
   return (
     <>
@@ -159,98 +96,7 @@ export function LiveTalkPage() {
 
         <div className="live-layout">
         <div className="live-stage" aria-live="polite">
-          {session?.playbackId && session.tokens ? (
-            <Suspense fallback={<LiveNotice eyebrow="One moment" title="Loading the player…" />}>
-            <MuxPlayer
-              playbackId={session.playbackId}
-              tokens={session.tokens}
-              streamType={session.mode === "live" ? "live" : "on-demand"}
-              metadata={{ video_title: session.title, video_id: session.eventId }}
-              accentColor="#bc8f44"
-              primaryColor="#f4f0e5"
-              secondaryColor="#1c1916"
-              style={
-                // A phone broadcast is vertical; sizing it by width would make
-                // it absurdly tall on a desktop screen.
-                session.orientation === "portrait"
-                  ? { height: "min(78vh, 760px)", aspectRatio: "9 / 16", margin: "0 auto", display: "block" }
-                  : { width: "100%", aspectRatio: "16 / 9" }
-              }
-            />
-            </Suspense>
-          ) : error?.code === "membership_required" ? (
-            <LiveNotice
-              eyebrow="Members only"
-              title="This talk is part of the membership."
-              body={
-                error.requiresLogin
-                  ? "Sign in to your account — your membership unlocks this talk."
-                  : "You're signed in, but this talk needs an active membership."
-              }
-            >
-              {error.requiresLogin ? (
-                <Link className="btn btn-primary" to="/account">
-                  Sign in
-                </Link>
-              ) : (
-                <Link className="btn btn-primary" to="/weekly-talks">
-                  Become a member
-                </Link>
-              )}
-            </LiveNotice>
-          ) : error?.code === "purchase_required" ? (
-            <LiveNotice
-              eyebrow="Members only"
-              title="This talk is part of the membership."
-              body="Members receive a personal link by email that works for the live session and its replay."
-            >
-              {buyHref ? (
-                <a className="btn btn-primary" href={buyHref}>
-                  Join the weekly talks
-                </a>
-              ) : (
-                <Link className="btn btn-primary" to="/weekly-talks">
-                  About the membership
-                </Link>
-              )}
-            </LiveNotice>
-          ) : error ? (
-            <LiveNotice
-              eyebrow="Not available"
-              title="We could not load the broadcast."
-              // Only when the API said something more specific than our own
-              // generic fallback — otherwise the notice repeats itself.
-              body={
-                error.message === "We could not load the broadcast."
-                  ? undefined
-                  : error.message
-              }
-            >
-              <button className="btn btn-outline" type="button" onClick={() => setAttempt((n) => n + 1)}>
-                Try again
-              </button>
-            </LiveNotice>
-          ) : session?.mode === "interrupted" ? (
-            <LiveNotice
-              eyebrow="Reconnecting"
-              title="The signal dropped for a moment."
-              body="The broadcast can come back. This page refreshes itself — there is no need to reload."
-            />
-          ) : session?.mode === "ended" ? (
-            <LiveNotice
-              eyebrow="Finished"
-              title="The talk has ended."
-              body="If a replay was enabled it appears here once Mux finishes processing it."
-            />
-          ) : session ? (
-            <LiveNotice
-              eyebrow="Starting soon"
-              title="The talk has not started yet."
-              body="This page updates on its own as soon as the signal arrives."
-            />
-          ) : (
-            <LiveNotice eyebrow="One moment" title="Authorising the broadcast…" />
-          )}
+          <LiveTalkStage session={session} error={error} checkoutUrl={event?.checkoutUrl} onRetry={retry} />
         </div>
         {/* Keyed by event so switching talks starts a clean room. */}
         <Suspense fallback={null}>

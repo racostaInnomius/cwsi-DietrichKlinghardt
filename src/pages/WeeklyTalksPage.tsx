@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
-import { eventLongDate, splitByTime } from "@/lib/format";
+import { eventLongDate, eventTimeLabel, splitByTime } from "@/lib/format";
 import { calendarHref } from "@/lib/calendar";
 import { env } from "@/lib/env";
 import { useAuth } from "@/features/auth/useAuth";
@@ -12,6 +13,9 @@ import {
   startMembershipCheckout,
   type MembershipStatus,
 } from "@/lib/membership";
+import { readStoredMuxLiveToken } from "@/lib/muxLive";
+import { useLiveTalkSession } from "@/lib/useLiveTalkSession";
+import { LiveTalkStage } from "@/components/live/LiveTalkStage";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -91,6 +95,38 @@ export function WeeklyTalksPage() {
   const addToCalendar = calendarHref(nextLive, {
     url: `${env.SITE_URL}/weekly-talks`,
   });
+
+  // The standing free talk: an "open" (no-charge) event wired to Mux Live.
+  // Whichever one the CMS publishes is embedded directly in the hero — no
+  // extra "evergreen" flag needed, "open" + liveMode already says "anyone
+  // can watch". Picks the event already in progress first; otherwise the
+  // soonest one, so the hero shows whichever free talk is most relevant.
+  const freeEvents = splitByTime(
+    useCollection("events").filter(
+      (event) =>
+        typeof event.liveMode === "string" &&
+        event.liveMode !== "off" &&
+        text(event, "registrationType", "open") === "open",
+    ),
+  );
+  const freeEvent = freeEvents.upcoming[0] ?? freeEvents.past[0];
+  const { session: freeSession } = useLiveTalkSession(
+    freeEvent ? String(freeEvent.id) : "",
+    undefined,
+    Boolean(freeEvent),
+  );
+  const freeTalkIsLive = freeSession?.mode === "live" && Boolean(freeSession.playbackId && freeSession.tokens);
+
+  // The next paid/members-only talk's own live state, polled the same way,
+  // so the "Live Now" badge appears the instant the broadcast actually
+  // starts rather than just whenever the scheduled time has passed.
+  const nextLiveIsGated = nextLive && text(nextLive, "registrationType", "open") !== "open";
+  const { session: nextLiveSession } = useLiveTalkSession(
+    nextLive && nextLiveIsGated ? String(nextLive.id) : "",
+    nextLive ? readStoredMuxLiveToken(String(nextLive.id)) ?? undefined : undefined,
+    Boolean(nextLive && nextLiveIsGated),
+  );
+  const nextLiveBadgeOn = nextLiveSession?.mode === "live";
 
   const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
 
@@ -208,38 +244,44 @@ export function WeeklyTalksPage() {
             </div>
           </Reveal>
 
-          {/* A generic "live call" mockup, drawn in CSS rather than a
-              screenshot — the frame's own version isn't a real photo either,
-              just a dark UI with a monogram avatar (see D-note below). */}
+          {/* When a free talk is actually live, it plays right here instead
+              of the mockup — the box itself never changes size either way
+              (sophia_hero_dimension), LiveTalkStage just fills it. */}
           <Reveal className="hero__aside" delay={120}>
-            <div className="live-mock" aria-hidden="true">
-              <div className="live-mock__bar">
-                <span className="live-mock__dot live-mock__dot--red" />
-                <span className="live-mock__dot live-mock__dot--yellow" />
-                <span className="live-mock__dot live-mock__dot--green" />
-                <span className="live-mock__url">weekly-talks.klinghardt-academy.com</span>
+            {freeTalkIsLive ? (
+              <div className="hero__live-embed">
+                <LiveTalkStage session={freeSession} error={null} compact />
               </div>
-              <div className="live-mock__screen">
-                <div className="live-mock__top">
-                  <span className="live-mock__live">
-                    <span className="live-mock__live-dot" /> Live
-                  </span>
-                  <span className="live-mock__watching">247 watching</span>
+            ) : (
+              <div className="live-mock" aria-hidden="true">
+                <div className="live-mock__bar">
+                  <span className="live-mock__dot live-mock__dot--red" />
+                  <span className="live-mock__dot live-mock__dot--yellow" />
+                  <span className="live-mock__dot live-mock__dot--green" />
+                  <span className="live-mock__url">weekly-talks.klinghardt-academy.com</span>
                 </div>
-                <div className="live-mock__body">
-                  <span className="live-mock__avatar">K</span>
-                  <p className="live-mock__name">Dr. Dietrich Klinghardt</p>
-                  <p className="live-mock__status">Live now</p>
-                </div>
-                <div className="live-mock__controls">
-                  <span className="live-mock__play" />
-                  <span className="live-mock__track">
-                    <span className="live-mock__progress" />
-                  </span>
-                  <span className="live-mock__time">42:18</span>
+                <div className="live-mock__screen">
+                  <div className="live-mock__top">
+                    <span className="live-mock__live">
+                      <span className="live-mock__live-dot" /> Live
+                    </span>
+                    <span className="live-mock__watching">247 watching</span>
+                  </div>
+                  <div className="live-mock__body">
+                    <span className="live-mock__avatar">K</span>
+                    <p className="live-mock__name">Dr. Dietrich Klinghardt</p>
+                    <p className="live-mock__status">Live now</p>
+                  </div>
+                  <div className="live-mock__controls">
+                    <span className="live-mock__play" />
+                    <span className="live-mock__track">
+                      <span className="live-mock__progress" />
+                    </span>
+                    <span className="live-mock__time">42:18</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </Reveal>
         </div>
       </AnimatedGradient>
@@ -253,7 +295,17 @@ export function WeeklyTalksPage() {
             <span className="next-live__chip">
               <span className="next-live__chip-dot" aria-hidden="true" /> Next live talk
             </span>
-            <p className="next-live__when">{eventLongDate(nextLive)}</p>
+            <p className="next-live__when">
+              {eventLongDate(nextLive)}
+              {eventTimeLabel(nextLive) ? (
+                <span className="next-live__time"> · {eventTimeLabel(nextLive)}</span>
+              ) : null}
+              {nextLiveBadgeOn ? (
+                <Link className="live-now-badge" to={`/live/${nextLive.id}`}>
+                  <span className="live-now-badge__dot" aria-hidden="true" /> Live Now
+                </Link>
+              ) : null}
+            </p>
             {addToCalendar ? (
               <a className="next-live__calendar" href={addToCalendar} download="weekly-talk.ics">
                 <EventMetaIcon kind="calendar" /> Add to calendar

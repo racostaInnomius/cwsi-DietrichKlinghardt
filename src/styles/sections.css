@@ -6376,6 +6376,23 @@ ul.sophia-therapies-grid h3 {
   background: #0a1c2e;
   box-shadow: 0 18px 48px rgb(2 56 102 / 0.28);
 }
+/* The real free-talk player, swapped in for .live-mock. Same box — the hero
+   box never grows to fit content (sophia_hero_dimension) — so this just
+   fills it instead of sizing itself. */
+.hero__live-embed {
+  width: 100%;
+  max-width: 442px;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: var(--radius-md, 14px);
+  background: #0a1c2e;
+  box-shadow: 0 18px 48px rgb(2 56 102 / 0.28);
+}
+.hero__live-embed mux-player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
 .live-mock__bar {
   display: flex;
   align-items: center;
@@ -7488,6 +7505,45 @@ ul.sophia-therapies-grid h3 {
   margin: 0 auto 0 0;
   font-family: var(--font-display);
   font-size: var(--fs-display-sm);
+}
+/* The time rides along with the date but reads as a secondary detail, not
+   a second headline — smaller, regular weight, body face. */
+.next-live__time {
+  font-family: var(--font-body, inherit);
+  font-size: 0.5em;
+  font-weight: 400;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+.live-now-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 14px;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: #e5544a;
+  color: #fff;
+  font-family: var(--font-body, inherit);
+  font-size: var(--fs-eyebrow);
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  vertical-align: middle;
+  animation: live-now-pulse 2s ease-in-out infinite;
+}
+.live-now-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+@keyframes live-now-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 84, 74, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(229, 84, 74, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-now-badge { animation: none; }
 }
 .next-live__calendar {
   display: inline-flex;
