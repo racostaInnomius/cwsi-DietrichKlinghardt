@@ -86,9 +86,16 @@ export function WeeklyTalksPage() {
 
   // The next live session, taken from the events the CMS already publishes.
   // `liveMode` is the CMS select with values "none" | "mux" — only "mux"
-  // means this event actually streams.
+  // means this event actually streams. Excludes "open" (no-charge) talks:
+  // those get their own standing slot in the hero below, so this band is
+  // only ever the next paid/membership talk — otherwise a free talk that
+  // happens to come first chronologically would hide the one that actually
+  // needs the "Live Now" badge and access gate.
   const nextLive = splitByTime(
-    useCollection("events").filter((event) => event.liveMode === "mux"),
+    useCollection("events").filter(
+      (event) =>
+        event.liveMode === "mux" && text(event, "registrationType", "open") !== "open",
+    ),
   ).upcoming[0];
   const addToCalendar = calendarHref(nextLive, {
     url: `${env.SITE_URL}/weekly-talks`,
