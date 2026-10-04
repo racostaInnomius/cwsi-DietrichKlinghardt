@@ -3,7 +3,8 @@ import { useLocation } from "react-router-dom";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { themeForPath } from "./navigation";
-import { usePageContent, text } from "@/lib/content";
+import { useCollection, usePageContent, text } from "@/lib/content";
+import { eventMonthDayOrdinal, nextWeeklyTalk } from "@/lib/format";
 
 /**
  * Pages that skip <NewsletterSection> and get /foundation's flat-navy
@@ -73,11 +74,20 @@ export function SiteShell({
   // The announcement bar is editable from the CMS like any other copy; the
   // fallback keeps the bar meaningful when the CMS is unreachable.
   const banner = usePageContent("announcement");
-  const bannerText = text(
+  const bannerTextRaw = text(
     banner,
     "title",
     "Join my weekly talk: next session September 1st.",
   );
+  // The CMS copy's trailing date ("next session September 1st.") goes stale
+  // the moment a new talk is scheduled — swap in the real next weekly talk's
+  // date (client, 2026-10-04) while leaving the rest of the CMS wording
+  // alone. Events without a next talk, or CMS copy that doesn't end in a
+  // date, keep the raw CMS text untouched.
+  const nextTalkDate = eventMonthDayOrdinal(nextWeeklyTalk(useCollection("events")));
+  const bannerText = nextTalkDate
+    ? bannerTextRaw.replace(/[A-Z][a-z]+ \d{1,2}(st|nd|rd|th)\.?$/, `${nextTalkDate}.`)
+    : bannerTextRaw;
   const bannerCta = text(banner, "ctaLabel", "Join now");
   const bannerHref = text(banner, "ctaUrl", "/weekly-talks");
 

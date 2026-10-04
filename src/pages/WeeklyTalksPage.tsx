@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
-import { eventLongDate, eventTimeLabel, splitByTime } from "@/lib/format";
+import { eventLongDate, eventTimeLabel, nextWeeklyTalk, splitByTime } from "@/lib/format";
 import { calendarHref } from "@/lib/calendar";
 import { env } from "@/lib/env";
 import { useAuth } from "@/features/auth/useAuth";
@@ -95,12 +95,7 @@ export function WeeklyTalksPage() {
   // only ever the next paid/membership talk — otherwise a free talk that
   // happens to come first chronologically would hide the one that actually
   // needs the "Live Now" badge and access gate.
-  const nextLive = splitByTime(
-    useCollection("events").filter(
-      (event) =>
-        event.liveMode === "mux" && text(event, "registrationType", "open") !== "open",
-    ),
-  ).upcoming[0];
+  const nextLive = nextWeeklyTalk(useCollection("events"));
   const addToCalendar = calendarHref(nextLive, {
     url: `${env.SITE_URL}/weekly-talks`,
   });

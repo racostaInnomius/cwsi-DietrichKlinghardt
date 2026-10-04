@@ -134,3 +134,37 @@ export function splitByTime(rows: ContentDoc[]): {
   }
   return { upcoming, past: past.reverse() };
 }
+
+/** "October 2nd" — the announcement bar's short form, in the event's own timezone. */
+export function eventMonthDayOrdinal(doc: ContentDoc | undefined): string {
+  const date = dateOf(doc);
+  if (!date) return "";
+  const timeZone = tzOf(doc);
+  const month = new Intl.DateTimeFormat("en-US", { month: "long", timeZone }).format(date);
+  const day = Number(new Intl.DateTimeFormat("en-US", { day: "numeric", timeZone }).format(date));
+  const suffix =
+    day % 10 === 1 && day !== 11
+      ? "st"
+      : day % 10 === 2 && day !== 12
+        ? "nd"
+        : day % 10 === 3 && day !== 13
+          ? "rd"
+          : "th";
+  return `${month} ${day}${suffix}`;
+}
+
+/**
+ * The next paid/membership weekly talk — same selection the "next live
+ * talk" band on /weekly-talks uses, shared here so the sitewide announcement
+ * bar always names the same session. Excludes "open" (no-charge) talks,
+ * which don't need the membership CTA this banner links to.
+ */
+export function nextWeeklyTalk(events: ContentDoc[]): ContentDoc | undefined {
+  return splitByTime(
+    events.filter((event) => {
+      const registrationType =
+        typeof event.registrationType === "string" ? event.registrationType : "open";
+      return event.liveMode === "mux" && registrationType !== "open";
+    }),
+  ).upcoming[0];
+}
