@@ -189,6 +189,9 @@ export function EventDetailPage() {
                 <a
                   className="btn btn-primary event-panel__cta"
                   href={registrationUrl || "#newsletter"}
+                  data-debug-registration-url={registrationUrl ?? "NULL"}
+                  data-debug-checkout-url={checkoutUrl ?? "NULL"}
+                  data-debug-registration-type={registrationType}
                 >
                   {ctaLabel}
                 </a>
