@@ -65,6 +65,15 @@ export function EventDetailPage() {
   const checkoutUrl = useCheckoutHref(event.checkoutUrl);
   const learnMoreUrl = externalUrl(event.learnMoreUrl);
   const registrationUrl = registrationType === "paid" ? checkoutUrl : learnMoreUrl;
+  // TEMP DEBUG
+  if (typeof window !== "undefined") {
+    console.log("[EventDetailPage render]", {
+      rawCheckoutUrl: event.checkoutUrl,
+      hookCheckoutUrl: checkoutUrl,
+      registrationType,
+      registrationUrl,
+    });
+  }
   const soldOut = event.status === "sold_out" || event.soldOut === true;
   const mapUrl = text(event, "mapUrl");
   const ctaLabel = registrationType === "paid" ? "Book now" : "Register / learn more";
