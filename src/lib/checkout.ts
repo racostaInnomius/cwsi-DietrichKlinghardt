@@ -21,6 +21,8 @@
  * reopens on the real domain.
  */
 
+import { useEffect, useState } from "react";
+
 const LIVE_HOSTS = new Set(["buy.stripe.com", "checkout.stripe.com"]);
 const STAGING_HOSTNAME_TEST_LINKS_ALLOWED = "dkk.beytrax.com";
 
@@ -51,4 +53,20 @@ export function checkoutHref(value: unknown): string | undefined {
   }
 
   return url.toString();
+}
+
+/**
+ * `checkoutHref` reads `window.location.hostname` for the staging exception
+ * above, but a value computed directly in a render body matches whatever ran
+ * at SSR time (no `window`) and never recomputes — React hydrates onto the
+ * server markup without re-running the check, so the real client-side
+ * hostname never takes effect. This forces one recompute right after mount,
+ * when `window` is actually available.
+ */
+export function useCheckoutHref(value: unknown): string | undefined {
+  const [href, setHref] = useState(() => checkoutHref(value));
+  useEffect(() => {
+    setHref(checkoutHref(value));
+  }, [value]);
+  return href;
 }
