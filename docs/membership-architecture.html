@@ -1,0 +1,518 @@
+<title>Donations vs. Subscriptions</title>
+<meta name="description" content="Arquitectura propuesta para membresías pagas en sitios Beytrax, separando lo que ya existe (Donations) de lo que falta construir (Subscriptions).">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f6f4ef;
+    --surface: #ffffff;
+    --surface-2: #efece4;
+    --ink: #1d201f;
+    --ink-soft: #4a4d4a;
+    --muted: #6d716c;
+    --line: #ddd8cb;
+    --accent: #2f5d8a;
+    --accent-ink: #1d3b56;
+    --accent-soft: #e7eef5;
+    --good: #2f7d5a;
+    --good-soft: #e7f3ec;
+    --warn: #a8710f;
+    --warn-soft: #fbf1de;
+    --bad: #ad4433;
+    --bad-soft: #f7e9e5;
+    --code-bg: #ece8dd;
+    --shadow: 0 1px 2px rgba(29,32,31,0.06), 0 8px 24px rgba(29,32,31,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17191a;
+      --surface: #1f2224;
+      --surface-2: #262a2c;
+      --ink: #ecebe6;
+      --ink-soft: #c7c5bd;
+      --muted: #9a9b93;
+      --line: #34383a;
+      --accent: #7ea9d1;
+      --accent-ink: #dfeaf5;
+      --accent-soft: #24333f;
+      --good: #7fc7a3;
+      --good-soft: #1f2f28;
+      --warn: #e0ad5f;
+      --warn-soft: #332a17;
+      --bad: #e0897a;
+      --bad-soft: #362320;
+      --code-bg: #2a2d27;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17191a;
+    --surface: #1f2224;
+    --surface-2: #262a2c;
+    --ink: #ecebe6;
+    --ink-soft: #c7c5bd;
+    --muted: #9a9b93;
+    --line: #34383a;
+    --accent: #7ea9d1;
+    --accent-ink: #dfeaf5;
+    --accent-soft: #24333f;
+    --good: #7fc7a3;
+    --good-soft: #1f2f28;
+    --warn: #e0ad5f;
+    --warn-soft: #332a17;
+    --bad: #e0897a;
+    --bad-soft: #362320;
+    --code-bg: #2a2d27;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    line-height: 1.6;
+    padding-inline: 20px;
+  }
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-block: 48px 96px;
+  }
+  h1, h2, h3 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 600;
+    color: var(--ink);
+    text-wrap: balance;
+    line-height: 1.2;
+  }
+  h1 { font-size: clamp(30px, 5vw, 42px); margin: 0 0 6px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0 0 28px; max-width: 60ch; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 40px;
+  }
+  .meta-pill {
+    font-size: 12.5px; padding: 5px 11px; border-radius: 999px;
+    background: var(--surface-2); color: var(--muted); border: 1px solid var(--line);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 44px;
+    box-shadow: var(--shadow);
+  }
+  nav.toc p { margin: 0 0 10px; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 24px; }
+  nav.toc li { margin-bottom: 6px; font-size: 14.5px; break-inside: avoid; }
+  nav.toc a { color: var(--accent-ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 56px; scroll-margin-top: 20px; }
+  h2 {
+    font-size: 26px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--line);
+    margin: 0 0 20px;
+  }
+  h2 .tag {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    vertical-align: middle;
+    margin-left: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .tag-donations { background: var(--good-soft); color: var(--good); }
+  .tag-subscriptions { background: var(--accent-soft); color: var(--accent-ink); }
+
+  h3 { font-size: 19px; margin: 30px 0 10px; }
+  p { margin: 0 0 14px; color: var(--ink-soft); max-width: 68ch; }
+  strong { color: var(--ink); }
+  a { color: var(--accent-ink); }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    padding: 1px 6px;
+    border-radius: 5px;
+    color: var(--ink);
+  }
+  ul, ol { max-width: 68ch; color: var(--ink-soft); padding-left: 22px; }
+  li { margin-bottom: 7px; }
+  li::marker { color: var(--muted); }
+
+  .callout {
+    display: flex; gap: 12px;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 18px 0;
+    border: 1px solid transparent;
+    max-width: 68ch;
+  }
+  .callout .icon { flex: none; font-size: 17px; line-height: 1.5; }
+  .callout p { margin: 0; }
+  .callout p + p { margin-top: 8px; }
+  .callout.good { background: var(--good-soft); border-color: color-mix(in srgb, var(--good) 30%, transparent); }
+  .callout.good .icon, .callout.good strong { color: var(--good); }
+  .callout.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
+  .callout.warn .icon, .callout.warn strong { color: var(--warn); }
+  .callout.bad { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 30%, transparent); }
+  .callout.bad .icon, .callout.bad strong { color: var(--bad); }
+
+  .status-table { width: 100%; border-collapse: collapse; margin: 20px 0 8px; font-size: 14.5px; }
+  .status-table th {
+    text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); padding: 0 12px 10px; border-bottom: 1px solid var(--line); font-weight: 600;
+  }
+  .status-table td { padding: 12px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-soft); }
+  .status-table td:first-child, .status-table th:first-child { padding-left: 0; }
+  .status-table code { white-space: nowrap; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+  .pill-built { background: var(--good-soft); color: var(--good); }
+  .pill-partial { background: var(--warn-soft); color: var(--warn); }
+  .pill-missing { background: var(--bad-soft); color: var(--bad); }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 14px; margin: 20px 0; }
+  .flow-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .flow-card .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: white;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; font-weight: 600; margin-bottom: 10px;
+  }
+  .flow-card h4 { margin: 0 0 6px; font-size: 14.5px; color: var(--ink); }
+  .flow-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+  pre.mermaid { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); overflow-x: auto; }
+
+  table.edge { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+  table.edge th { text-align: left; padding: 9px 12px; background: var(--surface-2); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  table.edge td { padding: 11px 12px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+  table.edge tr:last-child td { border-bottom: none; }
+  table.edge td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .overflow-x { overflow-x: auto; }
+
+  .phase-list { counter-reset: phase; list-style: none; padding-left: 0; }
+  .phase-list li {
+    counter-increment: phase; position: relative; padding-left: 44px; margin-bottom: 18px;
+  }
+  .phase-list li::before {
+    content: counter(phase);
+    position: absolute; left: 0; top: 0;
+    width: 30px; height: 30px; border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent-ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 14px;
+  }
+  .phase-list strong { display: block; color: var(--ink); margin-bottom: 2px; }
+
+  hr.section-break { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+
+  footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+</style>
+
+<div class="page">
+  <h1>Donations vs. Subscriptions</h1>
+  <p class="subtitle">Arquitectura propuesta para membresías pagas de visitantes finales en sitios Beytrax (caso de estudio: Dietrich Klinghardt — Weekly Talks + Archives), separando lo que ya existe de lo que falta construir.</p>
+  <div class="meta-row">
+    <span class="meta-pill">Actualizado 2026-09-27</span>
+    <span class="meta-pill">CWSB-Baytrax · cwsf-beytrax</span>
+    <span class="meta-pill">Estado: decisiones cerradas, código sin implementar</span>
+  </div>
+
+  <nav class="toc">
+    <p>Contenido</p>
+    <ol>
+      <li><a href="#resumen">Resumen ejecutivo</a></li>
+      <li><a href="#decisiones">Decisiones confirmadas</a></li>
+      <li><a href="#infra">Infraestructura compartida ya existente</a></li>
+      <li><a href="#donations">A · Donations (estado actual)</a></li>
+      <li><a href="#subscriptions">B · Subscriptions (a construir)</a></li>
+      <li><a href="#identidad">Identidad: Safecertus + Beytrax</a></li>
+      <li><a href="#tiers">Encaje en los tiers de Beytrax</a></li>
+      <li><a href="#edge-cases">Edge cases</a></li>
+      <li><a href="#fases">Fases sugeridas</a></li>
+      <li><a href="#preguntas">Preguntas abiertas</a></li>
+    </ol>
+  </nav>
+
+  <section id="resumen">
+    <h2>Resumen ejecutivo</h2>
+    <p>Tras revisar el esquema real de la base de datos de Beytrax y el código de los webhooks de Stripe (no solo el frontend de cada sitio), el panorama es mejor de lo que asumíamos al principio: <strong>la mayoría de las piezas de infraestructura (identidad, Stripe Connect, entitlement de contenido Mux, sistema de tiers) ya existen y están en producción</strong> — solo que hoy sirven a otro caso de uso (donaciones puntuales/recurrentes sin gating de contenido) y no al que necesitamos (acceso continuo a contenido mientras una suscripción esté activa).</p>
+    <p>El punto central de este documento: <strong>Donations y Subscriptions deben ser dos sistemas separados</strong>, aunque compartan el mismo patrón de Stripe Connect. Donations es un <em>libro de registro de regalos</em> (append-only, para recibos y reportes). Subscriptions necesita ser un <em>sistema de estado activo</em> (una fila por suscriptor que se actualiza, no se acumula) porque de eso depende directamente si alguien puede ver el contenido o no.</p>
+  </section>
+
+  <section id="decisiones">
+    <h2>Decisiones confirmadas</h2>
+    <p>Respuestas ya cerradas a las preguntas abiertas de la primera versión de este documento. El resto del documento se actualizó para reflejarlas.</p>
+    <div class="overflow-x">
+    <table class="edge">
+      <tr><th>Pregunta</th><th>Decisión</th></tr>
+      <tr><td>¿Capability de Beytrax o algo a medida?</td><td>Capability más de la plataforma. El staff la activa por tenant exactamente como ya funciona hoy cualquier otra capability: editando <code>tenants.enabled_modules</code> (JSONB, propiedad de Payload) — confirmado en <code>capabilities/provision.ts</code>. Una vez que un tenant esté en el tier correcto, el aprovisionamiento automático se la da; el staff puede además otorgarla manualmente a un tenant en un tier menor sin que un cambio de plan futuro se la quite (<code>recomputeCapabilitiesOnPlanChange</code> preserva "manual additions").</td></tr>
+      <tr><td>¿Qué tier?</td><td><strong>Business.</strong> Ya agregado a <code>plans/entitlements.ts</code> / marketing copy (<code>planFeatures.ts</code>) el 2026-09-27 — "Paid memberships" aparece en los bullets de Business (EN/ES, largo y corto). Falta solo la <code>CAPABILITY.memberships</code> en código, que se agrega junto con la Fase 2.</td></tr>
+      <tr><td>¿Customer de Stripe compartido con Donations?</td><td><strong>No — separados.</strong> Un socio que además dona tendrá dos <code>Customer</code> de Stripe distintos, uno por flujo. Más simple de razonar y evita que un problema de facturación en un flujo contamine al otro; el costo es que no comparten tarjeta guardada entre ambos.</td></tr>
+      <tr><td>¿Reembolso/disputa corta acceso?</td><td><strong>Sí, de inmediato.</strong> <code>charge.refunded</code> y <code>charge.dispute.created</code> deben agregarse al <code>dispatch()</code> del webhook y revocar el acceso al momento, no solo marcar para revisión.</td></tr>
+      <tr><td>¿Retención de reemplazos en Mux?</td><td><strong>No aplica como se planteó.</strong> El archivo de Weekly Talks no vive en Mux a largo plazo — ver la nueva sección <a href="#archivo-migracion">"Archivo de Weekly Talks: de Mux a Azure Blob"</a>.</td></tr>
+      <tr><td>¿Cuándo se dispara la migración a Blob?</td><td><strong>Inmediato</strong> — en cuanto termina la transmisión. En la práctica, "inmediato" debe leerse como "en cuanto Mux confirma que el asset/replay ya terminó de procesarse y está listo para descargar" (el webhook de Mux correspondiente, no un temporizador fijo) — Mux no entrega el archivo final en el mismo instante en que el streaming se corta, necesita procesarlo primero.</td></tr>
+      <tr><td>¿Migración automática o manual?</td><td><strong>Automática.</strong> Un job disparado por el webhook de Mux, sin intervención del equipo en el camino feliz.</td></tr>
+      <tr><td>¿Qué se conserva del talk?</td><td><strong>Solo el video.</strong> El registro del chat en vivo de esa sesión no se migra ni se conserva para el Archive.</td></tr>
+      <tr><td>¿Qué pasa si la migración falla a medio camino?</td><td><strong>Alerta a staff</strong> — <code>javier.pacheco@certusitm.com</code> y <code>rodrigo.acosta@certusitm.com</code>. Implica que el job no debe borrar de Mux hasta confirmar que la subida a Blob se completó con éxito (orden: subir primero, verificar, borrar después) — borrar antes de confirmar arriesgaría perder el video si la subida falla.</td></tr>
+      <tr><td>¿Cuántos reintentos antes de alertar?</td><td><strong>5 reintentos fallidos.</strong> Un error transitorio (red, Azure momentáneamente caído) se reintenta hasta 5 veces antes de mandar la alerta a staff — no se alerta desde el primer fallo.</td></tr>
+      <tr><td>¿El job puede migrar una charla que el cliente marcó como "no guardar"?</td><td><strong>No debe.</strong> El job revisa <code>events.enable_replay</code> en el momento de migrar (cuando Mux avisa que el asset ya está listo): si está apagado, no sube nada a Blob y deja que Mux borre esa grabación normalmente. Leer el valor vigente en ese instante ya es correcto — no hace falta ninguna sincronización especial, solo que el job no asuma "toda charla se archiva" sin revisar el interruptor primero.</td></tr>
+      <tr><td>¿Qué tipos de contenido lleva Archives, además de las charlas migradas?</td><td>Imágenes, videos subidos por aparte (no migrados de Mux), PDFs y música — los cuatro gateados por la misma membresía activa.</td></tr>
+      <tr><td>¿La música de Archives reutiliza el sistema de Mux Audio ya construido (<code>mux_track_entitlements</code>, usado hoy por Music para vender pistas sueltas)?</td><td><strong>No — todo uniforme en Azure Blob.</strong> Imágenes, PDFs, videos y música de Archives comparten un solo mecanismo nuevo de entitlement, en vez de que la música siga un camino distinto (Mux Audio) del resto del contenido. Más simple de razonar a futuro; el costo es no reutilizar el entitlement de audio que ya funciona en producción para Music.</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="infra">
+    <h2>Infraestructura compartida ya existente</h2>
+    <p>Confirmado directamente contra el esquema de la base de datos de producción y el código de <code>CWSB-Baytrax</code>:</p>
+    <table class="status-table">
+      <tr><th>Pieza</th><th>Dónde vive</th><th>Estado</th></tr>
+      <tr>
+        <td>Stripe Connect por tenant (cada cliente cobra en su propia cuenta)</td>
+        <td><code>tenant_payment_config</code>, <code>stripe_connect_accounts</code></td>
+        <td><span class="pill pill-built">● Ya existe</span></td>
+      </tr>
+      <tr>
+        <td>Webhook central de Stripe con idempotencia</td>
+        <td><code>stripe_webhook_events</code>, <code>webhooks.controller.ts</code></td>
+        <td><span class="pill pill-built">● Ya existe</span></td>
+      </tr>
+      <tr>
+        <td>Identidad de visitante final (no solo staff) sobre Safecertus</td>
+        <td><code>users</code>, <code>sessions</code>, <code>access_tokens</code>, <code>refresh_tokens</code></td>
+        <td><span class="pill pill-built">● Ya existe</span></td>
+      </tr>
+      <tr>
+        <td>Entitlement de contenido Mux (video/audio/vivo) por compra</td>
+        <td><code>mux_video_entitlements</code>, <code>mux_track_entitlements</code>, <code>mux_live_entitlements</code></td>
+        <td><span class="pill pill-partial">◐ Existe, no cubre membresías</span></td>
+      </tr>
+      <tr>
+        <td>Suscripciones recurrentes reales con Stripe (patrón probado)</td>
+        <td><code>beytrax_subscriptions</code> (Beytrax→Tenant) y donaciones mensuales (Tenant→Donante)</td>
+        <td><span class="pill pill-partial">◐ Patrón existe, no para este caso</span></td>
+      </tr>
+      <tr>
+        <td>Sistema de tiers/capacidades por tenant</td>
+        <td><code>plans/entitlements.ts</code> (<code>CAPABILITY.*</code>)</td>
+        <td><span class="pill pill-built">● Ya existe</span></td>
+      </tr>
+      <tr>
+        <td>Estado de suscripción de un visitante final (activa/vencida/cancelada)</td>
+        <td>—</td>
+        <td><span class="pill pill-missing">✕ No existe</span></td>
+      </tr>
+      <tr>
+        <td>Entitlement para contenido que no es Mux (imágenes, archivos de Archives)</td>
+        <td>—</td>
+        <td><span class="pill pill-missing">✕ No existe</span></td>
+      </tr>
+    </table>
+  </section>
+
+  <hr class="section-break">
+
+  <section id="donations">
+    <h2>A · Donations <span class="tag tag-donations">Estado actual — revisado a fondo</span></h2>
+
+    <h3>Cómo funciona hoy, paso a paso</h3>
+    <div class="card-grid">
+      <div class="flow-card"><span class="step-num">1</span><h4>Donante llena el formulario</h4><p>El frontend del sitio (ej. Foundation de Dietrich Klinghardt) pide monto, frecuencia (única o mensual) y datos del donante.</p></div>
+      <div class="flow-card"><span class="step-num">2</span><h4>POST /donations/create-intent</h4><p>Verifica que el tenant tenga Stripe Connect activo (<code>charges_enabled</code>) antes de aceptar nada.</p></div>
+      <div class="flow-card"><span class="step-num">3</span><h4>Única vez → PaymentIntent</h4><p><code>on_behalf_of</code> + <code>transfer_data.destination</code> apuntan a la cuenta del tenant — el estado de cuenta del donante muestra el nombre del tenant, no "Beytrax".</p></div>
+      <div class="flow-card"><span class="step-num">4</span><h4>Mensual → Subscription real</h4><p>Se crea un <code>Customer</code> en la cuenta de Beytrax y una <code>Subscription</code> con <code>price_data</code> dinámico + <code>application_fee_percent</code>, misma lógica de destino.</p></div>
+      <div class="flow-card"><span class="step-num">5</span><h4>Fila "pending" en <code>donations</code></h4><p>Se inserta antes de confirmar el pago, con <code>tenant_id</code>, <code>site_id</code>, <code>user_id</code> opcional (anónimo permitido).</p></div>
+      <div class="flow-card"><span class="step-num">6</span><h4>Webhook confirma</h4><p><code>invoice.paid</code> / <code>payment_intent.succeeded</code> marcan la fila <code>succeeded</code>; cada mes siguiente <strong>inserta una fila nueva</strong>, no actualiza la anterior.</p></div>
+    </div>
+
+    <h3>Lo que Donations resuelve muy bien</h3>
+    <div class="callout good">
+      <span class="icon">✓</span>
+      <div>
+        <p><strong>Split de fondos multi-tenant.</strong> El patrón <code>on_behalf_of</code> + <code>transfer_data</code> + <code>application_fee_percent</code>/<code>_amount</code> ya resuelve correctamente "el dinero es del tenant, Beytrax se queda con una comisión" — tanto para pago único como recurrente.</p>
+        <p><strong>Historial para el donante.</strong> <code>GET /donations/mine</code> ya alimenta el portal de Sistworld con el historial real de aportes de un usuario autenticado.</p>
+        <p><strong>Trazabilidad contable.</strong> Cada cobro (inicial y cada renovación) queda como una fila propia con su <code>stripe_invoice_id</code> — ideal para reportes y recibos fiscales.</p>
+      </div>
+    </div>
+
+    <h3>Lo que Donations NO resuelve — y por qué no sirve tal cual para membresías</h3>
+    <div class="callout bad">
+      <span class="icon">✕</span>
+      <div>
+        <p><strong>No existe un estado persistente de "¿sigue activa esta donación recurrente?"</strong> Confirmado en el código: cuando un donante cancela en Stripe, llega <code>customer.subscription.deleted</code> — el handler busca la suscripción en <code>beytrax_subscriptions</code>, no la encuentra (porque es una donación, no vive ahí) y <strong>retorna en silencio, sin tocar nada</strong>. Lo mismo pasa con <code>customer.subscription.updated</code>. Hoy no hay ninguna fila en la base de datos que diga "este donante canceló" — solo se puede inferir mirando si dejaron de llegar invoices.</p>
+        <p><strong>Es un ledger append-only, no un registro de estado.</strong> Cada mes se inserta una fila nueva (<code>recordDonationInvoicePaid</code>) — perfecto para historial, pero no hay una sola fila por donante que puedas consultar con "¿está activo, sí o no?" sin agregar/ordenar manualmente por fecha.</p>
+        <p><strong>Sin dunning ni periodo de gracia.</strong> Un pago fallido solo marca esa fila puntual como <code>failed</code> (<code>updateDonationStatus</code>) — no hay reintentos rastreados, ni alerta al donante, ni "vas a perder tu beneficio en X días" (el lado de <code>beytrax_subscriptions</code> sí tiene todo esto: <code>past_due_since</code>, emails de pago fallido, ventana de gracia — pero deliberadamente no se replicó del lado de donaciones porque nunca tuvo que gatear nada).</p>
+        <p><strong>Es intencional, no un descuido:</strong> las donaciones nunca desbloquearon contenido, así que nunca necesitaron saber "¿sigue pagando?" — solo "¿cuánto ha dado en total?". Para una membresía que sí controla acceso, esa pregunta se vuelve central.</p>
+      </div>
+    </div>
+
+    <p><strong>Conclusión de esta sección:</strong> Donations es un sistema maduro y bien construido para lo que fue diseñado — <em>registrar regalos y repartir el dinero correctamente</em> — pero no es, ni debe forzarse a ser, el sistema que decida si alguien puede ver el Weekly Talk de esta semana.</p>
+  </section>
+
+  <hr class="section-break">
+
+  <section id="subscriptions">
+    <h2>B · Subscriptions / Membresías <span class="tag tag-subscriptions">A construir</span></h2>
+
+    <h3>Qué SÍ se reutiliza de Donations</h3>
+    <ul>
+      <li>El patrón completo de Stripe Connect (<code>on_behalf_of</code> + <code>transfer_data</code> + <code>application_fee_percent</code>) — ya probado en producción, cero riesgo nuevo ahí.</li>
+      <li>El endpoint único de webhooks (<code>stripeWebhookHandler</code>) y su tabla de idempotencia (<code>stripe_webhook_events</code>) — se le agrega un caso más al <code>dispatch()</code>, no un sistema nuevo.</li>
+      <li>El mismo patrón de "no fallar el webhook si el correo falla" (fire-and-forget con captura de errores) que ya usan donaciones y <code>beytrax_subscriptions</code>.</li>
+    </ul>
+
+    <h3>Qué NO se reutiliza tal cual</h3>
+    <div class="callout warn">
+      <span class="icon">◐</span>
+      <div>
+        <p>La tabla <code>donations</code> en sí <strong>no</strong> debería recibir las membresías — mezclaría un ledger contable con un sistema de control de acceso, y heredaría el mismo hueco de "no sé si sigue cancelado o no". En vez de eso, la tabla nueva debe copiar el <strong>otro</strong> patrón que ya existe en la misma base de datos: <code>beytrax_subscriptions</code> — una fila por suscriptor, con <code>status</code>/<code>current_period_end</code>/<code>cancel_at_period_end</code> que se <strong>actualiza</strong> (no se acumula) en cada evento de Stripe.</p>
+      </div>
+    </div>
+
+    <h3>Modelo de datos propuesto (nuevo)</h3>
+    <div class="overflow-x">
+    <table class="edge">
+      <tr><th>Campo</th><th>Propósito</th></tr>
+      <tr><td>tenant_id, site_id</td><td>igual que <code>donations</code> — a qué sitio pertenece la membresía</td></tr>
+      <tr><td>user_id</td><td>FK a <code>users</code> — a diferencia de las donaciones, aquí <strong>no debería ser opcional</strong>: sin cuenta no hay a quién dejarle entrar</td></tr>
+      <tr><td>stripe_customer_id / stripe_subscription_id / stripe_price_id</td><td>igual que <code>beytrax_subscriptions</code></td></tr>
+      <tr><td>plan_key</td><td><code>"monthly"</code> / <code>"annual"</code></td></tr>
+      <tr><td>status</td><td><code>active</code> / <code>past_due</code> / <code>canceled</code> — actualizado por el webhook, no insertado de nuevo cada mes</td></tr>
+      <tr><td>current_period_end, cancel_at_period_end, past_due_since</td><td>idénticos a <code>beytrax_subscriptions</code> — copiar ese diseño ya probado</td></tr>
+    </table>
+    </div>
+
+    <h3>El webhook: mismo endpoint, un caso más</h3>
+    <p>Hoy <code>handleSubscriptionUpserted</code> y <code>handleSubscriptionDeleted</code> ya distinguen "¿esto es una suscripción de <code>beytrax_subscriptions</code>?" y si no, asumen que es una donación y la ignoran silenciosamente. El cambio necesario es agregar una tercera rama: <strong>si tampoco es una donación, buscar en la nueva tabla de membresías</strong> antes de descartar el evento.</p>
+    <pre class="mermaid">
+flowchart TD
+    A["Stripe envía\ncustomer.subscription.updated/deleted"] --> B{"¿Existe en\nbeytrax_subscriptions?"}
+    B -- sí --> C["Actualiza facturación\nBeytrax → Tenant\n(ya existe)"]
+    B -- no --> D{"¿Existe en\nsite_memberships? (nuevo)"}
+    D -- sí --> E["Actualiza estado del socio\n→ afecta acceso a contenido"]
+    D -- no --> F["Es una donación recurrente\n(se ignora, como hoy)"]
+    </pre>
+
+    <h3>Conectar con el gating de contenido: Weekly Talk en vivo</h3>
+    <p>Para la transmisión en vivo (y su reemplazo inmediato, mientras aún vive en Mux), en vez de crear una fila de <code>mux_live_entitlements</code> por cada charla para cada socio, el chequeo debería ser en dos pasos: <strong>(1)</strong> ¿tiene una fila <code>active</code> en la nueva tabla de membresías? Si sí, <strong>(2)</strong> emitir el token de Mux normalmente (reutilizando <code>muxLive.ts</code> tal como está) sin necesitar una fila de entitlement previa por ese evento puntual.</p>
+
+    <h3 id="archivo-migracion">Archivo de Weekly Talks: de Mux a Azure Blob</h3>
+    <p>Aclarado por el cliente: el archivo de charlas pasadas en <code>/archives</code> <strong>no</strong> se sirve desde Mux a largo plazo. El flujo real tiene tres pasos:</p>
+    <div class="card-grid">
+      <div class="flow-card"><span class="step-num">1</span><h4>Aparece en /archives</h4><p>Cada Weekly Talk pasada se lista en la página de Archives, no solo en una sección aparte de "reemplazos".</p></div>
+      <div class="flow-card"><span class="step-num">2</span><h4>Se sube al Blob de Dietrich</h4><p>El video se exporta de Mux y se sube al contenedor de Azure Blob Storage ya asignado a este tenant — el mismo mecanismo que ya usan los videos de la pirámide y de Sophia (bypass de Payload, subida directa vía SDK).</p></div>
+      <div class="flow-card"><span class="step-num">3</span><h4>Se borra de Mux</h4><p>Libera el <code>muxStoredMinutes</code> del plan del tenant (<code>entitlements.ts</code> ya limita esto por tier) — Mux queda solo para transmisión en vivo, no como almacenamiento permanente.</p></div>
+    </div>
+    <div class="callout warn">
+      <span class="icon">◐</span>
+      <div>
+        <p><strong>Esto fusiona dos frentes que parecían separados.</strong> La versión anterior de este documento trataba "reemplazos de Weekly Talks" (vía Mux) y "gating de Archives" (contenido no-Mux) como dos problemas distintos. Con la migración a Blob, <strong>son el mismo problema</strong>: una vez que el video sale de Mux, se convierte en un archivo más de Azure Blob, protegido por el mismo mecanismo de entitlement que hace falta construir para el resto de Archives (URLs firmadas de corta duración, verificadas contra "¿tiene membresía activa?").</p>
+        <p>Esto en realidad <strong>simplifica</strong> el trabajo: solo hay que construir un mecanismo de entitlement para contenido de Blob (no dos, uno para Mux-viejo y otro para Archives), y el chequeo de acceso es exactamente el mismo para cualquier contenido de Archives sin importar si es un video migrado o una imagen nueva.</p>
+      </div>
+    </div>
+
+    <h3>Qué tipos de contenido lleva Archives</h3>
+    <p>Aclarado por el cliente: Archives no es solo el archivo de charlas pasadas — también tendrá imágenes, videos subidos por aparte (no migrados de Mux), PDFs y música. Decisión: <strong>los cuatro más las charlas migradas comparten un solo mecanismo de entitlement en Azure Blob</strong>, en vez de que cada tipo siga un camino distinto.</p>
+    <div class="overflow-x">
+    <table class="edge">
+      <tr><th>Tipo de contenido</th><th>Camino técnico hoy</th><th>Qué falta</th></tr>
+      <tr><td>Weekly Talks migradas</td><td>Salen de Mux → Azure Blob (pipeline de esta sección)</td><td>El job de migración en sí</td></tr>
+      <tr><td>Videos nuevos, subidos directo</td><td>Ya existe: mismo patrón de <em>bypass</em> de Payload usado para los videos de la pirámide y de Sophia</td><td>Solo el entitlement — la subida ya funciona</td></tr>
+      <tr><td>Imágenes / PDFs</td><td>La colección <code>Media</code> de Payload técnicamente acepta ambos tipos — <strong>pero su acceso es 100% público</strong> (<code>access: { read: publicRead }</code>, confirmado en <code>collections/Media.ts</code>): cualquiera con el link directo del Blob lo ve, sin importar la membresía.</td><td>No pueden pasar por la colección <code>Media</code> normal tal cual — necesitan el mismo mecanismo de Blob privado + URL firmada que el resto de Archives, igual que ya pasa con el video.</td></tr>
+      <tr><td>Música</td><td>Existe una alternativa ya construida y en producción (Mux Audio + <code>mux_track_entitlements</code>, usada hoy por Music) — <strong>decidido no usarla aquí</strong>, para mantener todo Archives bajo un solo mecanismo.</td><td>Mismo entitlement de Blob que el resto — nada de Mux Audio para este caso.</td></tr>
+    </table>
+    </div>
+    <div class="callout bad">
+      <span class="icon">✕</span>
+      <p><strong>Hallazgo nuevo, importante:</strong> ni siquiera las imágenes/PDFs "simples" de Archives pueden simplemente subirse a la colección <code>Media</code> de Payload como se hace en el resto del sitio — esa colección no tiene ningún concepto de acceso privado, todo lo que entra ahí queda con URL pública de Blob para siempre. Todo el contenido de Archives, sin excepción, tiene que evitar el flujo normal de <code>Media</code> y pasar por el entitlement nuevo.</p>
+    </div>
+    <p>Disparador ya decidido (ver <a href="#decisiones">Decisiones confirmadas</a>): job automático, activado por el webhook de Mux que confirma que el asset terminó de procesarse — no un temporizador fijo. Antes de mover nada, el job revisa <code>events.enable_replay</code> para ese talk: si el cliente lo apagó, no migra y deja que Mux borre la grabación normalmente. Si está encendido, sigue el orden obligatorio: <strong>subir a Blob → verificar → recién entonces borrar de Mux</strong>, nunca al revés, para no perder el video si la subida falla a medio camino. Un error transitorio se reintenta hasta <strong>5 veces</strong> antes de alertar a <code>javier.pacheco@certusitm.com</code> y <code>rodrigo.acosta@certusitm.com</code>. Solo el video se conserva — no el chat de esa sesión.</p>
+  </section>
+
+  <hr class="section-break">
+
+  <section id="identidad">
+    <h2>Identidad: Safecertus + Beytrax</h2>
+    <p>Con el esquema de la base de datos confirmado, esta parte queda resuelta sin tocar Safecertus:</p>
+    <ul>
+      <li><code>users.idp_user_id</code> conecta cada usuario de Beytrax con su identidad real en Safecertus.</li>
+      <li><code>sessions</code> / <code>access_tokens</code> / <code>refresh_tokens</code> ya cargan <code>active_tenant_id</code> y <code>active_site_id</code> — Beytrax ya sabe distinguir "este usuario está en el sitio de Dietrich Klinghardt" de cualquier otro sitio, sin ambigüedad de qué RP de Safecertus se usó.</li>
+      <li>Este es exactamente el mecanismo que ya usa el portal de donantes de Sistworld en producción — se reutiliza tal cual para el login del socio de Dietrich Klinghardt.</li>
+    </ul>
+    <div class="callout good">
+      <span class="icon">✓</span>
+      <p>No hace falta ninguna modificación en <code>CWSB-SafeCertus</code> ni en <code>cwsf-safecertus2</code> para esta funcionalidad. El "service-join"/"entitlement mode" que revisamos ahí resuelve un problema distinto (acceso de staff a herramientas internas de Beytrax), no el acceso de un visitante final a contenido pago de un sitio cliente.</p>
+    </div>
+  </section>
+
+  <hr class="section-break">
+
+  <section id="tiers">
+    <h2>Encaje en los tiers de Beytrax</h2>
+    <p><code>plans/entitlements.ts</code> ya define 5 tiers (Starter, Pro, Pro+, Business, Enterprise) como un mapa de <em>capabilities</em> — y <strong>Donations ya es una de ellas</strong> (<code>CAPABILITY.donations</code>, disponible desde Pro+). Esto confirmó que agregar "Subscriptions" como feature de plataforma era estructuralmente trivial, y ya se decidió: <strong>va en Business.</strong></p>
+    <ol>
+      <li><span class="pill pill-built">● Hecho (2026-09-27)</span> — copy de marketing actualizado: "Paid memberships" / "Membresías pagas" en los bullets largos y cortos de Business, en <code>plans/planFeatures.ts</code> (fuente única servida a <code>cwsi-beytrax</code> y al picker de <code>cwsf-beytrax</code> vía <code>GET /api/subscriptions/plans</code>).</li>
+      <li><span class="pill pill-missing">✕ Pendiente</span> — agregar la key real <code>CAPABILITY.memberships</code> en <code>capabilities/keys.ts</code> e incluirla en <code>BUSINESS_ADDS</code> (<code>entitlements.ts</code>), para que el copy ya publicado corresponda a algo que de verdad se aplica/revoca.</li>
+      <li>El resto del mecanismo de aprovisionamiento (<code>provisionTenantIfUnset</code>, <code>recomputeCapabilitiesOnPlanChange</code>) ya sabe cómo prender/apagar capabilities al cambiar de plan — no hay que tocarlo.</li>
+    </ol>
+  </section>
+
+  <hr class="section-break">
+
+  <section id="edge-cases">
+    <h2>Edge cases</h2>
+    <div class="overflow-x">
+    <table class="edge">
+      <tr><th>Caso</th><th>Cómo se resolvería</th></tr>
+      <tr><td>Pago de renovación falla</td><td>Igual que <code>beytrax_subscriptions</code>: <code>past_due_since</code> + ventana de gracia antes de revocar acceso, replicando el dunning que ya existe del lado de Beytrax→Tenant.</td></tr>
+      <tr><td>Cancelación</td><td><code>customer.subscription.deleted</code> marca <code>canceled</code>, pero el acceso sigue vivo hasta <code>current_period_end</code> — no se corta en el segundo exacto de la cancelación.</td></tr>
+      <tr><td>Upgrade mensual → anual</td><td><code>customer.subscription.updated</code> con prorrateo de Stripe; se actualiza <code>plan_key</code> en la misma fila.</td></tr>
+      <tr><td>Webhook se pierde (servidor caído)</td><td>Igual riesgo que ya existe hoy para <code>beytrax_subscriptions</code> — mismo mecanismo de reintentos de Stripe (varios días) ya cubre esto; no es un riesgo nuevo.</td></tr>
+      <tr><td>Reembolso / contracargo</td><td><strong>Decidido: corta acceso de inmediato.</strong> <code>charge.refunded</code> / <code>charge.dispute.created</code> no están en el <code>dispatch()</code> actual — hay que agregarlos, y en vez de solo marcar para revisión, revocar el acceso (<code>status = 'canceled'</code>) en el mismo evento.</td></tr>
+      <tr><td>Donante que también se hace socio</td><td><strong>Decidido: Customers separados.</strong> Un socio-donante tendrá un <code>stripe_customer_id</code> distinto en cada flujo — más simple de razonar, a costa de no compartir tarjeta guardada entre ambos.</td></tr>
+      <tr><td>Reemplazo de Weekly Talk en Mux, antes de migrar a Blob</td><td>Ya no necesita retención larga en Mux — solo la ventana corta entre que termina la transmisión y se completa la migración a Azure Blob (ver <a href="#archivo-migracion">sección de migración</a>). <code>events.replay_retention_days</code> (90 días por defecto) alcanza de sobra para esa ventana; el archivo permanente vive en Blob, no en Mux.</td></tr>
+      <tr><td>Compartir credenciales de la cuenta</td><td>Mitigado por tener cuenta real (Safecertus) en vez de un link suelto — pero no eliminado del todo; fuera de alcance de este documento (ver discusión de identidad).</td></tr>
+      <tr><td>Un socio pide ver/cancelar su plan</td><td>Enviar al Stripe Customer Portal (gratis, ya viene con Stripe) en vez de construir una pantalla de cuenta propia en la v1.</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <hr class="section-break">
+
+  <section id="fases">
+    <h2>Fases sugeridas</h2>
+    <ol class="phase-list">
+      <li><strong>Modelo de datos + webhook</strong> — tabla nueva de membresías (estilo <code>beytrax_subscriptions</code>), tercera rama en <code>handleSubscriptionUpserted</code>/<code>handleSubscriptionDeleted</code>, checkout en <code>mode: "subscription"</code>, <code>Customer</code> de Stripe separado del de donaciones, manejo de <code>charge.refunded</code>/<code>charge.dispute.created</code> cortando acceso de inmediato.</li>
+      <li><strong>Capability real</strong> — <code>CAPABILITY.memberships</code> en <code>capabilities/keys.ts</code> + <code>BUSINESS_ADDS</code> (el copy de marketing ya salió en la fase anterior).</li>
+      <li><strong>Gating de Weekly Talks en vivo</strong> — conectar el chequeo de membresía activa con <code>muxLive.ts</code>, sin depender de <code>mux_live_entitlements</code> por evento.</li>
+      <li><strong>Pipeline de migración Mux → Blob</strong> — job (automático o manual, ver preguntas abiertas) que exporta el video a Azure Blob y lo borra de Mux tras la ventana de reemplazo.</li>
+      <li><strong>Entitlement de Archives (unificado)</strong> — un solo mecanismo de URLs firmadas contra membresía activa, que sirve tanto a Weekly Talks migradas como a cualquier otro contenido nuevo de Archives — solo una vez que el cliente defina ese contenido.</li>
+      <li><strong>Cuenta del socio</strong> — enlace al Stripe Customer Portal; página mínima de "mi membresía" en el sitio del tenant.</li>
+    </ol>
+  </section>
+
+  <hr class="section-break">
+
+  <section id="preguntas">
+    <h2>Preguntas abiertas antes de construir</h2>
+    <div class="callout good">
+      <span class="icon">✓</span>
+      <p>Todas las preguntas planteadas en las tres rondas de revisión ya están resueltas — ver <a href="#decisiones">Decisiones confirmadas</a>. No quedan preguntas de diseño pendientes; el siguiente paso natural es pasar a la Fase 1 de <a href="#fases">Fases sugeridas</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    Documento de arquitectura — sin cambios de código aplicados. Referencias: <code>CWSB-Baytrax</code> (esquema de base de datos y <code>webhooks.controller.ts</code>), <code>donations.controller.ts</code>, <code>plans/entitlements.ts</code>; <code>cwsi-sistworld</code> (portal de donante como referencia de identidad); <code>CWSB-SafeCertus</code> / <code>cwsf-safecertus2</code> (IdP, sin cambios necesarios).
+  </footer>
+</div>

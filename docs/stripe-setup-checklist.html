@@ -1,0 +1,525 @@
+<title>Stripe Setup Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+  :root {
+    --cream: #f7f2e7;
+    --surface: #ffffff;
+    --surface-2: #fbf8f1;
+    --ink: #1c2b35;
+    --muted: #5b6b73;
+    --line: #e3d9c3;
+    --navy: #0c3a5c;
+    --gold: #a9781f;
+    --gold-soft: #f1e4c8;
+    --sage: #5a7a5e;
+    --sage-soft: #e6ede4;
+    --track-a: #0c3a5c;
+    --track-b: #a9781f;
+    --track-c: #6b5b95;
+    --shadow: 0 1px 2px rgba(28,43,53,0.06), 0 8px 24px rgba(28,43,53,0.05);
+    --focus: #a9781f;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --cream: #10181d;
+      --surface: #17222a;
+      --surface-2: #1c2830;
+      --ink: #ecece4;
+      --muted: #9fb0b6;
+      --line: #2c3a42;
+      --navy: #cfe0ea;
+      --gold: #e0b563;
+      --gold-soft: #3a2f1a;
+      --sage: #9dc3a1;
+      --sage-soft: #223327;
+      --track-a: #7fb2d6;
+      --track-b: #e0b563;
+      --track-c: #b7a8dd;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+      --focus: #e0b563;
+    }
+  }
+  :root[data-theme="dark"] {
+    --cream: #10181d;
+    --surface: #17222a;
+    --surface-2: #1c2830;
+    --ink: #ecece4;
+    --muted: #9fb0b6;
+    --line: #2c3a42;
+    --navy: #cfe0ea;
+    --gold: #e0b563;
+    --gold-soft: #3a2f1a;
+    --sage: #9dc3a1;
+    --sage-soft: #223327;
+    --track-a: #7fb2d6;
+    --track-b: #e0b563;
+    --track-c: #b7a8dd;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    --focus: #e0b563;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline: 20px;
+    padding-block: 48px 80px;
+  }
+  .page {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  h1, h2, h3 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    color: var(--ink);
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  code, .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  header.top {
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: clamp(30px, 4.4vw, 42px);
+    line-height: 1.12;
+    margin-bottom: 14px;
+  }
+  .lede {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  /* progress + legend */
+  .status-bar {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+  }
+  .progress-num {
+    font-family: "Fraunces", serif;
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .progress-num span { color: var(--muted); font-size: 14px; font-family: "Public Sans", sans-serif; }
+  .progress-track {
+    flex: 1 1 140px;
+    min-width: 100px;
+    height: 6px;
+    border-radius: 4px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--sage);
+    transition: width 0.35s ease;
+  }
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .legend a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 3px 4px;
+    border-radius: 5px;
+  }
+  .legend a:hover { color: var(--ink); }
+  .legend a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Section modules ────────────────────────────────────── */
+  .track {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    margin-top: 28px;
+    overflow: hidden;
+    scroll-margin-top: 20px;
+  }
+  .track__rail {
+    height: 5px;
+  }
+  .track__body {
+    padding: 30px 32px 32px;
+  }
+  @media (max-width: 480px) {
+    .track__body { padding: 26px 20px 28px; }
+  }
+  .track__kicker {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .track h2 {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+  .track__for {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .track__for code {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+  .track__intro {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    max-width: 62ch;
+    margin-bottom: 22px;
+  }
+
+  h3.subhead {
+    font-family: "Public Sans", sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    margin-top: 26px;
+  }
+
+  /* checklist */
+  ul.checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  ul.checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 8px;
+    border-radius: 8px;
+  }
+  ul.checklist label {
+    font-size: 15px;
+    line-height: 1.5;
+    cursor: pointer;
+    flex: 1;
+  }
+  ul.checklist li:has(input:checked) label {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1.5px;
+  }
+  ul.checklist input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface-2);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  ul.checklist input[type="checkbox"]:checked {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+  ul.checklist input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(40deg);
+  }
+  ul.checklist input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* how-to steps */
+  ol.steps {
+    list-style: none;
+    counter-reset: step;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  ol.steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+  }
+  ol.steps li::before {
+    content: counter(step);
+    font-family: "Fraunces", serif;
+    font-size: 14px;
+    color: var(--surface);
+    background: var(--track-color, var(--gold));
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transform: translateY(1px);
+  }
+  ol.steps li p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .track--a ol.steps { --track-color: var(--track-a); }
+  .track--b ol.steps { --track-color: var(--track-b); }
+  .track--c ol.steps { --track-color: var(--track-c); }
+
+  .nav-path {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .callout {
+    margin-top: 28px;
+    padding: 18px 20px;
+    background: var(--gold-soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    display: flex;
+    gap: 12px;
+  }
+  .callout__mark {
+    font-family: "Fraunces", serif;
+    font-size: 20px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  footer.close {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  footer.close strong { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="top">
+    <p class="eyebrow">Dietrich Klinghardt™ — Payments</p>
+    <h1>Getting Stripe ready to take real payments</h1>
+    <p class="lede">The site has <strong>three separate places</strong> that collect money, and each one needs something different from your side before it can go live. This page is a checklist you can work through with your team — tick items off as you complete them.</p>
+
+    <div class="status-bar">
+      <div class="progress-num" id="progressNum">0<span> / 10 ready</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <nav class="legend">
+        <a href="#track-a"><span class="dot" style="background:var(--track-a)"></span>Foundation Donations</a>
+        <a href="#track-b"><span class="dot" style="background:var(--track-b)"></span>Store Checkout</a>
+        <a href="#track-c"><span class="dot" style="background:var(--track-c)"></span>Payment Links</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- TRACK A — Foundation Donations -->
+  <section class="track track--a" id="track-a">
+    <div class="track__rail" style="background:var(--track-a)"></div>
+    <div class="track__body">
+      <p class="track__kicker" style="color:var(--track-a)">Track 1 of 3</p>
+      <h2>Foundation Donations</h2>
+      <p class="track__for">Powers the giving form at <code>/foundation/donate</code></p>
+      <p class="track__intro">Donations route through Beytrax's Stripe platform, then attribute straight to the Foundation's own connected account — so the Foundation gets the funds, but never has to touch Stripe's checkout code itself. Until that account is fully verified, the donation page stays in a friendly "opening soon" state. Nothing breaks — it also just doesn't collect yet.</p>
+
+      <h3 class="subhead">What needs to be ready</h3>
+      <ul class="checklist" data-track="a">
+        <li><input type="checkbox" id="a1"><label for="a1">A Stripe account exists for the Foundation</label></li>
+        <li><input type="checkbox" id="a2"><label for="a2">Legal &amp; business details submitted (legal name, tax ID, address, a responsible person)</label></li>
+        <li><input type="checkbox" id="a3"><label for="a3">A bank account is connected for payouts</label></li>
+        <li><input type="checkbox" id="a4"><label for="a4">Stripe confirms charges are enabled</label></li>
+      </ul>
+
+      <h3 class="subhead">How to get there</h3>
+      <ol class="steps">
+        <li><p>Go to <span class="nav-path">dashboard.stripe.com</span> and create an account (or sign in to an existing one) under the Foundation's legal name.</p></li>
+        <li><p>Under <span class="nav-path">Settings → Business settings</span>, fill in the legal entity name, EIN or tax ID (if the Foundation has one), registered address, and the name and email of a responsible person.</p></li>
+        <li><p>Under <span class="nav-path">Settings → Bank accounts and scheduling</span>, add the account that should receive donation payouts.</p></li>
+        <li><p>Check your status: on the Stripe Home page, look for <strong>"You can now accept payments."</strong> You can also confirm under <span class="nav-path">Settings → Account status</span>.</p></li>
+        <li><p>Once that's done, Beytrax will send a secure Stripe connection link — click it and approve the connection. That's the step that actually links your account to the donation page.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TRACK B — Store Checkout -->
+  <section class="track track--b" id="track-b">
+    <div class="track__rail" style="background:var(--track-b)"></div>
+    <div class="track__body">
+      <p class="track__kicker" style="color:var(--track-b)">Track 2 of 3</p>
+      <h2>Store Checkout</h2>
+      <p class="track__for">Powers purchases at <code>/store</code></p>
+      <p class="track__intro">Store purchases use <strong>Dr. Klinghardt's own Stripe account</strong> directly, not Beytrax's. Beytrax only needs a limited-permission key to open a checkout page on your behalf — your full account access, and every dollar, stays with you.</p>
+
+      <h3 class="subhead">What needs to be ready</h3>
+      <ul class="checklist" data-track="b">
+        <li><input type="checkbox" id="b1"><label for="b1">A Stripe account for the store, with payments enabled</label></li>
+        <li><input type="checkbox" id="b2"><label for="b2">A restricted API key created, scoped to Checkout Sessions only</label></li>
+        <li><input type="checkbox" id="b3"><label for="b3">Final product list ready: names, prices, descriptions, photos</label></li>
+      </ul>
+
+      <h3 class="subhead">How to get there</h3>
+      <ol class="steps">
+        <li><p>Sign in to (or create) the Stripe account that should receive store payments, and confirm payments are enabled the same way as above.</p></li>
+        <li><p>Go to <span class="nav-path">Developers → API keys → Create restricted key</span>. Name it something recognizable, like <em>"Beytrax Store Integration."</em></p></li>
+        <li><p>Under permissions, set <strong>Checkout Sessions</strong> to <strong>Write</strong>, and leave every other permission at <strong>None</strong>.</p></li>
+        <li><p>Click <strong>Create key</strong> and copy it immediately — Stripe only shows it once. Send it to Beytrax through a private channel (a password manager's share link works well). <strong>Never</strong> by plain email, text, or chat.</p></li>
+        <li><p>Send Beytrax your final product list — name, price, a short description, and a photo for each — so they can load it in for you to review before it goes live.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TRACK C — Payment Links -->
+  <section class="track track--c" id="track-c">
+    <div class="track__rail" style="background:var(--track-c)"></div>
+    <div class="track__body">
+      <p class="track__kicker" style="color:var(--track-c)">Track 3 of 3</p>
+      <h2>Payment Links</h2>
+      <p class="track__for">Powers Events, Courses, and the Weekly Talks membership</p>
+      <p class="track__intro">These don't run through a checkout on the site at all — a visitor is sent straight to a Stripe-hosted payment page that you create yourself, one per event, course, or membership tier.</p>
+
+      <h3 class="subhead">What needs to be ready</h3>
+      <ul class="checklist" data-track="c">
+        <li><input type="checkbox" id="c1"><label for="c1">Stripe is switched to Live mode (not Test)</label></li>
+        <li><input type="checkbox" id="c2"><label for="c2">One Payment Link created per event, course, and the Weekly Talks tier</label></li>
+        <li><input type="checkbox" id="c3"><label for="c3">Each link's price double-checked against what's written on the site</label></li>
+      </ul>
+
+      <h3 class="subhead">How to get there</h3>
+      <ol class="steps">
+        <li><p>In your Stripe Dashboard, check the toggle in the top-right corner and make sure it reads <strong>Live</strong> — links made in test mode can't take a real payment.</p></li>
+        <li><p>Go to <span class="nav-path">Payment Links → + New</span> and create one link for each thing you're selling this way: every individual event, every course, and the Weekly Talks membership.</p></li>
+        <li><p>Copy each link's address (it starts with <span class="mono">buy.stripe.com/</span>…) and send Beytrax the full list, clearly labeled with which event, course, or membership each one belongs to.</p></li>
+        <li><p>Before sending, check each link's price against the price written on the site page — these live in two separate places, and nothing keeps them in sync automatically.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="callout">
+    <span class="callout__mark">!</span>
+    <p>Quick rule of thumb: anything Stripe calls a <strong>Secret key</strong>, or shows you only once, should never travel by plain email, text, or chat. If you're not sure how to share something safely, ask Beytrax first — it takes two minutes and avoids a much bigger cleanup later.</p>
+  </div>
+
+  <footer class="close">
+    <p><strong>Questions on any of this?</strong> Beytrax is happy to walk through it together on a call — just let us know which section is giving you trouble, and we'll take it from there.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var STORAGE_KEY = "klinghardt-stripe-checklist-v1";
+    var boxes = Array.prototype.slice.call(document.querySelectorAll(".checklist input[type=checkbox]"));
+    var total = boxes.length;
+    var progressNum = document.getElementById("progressNum");
+    var progressFill = document.getElementById("progressFill");
+
+    function loadState() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+    function saveState(state) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        /* private browsing or storage blocked — checklist still works, just won't persist */
+      }
+    }
+
+    function updateProgress() {
+      var checked = boxes.filter(function (b) { return b.checked; }).length;
+      progressNum.childNodes[0].nodeValue = String(checked);
+      progressFill.style.width = total ? (checked / total * 100) + "%" : "0%";
+    }
+
+    var state = loadState();
+    boxes.forEach(function (box) {
+      if (state[box.id]) box.checked = true;
+      box.addEventListener("change", function () {
+        var s = loadState();
+        s[box.id] = box.checked;
+        saveState(s);
+        updateProgress();
+      });
+    });
+    updateProgress();
+  })();
+</script>

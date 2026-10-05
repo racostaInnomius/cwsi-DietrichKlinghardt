@@ -1,0 +1,525 @@
+<title>Checklist de Configuración de Stripe</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+  :root {
+    --cream: #f7f2e7;
+    --surface: #ffffff;
+    --surface-2: #fbf8f1;
+    --ink: #1c2b35;
+    --muted: #5b6b73;
+    --line: #e3d9c3;
+    --navy: #0c3a5c;
+    --gold: #a9781f;
+    --gold-soft: #f1e4c8;
+    --sage: #5a7a5e;
+    --sage-soft: #e6ede4;
+    --track-a: #0c3a5c;
+    --track-b: #a9781f;
+    --track-c: #6b5b95;
+    --shadow: 0 1px 2px rgba(28,43,53,0.06), 0 8px 24px rgba(28,43,53,0.05);
+    --focus: #a9781f;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --cream: #10181d;
+      --surface: #17222a;
+      --surface-2: #1c2830;
+      --ink: #ecece4;
+      --muted: #9fb0b6;
+      --line: #2c3a42;
+      --navy: #cfe0ea;
+      --gold: #e0b563;
+      --gold-soft: #3a2f1a;
+      --sage: #9dc3a1;
+      --sage-soft: #223327;
+      --track-a: #7fb2d6;
+      --track-b: #e0b563;
+      --track-c: #b7a8dd;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+      --focus: #e0b563;
+    }
+  }
+  :root[data-theme="dark"] {
+    --cream: #10181d;
+    --surface: #17222a;
+    --surface-2: #1c2830;
+    --ink: #ecece4;
+    --muted: #9fb0b6;
+    --line: #2c3a42;
+    --navy: #cfe0ea;
+    --gold: #e0b563;
+    --gold-soft: #3a2f1a;
+    --sage: #9dc3a1;
+    --sage-soft: #223327;
+    --track-a: #7fb2d6;
+    --track-b: #e0b563;
+    --track-c: #b7a8dd;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    --focus: #e0b563;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline: 20px;
+    padding-block: 48px 80px;
+  }
+  .page {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  h1, h2, h3 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    color: var(--ink);
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  code, .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+  }
+
+  /* ── Encabezado ─────────────────────────────────────────── */
+  header.top {
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: clamp(30px, 4.4vw, 42px);
+    line-height: 1.12;
+    margin-bottom: 14px;
+  }
+  .lede {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  /* progreso + leyenda */
+  .status-bar {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+  }
+  .progress-num {
+    font-family: "Fraunces", serif;
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .progress-num span { color: var(--muted); font-size: 14px; font-family: "Public Sans", sans-serif; }
+  .progress-track {
+    flex: 1 1 140px;
+    min-width: 100px;
+    height: 6px;
+    border-radius: 4px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--sage);
+    transition: width 0.35s ease;
+  }
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .legend a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 3px 4px;
+    border-radius: 5px;
+  }
+  .legend a:hover { color: var(--ink); }
+  .legend a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Módulos de sección ─────────────────────────────────── */
+  .track {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    margin-top: 28px;
+    overflow: hidden;
+    scroll-margin-top: 20px;
+  }
+  .track__rail {
+    height: 5px;
+  }
+  .track__body {
+    padding: 30px 32px 32px;
+  }
+  @media (max-width: 480px) {
+    .track__body { padding: 26px 20px 28px; }
+  }
+  .track__kicker {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .track h2 {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+  .track__for {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .track__for code {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+  .track__intro {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    max-width: 62ch;
+    margin-bottom: 22px;
+  }
+
+  h3.subhead {
+    font-family: "Public Sans", sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    margin-top: 26px;
+  }
+
+  /* checklist */
+  ul.checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  ul.checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 8px;
+    border-radius: 8px;
+  }
+  ul.checklist label {
+    font-size: 15px;
+    line-height: 1.5;
+    cursor: pointer;
+    flex: 1;
+  }
+  ul.checklist li:has(input:checked) label {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1.5px;
+  }
+  ul.checklist input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface-2);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  ul.checklist input[type="checkbox"]:checked {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+  ul.checklist input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(40deg);
+  }
+  ul.checklist input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* pasos */
+  ol.steps {
+    list-style: none;
+    counter-reset: step;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  ol.steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+  }
+  ol.steps li::before {
+    content: counter(step);
+    font-family: "Fraunces", serif;
+    font-size: 14px;
+    color: var(--surface);
+    background: var(--track-color, var(--gold));
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transform: translateY(1px);
+  }
+  ol.steps li p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .track--a ol.steps { --track-color: var(--track-a); }
+  .track--b ol.steps { --track-color: var(--track-b); }
+  .track--c ol.steps { --track-color: var(--track-c); }
+
+  .nav-path {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .callout {
+    margin-top: 28px;
+    padding: 18px 20px;
+    background: var(--gold-soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    display: flex;
+    gap: 12px;
+  }
+  .callout__mark {
+    font-family: "Fraunces", serif;
+    font-size: 20px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  footer.close {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  footer.close strong { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="top">
+    <p class="eyebrow">Dietrich Klinghardt™ — Cobros</p>
+    <h1>Dejando Stripe listo para cobrar de verdad</h1>
+    <p class="lede">El sitio tiene <strong>tres lugares distintos</strong> donde se recibe dinero, y cada uno necesita algo diferente de su parte antes de poder activarse. Esta página es un checklist que pueden ir resolviendo con su equipo — marquen cada punto conforme lo completen.</p>
+
+    <div class="status-bar">
+      <div class="progress-num" id="progressNum">0<span> / 10 listos</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <nav class="legend">
+        <a href="#track-a"><span class="dot" style="background:var(--track-a)"></span>Donaciones a la Fundación</a>
+        <a href="#track-b"><span class="dot" style="background:var(--track-b)"></span>Compras en la Tienda</a>
+        <a href="#track-c"><span class="dot" style="background:var(--track-c)"></span>Payment Links</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- TRACK A — Donaciones a la Fundación -->
+  <section class="track track--a" id="track-a">
+    <div class="track__rail" style="background:var(--track-a)"></div>
+    <div class="track__body">
+      <p class="track__kicker" style="color:var(--track-a)">Bloque 1 de 3</p>
+      <h2>Donaciones a la Fundación</h2>
+      <p class="track__for">Alimenta el formulario de donación en <code>/foundation/donate</code></p>
+      <p class="track__intro">Las donaciones pasan primero por la plataforma de Stripe de Beytrax, y de ahí se atribuyen directo a la cuenta conectada de la Fundación — así la Fundación recibe el dinero sin tener que tocar el código del checkout de Stripe. Mientras esa cuenta no esté completamente verificada, la página de donación se queda en un estado amable de "próximamente". No se rompe nada — simplemente todavía no cobra.</p>
+
+      <h3 class="subhead">Qué debe estar listo</h3>
+      <ul class="checklist" data-track="a">
+        <li><input type="checkbox" id="a1"><label for="a1">Existe una cuenta de Stripe para la Fundación</label></li>
+        <li><input type="checkbox" id="a2"><label for="a2">Datos legales y del negocio enviados (razón social, RFC/tax ID, dirección, una persona responsable)</label></li>
+        <li><input type="checkbox" id="a3"><label for="a3">Hay una cuenta bancaria conectada para los depósitos</label></li>
+        <li><input type="checkbox" id="a4"><label for="a4">Stripe confirma que los cobros están habilitados</label></li>
+      </ul>
+
+      <h3 class="subhead">Cómo conseguirlo</h3>
+      <ol class="steps">
+        <li><p>Entrar a <span class="nav-path">dashboard.stripe.com</span> y crear una cuenta (o iniciar sesión en una existente) con el nombre legal de la Fundación.</p></li>
+        <li><p>En <span class="nav-path">Settings → Business settings</span>, llenar: razón social, RFC o tax ID (si la Fundación tiene uno), dirección registrada, y el nombre y correo de una persona responsable.</p></li>
+        <li><p>En <span class="nav-path">Settings → Bank accounts and scheduling</span>, agregar la cuenta bancaria que debe recibir los depósitos de las donaciones.</p></li>
+        <li><p>Revisar el estado de la cuenta: en la página principal de Stripe, buscar el mensaje <strong>"You can now accept payments."</strong> También se puede confirmar en <span class="nav-path">Settings → Account status</span>.</p></li>
+        <li><p>Una vez listo esto, Beytrax enviará un enlace seguro de conexión de Stripe — hay que darle clic y aprobar la conexión. Ese es el paso que realmente conecta la cuenta con la página de donación.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TRACK B — Compras en la Tienda -->
+  <section class="track track--b" id="track-b">
+    <div class="track__rail" style="background:var(--track-b)"></div>
+    <div class="track__body">
+      <p class="track__kicker" style="color:var(--track-b)">Bloque 2 de 3</p>
+      <h2>Compras en la Tienda</h2>
+      <p class="track__for">Alimenta las compras en <code>/store</code></p>
+      <p class="track__intro">Las compras de la tienda usan directamente <strong>la propia cuenta de Stripe del Dr. Klinghardt</strong>, no la de Beytrax. Beytrax solo necesita una clave con permisos limitados para abrir la pantalla de pago en su nombre — el acceso completo a la cuenta, y cada dólar cobrado, se queda con ustedes.</p>
+
+      <h3 class="subhead">Qué debe estar listo</h3>
+      <ul class="checklist" data-track="b">
+        <li><input type="checkbox" id="b1"><label for="b1">Una cuenta de Stripe para la tienda, con los cobros habilitados</label></li>
+        <li><input type="checkbox" id="b2"><label for="b2">Una clave de API restringida, con permiso únicamente sobre Checkout Sessions</label></li>
+        <li><input type="checkbox" id="b3"><label for="b3">Lista final de productos: nombres, precios, descripciones, fotos</label></li>
+      </ul>
+
+      <h3 class="subhead">Cómo conseguirlo</h3>
+      <ol class="steps">
+        <li><p>Iniciar sesión (o crear) la cuenta de Stripe que debe recibir los pagos de la tienda, y confirmar que los cobros estén habilitados de la misma forma que arriba.</p></li>
+        <li><p>Ir a <span class="nav-path">Developers → API keys → Create restricted key</span>. Ponerle un nombre reconocible, como <em>"Beytrax Store Integration."</em></p></li>
+        <li><p>En los permisos, poner <strong>Checkout Sessions</strong> en <strong>Write</strong>, y dejar todos los demás permisos en <strong>None</strong>.</p></li>
+        <li><p>Dar clic en <strong>Create key</strong> y copiarla de inmediato — Stripe solo la muestra una vez. Enviarla a Beytrax por un canal privado (un enlace compartido desde un gestor de contraseñas funciona bien). <strong>Nunca</strong> por correo, mensaje de texto o chat sin cifrar.</p></li>
+        <li><p>Enviar a Beytrax la lista final de productos — nombre, precio, una descripción breve y una foto de cada uno — para que puedan cargarla y que la revisen antes de publicarla.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TRACK C — Payment Links -->
+  <section class="track track--c" id="track-c">
+    <div class="track__rail" style="background:var(--track-c)"></div>
+    <div class="track__body">
+      <p class="track__kicker" style="color:var(--track-c)">Bloque 3 de 3</p>
+      <h2>Payment Links</h2>
+      <p class="track__for">Alimenta Eventos, Cursos y la membresía de Weekly Talks</p>
+      <p class="track__intro">Estos no pasan por ningún checkout dentro del sitio — a la persona se le envía directo a una página de pago alojada por Stripe, que ustedes mismos crean, una por cada evento, curso o nivel de membresía.</p>
+
+      <h3 class="subhead">Qué debe estar listo</h3>
+      <ul class="checklist" data-track="c">
+        <li><input type="checkbox" id="c1"><label for="c1">Stripe está en modo Live (no en modo de prueba)</label></li>
+        <li><input type="checkbox" id="c2"><label for="c2">Un Payment Link creado por cada evento, curso y nivel de Weekly Talks</label></li>
+        <li><input type="checkbox" id="c3"><label for="c3">El precio de cada enlace revisado contra lo que está escrito en el sitio</label></li>
+      </ul>
+
+      <h3 class="subhead">Cómo conseguirlo</h3>
+      <ol class="steps">
+        <li><p>En el Dashboard de Stripe, revisar el interruptor de la esquina superior derecha y asegurarse de que diga <strong>Live</strong> — los enlaces creados en modo de prueba no pueden cobrar de verdad.</p></li>
+        <li><p>Ir a <span class="nav-path">Payment Links → + New</span> y crear un enlace por cada cosa que se vende así: cada evento individual, cada curso, y la membresía de Weekly Talks.</p></li>
+        <li><p>Copiar la dirección de cada enlace (empieza con <span class="mono">buy.stripe.com/</span>…) y enviar a Beytrax la lista completa, etiquetada claramente con a qué evento, curso o membresía corresponde cada uno.</p></li>
+        <li><p>Antes de enviarlo, revisar el precio de cada enlace contra el precio escrito en la página del sitio — viven en dos lugares separados, y nada los mantiene sincronizados automáticamente.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="callout">
+    <span class="callout__mark">!</span>
+    <p>Regla rápida: cualquier cosa que Stripe llame <strong>Secret key</strong>, o que se muestre solo una vez, nunca debe viajar por correo, mensaje de texto o chat sin cifrar. Si no están seguros de cómo compartir algo de forma segura, pregúntenle primero a Beytrax — toma dos minutos y evita un problema mucho más grande después.</p>
+  </div>
+
+  <footer class="close">
+    <p><strong>¿Dudas sobre algo de esto?</strong> Con gusto lo revisamos juntos en una llamada — solo avísennos qué sección les está costando trabajo y lo resolvemos desde ahí.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var STORAGE_KEY = "klinghardt-stripe-checklist-es-v1";
+    var boxes = Array.prototype.slice.call(document.querySelectorAll(".checklist input[type=checkbox]"));
+    var total = boxes.length;
+    var progressNum = document.getElementById("progressNum");
+    var progressFill = document.getElementById("progressFill");
+
+    function loadState() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+    function saveState(state) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        /* modo privado o almacenamiento bloqueado — el checklist sigue funcionando, solo no se guarda */
+      }
+    }
+
+    function updateProgress() {
+      var checked = boxes.filter(function (b) { return b.checked; }).length;
+      progressNum.childNodes[0].nodeValue = String(checked);
+      progressFill.style.width = total ? (checked / total * 100) + "%" : "0%";
+    }
+
+    var state = loadState();
+    boxes.forEach(function (box) {
+      if (state[box.id]) box.checked = true;
+      box.addEventListener("change", function () {
+        var s = loadState();
+        s[box.id] = box.checked;
+        saveState(s);
+        updateProgress();
+      });
+    });
+    updateProgress();
+  })();
+</script>

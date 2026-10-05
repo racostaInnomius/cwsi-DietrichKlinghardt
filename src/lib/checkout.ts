@@ -66,7 +66,14 @@ export function checkoutHref(value: unknown): string | undefined {
 export function useCheckoutHref(value: unknown): string | undefined {
   const [href, setHref] = useState(() => checkoutHref(value));
   useEffect(() => {
-    setHref(checkoutHref(value));
+    const next = checkoutHref(value);
+    // TEMP DEBUG — remove after diagnosing the staging-domain exception.
+    console.log("[useCheckoutHref]", {
+      value,
+      next,
+      hostname: typeof window !== "undefined" ? window.location.hostname : "no-window",
+    });
+    setHref(next);
   }, [value]);
   return href;
 }
