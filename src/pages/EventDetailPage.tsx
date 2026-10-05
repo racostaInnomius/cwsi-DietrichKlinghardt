@@ -2,7 +2,7 @@ import { Seo } from "@/components/Seo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number, textList } from "@/lib/content";
 import { externalUrl, richTextBlocks } from "@/lib/cms";
-import { useCheckoutHref } from "@/lib/checkout";
+import { checkoutHref } from "@/lib/checkout";
 import { eventDateBlock, eventLocation, eventLongDate, eventTimeLabel, money } from "@/lib/format";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -62,18 +62,9 @@ export function EventDetailPage() {
   const capacity = number(event, "capacity");
   const price = typeof event.price === "number" ? event.price : undefined;
   const registrationType = text(event, "registrationType", "open");
-  const checkoutUrl = useCheckoutHref(event.checkoutUrl);
+  const checkoutUrl = checkoutHref(event.checkoutUrl);
   const learnMoreUrl = externalUrl(event.learnMoreUrl);
   const registrationUrl = registrationType === "paid" ? checkoutUrl : learnMoreUrl;
-  // TEMP DEBUG
-  if (typeof window !== "undefined") {
-    console.log("[EventDetailPage render]", {
-      rawCheckoutUrl: event.checkoutUrl,
-      hookCheckoutUrl: checkoutUrl,
-      registrationType,
-      registrationUrl,
-    });
-  }
   const soldOut = event.status === "sold_out" || event.soldOut === true;
   const mapUrl = text(event, "mapUrl");
   const ctaLabel = registrationType === "paid" ? "Book now" : "Register / learn more";
@@ -198,9 +189,6 @@ export function EventDetailPage() {
                 <a
                   className="btn btn-primary event-panel__cta"
                   href={registrationUrl || "#newsletter"}
-                  data-debug-registration-url={registrationUrl ?? "NULL"}
-                  data-debug-checkout-url={checkoutUrl ?? "NULL"}
-                  data-debug-registration-type={registrationType}
                 >
                   {ctaLabel}
                 </a>

@@ -15,16 +15,30 @@
  * staging domain while the owner reviews it — client-facing demos happen
  * here before the real cutover to dietrich-klinghardt.com, and need a working
  * "Book now"/"Buy" click-through without DKK's live Stripe key existing yet.
- * Sandbox links are allowed ONLY on this exact hostname. This must be removed
- * — delete STAGING_HOSTNAME_TEST_LINKS_ALLOWED and its one use below — once
- * the site moves to dietrich-klinghardt.com, or the same gap Iconic hit
- * reopens on the real domain.
+ * Sandbox links are allowed ONLY when built for this exact site URL — read
+ * from VITE_PUBLIC_SITE_URL (baked in at build time, same value on the server
+ * prerender and the client, so there's nothing for hydration to disagree on)
+ * rather than `window.location`, which this page's component tree never
+ * actually recomputes after hydration (a separate, pre-existing issue this
+ * sidesteps rather than fixes). This exception must be removed — delete
+ * STAGING_HOSTNAME_TEST_LINKS_ALLOWED and its one use below — once the site
+ * moves to dietrich-klinghardt.com, or the same gap Iconic hit reopens on the
+ * real domain.
  */
-
-import { useEffect, useState } from "react";
 
 const LIVE_HOSTS = new Set(["buy.stripe.com", "checkout.stripe.com"]);
 const STAGING_HOSTNAME_TEST_LINKS_ALLOWED = "dkk.beytrax.com";
+
+function builtForStagingDomain(): boolean {
+  try {
+    return (
+      new URL(import.meta.env.VITE_PUBLIC_SITE_URL ?? "").hostname ===
+      STAGING_HOSTNAME_TEST_LINKS_ALLOWED
+    );
+  } catch {
+    return false;
+  }
+}
 
 export function checkoutHref(value: unknown): string | undefined {
   if (typeof value !== "string" || !value.trim()) return undefined;
@@ -38,42 +52,16 @@ export function checkoutHref(value: unknown): string | undefined {
   if (url.protocol !== "https:") return undefined;
 
   // Stripe Sandbox links carry a `test_` path segment. Allowed while developing
-  // so the flow can be exercised, or on the temporary staging domain above;
+  // so the flow can be exercised, or on the temporary staging build above;
   // never served on the real production domain.
-  const onStagingDomain =
-    typeof window !== "undefined" &&
-    window.location.hostname === STAGING_HOSTNAME_TEST_LINKS_ALLOWED;
   if (
     LIVE_HOSTS.has(url.hostname) &&
     url.pathname.split("/").some((part) => part.startsWith("test_")) &&
     import.meta.env.PROD &&
-    !onStagingDomain
+    !builtForStagingDomain()
   ) {
     return undefined;
   }
 
   return url.toString();
-}
-
-/**
- * `checkoutHref` reads `window.location.hostname` for the staging exception
- * above, but a value computed directly in a render body matches whatever ran
- * at SSR time (no `window`) and never recomputes — React hydrates onto the
- * server markup without re-running the check, so the real client-side
- * hostname never takes effect. This forces one recompute right after mount,
- * when `window` is actually available.
- */
-export function useCheckoutHref(value: unknown): string | undefined {
-  const [href, setHref] = useState(() => checkoutHref(value));
-  useEffect(() => {
-    const next = checkoutHref(value);
-    // TEMP DEBUG — remove after diagnosing the staging-domain exception.
-    console.log("[useCheckoutHref]", {
-      value,
-      next,
-      hostname: typeof window !== "undefined" ? window.location.hostname : "no-window",
-    });
-    setHref(next);
-  }, [value]);
-  return href;
 }
