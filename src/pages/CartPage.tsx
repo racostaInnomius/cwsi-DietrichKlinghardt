@@ -3,7 +3,7 @@ import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCart } from "@/lib/cart";
 import { startCheckout, useStoreProducts } from "@/lib/store";
-import { CurrencyNote, Price } from "@/lib/currency";
+import { CurrencyNote, Price, useCurrency } from "@/lib/currency";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -18,6 +18,7 @@ import { Marked } from "@/components/Marked";
  */
 export function CartPage() {
   const { items, count, subtotal, setQuantity, remove, clear } = useCart();
+  const { selected } = useCurrency();
   const products = useStoreProducts();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export function CartPage() {
     setBusy(true);
     setError(null);
     try {
-      const { url } = await startCheckout(items);
+      const { url } = await startCheckout(items, selected);
       window.location.assign(url);
     } catch (err) {
       setError(
@@ -133,7 +134,7 @@ export function CartPage() {
             ) : null}
           </dl>
 
-          <CurrencyNote currency={currency} />
+          <CurrencyNote currency={currency} charge="selected" />
 
           {error ? <p className="donate-error">{error}</p> : null}
 

@@ -117,7 +117,14 @@ export interface CheckoutResult {
  * Hands the basket to the API, which prices it and creates the Stripe session.
  * Only document ids and quantities travel — see the note at the top.
  */
-export async function startCheckout(items: CartItem[]): Promise<CheckoutResult> {
+/**
+ * `currency`: the visitor's display currency — the API then charges the cart
+ * in it (converting each Stripe price server-side). Omitted = USD as set up.
+ */
+export async function startCheckout(
+  items: CartItem[],
+  currency?: string | null,
+): Promise<CheckoutResult> {
   const response = await fetch(`${env.API_URL}/api/public/checkout-session`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -128,6 +135,7 @@ export async function startCheckout(items: CartItem[]): Promise<CheckoutResult> 
         productId: item.sourceId,
         quantity: item.quantity,
       })),
+      ...(currency ? { currency } : {}),
     }),
   });
 
