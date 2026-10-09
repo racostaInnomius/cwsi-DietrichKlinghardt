@@ -2,6 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import type { RouteRecord } from "vite-react-ssg";
 import { ContentProvider, loadSiteContent } from "@/lib/content";
 import { CartProvider } from "@/lib/cart";
+import { CurrencyProvider } from "@/lib/currency";
 import { AuthProvider } from "@/features/auth/AuthProvider";
 import { fetchCollection, fetchEvents } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
@@ -55,9 +56,11 @@ function Root() {
   return (
     <AuthProvider>
       <CartProvider>
-        <ContentProvider>
-          <Outlet />
-        </ContentProvider>
+        <CurrencyProvider>
+          <ContentProvider>
+            <Outlet />
+          </ContentProvider>
+        </CurrencyProvider>
       </CartProvider>
     </AuthProvider>
   );

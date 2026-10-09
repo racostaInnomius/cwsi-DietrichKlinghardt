@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import type { ContentDoc } from "@/data/demo";
 import { text } from "@/lib/content";
-import { eventDateParts, eventLocation, eventTimeLabel, money } from "@/lib/format";
+import { eventDateParts, eventLocation, eventTimeLabel } from "@/lib/format";
+import { Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { EventMetaIcon } from "@/components/Icons";
@@ -54,7 +55,7 @@ export function EventRow({
           {category ? <span className="tag">{category}</span> : null}
           {showPrice && price != null ? (
             <span className="event-row__price">
-              {money(price, text(event, "currency", "usd"))}
+              <Price cents={price} currency={text(event, "currency", "usd")} />
             </span>
           ) : null}
           <span className="event-row__arrow" aria-hidden="true">
@@ -88,7 +89,7 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
   // the literal "0.00" asked for here, so the fallback is spelled out
   // instead of routed through money(0, ...).
   const price = typeof event.price === "number"
-    ? money(event.price, text(event, "currency", "usd"))
+    ? <Price cents={event.price} currency={text(event, "currency", "usd")} />
     : "$0.00";
   const soldOut = event.status === "sold_out" || event.soldOut === true;
   const href = slug ? `/events/${slug}` : "/events";

@@ -3,7 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number, textList } from "@/lib/content";
 import { externalUrl, richTextBlocks } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
-import { eventDateBlock, eventLocation, eventLongDate, eventTimeLabel, money } from "@/lib/format";
+import { eventDateBlock, eventLocation, eventLongDate, eventTimeLabel } from "@/lib/format";
+import { CurrencyNote, Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
@@ -167,10 +168,13 @@ export function EventDetailPage() {
 
             <div className="event-panel__price">
               {price != null ? (
-                <p className="event-panel__price-value">
-                  {money(price, text(event, "currency", "usd"))}
-                  <span>per person</span>
-                </p>
+                <>
+                  <p className="event-panel__price-value">
+                    <Price cents={price} currency={text(event, "currency", "usd")} />
+                    <span>per person</span>
+                  </p>
+                  <CurrencyNote currency={text(event, "currency", "usd")} />
+                </>
               ) : null}
 
               {tags.length ? (

@@ -3,7 +3,7 @@ import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCart } from "@/lib/cart";
 import { startCheckout, useStoreProducts } from "@/lib/store";
-import { money } from "@/lib/format";
+import { CurrencyNote, Price } from "@/lib/currency";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -102,7 +102,7 @@ export function CartPage() {
                     </label>
 
                     <span className="cart-line__price">
-                      {money((live?.price ?? item.unitAmount) * item.quantity, item.currency)}
+                      <Price cents={(live?.price ?? item.unitAmount) * item.quantity} currency={item.currency} />
                     </span>
                   </li>
                 );
@@ -123,7 +123,7 @@ export function CartPage() {
           <dl className="cart-summary">
             <div>
               <dt>Subtotal</dt>
-              <dd>{money(subtotal, currency)}</dd>
+              <dd><Price cents={subtotal} currency={currency} /></dd>
             </div>
             {needsShipping ? (
               <div>
@@ -132,6 +132,8 @@ export function CartPage() {
               </div>
             ) : null}
           </dl>
+
+          <CurrencyNote currency={currency} />
 
           {error ? <p className="donate-error">{error}</p> : null}
 

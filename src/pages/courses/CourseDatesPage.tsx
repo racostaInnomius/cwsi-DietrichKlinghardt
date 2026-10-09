@@ -4,7 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
 import { useTrainingPath, eventsForPath } from "@/lib/trainingPaths";
 import { checkoutHref } from "@/lib/checkout";
-import { eventDateParts, eventLocation, money, splitByTime } from "@/lib/format";
+import { eventDateParts, eventLocation, splitByTime } from "@/lib/format";
+import { Price } from "@/lib/currency";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -171,7 +172,7 @@ export function CourseDatesPage() {
                       )}
                       {price != null ? (
                         <span className="course-card__cta course-card__cta--secondary">
-                          {money(price, text(event, "currency", "usd"))}
+                          <Price cents={price} currency={text(event, "currency", "usd")} />
                         </span>
                       ) : null}
                     </div>

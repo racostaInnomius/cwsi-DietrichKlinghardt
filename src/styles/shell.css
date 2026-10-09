@@ -429,6 +429,52 @@
   text-align: center;
 }
 
+/* Display-currency switch (CurrencySelect.tsx): same 42px pill height and
+   ink color as the cart/account buttons next to it. */
+.currency-select select {
+  height: 42px;
+  padding: 0 26px 0 12px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  background: transparent
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/></svg>")
+    no-repeat right 11px center / 9px 6px;
+  color: var(--brand-ink);
+  font: 600 12px/1 var(--font-sans);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  appearance: none;
+}
+.currency-select select:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+/* Second copy of the switch inside the hamburger menu, shown only at the
+   widths where the header row hides its own (≤1129px, below). */
+.site-nav__currency {
+  display: none;
+}
+/* 1130-1199px: the inline nav plus the full pill overflows by up to 46px;
+   a borderless, tighter switch (and tighter action gaps) fits. */
+@media (min-width: 1130px) and (max-width: 1199px) {
+  .site-header__actions {
+    gap: 6px;
+  }
+  .currency-select select {
+    padding: 0 13px 0 4px;
+    border-color: transparent;
+    background-position: right 2px center;
+    font-size: 11px;
+  }
+}
+/* 1901-2149px: the "Contact us" CTA reappears above 1900px and, next to the
+   currency switch, overflows the header row (measured up to 107px at 1901px,
+   0 from 2150px). Keep it hidden in that band, as it already is ≤1900px. */
+@media (min-width: 1901px) and (max-width: 2149px) {
+  .site-header__cta {
+    display: none;
+  }
+}
+
 .site-header__burger {
   display: none;
   /* 44x44, not 38x38 (mobile/tablet audit, 2026-09-18): the single
@@ -779,6 +825,17 @@
   .site-header__burger {
     display: grid;
     place-items: center;
+  }
+  .site-header__actions .currency-select {
+    display: none;
+  }
+  .site-nav__currency {
+    display: block;
+    padding: 4px var(--gutter) 20px;
+    color: #fff;
+  }
+  .site-nav__currency select {
+    color: inherit;
   }
   .site-nav {
     position: absolute;

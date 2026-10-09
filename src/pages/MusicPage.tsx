@@ -3,7 +3,7 @@ import { useCollection, text } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { externalUrl, mediaUrl, musicEmbed } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
-import { money } from "@/lib/format";
+import { Price } from "@/lib/currency";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -158,7 +158,7 @@ export function MusicPage() {
                   <div className="record-card__buy">
                     {price != null ? (
                       <span className="record-card__price">
-                        {money(price, text(record, "currency", "usd"))}
+                        <Price cents={price} currency={text(record, "currency", "usd")} />
                       </span>
                     ) : null}
                     {href ? (

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { toCartItem, type StoreProduct } from "@/lib/store";
 import { useCart } from "@/lib/cart";
-import { money } from "@/lib/format";
+import { Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { ArrowIcon } from "@/components/Icons";
@@ -49,7 +49,7 @@ export function ProductCard({
 
         <div className="product__buy">
           {product.price != null ? (
-            <span className="product__price">{money(product.price, product.currency)}</span>
+            <span className="product__price"><Price cents={product.price} currency={product.currency} /></span>
           ) : null}
           <button
             type="button"

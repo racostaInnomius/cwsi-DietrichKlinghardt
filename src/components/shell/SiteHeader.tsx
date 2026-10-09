@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, type NavItem } from "./navigation";
 import { CartButton } from "./CartButton";
+import { CurrencySelect } from "./CurrencySelect";
 import { AccountButton } from "./AccountButton";
 
 // Hash-anchor children (e.g. "/sophia#chronic-illness") share a pathname with
@@ -149,12 +150,18 @@ export function SiteHeader() {
               );
             })}
           </ul>
+          {/* Hamburger menu only (≤1129px): the header row has no room for
+              the currency switch there — see .site-nav__currency. */}
+          <div className="site-nav__currency">
+            <CurrencySelect />
+          </div>
         </nav>
 
         <div className="site-header__actions">
           <Link className="btn btn-light site-header__cta" to="/contact">
             Contact us
           </Link>
+          <CurrencySelect />
           <CartButton />
           <AccountButton />
           <button

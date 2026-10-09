@@ -1114,6 +1114,19 @@
   font-weight: 500;
   color: var(--muted);
 }
+.event-panel__price-value .price-approx {
+  /* A converted price (lib/currency.tsx) is a span too — keep it at the
+     price's own size, not the "per person" label's. */
+  font: inherit;
+  color: inherit;
+}
+/* Approximate-currency disclaimer under a price (lib/currency.tsx). */
+.currency-note {
+  margin: -6px 0 14px;
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--muted);
+}
 .event-panel__tags {
   margin-bottom: 16px;
   display: flex;

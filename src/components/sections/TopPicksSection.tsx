@@ -1,4 +1,4 @@
-import { money } from "@/lib/format";
+import { Price } from "@/lib/currency";
 import { toCartItem, type StoreProduct } from "@/lib/store";
 import { useCart } from "@/lib/cart";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -83,7 +83,7 @@ function TopPickCard({
         </h3>
         <div className="top-pick-card__footer">
           {product.price != null ? (
-            <span className="top-pick-card__price">{money(product.price, product.currency)}</span>
+            <span className="top-pick-card__price"><Price cents={product.price} currency={product.currency} /></span>
           ) : null}
           <button
             type="button"
