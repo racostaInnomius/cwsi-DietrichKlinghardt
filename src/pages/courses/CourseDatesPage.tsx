@@ -5,7 +5,7 @@ import { useCollection, text } from "@/lib/content";
 import { useTrainingPath, eventsForPath } from "@/lib/trainingPaths";
 import { checkoutHref } from "@/lib/checkout";
 import { eventDateParts, eventLocation, splitByTime } from "@/lib/format";
-import { Price } from "@/lib/currency";
+import { CheckoutLink, Price } from "@/lib/currency";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -159,9 +159,15 @@ export function CourseDatesPage() {
 
                     <div className="course-card__footer">
                       {href ? (
-                        <a className="course-card__cta course-card__cta--primary" href={href}>
+                        <CheckoutLink
+                          className="course-card__cta course-card__cta--primary"
+                          href={href}
+                          kind="event"
+                          itemId={event.id}
+                          currency={text(event, "currency", "usd")}
+                        >
                           Book now
-                        </a>
+                        </CheckoutLink>
                       ) : (
                         <Link
                           className="course-card__cta course-card__cta--primary"

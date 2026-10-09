@@ -3,7 +3,7 @@ import { useCollection, text } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
 import { externalUrl, mediaUrl, musicEmbed } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
-import { Price } from "@/lib/currency";
+import { CheckoutLink, Price } from "@/lib/currency";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -162,9 +162,15 @@ export function MusicPage() {
                       </span>
                     ) : null}
                     {href ? (
-                      <a className="btn btn-primary" href={href}>
+                      <CheckoutLink
+                        className="btn btn-primary"
+                        href={href}
+                        kind="product"
+                        itemId={record.id}
+                        currency={text(record, "currency", "usd")}
+                      >
                         Buy
-                      </a>
+                      </CheckoutLink>
                     ) : (
                       <span className="record-card__soon">Coming soon</span>
                     )}

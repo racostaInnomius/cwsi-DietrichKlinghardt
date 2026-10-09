@@ -1,10 +1,12 @@
+import type { ReactNode } from "react";
 import { Seo } from "@/components/Seo";
+import type { ContentDoc } from "@/data/demo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number, textList } from "@/lib/content";
 import { externalUrl, richTextBlocks } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { eventDateBlock, eventLocation, eventLongDate, eventTimeLabel } from "@/lib/format";
-import { CurrencyNote, Price } from "@/lib/currency";
+import { CheckoutLink, CurrencyNote, Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
@@ -173,7 +175,10 @@ export function EventDetailPage() {
                     <Price cents={price} currency={text(event, "currency", "usd")} />
                     <span>per person</span>
                   </p>
-                  <CurrencyNote currency={text(event, "currency", "usd")} />
+                  <CurrencyNote
+                    currency={text(event, "currency", "usd")}
+                    charge={registrationType === "paid" ? "selected" : "original"}
+                  />
                 </>
               ) : null}
 
@@ -190,12 +195,14 @@ export function EventDetailPage() {
               {soldOut ? (
                 <p className="event-panel__note">{noteText}</p>
               ) : (
-                <a
+                <EventCta
                   className="btn btn-primary event-panel__cta"
-                  href={registrationUrl || "#newsletter"}
+                  paid={registrationType === "paid"}
+                  href={registrationUrl}
+                  event={event}
                 >
                   {ctaLabel}
-                </a>
+                </EventCta>
               )}
 
               {mapUrl ? (
@@ -245,9 +252,14 @@ export function EventDetailPage() {
                 <span className="event-copy__note">{noteText}</span>
               ) : (
                 <>
-                  <a className="btn btn-primary" href={registrationUrl || "#newsletter"}>
+                  <EventCta
+                    className="btn btn-primary"
+                    paid={registrationType === "paid"}
+                    href={registrationUrl}
+                    event={event}
+                  >
                     {ctaLabel}
-                  </a>
+                  </EventCta>
                   {capacity > 0 ? (
                     <span className="event-copy__note">{capacity} seats remaining</span>
                   ) : null}
@@ -260,5 +272,42 @@ export function EventDetailPage() {
 
       <NewsletterSection />
     </>
+  );
+}
+
+/**
+ * The page's registration button: a paid event's checkout honours the
+ * visitor's display currency (CheckoutLink); anything else is a plain link.
+ */
+function EventCta({
+  paid,
+  href,
+  event,
+  className,
+  children,
+}: {
+  paid: boolean;
+  href: string | undefined;
+  event: ContentDoc;
+  className: string;
+  children: ReactNode;
+}) {
+  if (paid && href) {
+    return (
+      <CheckoutLink
+        className={className}
+        href={href}
+        kind="event"
+        itemId={event.id}
+        currency={text(event, "currency", "usd")}
+      >
+        {children}
+      </CheckoutLink>
+    );
+  }
+  return (
+    <a className={className} href={href || "#newsletter"}>
+      {children}
+    </a>
   );
 }

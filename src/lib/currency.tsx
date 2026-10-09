@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type MouseEvent,
   type ReactNode,
 } from "react";
 import { env } from "@/lib/env";
@@ -172,15 +173,88 @@ export function Price({ cents, currency = "usd" }: { cents: number; currency?: s
 
 /**
  * Short note for places where the visitor is about to pay. Renders nothing
- * while prices show in their own currency.
+ * while prices show in their own currency. `charge="selected"` where checkout
+ * honours the display currency (single items via CheckoutLink); "original"
+ * where it doesn't (the cart).
  */
-export function CurrencyNote({ currency = "usd", className }: { currency?: string; className?: string }) {
+export function CurrencyNote({
+  currency = "usd",
+  charge = "original",
+  className,
+}: {
+  currency?: string;
+  charge?: "selected" | "original";
+  className?: string;
+}) {
   const { selected } = useCurrency();
   if (!selected || selected === currency.toLowerCase()) return null;
+  const shown = selected.toUpperCase();
+  const base = currency.toUpperCase();
   return (
     <p className={className ?? "currency-note"}>
-      Amounts in {selected.toUpperCase()} are approximate. You’re charged in{" "}
-      {currency.toUpperCase()}; at checkout you can also pay in your local currency.
+      {charge === "selected"
+        ? `Converted from ${base} at today’s rate. You’ll pay in ${shown} at checkout.`
+        : `Amounts in ${shown} are approximate. Cart orders are charged in ${base}; at checkout you can also pay in your local currency.`}
     </p>
+  );
+}
+
+/**
+ * A "Book now" / "Buy" link to an item's Stripe Payment Link that honours the
+ * display currency. Payment Links can't be forced into a currency, so when
+ * the visitor picked one other than the item's, clicking asks the Beytrax API
+ * for a Checkout Session in that currency (same item, same Stripe account,
+ * the amount shown on the site) and goes there instead. Anything going wrong
+ * falls back to the Payment Link itself, so a sale is never blocked.
+ */
+export function CheckoutLink({
+  href,
+  kind,
+  itemId,
+  currency = "usd",
+  className,
+  children,
+}: {
+  href: string;
+  kind: "event" | "product";
+  itemId: unknown;
+  currency?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  const { selected } = useCurrency();
+  const [busy, setBusy] = useState(false);
+  const convert =
+    selected !== null && selected !== currency.toLowerCase() && typeof itemId === "string";
+
+  async function onClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (!convert || event.metaKey || event.ctrlKey || event.shiftKey) return;
+    event.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    try {
+      const res = await fetch(`${env.API_URL}/api/public/fx-checkout-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tenantId: env.TENANT_ID,
+          siteId: env.SITE_ID,
+          kind,
+          itemId,
+          currency: selected,
+          returnUrl: window.location.href,
+        }),
+      });
+      const json = (await res.json().catch(() => null)) as { data?: { url?: string } } | null;
+      window.location.assign(res.ok && json?.data?.url ? json.data.url : href);
+    } catch {
+      window.location.assign(href);
+    }
+  }
+
+  return (
+    <a className={className} href={href} onClick={onClick} aria-busy={busy || undefined}>
+      {children}
+    </a>
   );
 }
