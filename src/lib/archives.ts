@@ -1,10 +1,22 @@
 import { env } from "./env";
 import { authedFetch } from "./auth";
 
+/** The six collections the Archives page presents (CMS `collection`). */
+export const ARCHIVE_COLLECTIONS = [
+  "recordings",
+  "letters",
+  "diagrams",
+  "lectures",
+  "videos",
+  "seminars",
+] as const;
+export type ArchiveCollection = (typeof ARCHIVE_COLLECTIONS)[number];
+
 export interface ArchiveListItem {
   id: string;
   source: "weekly_talk" | "archive_item";
   kind: "video" | "image" | "pdf" | "audio";
+  collection: ArchiveCollection;
   title: string;
   description: string | null;
   addedAt: string;
@@ -62,4 +74,25 @@ export function fetchArchiveAccess(args: {
     id: args.id,
     ...(args.download ? { download: true } : {}),
   });
+}
+
+/**
+ * How many pieces each collection holds. Public — no sign-in — so every
+ * visitor sees which collections are open; counts only, never content.
+ * Null when the API can't answer (the page then shows every collection as
+ * "Coming soon", which is never wrong for a visitor).
+ */
+export async function fetchArchivesSummary(): Promise<Record<ArchiveCollection, number> | null> {
+  try {
+    const response = await fetch(`${env.API_URL}/api/public/archives/summary`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tenantId: env.TENANT_ID, siteId: env.SITE_ID }),
+    });
+    if (!response.ok) return null;
+    const result = (await response.json()) as { data?: { collections?: Record<ArchiveCollection, number> } };
+    return result.data?.collections ?? null;
+  } catch {
+    return null;
+  }
 }

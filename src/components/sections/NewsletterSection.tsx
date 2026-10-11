@@ -35,7 +35,21 @@ type Status = "idle" | "sending" | "done" | "error";
  * — its own theme never asked for this, and the amber/navy journey is a DK
  * colour story.
  */
-export function NewsletterSection() {
+export function NewsletterSection({
+  eyebrow = "Stay connected",
+  title,
+  lead,
+  id = "newsletter",
+  className,
+}: {
+  /** Overrides for pages that present the same signup with their own copy
+   *  (e.g. /archives' "Be First into the Archive" waiting list). */
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  id?: string;
+  className?: string;
+} = {}) {
   const { pathname } = useLocation();
   const isPinned = pathname !== "/" && themeForPath(pathname) === "dk";
 
@@ -140,15 +154,17 @@ export function NewsletterSection() {
 
   const content = (
     <AnimatedGradient
-      id="newsletter"
+      id={id}
       variant="plain"
-      className="newsletter"
+      className={className ? `newsletter ${className}` : "newsletter"}
     >
       <div className="wrap newsletter__inner">
         <Reveal>
-          <p className="eyebrow">Stay connected</p>
-          <h2>{section.title}</h2>
-          {section.lead ? <p className="newsletter__lead">{section.lead}</p> : null}
+          <p className="eyebrow">{eyebrow}</p>
+          <h2>{title ?? section.title}</h2>
+          {(lead ?? section.lead) ? (
+            <p className="newsletter__lead">{lead ?? section.lead}</p>
+          ) : null}
 
           <form className="newsletter__form" onSubmit={submit}>
             <div className="newsletter__row">

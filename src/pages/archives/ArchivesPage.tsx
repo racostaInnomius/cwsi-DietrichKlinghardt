@@ -1,36 +1,155 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
-import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { useAuth } from "@/features/auth/useAuth";
 import {
+  ARCHIVE_COLLECTIONS,
   ArchivesError,
   fetchArchiveAccess,
   fetchArchivesList,
+  fetchArchivesSummary,
+  type ArchiveCollection,
   type ArchiveListItem,
 } from "@/lib/archives";
 import { fetchMembershipStatus, type MembershipStatus } from "@/lib/membership";
 
 /**
- * Archives — Phase 5 of the membership feature. Real content at last: a
- * member-gated grid merging migrated Weekly Talk replays (Phase 4, served
- * from Azure Blob, not Mux) with whatever staff has uploaded directly
- * (images, PDFs, music, standalone video) — see cwsf-beytrax's ArchiveItems
- * collection. Same membership_required gate contract as LiveTalkPage's, so
- * this page reuses its LiveNotice component.
+ * /archives — "The Klinghardt Living Archive" (client design, 2026-10-10:
+ * hero, six collections, how it works, waiting list), on the page's own
+ * gradient like the design (no hero card).
  *
- * Access is two calls, not one: /list never returns a working URL (see the
- * API for why), so opening any item first asks the API for a short-lived
- * signed one, only at the moment the visitor actually wants to see it.
+ * Every visitor sees the whole page. The six collections come from the CMS
+ * (ArchiveItems' `collection`): /archives/summary gives every visitor each
+ * one's count, so a collection reads "Coming soon" until it holds pieces.
+ * The content itself stays member-gated exactly as before (Phase 5): a member
+ * gets the list right under the collections — a collection card filters it —
+ * and anyone else gets the existing "Members only" card in that same spot.
+ * The waiting list is the site's newsletter signup with the design's copy.
+ *
+ * Access is still two calls (see the API): /list never returns a working URL;
+ * opening an item asks /access for a short-lived signed one.
  */
+
+interface CollectionCopy {
+  title: string;
+  description: string;
+  icon: ReactNode;
+}
+
+const ICON_PROPS = {
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.7,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true,
+};
+
+const COLLECTIONS: Record<ArchiveCollection, CollectionCopy> = {
+  recordings: {
+    title: "Unheard Recordings",
+    description: "Private audio sessions and clinical conversations never before released to the public.",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <rect x="9" y="3" width="6" height="11" rx="3" />
+        <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+      </svg>
+    ),
+  },
+  letters: {
+    title: "Letters & Correspondence",
+    description: "Decades of written exchange with colleagues, patients, and researchers worldwide.",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <path d="M12 20h9" />
+        <path d="M16.4 3.6a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+      </svg>
+    ),
+  },
+  diagrams: {
+    title: "Original Diagrams",
+    description: "Hand-drawn schematics and working models developed across four decades of practice.",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+        <path d="M14 3v5h5M9 13h6M9 17h6M9 9h1" />
+      </svg>
+    ),
+  },
+  lectures: {
+    title: "Lecture Materials",
+    description: "Course slides, handouts, and annotated syllabi from international training programs.",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+        <path d="M6 12v5c3 2 9 2 12 0v-5" />
+      </svg>
+    ),
+  },
+  videos: {
+    title: "Videos",
+    description: "Rare footage from seminars, interviews, and clinical demonstrations across the years.",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <rect x="2" y="6" width="14" height="12" rx="2" />
+        <path d="m16 10 6-3v10l-6-3" />
+      </svg>
+    ),
+  },
+  seminars: {
+    title: "Seminars",
+    description: "Full seminar recordings and transcripts from landmark educational events.",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <path d="M2 5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2ZM22 5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7Z" />
+      </svg>
+    ),
+  },
+};
+
+const STEPS = [
+  {
+    title: "Restore",
+    text: "Each piece is carefully digitized, curated, and authenticated from the original source materials.",
+  },
+  {
+    title: "Reveal",
+    text: "One new item unlocks every week — surfacing knowledge that has never been publicly accessible.",
+  },
+  {
+    title: "Explore",
+    text: "Navigate by topic, date, or medium. Search the full archive as it grows over time.",
+  },
+];
+
+const pieces = (n: number) => `${n} ${n === 1 ? "piece" : "pieces"}`;
+
+function scrollToId(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function ArchivesPage() {
   const { status: authStatus, signIn } = useAuth();
   const [items, setItems] = useState<ArchiveListItem[] | null>(null);
   const [error, setError] = useState<ArchivesError | null>(null);
   const [membership, setMembership] = useState<MembershipStatus | null>(null);
   const [viewing, setViewing] = useState<ArchiveListItem | null>(null);
+  const [counts, setCounts] = useState<Record<ArchiveCollection, number> | null>(null);
+  const [filter, setFilter] = useState<ArchiveCollection | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchArchivesSummary().then((result) => {
+      if (!cancelled) setCounts(result);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (authStatus === "loading") return;
@@ -61,25 +180,91 @@ export function ArchivesPage() {
     };
   }, [authStatus]);
 
+  const isMember = Boolean(items);
+  const visible = useMemo(
+    () => (items && filter ? items.filter((item) => item.collection === filter) : items),
+    [items, filter],
+  );
+
+  function openCollection(collection: ArchiveCollection) {
+    if (isMember) setFilter(collection);
+    scrollToId("archive-content");
+  }
+
   return (
     <>
       <Seo
-        title={"Archives — Dr. Dietrich Klinghardt™"}
-        description="Member-only recordings, images, PDFs and music from Dr. Klinghardt."
+        title={"The Klinghardt Living Archive — Dr. Dietrich Klinghardt™"}
+        description="Four decades of Dr. Klinghardt's notes, recordings, diagrams, correspondence and seminar footage — restored and released one piece at a time."
         path="/archives"
         noindex
       />
 
-      <AnimatedGradient variant="card" intensity="soft" className="page-hero">
-        <div className="wrap page-hero__inner">
-          <Reveal>
-            <p className="eyebrow">Archives</p>
-            <h1>Archives</h1>
-          </Reveal>
-        </div>
-      </AnimatedGradient>
+      <section className="archive-hero wrap">
+        <Reveal>
+          <p className="eyebrow">A living archive</p>
+          <h1>The Klinghardt Living Archive</h1>
+          <p className="archive-hero__subtitle">A Lifetime of Discovery, Rediscovered</p>
+          <p className="archive-hero__lead">
+            For over four decades, Dr. Dietrich Klinghardt has accumulated an extraordinary body of
+            knowledge — in written notes, recorded lectures, hand-drawn diagrams, private
+            correspondence, and rare seminar footage. Most of it has never been seen by the public.
+            The Klinghardt Living Archive is being carefully assembled — one piece at a time — to
+            bring this lifetime of discovery into the world. Each week, a new item unlocks. Some
+            have never left the clinic walls. All of them matter.
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary archive-hero__cta"
+            onClick={() => scrollToId(isMember ? "archive-content" : "waitlist")}
+          >
+            {isMember ? "Explore the Archive" : "Be first into the Archive"} <span aria-hidden="true">→</span>
+          </button>
+        </Reveal>
+      </section>
 
-      <section className="section wrap">
+      <section className="archive-collections wrap" aria-labelledby="archive-collections-title">
+        <Reveal className="archive-section-head">
+          <p className="eyebrow">What’s inside</p>
+          <h2 id="archive-collections-title">Six Collections, One Archive</h2>
+          <p>Newly restored materials, unveiled every week</p>
+          <p>
+            Six collections are being prepared for release. Each week, one new piece is added to the
+            Archive — the rest remain sealed until it&apos;s their turn.
+          </p>
+        </Reveal>
+
+        <ul className="archive-collection-grid">
+          {ARCHIVE_COLLECTIONS.map((key, index) => {
+            const copy = COLLECTIONS[key];
+            const count = counts?.[key] ?? 0;
+            const open = count > 0;
+            return (
+              <Reveal as="li" key={key} className="archive-collection" delay={(index % 3) * 70}>
+                <div className="archive-collection__top">
+                  <span className="archive-collection__icon">{copy.icon}</span>
+                  <span className="archive-collection__number">{String(index + 1).padStart(2, "0")}</span>
+                </div>
+                <h3>{copy.title}</h3>
+                <p>{copy.description}</p>
+                {open ? (
+                  <button
+                    type="button"
+                    className="archive-collection__badge archive-collection__badge--open"
+                    onClick={() => openCollection(key)}
+                  >
+                    {isMember ? `Explore · ${pieces(count)}` : pieces(count)}
+                  </button>
+                ) : (
+                  <span className="archive-collection__badge">Coming soon</span>
+                )}
+              </Reveal>
+            );
+          })}
+        </ul>
+      </section>
+
+      <section id="archive-content" className="archive-content wrap" aria-live="polite">
         {authStatus === "loading" || (!items && !error) ? (
           <p className="empty-note">Loading the Archives…</p>
         ) : error?.code === "membership_required" ? (
@@ -135,26 +320,71 @@ export function ArchivesPage() {
           <p className="empty-note">{error.message}</p>
         ) : items && items.length === 0 ? (
           <p className="empty-note">
-            The Archives are being filled in. Check back soon, or reach out via{" "}
-            <a href="/contact">Contact</a> for anything you're looking for.
+            The first pieces are being restored. Check back soon, or reach out via{" "}
+            <a href="/contact">Contact</a> for anything you&apos;re looking for.
           </p>
         ) : items ? (
-          <ul className="archive-grid">
-            {items.map((item, index) => (
-              <Reveal as="li" key={`${item.source}:${item.id}`} className="archive-card" delay={index * 60}>
-                <span className={`archive-card__badge archive-card__badge--${item.kind}`}>
-                  {{ video: "Video", image: "Image", pdf: "PDF", audio: "Music" }[item.kind]}
-                </span>
-                <h2>{item.title}</h2>
-                {item.description ? <p>{item.description}</p> : null}
-                <button type="button" className="btn btn-outline" onClick={() => setViewing(item)}>
-                  {item.kind === "pdf" ? "Open" : "View"}
-                </button>
-              </Reveal>
-            ))}
-          </ul>
+          <>
+            <div className="archive-filter" role="group" aria-label="Filter by collection">
+              <button type="button" aria-pressed={filter === null} onClick={() => setFilter(null)}>
+                All · {items.length}
+              </button>
+              {ARCHIVE_COLLECTIONS.filter((key) => items.some((item) => item.collection === key)).map(
+                (key) => (
+                  <button
+                    type="button"
+                    key={key}
+                    aria-pressed={filter === key}
+                    onClick={() => setFilter(key)}
+                  >
+                    {COLLECTIONS[key].title} · {items.filter((item) => item.collection === key).length}
+                  </button>
+                ),
+              )}
+            </div>
+            <ul className="archive-grid">
+              {(visible ?? []).map((item, index) => (
+                <Reveal as="li" key={`${item.source}:${item.id}`} className="archive-card" delay={(index % 3) * 60}>
+                  <span className={`archive-card__badge archive-card__badge--${item.kind}`}>
+                    {{ video: "Video", image: "Image", pdf: "PDF", audio: "Audio" }[item.kind]}
+                  </span>
+                  <p className="archive-card__collection">{COLLECTIONS[item.collection].title}</p>
+                  <h3>{item.title}</h3>
+                  {item.description ? <p>{item.description}</p> : null}
+                  <button type="button" className="btn btn-outline" onClick={() => setViewing(item)}>
+                    {item.kind === "pdf" ? "Open" : "View"}
+                  </button>
+                </Reveal>
+              ))}
+            </ul>
+          </>
         ) : null}
       </section>
+
+      <section className="archive-how wrap" aria-labelledby="archive-how-title">
+        <Reveal className="archive-section-head">
+          <p className="eyebrow">How it works</p>
+          <h2 id="archive-how-title">One New Piece, Every Week</h2>
+        </Reveal>
+        <Reveal as="ol" className="archive-steps">
+          {STEPS.map((step, index) => (
+            <li key={step.title}>
+              <p className="archive-steps__label">Step {String(index + 1).padStart(2, "0")}</p>
+              <h3>{step.title}</h3>
+              <span className="archive-steps__rule" aria-hidden="true" />
+              <p>{step.text}</p>
+            </li>
+          ))}
+        </Reveal>
+      </section>
+
+      <NewsletterSection
+        id="waitlist"
+        className="archive-waitlist"
+        eyebrow="Join the waiting list"
+        title="Be First into the Archive"
+        lead="Subscribe to be notified when the Archive opens — and receive early access to the first item before it’s available to the public."
+      />
 
       {viewing ? <ArchiveViewer item={viewing} onClose={() => setViewing(null)} /> : null}
     </>

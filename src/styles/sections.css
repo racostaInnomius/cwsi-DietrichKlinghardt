@@ -3200,30 +3200,216 @@
   cursor: pointer;
 }
 
+/* ── The Klinghardt Living Archive (client design, 2026-10-10) ───────────
+   Measured on the 1440px design: everything sits on the page's own gradient
+   (no hero card); colours are the site's tokens (gold #bc8f44 headings and
+   badges, --brand navy, --ink / --ink-soft copy). Sizes below are the
+   design's, in px at 1440 with fluid clamps for narrower screens. */
+.archive-hero {
+  padding-block: clamp(40px, 3.9vw, 56px) 0;
+  text-align: center;
+}
+.archive-hero .eyebrow {
+  margin-bottom: 4px;
+  color: var(--white);
+}
+.archive-hero h1 {
+  margin: 0;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.12;
+}
+.archive-hero__subtitle {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(22px, 2.5vw, 36px);
+  line-height: 1.2;
+  color: var(--gold);
+}
+.archive-hero__lead {
+  max-width: 760px;
+  margin: 26px auto 0;
+  font-size: clamp(16px, 1.25vw, 18px);
+  line-height: 1.82;
+  color: var(--ink);
+}
+.archive-hero__cta {
+  margin-top: 22px;
+  min-height: 46px;
+  padding-inline: 32px;
+}
+
+.archive-section-head {
+  max-width: 760px;
+  margin-inline: auto;
+  text-align: center;
+}
+.archive-section-head .eyebrow {
+  margin-bottom: 4px;
+  color: var(--gold);
+}
+.archive-section-head h2 {
+  margin: 0;
+  font-size: clamp(34px, 4vw, 57px);
+  line-height: 1.15;
+}
+.archive-section-head h2 + p {
+  margin-top: 18px;
+}
+.archive-section-head p:not(.eyebrow) {
+  margin-bottom: 0;
+  font-size: clamp(16px, 1.25vw, 18px);
+  line-height: 1.8;
+  color: var(--ink);
+}
+
+.archive-collections {
+  padding-top: clamp(64px, 7.9vw, 114px);
+}
+.archive-collection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 23px 22px;
+  max-width: 1282px;
+  margin: clamp(32px, 3.6vw, 52px) auto 0;
+  padding: 0;
+  list-style: none;
+}
+.archive-collection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 282px;
+  padding: 33px 30px 34px;
+  border: 1px solid #dbe5ea;
+  border-radius: 14px;
+  background: #f4f9f9;
+}
+.archive-collection__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+}
+.archive-collection__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e6edf6;
+  color: var(--brand);
+}
+.archive-collection__icon svg {
+  width: 17px;
+  height: 17px;
+}
+.archive-collection__number {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: #b9cad5;
+}
+.archive-collection h3 {
+  margin: 22px 0 0;
+  font-size: clamp(22px, 1.75vw, 25px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.archive-collection p {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+.archive-collection__badge {
+  margin-top: auto;
+  padding: 6px 10px 5px;
+  border: 1.5px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.archive-collection p + .archive-collection__badge {
+  margin-top: 36px;
+}
+.archive-collection__badge--open {
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.archive-collection__badge--open:hover,
+.archive-collection__badge--open:focus-visible {
+  background: var(--gold);
+  color: var(--white);
+}
+
+/* Members: the content itself, right under the collections. */
+.archive-content {
+  padding-top: clamp(48px, 5vw, 72px);
+  scroll-margin-top: 140px;
+}
+.archive-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: clamp(24px, 2.6vw, 36px);
+}
+.archive-filter button {
+  padding: 8px 14px;
+  border: 1px solid #dbe5ea;
+  border-radius: var(--radius-pill);
+  background: #f4f9f9;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: var(--fs-meta);
+}
+.archive-filter button[aria-pressed="true"] {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--white);
+}
 .archive-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: clamp(18px, 2.2vw, 28px);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 23px 22px;
+  max-width: 1282px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
 }
 .archive-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  padding: clamp(20px, 2.4vw, 26px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface-2);
+  padding: 30px;
+  border: 1px solid #dbe5ea;
+  border-radius: 14px;
+  background: #f4f9f9;
 }
-.archive-card h2 {
+.archive-card h3 {
   margin: 0;
-  color: var(--ink);
-  font-size: clamp(18px, 1.6vw, 22px);
+  font-size: clamp(20px, 1.6vw, 23px);
+  line-height: 1.2;
 }
 .archive-card p {
   margin: 0;
-  color: var(--muted);
-  font-size: var(--fs-sm);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.archive-card .archive-card__collection {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 .archive-card .btn {
   margin-top: auto;
@@ -3233,7 +3419,7 @@
 .archive-card__badge {
   padding: 4px 10px;
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--brand) 8%, var(--white));
+  background: #e6edf6;
   color: var(--brand);
   font-size: 11px;
   font-weight: 700;
@@ -3242,6 +3428,81 @@
 .archive-card__badge--video {
   background: color-mix(in srgb, var(--gold) 12%, var(--white));
   color: var(--gold-deep);
+}
+
+/* How it works: three navy panels joined by a 1px seam of page background. */
+.archive-how {
+  padding-top: clamp(64px, 6.7vw, 96px);
+}
+.archive-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 1268px;
+  margin: clamp(32px, 3.4vw, 49px) auto 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  list-style: none;
+}
+.archive-steps li {
+  padding: 50px clamp(24px, 3vw, 44px) 50px;
+  background: var(--brand);
+  color: var(--white);
+  text-align: center;
+}
+.archive-steps__label {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.2;
+  color: rgba(188, 143, 68, 0.7);
+}
+.archive-steps h3 {
+  margin: 10px 0 0;
+  color: var(--white);
+  font-size: clamp(32px, 2.8vw, 41px);
+  line-height: 1.15;
+}
+.archive-steps__rule {
+  display: block;
+  width: 34px;
+  height: 2px;
+  margin: 18px auto 0;
+  background: rgba(188, 143, 68, 0.7);
+}
+.archive-steps li p {
+  max-width: 340px;
+  margin: 22px auto 0;
+  font-size: clamp(15px, 1.15vw, 16.5px);
+  line-height: 1.95;
+  color: var(--white);
+}
+
+/* The waiting list is the site's newsletter band with the design's copy;
+   its title is set larger, as in the design. */
+.archive-waitlist h2 {
+  max-width: none;
+  font-size: clamp(44px, 5.8vw, 84px);
+  line-height: 1.1;
+}
+
+@media (max-width: 900px) {
+  .archive-collection-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .archive-steps {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .archive-collection-grid {
+    grid-template-columns: 1fr;
+  }
+  .archive-collection {
+    min-height: 0;
+  }
 }
 
 /* ── Archive viewer modal ─────────────────────────────────────── */
