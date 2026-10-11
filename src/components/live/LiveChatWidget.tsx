@@ -74,6 +74,9 @@ export function LiveChatWidget({
     socket.on("chat:message", (message: ChatMessage) =>
       setMessages((prev) => [...prev, message]),
     );
+    // Staff emptied this event's chat (CMS "Clear chat", e.g. reusing the
+    // event on new dates): drop what's on screen right away.
+    socket.on("chat:cleared", () => setMessages([]));
     socket.on("chat:room_closed", () => {
       setClosed(true);
       setStatusNote("The broadcast ended and the chat is closed.");
