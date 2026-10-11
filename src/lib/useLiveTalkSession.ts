@@ -72,6 +72,17 @@ export function useLiveTalkSession(
         // credential would just repeat the same error until the caller
         // reacts and this effect re-runs with accessToken=undefined.
         setError(failure);
+
+        // Access gates deliberately include the broadcast's public mode even
+        // when they withhold playback. Keep polling those responses so an
+        // anonymous/non-member visitor who opened the page while it was
+        // waiting still sees the indicator switch to "Live Now" without a
+        // reload. A replay/ended response is terminal just like the success
+        // path above; failures without a mode remain manual-retry errors.
+        if (failure.mode && failure.mode !== "replay" && failure.mode !== "ended") {
+          const seconds = failure.mode === "live" ? 10 : 15;
+          timer = window.setTimeout(() => void load(false), seconds * 1000);
+        }
       }
     };
 
