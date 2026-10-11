@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, useRecords, SECTION } from "@/lib/sections";
-import { eventLongDate, eventTimeLabel, nextWeeklyTalk, splitByTime } from "@/lib/format";
+import {
+  eventLongDate,
+  eventTimeLabel,
+  splitByTime,
+  weeklyTalkStatus,
+} from "@/lib/format";
 import { calendarHref } from "@/lib/calendar";
 import { env } from "@/lib/env";
 import { useAuth } from "@/features/auth/useAuth";
@@ -15,6 +20,7 @@ import {
 } from "@/lib/membership";
 import { readStoredMuxLiveToken } from "@/lib/muxLive";
 import { useLiveTalkSession } from "@/lib/useLiveTalkSession";
+import { useNextWeeklyTalk } from "@/lib/useNextWeeklyTalk";
 import { LiveTalkStage } from "@/components/live/LiveTalkStage";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -95,7 +101,7 @@ export function WeeklyTalksPage() {
   // only ever the next paid/membership talk — otherwise a free talk that
   // happens to come first chronologically would hide the one that actually
   // needs the "Live Now" badge and access gate.
-  const nextLive = nextWeeklyTalk(useCollection("events"));
+  const nextLive = useNextWeeklyTalk();
   const addToCalendar = calendarHref(nextLive, {
     url: `${env.SITE_URL}/weekly-talks`,
   });
@@ -132,23 +138,16 @@ export function WeeklyTalksPage() {
     nextLive && nextLiveIsGated ? String(nextLive.id) : "",
     nextLive ? readStoredMuxLiveToken(String(nextLive.id)) ?? undefined : undefined,
     Boolean(nextLive && nextLiveIsGated) && authStatus !== "loading",
+    true,
   );
   // A visitor without access still gets `error.mode` from the gate (see
   // publicMuxLiveHandler), so this status is useful before they enter the
-  // gated room too. "Waiting" only becomes visible once the scheduled start
-  // has passed: before then this remains an ordinary upcoming event.
-  const nextLiveMode = nextLiveSession?.mode ?? nextLiveError?.mode;
-  const nextLiveStartRaw = text(nextLive, "startDateTime");
-  const nextLiveStart = nextLiveStartRaw ? new Date(nextLiveStartRaw).getTime() : Number.NaN;
-  const nextLiveHasStarted = Number.isFinite(nextLiveStart) && nextLiveStart <= Date.now();
-  const nextLiveStatus =
-    nextLiveMode === "live"
-      ? { label: "Live Now", tone: "live" as const }
-      : nextLiveMode === "interrupted"
-        ? { label: "Reconnecting…", tone: "interrupted" as const }
-        : nextLiveMode === "waiting" && nextLiveHasStarted
-          ? { label: "Starting shortly", tone: "waiting" as const }
-          : null;
+  // gated room too. See weeklyTalkStatus for when "waiting" is shown.
+  const nextLiveStatus = weeklyTalkStatus(
+    nextLive,
+    nextLiveSession?.mode ?? nextLiveError?.mode,
+    nextLiveSession?.status,
+  );
 
   const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
 
@@ -323,17 +322,8 @@ export function WeeklyTalksPage() {
               ) : null}
               {nextLiveStatus ? (
                 <Link
-                  className="live-now-badge"
+                  className={`live-now-badge live-now-badge--${nextLiveStatus.tone}`}
                   to={`/weekly-talks/live/${nextLive.id}`}
-                  style={
-                    nextLiveStatus.tone === "live"
-                      ? undefined
-                      : {
-                          backgroundColor:
-                            nextLiveStatus.tone === "waiting" ? "#b7791f" : "#8a6d3b",
-                          animation: "none",
-                        }
-                  }
                 >
                   <span className="live-now-badge__dot" aria-hidden="true" />
                   {nextLiveStatus.label}

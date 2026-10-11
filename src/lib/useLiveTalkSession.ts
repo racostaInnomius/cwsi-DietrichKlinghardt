@@ -21,6 +21,12 @@ export function useLiveTalkSession(
   accessToken: string | undefined,
   /** False to skip polling entirely — e.g. an embed that isn't visible yet. */
   enabled = true,
+  /**
+   * Only track the broadcast's mode, never ask for playback: a status badge
+   * or banner has no player, and minting tokens reserves Mux delivery
+   * minutes for every visitor who merely sees the indicator.
+   */
+  stateOnly = false,
 ): {
   session: PublicMuxLiveSession | null;
   error: MuxLiveError | null;
@@ -41,7 +47,7 @@ export function useLiveTalkSession(
         let next = await requestMuxLive({ eventId, accessToken, includePlayback });
         if (!active) return;
 
-        if (!includePlayback && next.playbackId) {
+        if (!stateOnly && !includePlayback && next.playbackId) {
           if (current?.playbackId === next.playbackId && current.tokens) {
             // Keep the original token object: replacing it would change the
             // player's HLS URL and rebuffer the stream on every state poll.
@@ -82,16 +88,21 @@ export function useLiveTalkSession(
         if (failure.mode && failure.mode !== "replay" && failure.mode !== "ended") {
           const seconds = failure.mode === "live" ? 10 : 15;
           timer = window.setTimeout(() => void load(false), seconds * 1000);
+        } else if (failure.code === "live_failed") {
+          // A network blip or 5xx (no gate, no mode): try again on a slower
+          // beat rather than freezing the badge/player until a reload. Hard
+          // errors the API names (event_not_found…) still wait for retry().
+          timer = window.setTimeout(() => void load(includePlayback), 30_000);
         }
       }
     };
 
-    void load(true);
+    void load(!stateOnly);
     return () => {
       active = false;
       if (timer !== undefined) window.clearTimeout(timer);
     };
-  }, [accessToken, attempt, eventId, enabled]);
+  }, [accessToken, attempt, eventId, enabled, stateOnly]);
 
   return { session, error, retry: () => setAttempt((n) => n + 1) };
 }

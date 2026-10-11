@@ -7806,6 +7806,13 @@ ul.sophia-therapies-grid h3 {
   vertical-align: middle;
   animation: live-now-pulse 2s ease-in-out infinite;
 }
+/* Not live (yet / any more): steady, no pulse. Both keep ≥4.5:1 with white. */
+.live-now-badge--waiting,
+.live-now-badge--interrupted {
+  animation: none;
+}
+.live-now-badge--waiting { background: #975a16; }
+.live-now-badge--interrupted { background: #7a5f32; }
 .live-now-badge__dot {
   width: 6px;
   height: 6px;

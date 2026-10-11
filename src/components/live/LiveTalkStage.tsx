@@ -33,13 +33,15 @@ export function LiveTalkStage({
 }) {
   const buyHref = error?.checkoutUrl ? checkoutHref(error.checkoutUrl) : checkoutHref(checkoutUrl);
 
-  if (session?.playbackId && session.tokens) {
+  // Live only: a finished talk is never replayed here — its recording moves
+  // to the Archives (members), see the "ended" notice below.
+  if (session?.mode === "live" && session.playbackId && session.tokens) {
     return (
       <Suspense fallback={<LiveNotice eyebrow="One moment" title="Loading the player…" />}>
         <MuxPlayer
           playbackId={session.playbackId}
           tokens={session.tokens}
-          streamType={session.mode === "live" ? "live" : "on-demand"}
+          streamType="live"
           metadata={{ video_title: session.title, video_id: session.eventId }}
           accentColor="#bc8f44"
           primaryColor="#f4f0e5"
@@ -87,7 +89,7 @@ export function LiveTalkStage({
       <LiveNotice
         eyebrow="Members only"
         title="This talk is part of the membership."
-        body="Members receive a personal link by email that works for the live session and its replay."
+        body="Members receive a personal link by email that works for the live session."
       >
         {buyHref ? (
           <a className="btn btn-primary" href={buyHref}>
@@ -128,13 +130,17 @@ export function LiveTalkStage({
     );
   }
 
-  if (session?.mode === "ended") {
+  if (session?.mode === "ended" || session?.mode === "replay") {
     return (
       <LiveNotice
         eyebrow="Finished"
         title="The talk has ended."
-        body="If a replay was enabled it appears here once Mux finishes processing it."
-      />
+        body="Its recording will be added to the Archives for members."
+      >
+        <Link className="btn btn-outline" to="/archives">
+          Go to the Archives
+        </Link>
+      </LiveNotice>
     );
   }
 

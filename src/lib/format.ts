@@ -159,30 +159,91 @@ export function eventMonthDayOrdinal(doc: ContentDoc | undefined): string {
   return `${month} ${day}${suffix}`;
 }
 
-/**
- * The current or next paid/membership weekly talk — same selection the "next
- * live talk" band on /weekly-talks uses, shared here so the sitewide
- * announcement bar always names the same session. An event remains eligible
- * from its start through its scheduled end, allowing the page to keep polling
- * Mux and expose the "Live Now" link for the full broadcast window. Excludes
- * "open" (no-charge) talks, which don't need the membership CTA this banner
- * links to.
- */
-export function nextWeeklyTalk(events: ContentDoc[]): ContentDoc | undefined {
-  const now = Date.now();
-  const candidates = sortByStart(
+/** A talk saved without an end time is assumed to run this long. */
+const DEFAULT_TALK_LENGTH_MS = 2 * 60 * 60 * 1000;
+/** How long after its scheduled end a talk is still checked for running over. */
+const MAX_OVERRUN_MS = 12 * 60 * 60 * 1000;
+
+/** The scheduled end in ms — or start + DEFAULT_TALK_LENGTH_MS when the CMS has none. */
+function scheduledEnd(doc: ContentDoc | undefined): number | null {
+  const end = endDateOf(doc)?.getTime();
+  if (end != null) return end;
+  const start = dateOf(doc)?.getTime();
+  return start == null ? null : start + DEFAULT_TALK_LENGTH_MS;
+}
+
+/** Paid/membership talks streamed on Mux, soonest first. */
+function gatedWeeklyTalks(events: ContentDoc[]): ContentDoc[] {
+  return sortByStart(
     events.filter((event) => {
       const registrationType =
         typeof event.registrationType === "string" ? event.registrationType : "open";
       return event.liveMode === "mux" && registrationType !== "open";
     }),
   );
+}
 
-  return candidates.find((event) => {
+/**
+ * The current or next paid/membership weekly talk — same selection the "next
+ * live talk" band on /weekly-talks uses, shared here so the sitewide
+ * announcement bar always names the same session. A talk stays current from
+ * its start through its scheduled end (a talk without an end time is assumed
+ * to last DEFAULT_TALK_LENGTH_MS) — even when the stream finished early —
+ * and past that end only while it is still on air (`stillLiveId`, see
+ * useNextWeeklyTalk). Excludes "open" (no-charge) talks, which don't need the
+ * membership CTA this banner links to.
+ */
+export function nextWeeklyTalk(
+  events: ContentDoc[],
+  now = Date.now(),
+  stillLiveId?: string,
+): ContentDoc | undefined {
+  return gatedWeeklyTalks(events).find((event) => {
+    if (stillLiveId && String(event.id) === stillLiveId) return true;
     const start = dateOf(event)?.getTime();
     if (start == null || start >= now) return true;
-
-    const end = endDateOf(event)?.getTime();
+    const end = scheduledEnd(event);
     return end != null && end > now;
   });
+}
+
+/**
+ * The latest talk whose scheduled end has passed recently — the one that may
+ * still be running over, so its live state is worth asking about.
+ */
+export function overrunCandidate(events: ContentDoc[], now = Date.now()): ContentDoc | undefined {
+  return gatedWeeklyTalks(events)
+    .filter((event) => {
+      const end = scheduledEnd(event);
+      return end != null && end <= now && end + MAX_OVERRUN_MS > now;
+    })
+    .at(-1);
+}
+
+export type WeeklyTalkStatus = { label: string; tone: "live" | "interrupted" | "waiting" };
+
+/**
+ * The /weekly-talks "next live talk" badge for a polled Mux mode:
+ *   - "Live Now" whenever the stream is on air, including past the scheduled end.
+ *   - "Reconnecting…" while a dropped signal may still come back.
+ *   - "Starting shortly" only between the scheduled start and the moment the
+ *     stream actually begins (e.g. 2:30 → 2:35), never before the start and
+ *     never once the broadcast is over (`muxStatus` "completed", or past the
+ *     scheduled end).
+ *   - Nothing otherwise — an upcoming talk, or one already finished.
+ */
+export function weeklyTalkStatus(
+  doc: ContentDoc | undefined,
+  mode: string | null | undefined,
+  muxStatus?: string,
+  now = Date.now(),
+): WeeklyTalkStatus | null {
+  if (mode === "live") return { label: "Live Now", tone: "live" };
+  if (mode === "interrupted") return { label: "Reconnecting…", tone: "interrupted" };
+  if (mode !== "waiting" || muxStatus === "completed") return null;
+  const start = dateOf(doc)?.getTime();
+  const end = scheduledEnd(doc);
+  return start != null && end != null && start <= now && now < end
+    ? { label: "Starting shortly", tone: "waiting" }
+    : null;
 }

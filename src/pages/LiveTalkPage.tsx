@@ -120,7 +120,7 @@ export function LiveTalkPage() {
             ← Back to weekly talks
           </Link>
           {accessToken ? (
-            <small>Your link works for the live session and its replay. Please don’t share it.</small>
+            <small>Your link works for the live session. Please don’t share it.</small>
           ) : null}
         </footer>
       </section>

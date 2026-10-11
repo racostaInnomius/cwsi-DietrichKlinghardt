@@ -4,7 +4,8 @@ import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { themeForPath } from "./navigation";
 import { useCollection, usePageContent, text } from "@/lib/content";
-import { eventMonthDayOrdinal, nextWeeklyTalk } from "@/lib/format";
+import { eventMonthDayOrdinal } from "@/lib/format";
+import { useNextWeeklyTalk } from "@/lib/useNextWeeklyTalk";
 
 /**
  * Pages that skip <NewsletterSection> and get /foundation's flat-navy
@@ -84,7 +85,7 @@ export function SiteShell({
   // date (client, 2026-10-04) while leaving the rest of the CMS wording
   // alone. Events without a next talk, or CMS copy that doesn't end in a
   // date, keep the raw CMS text untouched.
-  const nextTalkDate = eventMonthDayOrdinal(nextWeeklyTalk(useCollection("events")));
+  const nextTalkDate = eventMonthDayOrdinal(useNextWeeklyTalk());
   const bannerText = nextTalkDate
     ? bannerTextRaw.replace(/[A-Z][a-z]+ \d{1,2}(st|nd|rd|th)\.?$/, `${nextTalkDate}.`)
     : bannerTextRaw;
