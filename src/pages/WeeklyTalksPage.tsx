@@ -19,6 +19,7 @@ import {
   type MembershipStatus,
 } from "@/lib/membership";
 import { readStoredMuxLiveToken } from "@/lib/muxLive";
+import { CurrencyNote, useCurrency } from "@/lib/currency";
 import { useLiveTalkSession } from "@/lib/useLiveTalkSession";
 import { useNextWeeklyTalk } from "@/lib/useNextWeeklyTalk";
 import { LiveTalkStage } from "@/components/live/LiveTalkStage";
@@ -205,13 +206,19 @@ export function WeeklyTalksPage() {
   const isOtherActivePlan = (interval: string) =>
     Boolean(membership?.active) && subscribedInterval !== interval;
 
-  const handleJoin = (planId: string) => {
+  // The header's currency selector, same as physical products: plan prices
+  // show converted, and checkout subscribes in that currency.
+  const { selected: displayCurrency, convert } = useCurrency();
+
+  const handleJoin = (planId: string, planCurrency: string) => {
     if (authStatus !== "authenticated") {
       signIn("/weekly-talks");
       return;
     }
     setCheckoutState((s) => ({ ...s, [planId]: "loading" }));
-    startMembershipCheckout(planId, "/weekly-talks").catch(() => {
+    const currency =
+      displayCurrency && displayCurrency !== planCurrency.toLowerCase() ? displayCurrency : undefined;
+    startMembershipCheckout(planId, "/weekly-talks", currency).catch(() => {
       setCheckoutState((s) => ({ ...s, [planId]: "error" }));
     });
   };
@@ -402,17 +409,28 @@ export function WeeklyTalksPage() {
               const planId = String(plan.id);
               const interval = text(plan, "interval");
               const state = checkoutState[planId] ?? "idle";
+              const planCurrency = text(plan, "currency", "usd");
+              const planPrice = number(plan, "price");
+              const converted = convert(planPrice, planCurrency);
               return (
                 <Reveal className="plan" delay={90 + index * 50} key={planId}>
                   <div className="plan__head">
                     <p className="eyebrow">{text(plan, "title")}</p>
                     <p className="plan__price">
-                      <span className="plan__amount">
-                        {formatPlanPrice(number(plan, "price"), text(plan, "currency", "usd"))}
-                      </span>
+                      {converted ? (
+                        <span
+                          className="plan__amount"
+                          title={`Converted from ${formatPlanPrice(planPrice, planCurrency)} ${planCurrency.toUpperCase()}`}
+                        >
+                          ≈ {formatPlanPrice(Math.round(converted.cents / 100) * 100, converted.currency)}
+                        </span>
+                      ) : (
+                        <span className="plan__amount">{formatPlanPrice(planPrice, planCurrency)}</span>
+                      )}
                       <span className="plan__period">{interval === "year" ? "/ year" : "/ month"}</span>
                     </p>
                     <p className="plan__terms">{text(plan, "description")}</p>
+                    <CurrencyNote currency={planCurrency} charge="selected" className="plan__currency-note" />
                   </div>
 
                   <div className="plan__body">
@@ -439,7 +457,7 @@ export function WeeklyTalksPage() {
                       <button
                         type="button"
                         className="btn btn-primary plan__cta"
-                        onClick={() => handleJoin(planId)}
+                        onClick={() => handleJoin(planId, planCurrency)}
                         disabled={state === "loading"}
                       >
                         {state === "loading" ? "Redirecting…" : "Join my talks"}

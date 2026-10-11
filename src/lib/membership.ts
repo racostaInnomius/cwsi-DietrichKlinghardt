@@ -22,10 +22,24 @@ export async function fetchMembershipStatus(): Promise<MembershipStatus> {
 }
 
 /** Starts a Stripe Checkout subscription for the given membership plan, then redirects. */
-export async function startMembershipCheckout(planId: string, returnPath = "/weekly-talks"): Promise<void> {
+/**
+ * `currency`: the visitor's display currency when it differs from the plan's
+ * — the API then subscribes them in it, converted at the day's rate.
+ */
+export async function startMembershipCheckout(
+  planId: string,
+  returnPath = "/weekly-talks",
+  currency?: string,
+): Promise<void> {
   const res = await authedFetch("/api/memberships/create-checkout-session", {
     method: "POST",
-    body: JSON.stringify({ tenantId: env.TENANT_ID, siteId: env.SITE_ID, planId, returnPath }),
+    body: JSON.stringify({
+      tenantId: env.TENANT_ID,
+      siteId: env.SITE_ID,
+      planId,
+      returnPath,
+      ...(currency ? { currency } : {}),
+    }),
   });
   const json = (await res.json().catch(() => null)) as { data?: { url: string }; error?: string } | null;
   if (!res.ok || !json?.data?.url) {

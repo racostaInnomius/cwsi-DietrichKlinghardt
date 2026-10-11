@@ -7922,6 +7922,13 @@ ul.sophia-therapies-grid h3 {
   font-size: var(--fs-xs);
   color: rgba(255, 255, 255, 0.7);
 }
+/* "Converted from USD at today's rate…" under a converted plan price. */
+.plan__currency-note {
+  margin: 8px 0 0;
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.7);
+}
 .plan__benefits {
   margin: 0 0 clamp(22px, 2.6vw, 32px);
   text-align: left;
