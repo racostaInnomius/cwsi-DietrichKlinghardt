@@ -31,7 +31,7 @@ export function includedDayPassIds(events: ContentDoc[]): Set<string> {
   return ids;
 }
 
-/** Listings show the package, not each of its days as a separate event. */
+/** Home's short "upcoming" list shows the package, not each of its days too. */
 export function withoutIncludedDays(events: ContentDoc[]): ContentDoc[] {
   const included = includedDayPassIds(events);
   return included.size ? events.filter((event) => !included.has(String(event.id))) : events;
