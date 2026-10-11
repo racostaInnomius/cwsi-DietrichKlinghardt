@@ -3,7 +3,7 @@ import { Seo } from "@/components/Seo";
 import type { ContentDoc } from "@/data/demo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number, textList } from "@/lib/content";
-import { externalUrl, richTextBlocks } from "@/lib/cms";
+import { externalUrl, richTextBlocks, richTextSections } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { eventDateBlock, eventLocation, eventLongDate, eventTimeLabel } from "@/lib/format";
 import { CheckoutLink, CurrencyNote, Price } from "@/lib/currency";
@@ -54,6 +54,12 @@ export function EventDetailPage() {
   const paragraphs = richTextBlocks(event.description);
   const requirements = textList(event, "requirements");
   const whatYouWillLearn = richTextBlocks(event.whatYouWillLearn);
+  // The purchase policy (CMS "Disclosure"): its first heading, when it opens
+  // with one, is the collapsed title; the rest stays hidden until opened.
+  const disclosure = richTextSections(event.disclosure);
+  const disclosureTitle =
+    disclosure[0]?.kind === "heading" ? disclosure[0].text : "Purchase policy";
+  const disclosureBody = disclosure[0]?.kind === "heading" ? disclosure.slice(1) : disclosure;
   const tags = textList(event, "tags");
   const location = eventLocation(event);
   const date = eventLongDate(event);
@@ -245,6 +251,23 @@ export function EventDetailPage() {
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </div>
+            ) : null}
+
+            {disclosure.length ? (
+              <details className="event-copy__section event-disclosure" id="purchase-policy">
+                <summary>
+                  <h2>{disclosureTitle}</h2>
+                </summary>
+                <div className="event-disclosure__body">
+                  {disclosureBody.map((block, index) =>
+                    block.kind === "heading" ? (
+                      <h3 key={index}>{block.text}</h3>
+                    ) : (
+                      <p key={index}>{block.text}</p>
+                    ),
+                  )}
+                </div>
+              </details>
             ) : null}
 
             <div className="event-copy__footer">

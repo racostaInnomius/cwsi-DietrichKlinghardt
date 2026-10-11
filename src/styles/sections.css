@@ -1168,6 +1168,41 @@
 .event-copy__section p:last-child {
   margin-bottom: 0;
 }
+/* Purchase policy (CMS "Disclosure"): collapsed under its own title. */
+.event-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+}
+.event-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+.event-disclosure summary::after {
+  content: "+";
+  flex: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--muted);
+}
+.event-disclosure[open] summary::after {
+  content: "−";
+}
+.event-disclosure summary h2 {
+  margin-bottom: 0;
+}
+.event-disclosure__body {
+  margin-top: 18px;
+}
+.event-disclosure__body h3 {
+  margin: 1.4em 0 0.5em;
+  font-size: var(--fs-lead);
+}
+.event-disclosure__body h3:first-child {
+  margin-top: 0;
+}
 .event-copy__list {
   margin: 0;
   padding: 0;

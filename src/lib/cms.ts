@@ -131,6 +131,24 @@ export function richTextBlocks(doc: unknown): string[] {
   return root?.children?.map(lexicalText).map((value) => value.trim()).filter(Boolean) ?? [];
 }
 
+/**
+ * Rich text that keeps its headings — for long structured copy (an event's
+ * purchase policy) where flattening every block into paragraphs would lose
+ * the sub-titles. Anything that isn't a heading renders as a paragraph.
+ */
+export function richTextSections(
+  doc: unknown,
+): Array<{ kind: "heading" | "paragraph"; text: string }> {
+  if (!doc || typeof doc !== "object") return [];
+  const root = (doc as { root?: { children?: unknown[] } }).root;
+  return (root?.children ?? [])
+    .map((node) => ({
+      kind: (node as LexicalNode)?.type === "heading" ? ("heading" as const) : ("paragraph" as const),
+      text: lexicalText(node).trim(),
+    }))
+    .filter((block) => block.text);
+}
+
 export function richText(doc: unknown): string {
   return richTextBlocks(doc).join("\n\n");
 }
