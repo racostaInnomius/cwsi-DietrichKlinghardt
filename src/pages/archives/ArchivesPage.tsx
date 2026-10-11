@@ -126,6 +126,12 @@ const STEPS = [
   },
 ];
 
+function broadcastDate(iso: string): string {
+  return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" }).format(
+    new Date(iso),
+  );
+}
+
 const pieces = (n: number) => `${n} ${n === 1 ? "piece" : "pieces"}`;
 
 function scrollToId(id: string) {
@@ -350,6 +356,11 @@ export function ArchivesPage() {
                   </span>
                   <p className="archive-card__collection">{COLLECTIONS[item.collection].title}</p>
                   <h3>{item.title}</h3>
+                  {item.source === "weekly_talk" ? (
+                    // One recording per week of the same talk: the date is
+                    // what tells them apart.
+                    <p className="archive-card__date">{broadcastDate(item.addedAt)}</p>
+                  ) : null}
                   {item.description ? <p>{item.description}</p> : null}
                   <button type="button" className="btn btn-outline" onClick={() => setViewing(item)}>
                     {item.kind === "pdf" ? "Open" : "View"}

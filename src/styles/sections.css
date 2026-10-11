@@ -3411,6 +3411,11 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
+.archive-card .archive-card__date {
+  margin-top: -4px;
+  color: var(--ink-soft, #5c6670);
+  font-size: var(--fs-meta);
+}
 .archive-card .btn {
   margin-top: auto;
   align-self: stretch;
