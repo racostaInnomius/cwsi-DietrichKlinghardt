@@ -20,6 +20,13 @@ function dateOf(doc: ContentDoc | undefined): Date | null {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
+function endDateOf(doc: ContentDoc | undefined): Date | null {
+  const raw = doc?.endDateTime;
+  if (typeof raw !== "string" || !raw) return null;
+  const parsed = new Date(raw);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
 /** "06" / "Sept" — the stacked date block used in the listings. */
 export function eventDateParts(doc: ContentDoc | undefined): { day: string; month: string } {
   const date = dateOf(doc);
@@ -76,9 +83,8 @@ export function eventTimeLabel(doc: ContentDoc | undefined): string {
     .formatToParts(start)
     .find((part) => part.type === "timeZoneName")?.value;
 
-  const rawEnd = doc?.endDateTime;
-  const end = typeof rawEnd === "string" ? new Date(rawEnd) : null;
-  const range = end && !Number.isNaN(end.getTime())
+  const end = endDateOf(doc);
+  const range = end
     ? `${time.format(start)} – ${time.format(end)}`
     : time.format(start);
 
@@ -154,17 +160,29 @@ export function eventMonthDayOrdinal(doc: ContentDoc | undefined): string {
 }
 
 /**
- * The next paid/membership weekly talk — same selection the "next live
- * talk" band on /weekly-talks uses, shared here so the sitewide announcement
- * bar always names the same session. Excludes "open" (no-charge) talks,
- * which don't need the membership CTA this banner links to.
+ * The current or next paid/membership weekly talk — same selection the "next
+ * live talk" band on /weekly-talks uses, shared here so the sitewide
+ * announcement bar always names the same session. An event remains eligible
+ * from its start through its scheduled end, allowing the page to keep polling
+ * Mux and expose the "Live Now" link for the full broadcast window. Excludes
+ * "open" (no-charge) talks, which don't need the membership CTA this banner
+ * links to.
  */
 export function nextWeeklyTalk(events: ContentDoc[]): ContentDoc | undefined {
-  return splitByTime(
+  const now = Date.now();
+  const candidates = sortByStart(
     events.filter((event) => {
       const registrationType =
         typeof event.registrationType === "string" ? event.registrationType : "open";
       return event.liveMode === "mux" && registrationType !== "open";
     }),
-  ).upcoming[0];
+  );
+
+  return candidates.find((event) => {
+    const start = dateOf(event)?.getTime();
+    if (start == null || start >= now) return true;
+
+    const end = endDateOf(event)?.getTime();
+    return end != null && end > now;
+  });
 }
