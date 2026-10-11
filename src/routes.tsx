@@ -36,7 +36,7 @@ import { loadPractitioners } from "@/lib/practitioners";
 import { loadTrainingPaths } from "@/lib/trainingPaths";
 import { StorePage } from "@/pages/StorePage";
 import { CartPage } from "@/pages/CartPage";
-import { CartReturnPage } from "@/pages/CartReturnPage";
+import { ThankYouPage } from "@/pages/ThankYouPage";
 import { DirectoryPage } from "@/pages/DirectoryPage";
 import { AcademyPage } from "@/pages/AcademyPage";
 import { ArtPage } from "@/pages/ArtPage";
@@ -187,7 +187,8 @@ export const routes: RouteRecord[] = [
           },
           { path: "store", element: <StorePage /> },
           { path: "cart", element: <CartPage /> },
-          { path: "cart/return", element: <CartReturnPage /> },
+          { path: "cart/return", element: <ThankYouPage /> },
+          { path: "thank-you", element: <ThankYouPage /> },
           { path: "music", element: <MusicPage /> },
           { path: "weekly-talks", element: <WeeklyTalksPage /> },
           // Per-viewer, token-gated and time-bound — never pre-rendered with
