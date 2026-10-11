@@ -18,6 +18,10 @@ export const env = {
    */
   INDEXABLE: value("VITE_PUBLIC_INDEXABLE", "false") === "true",
   API_URL: value("VITE_PUBLIC_API_URL", "http://localhost:3500"),
+  /** Where sign-in/sign-up redirects go. Same as API_URL except in local dev
+   * behind vite's /__api proxy, where the OAuth round-trip must hit the API
+   * host itself (its state cookie can't live on the dev origin). */
+  AUTH_URL: value("VITE_PUBLIC_AUTH_URL", value("VITE_PUBLIC_API_URL", "http://localhost:3500")),
   CMS_URL: value("VITE_PUBLIC_CMS_URL", "http://localhost:3000"),
   TENANT_ID: value("VITE_PUBLIC_TENANT_ID"),
   SITE_ID: value("VITE_PUBLIC_SITE_ID"),

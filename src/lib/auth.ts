@@ -82,13 +82,13 @@ export async function authedFetch(path: string, options: RequestInit = {}): Prom
 }
 
 export function buildSignInUrl(returnTo: string): string {
-  const url = new URL("/auth/login", env.API_URL);
+  const url = new URL("/auth/login", env.AUTH_URL);
   url.searchParams.set("return", returnTo);
   return url.toString();
 }
 
 export function buildSignUpUrl(returnTo: string): string {
-  const url = new URL("/auth/register", env.API_URL);
+  const url = new URL("/auth/register", env.AUTH_URL);
   url.searchParams.set("return", returnTo);
   return url.toString();
 }

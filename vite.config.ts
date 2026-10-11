@@ -22,6 +22,7 @@ function copyHtaccess(): Plugin {
 export default defineConfig(({ mode }) => {
   const buildEnv = loadEnv(mode, root, "");
   const cmsTarget = buildEnv.VITE_PUBLIC_CMS_URL || "http://localhost:3000";
+  const apiTarget = buildEnv.VITE_DEV_API_PROXY_TARGET || "https://api.beytrax.com";
 
   return {
     plugins: [react(), copyHtaccess()],
@@ -43,6 +44,15 @@ export default defineConfig(({ mode }) => {
           target: cmsTarget,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/__cms/, ""),
+        },
+        // Same idea for the API: its CORS allow-list has no localhost, so a
+        // local dev build can opt in (VITE_PUBLIC_API_URL=<dev origin>/__api in
+        // an uncommitted .env.development.local) to reach it same-origin.
+        // Sign-in redirects keep going to the API directly (VITE_PUBLIC_AUTH_URL).
+        "/__api": {
+          target: apiTarget,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/__api/, ""),
         },
       },
     },
