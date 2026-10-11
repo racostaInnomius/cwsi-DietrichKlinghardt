@@ -1168,6 +1168,84 @@
 .event-copy__section p:last-child {
   margin-bottom: 0;
 }
+/* Multi-day course sold per day (CMS "Day passes"): one card per day. */
+.day-passes__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.day-pass {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.4vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-card);
+}
+.event-copy__section .day-pass__label {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-sm);
+  line-height: 1.15;
+  color: var(--brand);
+}
+.event-copy__section .day-pass h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--brand);
+}
+.event-copy__section .day-pass__time {
+  margin: 0 0 14px;
+  font-size: var(--fs-sm);
+}
+.event-copy__section .day-pass__topics {
+  margin: 0 0 18px;
+}
+.day-pass__buy {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  border-top: 1px solid var(--line);
+}
+.event-copy__section .day-pass__price {
+  margin: 0;
+  flex-basis: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--brand);
+}
+.day-pass__price span:last-child {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.day-pass__price .price-approx {
+  font: inherit;
+  color: inherit;
+}
+.event-copy__section .day-pass__note {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: var(--fs-xs);
+}
+.day-pass__details {
+  font-size: var(--fs-meta);
+}
+.event-copy__package {
+  margin: 24px 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
 /* Purchase policy (CMS "Disclosure"): collapsed under its own title. */
 .event-disclosure summary {
   display: flex;

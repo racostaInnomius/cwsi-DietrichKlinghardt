@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { splitByTime } from "@/lib/format";
+import { withoutIncludedDays } from "@/lib/dayPasses";
 import { featuredProducts, usedCategories, useStoreProducts } from "@/lib/store";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -97,7 +98,7 @@ export function HomePage() {
       });
   })();
 
-  const { upcoming, past } = splitByTime(useCollection("events"));
+  const { upcoming, past } = splitByTime(withoutIncludedDays(useCollection("events")));
   const [eventsTab, setEventsTab] = useState<"upcoming" | "past">("upcoming");
   const featured = (eventsTab === "upcoming" ? upcoming : past).slice(0, 3);
 

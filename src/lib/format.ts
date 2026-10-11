@@ -8,19 +8,19 @@ import type { ContentDoc } from "@/data/demo";
  * to whatever timezone the browser happens to be in.
  */
 
-function tzOf(doc: ContentDoc | undefined): string | undefined {
+export function tzOf(doc: ContentDoc | undefined): string | undefined {
   const tz = doc?.timezone;
   return typeof tz === "string" && tz ? tz : undefined;
 }
 
-function dateOf(doc: ContentDoc | undefined): Date | null {
+export function dateOf(doc: ContentDoc | undefined): Date | null {
   const raw = doc?.startDateTime ?? doc?.date;
   if (typeof raw !== "string" || !raw) return null;
   const parsed = new Date(raw);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-function endDateOf(doc: ContentDoc | undefined): Date | null {
+export function endDateOf(doc: ContentDoc | undefined): Date | null {
   const raw = doc?.endDateTime;
   if (typeof raw !== "string" || !raw) return null;
   const parsed = new Date(raw);
@@ -63,6 +63,28 @@ export function eventLongDate(doc: ContentDoc | undefined): string {
     year: "numeric",
     timeZone: tzOf(doc),
   }).format(date);
+}
+
+/**
+ * eventLongDate, or a range when the event ends on a later day:
+ * "Monday, November 23 – Tuesday, November 24, 2026".
+ */
+export function eventDateRange(doc: ContentDoc | undefined): string {
+  const start = dateOf(doc);
+  const end = endDateOf(doc);
+  if (!start) return "";
+  const format = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: tzOf(doc),
+  });
+  const day = (date: Date) =>
+    new Intl.DateTimeFormat("en-CA", { timeZone: tzOf(doc) }).format(date);
+  return end && end > start && day(end) !== day(start)
+    ? format.formatRange(start, end)
+    : format.format(start);
 }
 
 /** "9:00 AM – 12:00 PM PDT" in the event's declared timezone. */

@@ -17,7 +17,7 @@ function cmsBaseUrl(): string {
   return import.meta.env.DEV && typeof window !== "undefined" ? "/__cms" : env.CMS_URL;
 }
 
-function relationshipId(value: unknown): string | undefined {
+export function relationshipId(value: unknown): string | undefined {
   if (typeof value === "string" || typeof value === "number") return String(value);
   if (!value || typeof value !== "object") return undefined;
   const id = (value as { id?: unknown }).id;
@@ -125,10 +125,22 @@ function lexicalText(node: unknown): string {
   return item.children?.map(lexicalText).join("") ?? "";
 }
 
+/** A bulleted/numbered list is one block per item, not one run-on string. */
+function blockNodes(node: unknown): unknown[] {
+  const item = node as LexicalNode | null;
+  return item?.type === "list" ? (item.children ?? []) : [node];
+}
+
 export function richTextBlocks(doc: unknown): string[] {
   if (!doc || typeof doc !== "object") return [];
   const root = (doc as { root?: { children?: unknown[] } }).root;
-  return root?.children?.map(lexicalText).map((value) => value.trim()).filter(Boolean) ?? [];
+  return (
+    root?.children
+      ?.flatMap(blockNodes)
+      .map(lexicalText)
+      .map((value) => value.trim())
+      .filter(Boolean) ?? []
+  );
 }
 
 /**

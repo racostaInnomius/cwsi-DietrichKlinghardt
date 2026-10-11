@@ -3,6 +3,7 @@ import { Seo } from "@/components/Seo";
 import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { splitByTime } from "@/lib/format";
+import { withoutIncludedDays } from "@/lib/dayPasses";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -23,7 +24,7 @@ export function EventsPage() {
     ],
   });
 
-  const { upcoming, past } = splitByTime(useCollection("events"));
+  const { upcoming, past } = splitByTime(withoutIncludedDays(useCollection("events")));
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const rows = tab === "upcoming" ? upcoming : past;
 

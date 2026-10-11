@@ -5,7 +5,8 @@ import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number, textList } from "@/lib/content";
 import { externalUrl, richTextBlocks, richTextSections } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
-import { eventDateBlock, eventLocation, eventLongDate, eventTimeLabel } from "@/lib/format";
+import { eventDateBlock, eventDateRange, eventLocation, eventTimeLabel, splitByTime } from "@/lib/format";
+import { dayPassLabel, dayPassesOf, packagesIncluding } from "@/lib/dayPasses";
 import { CheckoutLink, CurrencyNote, Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -26,7 +27,8 @@ import { NewsletterSection } from "@/components/sections/NewsletterSection";
  */
 export function EventDetailPage() {
   const { slug } = useParams();
-  const event = useCollection("events").find((row) => row.slug === slug);
+  const events = useCollection("events");
+  const event = events.find((row) => row.slug === slug);
 
   if (!event) {
     return (
@@ -62,7 +64,7 @@ export function EventDetailPage() {
   const disclosureBody = disclosure[0]?.kind === "heading" ? disclosure.slice(1) : disclosure;
   const tags = textList(event, "tags");
   const location = eventLocation(event);
-  const date = eventLongDate(event);
+  const date = eventDateRange(event);
   const time = eventTimeLabel(event);
   const { day, month, year } = eventDateBlock(event);
   const category = text(event, "category");
@@ -76,7 +78,16 @@ export function EventDetailPage() {
   const registrationUrl = registrationType === "paid" ? checkoutUrl : learnMoreUrl;
   const soldOut = event.status === "sold_out" || event.soldOut === true;
   const mapUrl = text(event, "mapUrl");
-  const ctaLabel = registrationType === "paid" ? "Book now" : "Register / learn more";
+  // A multi-day course also sold per day (CMS "Day passes"): its days show as
+  // cards with their own Buy button; a day's page links back to its course.
+  const dayPasses = dayPassesOf(event, events);
+  const packages = packagesIncluding(event, events);
+  const ctaLabel =
+    registrationType !== "paid"
+      ? "Register / learn more"
+      : dayPasses.length
+        ? "Book the full course"
+        : "Book now";
   const noteText = text(event, "soldOutMessage", "This date is fully booked.");
 
   const eyebrow = [category, month && year ? `${month} ${year}` : ""]
@@ -253,6 +264,28 @@ export function EventDetailPage() {
               </div>
             ) : null}
 
+            {dayPasses.length ? (
+              <div className="event-copy__section day-passes">
+                <h2>Day passes</h2>
+                <div className="day-passes__grid">
+                  {dayPasses.map((day) => (
+                    <DayPassCard key={String(day.id)} pkg={event} day={day} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {packages.length ? (
+              <p className="event-copy__package">
+                {packages.map((pkg, index) => (
+                  <span key={String(pkg.id)}>
+                    {index ? " · " : "Also part of "}
+                    <Link to={`/events/${text(pkg, "slug")}`}>{text(pkg, "title")}</Link>
+                  </span>
+                ))}
+              </p>
+            ) : null}
+
             {disclosure.length ? (
               <details className="event-copy__section event-disclosure" id="purchase-policy">
                 <summary>
@@ -295,6 +328,65 @@ export function EventDetailPage() {
 
       <NewsletterSection />
     </>
+  );
+}
+
+/**
+ * One day of a multi-day course, sold on its own: "Day 1 — Nov 23", its
+ * subtitle (the day's short description), what it covers, time, price and its
+ * own Buy button. A sold-out day says so; a day that already happened can't
+ * be bought.
+ */
+function DayPassCard({ pkg, day }: { pkg: ContentDoc; day: ContentDoc }) {
+  const label = dayPassLabel(pkg, day);
+  const subtitle = text(day, "shortDescription");
+  const topics = richTextBlocks(day.whatYouWillLearn);
+  const time = eventTimeLabel(day);
+  const price = typeof day.price === "number" ? day.price : undefined;
+  const currency = text(day, "currency", "usd");
+  const paid = text(day, "registrationType", "open") === "paid";
+  const href = paid ? checkoutHref(day.checkoutUrl) : externalUrl(day.learnMoreUrl);
+  const soldOut = day.status === "sold_out" || day.soldOut === true;
+  const past = splitByTime([day]).past.length > 0;
+  const seats = number(day, "capacity");
+  const dayWord = label.startsWith("Day ") ? label.split(" — ")[0] : "";
+
+  return (
+    <article className="day-pass">
+      <p className="day-pass__label">{label}</p>
+      <h3>{subtitle || text(day, "title")}</h3>
+      {time ? <p className="day-pass__time">{time}</p> : null}
+      {topics.length ? (
+        <ul className="event-copy__list day-pass__topics">
+          {topics.map((topic) => (
+            <li key={topic}>{topic}</li>
+          ))}
+        </ul>
+      ) : null}
+      <div className="day-pass__buy">
+        {price != null ? (
+          <p className="day-pass__price">
+            <Price cents={price} currency={currency} />
+            <span>per person</span>
+          </p>
+        ) : null}
+        {past ? (
+          <p className="day-pass__note">This day has already taken place.</p>
+        ) : soldOut ? (
+          <p className="day-pass__note">{text(day, "soldOutMessage", "This date is fully booked.")}</p>
+        ) : href ? (
+          <EventCta className="btn btn-primary day-pass__cta" paid={paid} href={href} event={day}>
+            {paid ? (dayWord ? `Book ${dayWord}` : "Book now") : "Register / learn more"}
+          </EventCta>
+        ) : null}
+        {!past && !soldOut && seats > 0 ? (
+          <p className="day-pass__note">{seats} seats remaining</p>
+        ) : null}
+        <Link className="arrow-link day-pass__details" to={`/events/${text(day, "slug")}`}>
+          Day details <span aria-hidden="true">→</span>
+        </Link>
+      </div>
+    </article>
   );
 }
 
