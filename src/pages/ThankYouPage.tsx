@@ -62,7 +62,10 @@ function kindOf(pathname: string, kind: string | null): Kind {
 export function ThankYouPage() {
   const [params] = useSearchParams();
   const { pathname } = useLocation();
-  const sessionId = params.get("session_id");
+  // `checkout` is the Stripe session id; `session_id` is its old name (the
+  // host's WAF answers 403 to that parameter without a Referer, so the API
+  // no longer sends it).
+  const sessionId = params.get("checkout") ?? params.get("session_id");
   const kind = kindOf(pathname, params.get("kind"));
   const copy = COPY[kind];
   const { clear, count } = useCart();
