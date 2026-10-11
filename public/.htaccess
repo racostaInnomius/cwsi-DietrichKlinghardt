@@ -7,6 +7,12 @@ RewriteEngine On
 # `courses/art.html`.
 DirectorySlash Off
 
+# Editable QR codes (CMS "QR codes"): <this domain>/q/<code> is answered by
+# Beytrax, which redirects to the code's current destination. Lets a printed
+# QR carry the client's own domain (Sites → "QR code domain") instead of
+# Beytrax's. A 302 so the destination can change without browsers caching it.
+RewriteRule ^q/([a-z0-9-]{3,40})/?$ https://api.beytrax.com/q/$1 [R=302,L]
+
 # Clean URLs — and the reason this rule has to come first.
 #
 # The SSG emits a page and its children as siblings: `courses.html` *and* a
