@@ -134,10 +134,21 @@ export function WeeklyTalksPage() {
     Boolean(nextLive && nextLiveIsGated) && authStatus !== "loading",
   );
   // A visitor without access still gets `error.mode` from the gate (see
-  // publicMuxLiveHandler) — without it the badge could only ever appear for
-  // an already-entitled member, defeating its whole point as a public
-  // "it's starting" signal.
-  const nextLiveBadgeOn = nextLiveSession?.mode === "live" || nextLiveError?.mode === "live";
+  // publicMuxLiveHandler), so this status is useful before they enter the
+  // gated room too. "Waiting" only becomes visible once the scheduled start
+  // has passed: before then this remains an ordinary upcoming event.
+  const nextLiveMode = nextLiveSession?.mode ?? nextLiveError?.mode;
+  const nextLiveStartRaw = text(nextLive, "startDateTime");
+  const nextLiveStart = nextLiveStartRaw ? new Date(nextLiveStartRaw).getTime() : Number.NaN;
+  const nextLiveHasStarted = Number.isFinite(nextLiveStart) && nextLiveStart <= Date.now();
+  const nextLiveStatus =
+    nextLiveMode === "live"
+      ? { label: "Live Now", tone: "live" as const }
+      : nextLiveMode === "interrupted"
+        ? { label: "Reconnecting…", tone: "interrupted" as const }
+        : nextLiveMode === "waiting" && nextLiveHasStarted
+          ? { label: "Starting shortly", tone: "waiting" as const }
+          : null;
 
   const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
 
@@ -305,14 +316,27 @@ export function WeeklyTalksPage() {
             <span className="next-live__chip">
               <span className="next-live__chip-dot" aria-hidden="true" /> Next live talk
             </span>
-            <p className="next-live__when">
+            <p className="next-live__when" aria-live="polite">
               {eventLongDate(nextLive)}
               {eventTimeLabel(nextLive) ? (
                 <span className="next-live__time"> · {eventTimeLabel(nextLive)}</span>
               ) : null}
-              {nextLiveBadgeOn ? (
-                <Link className="live-now-badge" to={`/weekly-talks/live/${nextLive.id}`}>
-                  <span className="live-now-badge__dot" aria-hidden="true" /> Live Now
+              {nextLiveStatus ? (
+                <Link
+                  className="live-now-badge"
+                  to={`/weekly-talks/live/${nextLive.id}`}
+                  style={
+                    nextLiveStatus.tone === "live"
+                      ? undefined
+                      : {
+                          backgroundColor:
+                            nextLiveStatus.tone === "waiting" ? "#b7791f" : "#8a6d3b",
+                          animation: "none",
+                        }
+                  }
+                >
+                  <span className="live-now-badge__dot" aria-hidden="true" />
+                  {nextLiveStatus.label}
                 </Link>
               ) : null}
             </p>
