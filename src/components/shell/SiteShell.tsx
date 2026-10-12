@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
@@ -83,28 +83,17 @@ export function SiteShell({
   // The CMS copy's trailing date ("next session September 1st.") goes stale
   // the moment a new talk is scheduled — swap in the real next weekly talk's
   // date (client, 2026-10-04) while leaving the rest of the CMS wording
-  // alone. Events without a next talk, or CMS copy that doesn't end in a
-  // date, keep the raw CMS text untouched.
+  // alone. With no talk scheduled the CMS date is a past one, so it reads
+  // "coming soon" instead (client, 2026-10-12: "si no hay una fecha para un
+  // siguiente weekly talk muestra algún mensaje breve, amistoso"). CMS copy
+  // that doesn't end in a date keeps the raw CMS text untouched.
   const nextTalkDate = eventMonthDayOrdinal(useNextWeeklyTalk());
-  const bannerText = nextTalkDate
-    ? bannerTextRaw.replace(/[A-Z][a-z]+ \d{1,2}(st|nd|rd|th)\.?$/, `${nextTalkDate}.`)
-    : bannerTextRaw;
+  const bannerText = bannerTextRaw.replace(
+    /[A-Z][a-z]+ \d{1,2}(st|nd|rd|th)\.?$/,
+    nextTalkDate ? `${nextTalkDate}.` : "coming soon.",
+  );
   const bannerCta = text(banner, "ctaLabel", "Join now");
   const bannerHref = text(banner, "ctaUrl", "/weekly-talks");
-
-  // Shrinks the announcement bar once the page has scrolled past the very
-  // top, back to full size at the top again (client, 2026-09-09: "cuando
-  // comience a seguir al menu... un 10% mas delgado... cuando regrese a
-  // top que regrese a su tamaño original"). A small threshold rather than
-  // > 0 so it doesn't flicker on the sub-pixel scroll jitter some
-  // trackpads report at rest.
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Route changes scroll to top, except when the URL carries an anchor — the
   // nav links into #chronic-illness, #naturopathic-care, #newsletter and
@@ -137,10 +126,7 @@ export function SiteShell({
       </a>
 
       <div className="site-shell__sticky-top">
-        <aside
-          className={`announcement${scrolled ? " is-scrolled" : ""}`}
-          aria-label="Announcement"
-        >
+        <aside className="announcement" aria-label="Announcement">
           <p>
             {bannerText}{" "}
             <a href={bannerHref}>{bannerCta}</a>
