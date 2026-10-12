@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { Reveal } from "@/components/motion/Reveal";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { useAuth } from "@/features/auth/useAuth";
 import {
   ARCHIVE_COLLECTIONS,
@@ -21,13 +20,14 @@ import { fetchMembershipStatus, type MembershipStatus } from "@/lib/membership";
  * hero, six collections, how it works, waiting list), on the page's own
  * gradient like the design (no hero card).
  *
- * Every visitor sees the whole page. The six collections come from the CMS
- * (ArchiveItems' `collection`): /archives/summary gives every visitor each
- * one's count, so a collection reads "Coming soon" until it holds pieces.
- * The content itself stays member-gated exactly as before (Phase 5): a member
- * gets the list right under the collections — a collection card filters it —
- * and anyone else gets the existing "Members only" card in that same spot.
- * The waiting list is the site's newsletter signup with the design's copy.
+ * Members only (client, 2026-10-12: "se debe mostrar cuando esté el usuario
+ * logeado y que tenga suscripción a la weekly talks"): anyone without an
+ * active membership gets the "Members only" invitation card alone — sign in
+ * or join — and none of the page. A member gets the whole page: the six
+ * collections come from the CMS (ArchiveItems' `collection`), each with its
+ * count from /archives/summary ("Coming soon" until it holds pieces), and the
+ * list right under them — a collection card filters it. The design's waiting
+ * list was for visitors, so members don't get it.
  *
  * Access is still two calls (see the API): /list never returns a working URL;
  * opening an item asks /access for a short-lived signed one.
@@ -186,25 +186,45 @@ export function ArchivesPage() {
     };
   }, [authStatus]);
 
-  const isMember = Boolean(items);
   const visible = useMemo(
     () => (items && filter ? items.filter((item) => item.collection === filter) : items),
     [items, filter],
   );
 
   function openCollection(collection: ArchiveCollection) {
-    if (isMember) setFilter(collection);
+    setFilter(collection);
     scrollToId("archive-content");
+  }
+
+  const seo = (
+    <Seo
+      title={"The Klinghardt Living Archive — Dr. Dietrich Klinghardt™"}
+      description="Four decades of Dr. Klinghardt's notes, recordings, diagrams, correspondence and seminar footage — restored and released one piece at a time."
+      path="/archives"
+      noindex
+    />
+  );
+
+  if (!items) {
+    return (
+      <>
+        {seo}
+        <section className="section wrap archive-gate-page" aria-live="polite">
+          {error?.code === "membership_required" ? (
+            <MembershipGate error={error} membership={membership} onSignIn={() => signIn("/archives")} />
+          ) : error ? (
+            <p className="empty-note">{error.message}</p>
+          ) : (
+            <p className="empty-note">Loading the Archives…</p>
+          )}
+        </section>
+      </>
+    );
   }
 
   return (
     <>
-      <Seo
-        title={"The Klinghardt Living Archive — Dr. Dietrich Klinghardt™"}
-        description="Four decades of Dr. Klinghardt's notes, recordings, diagrams, correspondence and seminar footage — restored and released one piece at a time."
-        path="/archives"
-        noindex
-      />
+      {seo}
 
       <section className="archive-hero wrap">
         <Reveal>
@@ -222,9 +242,9 @@ export function ArchivesPage() {
           <button
             type="button"
             className="btn btn-primary archive-hero__cta"
-            onClick={() => scrollToId(isMember ? "archive-content" : "waitlist")}
+            onClick={() => scrollToId("archive-content")}
           >
-            {isMember ? "Explore the Archive" : "Be first into the Archive"} <span aria-hidden="true">→</span>
+            Explore the Archive <span aria-hidden="true">→</span>
           </button>
         </Reveal>
       </section>
@@ -259,7 +279,7 @@ export function ArchivesPage() {
                     className="archive-collection__badge archive-collection__badge--open"
                     onClick={() => openCollection(key)}
                   >
-                    {isMember ? `Explore · ${pieces(count)}` : pieces(count)}
+                    {`Explore · ${pieces(count)}`}
                   </button>
                 ) : (
                   <span className="archive-collection__badge">Coming soon</span>
@@ -271,65 +291,12 @@ export function ArchivesPage() {
       </section>
 
       <section id="archive-content" className="archive-content wrap" aria-live="polite">
-        {authStatus === "loading" || (!items && !error) ? (
-          <p className="empty-note">Loading the Archives…</p>
-        ) : error?.code === "membership_required" ? (
-          <div className="archive-membership-gate">
-            <div className="course-path-card archive-membership-card" role="status">
-              <div className="course-path-card__header">
-                <span className="course-path-card__badge">Members only</span>
-                <h2>The Archives are part of the membership.</h2>
-              </div>
-              <div className="course-path-card__body">
-                <p>
-                  {error.requiresLogin
-                    ? "Sign in to your account — your membership unlocks the Archives."
-                    : membership?.status === "incomplete"
-                      ? "Your membership checkout was not completed. Choose a plan to finish joining."
-                      : membership?.status === "canceled" || membership?.status === "incomplete_expired"
-                        ? "Your previous membership has ended. Rejoin to unlock the Archives again."
-                        : membership?.status === "unpaid"
-                          ? "Your membership needs payment before the Archives can be unlocked."
-                          : "You're signed in, but the Archives need an active membership."}
-                </p>
-              </div>
-              <div className="course-path-card__footer">
-                {error.requiresLogin ? (
-                  <button
-                    className="course-path-card__cta course-path-card__cta--primary"
-                    type="button"
-                    onClick={() => signIn("/archives")}
-                  >
-                    Sign in <span aria-hidden="true">↗</span>
-                  </button>
-                ) : (
-                  <>
-                    <Link
-                      className="course-path-card__cta course-path-card__cta--primary"
-                      to="/weekly-talks"
-                    >
-                      {membership?.status ? "Rejoin membership" : "Become a member"}{" "}
-                      <span aria-hidden="true">↗</span>
-                    </Link>
-                    <Link
-                      className="course-path-card__cta course-path-card__cta--secondary"
-                      to="/account"
-                    >
-                      View account <span aria-hidden="true">↗</span>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        ) : error ? (
-          <p className="empty-note">{error.message}</p>
-        ) : items && items.length === 0 ? (
+        {items.length === 0 ? (
           <p className="empty-note">
             The first pieces are being restored. Check back soon, or reach out via{" "}
             <a href="/contact">Contact</a> for anything you&apos;re looking for.
           </p>
-        ) : items ? (
+        ) : (
           <>
             <div className="archive-filter" role="group" aria-label="Filter by collection">
               <button type="button" aria-pressed={filter === null} onClick={() => setFilter(null)}>
@@ -369,7 +336,7 @@ export function ArchivesPage() {
               ))}
             </ul>
           </>
-        ) : null}
+        )}
       </section>
 
       <section className="archive-how wrap" aria-labelledby="archive-how-title">
@@ -389,16 +356,73 @@ export function ArchivesPage() {
         </Reveal>
       </section>
 
-      <NewsletterSection
-        id="waitlist"
-        className="archive-waitlist"
-        eyebrow="Join the waiting list"
-        title="Be First into the Archive"
-        lead="Subscribe to be notified when the Archive opens — and receive early access to the first item before it’s available to the public."
-      />
-
       {viewing ? <ArchiveViewer item={viewing} onClose={() => setViewing(null)} /> : null}
     </>
+  );
+}
+
+/**
+ * The invitation a non-member gets instead of the page. Signed-out visitors
+ * can sign in or go straight to the plans; signed-in ones are told why
+ * their account doesn't open it yet.
+ */
+function MembershipGate({
+  error,
+  membership,
+  onSignIn,
+}: {
+  error: ArchivesError;
+  membership: MembershipStatus | null;
+  onSignIn: () => void;
+}) {
+  return (
+    <div className="archive-membership-gate">
+      <div className="course-path-card archive-membership-card" role="status">
+        <div className="course-path-card__header">
+          <span className="course-path-card__badge">Members only</span>
+          <h2>The Archives are part of the Weekly Talks membership.</h2>
+        </div>
+        <div className="course-path-card__body">
+          <p>
+            {error.requiresLogin
+              ? "Sign in to your account — your membership unlocks the Archives."
+              : membership?.status === "incomplete"
+                ? "Your membership checkout was not completed. Choose a plan to finish joining."
+                : membership?.status === "canceled" || membership?.status === "incomplete_expired"
+                  ? "Your previous membership has ended. Rejoin to unlock the Archives again."
+                  : membership?.status === "unpaid"
+                    ? "Your membership needs payment before the Archives can be unlocked."
+                    : "You're signed in, but the Archives need an active membership."}
+          </p>
+        </div>
+        <div className="course-path-card__footer">
+          {error.requiresLogin ? (
+            <>
+              <button
+                className="course-path-card__cta course-path-card__cta--primary"
+                type="button"
+                onClick={onSignIn}
+              >
+                Sign in <span aria-hidden="true">↗</span>
+              </button>
+              <Link className="course-path-card__cta course-path-card__cta--secondary" to="/weekly-talks">
+                Become a member <span aria-hidden="true">↗</span>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link className="course-path-card__cta course-path-card__cta--primary" to="/weekly-talks">
+                {membership?.status ? "Rejoin membership" : "Become a member"}{" "}
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <Link className="course-path-card__cta course-path-card__cta--secondary" to="/account">
+                View account <span aria-hidden="true">↗</span>
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

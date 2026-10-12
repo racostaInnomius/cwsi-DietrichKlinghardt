@@ -3312,6 +3312,14 @@
   border: 0;
   cursor: pointer;
 }
+/* Members-only Archives (client, 2026-10-12): a non-member gets this card
+   alone, so the section centres it in a comfortable band instead of
+   leaving it pinned under the header. */
+.archive-gate-page {
+  min-height: 52vh;
+  display: grid;
+  align-content: center;
+}
 
 /* ── The Klinghardt Living Archive (client design, 2026-10-10) ───────────
    Measured on the 1440px design: everything sits on the page's own gradient
