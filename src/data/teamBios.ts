@@ -43,33 +43,6 @@ export const teamBios: Record<string, TeamBio> = {
       "Dr. Ko brings strong diagnostic skills and individualized treatment planning to every case, with a genuine dedication to improving the quality of life for those living with chronic health conditions — bridging conventional and naturopathic approaches while maintaining an ongoing commitment to professional development and patient education.",
     ],
   },
-  // Client (2026-09-26): Dr. Summer Beattie's board-members row was
-  // repurposed for Michaela Jezzard — same row/order, new person, so this
-  // key is renamed rather than left orphaned (SophiaTeamPage's `hasBio`
-  // check only looks at this file's keys, not the CMS bio field, to decide
-  // whether a team card's "Learn more" button links anywhere).
-  "michaela-jezzard": {
-    paragraphs: [
-      "Michaela is an award-winning Registered Nutritional Therapist, having completed further training with the IFM and British Society for Ecological Medicine, and has specialist training in integrative cancer. She has studied extensively with Daniela Deiosso, keeping up to date with the latest advances and A.R.T. techniques.",
-      "She specialises in finding the missing pieces to unravel complex cases, identifying the underlying root causes and imbalances and bringing together various modalities to bring back balance and support the body's innate ability to heal.",
-      "Michaela leads the Klinghardt Institute teaching team.",
-    ],
-  },
-  // Client (2026-09-27): added via the CMS API, sourced from
-  // https://klinghardtinstitute.com/our-team/ ("de ahi toma su info").
-  "gilian-crowther": {
-    paragraphs: [
-      "Gilian is a Naturopath and registered Nutritional Therapist with a clinic in London. She gained qualifications in complementary therapy in Germany for many years, studying the mitochondria in particular, before taking up further training in the UK.",
-      "She is much sought after for her knowledge of mitochondrial function. Gilian is Scientific Advisor to the Klinghardt Institute, Director of Research for the Academy of Nutritional Medicine (www.aonm.org), as well as being a core member of the BSEM (British Society for Ecological Medicine).",
-    ],
-  },
-  // Client (2026-09-27): added via the CMS API, bio text supplied directly.
-  "daniela-deiosso": {
-    paragraphs: [
-      "Founder of the Klinghardt Institute, with a Masters degree in Neuroscience and specialising in Anthroposophic Medicine and Education, with 14 years of clinic experience focusing on autism and brain research.",
-      "Klinghardt Institute is the official training body for teaching the Autonomic Response Testing® (A.R.T.) technique worldwide. Daniela has been developing A.R.T. alongside Dr Klinghardt, contributing to the validity and effectiveness of this unique diagnostic and healing method and opening up their teachings to physicians, students, practitioners and patients worldwide.",
-    ],
-  },
   "kim-dines": {
     paragraphs: [
       "Kim Dines is an integrative manual therapist whose work bridges advanced physical rehabilitation with mind–body therapeutics, cranial and visceral approaches, and autonomic nervous system regulation.",
@@ -96,13 +69,6 @@ export const teamBios: Record<string, TeamBio> = {
       "Dominique Hilliard is an administrative professional with over ten years of experience supporting executive leadership and developing organizational systems, with a background spanning healthcare and the philanthropic sector.",
       "Throughout her career she has strengthened organizational effectiveness by managing grant operations, directing staff onboarding and training, and establishing communication workflows — balancing strategic planning with the operational details that keep an organization stable.",
       "A Pacific Northwest resident, Dominique brings a grounded presence to her work and personal life, with interests including cooking for friends and family, music curation, and outdoor time with her dog, Ruka. Her commitment to equity and holistic wellness shapes her daily contributions at Sophia Health Institute, where thoughtful systems and human connection go hand in hand.",
-    ],
-  },
-  "andreanna-rainville": {
-    paragraphs: [
-      "Andreanna (Andi) Rainville is a registered nurse and nutritional counselor with over 20 years of experience in integrative and functional medicine, specializing in injection therapies, genetic and methylation optimization, detoxification, and complex chronic illness management.",
-      "She worked extensively with Dr. Dietrich Klinghardt, serving as his lead clinical nurse and senior instructor at the Klinghardt Academy for more than two decades. Her clinical work incorporates regenerative medicine, ozone, light, and laser therapies alongside nature-based healing approaches influenced by her upbringing in Kauai.",
-      "At Sophia Health Institute, she supports patients across all life stages with a dynamic, forward-thinking approach to integrative care, emphasizing education, empowerment, and comprehensive healing.",
     ],
   },
 };
