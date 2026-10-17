@@ -194,33 +194,27 @@ function scheduledEnd(doc: ContentDoc | undefined): number | null {
   return start == null ? null : start + DEFAULT_TALK_LENGTH_MS;
 }
 
-/** Paid/membership talks streamed on Mux, soonest first. */
-function gatedWeeklyTalks(events: ContentDoc[]): ContentDoc[] {
-  return sortByStart(
-    events.filter((event) => {
-      const registrationType =
-        typeof event.registrationType === "string" ? event.registrationType : "open";
-      return event.liveMode === "mux" && registrationType !== "open";
-    }),
-  );
+/** Talks streamed on Mux, free or members-only, soonest first. */
+function streamedWeeklyTalks(events: ContentDoc[]): ContentDoc[] {
+  return sortByStart(events.filter((event) => event.liveMode === "mux"));
 }
 
 /**
- * The current or next paid/membership weekly talk — same selection the "next
- * live talk" band on /weekly-talks uses, shared here so the sitewide
+ * The current or next weekly talk, free or members-only (client, 2026-10-16:
+ * "que el bloque muestre el siguiente sea Gratis o No") — same selection the
+ * "next live talk" band on /weekly-talks uses, shared here so the sitewide
  * announcement bar always names the same session. A talk stays current from
  * its start through its scheduled end (a talk without an end time is assumed
  * to last DEFAULT_TALK_LENGTH_MS) — even when the stream finished early —
  * and past that end only while it is still on air (`stillLiveId`, see
- * useNextWeeklyTalk). Excludes "open" (no-charge) talks, which don't need the
- * membership CTA this banner links to.
+ * useNextWeeklyTalk).
  */
 export function nextWeeklyTalk(
   events: ContentDoc[],
   now = Date.now(),
   stillLiveId?: string,
 ): ContentDoc | undefined {
-  return gatedWeeklyTalks(events).find((event) => {
+  return streamedWeeklyTalks(events).find((event) => {
     if (stillLiveId && String(event.id) === stillLiveId) return true;
     const start = dateOf(event)?.getTime();
     if (start == null || start >= now) return true;
@@ -234,7 +228,7 @@ export function nextWeeklyTalk(
  * still be running over, so its live state is worth asking about.
  */
 export function overrunCandidate(events: ContentDoc[], now = Date.now()): ContentDoc | undefined {
-  return gatedWeeklyTalks(events)
+  return streamedWeeklyTalks(events)
     .filter((event) => {
       const end = scheduledEnd(event);
       return end != null && end <= now && end + MAX_OVERRUN_MS > now;

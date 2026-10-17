@@ -97,11 +97,8 @@ export function WeeklyTalksPage() {
 
   // The next live session, taken from the events the CMS already publishes.
   // `liveMode` is the CMS select with values "none" | "mux" — only "mux"
-  // means this event actually streams. Excludes "open" (no-charge) talks:
-  // those get their own standing slot in the hero below, so this band is
-  // only ever the next paid/membership talk — otherwise a free talk that
-  // happens to come first chronologically would hide the one that actually
-  // needs the "Live Now" badge and access gate.
+  // means this event actually streams. Free or members-only, whichever comes
+  // first (client, 2026-10-16); the chip says which kind it is.
   const nextLive = useNextWeeklyTalk();
   const addToCalendar = calendarHref(nextLive, {
     url: `${env.SITE_URL}/weekly-talks`,
@@ -126,19 +123,23 @@ export function WeeklyTalksPage() {
   );
   const freeTalkIsLive = freeSession?.mode === "live" && Boolean(freeSession.playbackId && freeSession.tokens);
 
-  // The next paid/members-only talk's own live state, polled the same way,
-  // so the "Live Now" badge appears the instant the broadcast actually
-  // starts rather than just whenever the scheduled time has passed.
-  const nextLiveIsGated = nextLive && text(nextLive, "registrationType", "open") !== "open";
+  // The next talk's own live state, polled the same way, so the "Live Now"
+  // badge appears the instant the broadcast actually starts rather than just
+  // whenever the scheduled time has passed. When the next talk is the free
+  // one already playing in the hero, its poll is reused instead of a second.
+  const nextLiveIsGated = Boolean(nextLive) && text(nextLive, "registrationType", "open") !== "open";
+  const nextLiveIsHeroTalk =
+    Boolean(nextLive) && !nextLiveIsGated && Boolean(freeEvent) && String(freeEvent?.id) === String(nextLive?.id);
   // Waits for authStatus to leave "loading": the access token lives in
   // memory only and is refreshed from the stored refresh token on mount, so
   // polling immediately would send an unauthenticated request — a
   // membership event returns 403, not 401, so authedFetch's retry-on-401
   // never recovers it, and a signed-in member would see the wrong state.
+  const pollNextLive = Boolean(nextLive) && !nextLiveIsHeroTalk;
   const { session: nextLiveSession, error: nextLiveError } = useLiveTalkSession(
-    nextLive && nextLiveIsGated ? String(nextLive.id) : "",
-    nextLive ? readStoredMuxLiveToken(String(nextLive.id)) ?? undefined : undefined,
-    Boolean(nextLive && nextLiveIsGated) && authStatus !== "loading",
+    nextLive && pollNextLive ? String(nextLive.id) : "",
+    nextLive && nextLiveIsGated ? readStoredMuxLiveToken(String(nextLive.id)) ?? undefined : undefined,
+    pollNextLive && (!nextLiveIsGated || authStatus !== "loading"),
     true,
   );
   // A visitor without access still gets `error.mode` from the gate (see
@@ -146,8 +147,8 @@ export function WeeklyTalksPage() {
   // gated room too. See weeklyTalkStatus for when "waiting" is shown.
   const nextLiveStatus = weeklyTalkStatus(
     nextLive,
-    nextLiveSession?.mode ?? nextLiveError?.mode,
-    nextLiveSession?.status,
+    nextLiveIsHeroTalk ? freeSession?.mode : (nextLiveSession?.mode ?? nextLiveError?.mode),
+    nextLiveIsHeroTalk ? freeSession?.status : nextLiveSession?.status,
   );
 
   const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
@@ -320,14 +321,15 @@ export function WeeklyTalksPage() {
         <section className="section next-live-band">
           <Reveal className="next-live">
             <span className="next-live__chip">
-              <span className="next-live__chip-dot" aria-hidden="true" /> Next live talk
+              <span className="next-live__chip-dot" aria-hidden="true" />{" "}
+              {nextLiveIsGated ? "Members live talk" : "Free live talk"}
             </span>
             <p className="next-live__when" aria-live="polite">
               {eventLongDate(nextLive)}
               {eventTimeLabel(nextLive) ? (
                 <span className="next-live__time"> · {eventTimeLabel(nextLive)}</span>
               ) : null}
-              {nextLiveStatus ? (
+              {nextLiveStatus && nextLiveIsGated ? (
                 <Link
                   className={`live-now-badge live-now-badge--${nextLiveStatus.tone}`}
                   to={`/weekly-talks/live/${nextLive.id}`}
@@ -335,6 +337,12 @@ export function WeeklyTalksPage() {
                   <span className="live-now-badge__dot" aria-hidden="true" />
                   {nextLiveStatus.label}
                 </Link>
+              ) : nextLiveStatus ? (
+                // A free talk already plays in this page's hero: a status, not a link.
+                <span className={`live-now-badge live-now-badge--${nextLiveStatus.tone}`}>
+                  <span className="live-now-badge__dot" aria-hidden="true" />
+                  {nextLiveStatus.label}
+                </span>
               ) : null}
             </p>
             {addToCalendar ? (
