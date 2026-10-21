@@ -2608,27 +2608,56 @@
    of the same movement stretched out slower. --from tuned again the same
    day (client, via devtools) from -50px to -129px — a longer upward
    sweep, --to left as-is. */
-/* Client (2026-10-21): the two lower photos' names (Michaela Jezzard,
-   Gilian Crowther) never showed — a column is two 4:5 cards (~730px) in a
-   576px frame, and the columns swept in opposite directions, so the left
-   one hid its lower card while the right barely revealed its own. Now both
-   columns rise over the hold, at different rates so the cluster still reads
-   as layered, and the cluster is narrower (below): the top two names are
-   whole when the pin starts and all four are whole from ~40% of the hold on
-   at 1440–1920px (measured; ~60% at 1024px, ~80% at 1280×720). */
-.courses-hero-photos__col--a {
-  --from: 0px;
-  --to: -150px;
-}
+/* Client (2026-10-21): every photo whole, name included, for the whole
+   hold. A column used to be two 4:5 cards (~730px) in a 461–600px frame,
+   so the drift only chose which photo got cut (first the lower names, then
+   — once both columns rose — Dr. Klinghardt's photo at the top). Now, at
+   desktop, the cards are sized from the frame itself
+   (--sophia-hero-dimension-height): two cards + gap + the stagger fit with
+   24px to spare top and bottom, and the stagger IS the drift — the columns
+   cross by --ph-stagger in opposite directions over the hold, so the
+   cluster still moves as layers but never leaves the frame. Square cards
+   keep the names on one line down to 1280×720 (measured 920–1920px: all
+   four photos 100% visible at every point of the hold). */
 .courses-hero-photos__col--b {
-  --from: 20px;
-  --to: -200px;
   margin-top: 18%;
 }
 @media (min-width: 900px) {
   .courses-hero-photos {
-    max-width: 470px;
-    margin-left: auto;
+    --ph-pad: 24px;
+    --ph-gap: 16px;
+    --ph-stagger: 56px;
+    --ph-card: calc(
+      (var(--sophia-hero-dimension-height) - 2 * var(--ph-pad) - var(--ph-gap) - var(--ph-stagger)) / 2
+    );
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--ph-gap);
+    height: calc(2 * var(--ph-card) + var(--ph-gap) + var(--ph-stagger));
+  }
+  .courses-hero-photos__col {
+    flex: none;
+    width: var(--ph-card);
+    gap: var(--ph-gap);
+  }
+  .courses-hero-photos__col--a {
+    --from: 0px;
+    --to: var(--ph-stagger);
+  }
+  .courses-hero-photos__col--b {
+    --from: var(--ph-stagger);
+    --to: 0px;
+    margin-top: 0;
+  }
+  .courses-hero-photos__card {
+    height: var(--ph-card);
+    aspect-ratio: auto;
+  }
+  .courses-hero-photos__card img {
+    object-position: 50% 25%;
+  }
+  .courses-hero-photos__card figcaption {
+    padding: 24px 14px 12px;
   }
 }
 /* Below 900px the hero is not pinned (progress stays 0), so the fixed
