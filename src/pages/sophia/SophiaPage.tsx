@@ -102,19 +102,9 @@ const STEPS = [
 // Elsewhere, per the client's follow-up the same day).
 const THERAPIES: Card[] = [
   {
-    icon: "droplet",
-    title: "IV Therapies",
-    body: "At SHI by Dr.Klinghardt, personalized care starts with understanding what you need, we’ll help you explore the right options. For those seeking ongoing care, we can guide tailored recommendations, track your response to treatment, and inform adjustments as your needs evolve.",
-  },
-  {
     icon: "pulse",
     title: "Treating Chronic Illness",
     body: "If you're dealing with chronic illness, you might be skeptical of new treatment methods. It's natural to wonder what makes Sophia Health Institute by Dr.Klinghardt better than other clinics and treatment methods you've tried.",
-  },
-  {
-    icon: "leaf",
-    title: "Traditional Therapies",
-    body: "Our approach brings together a range of therapies, including homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, PhotonWave, pulsed electromagnetic field therapy, and microcurrent.",
   },
   {
     icon: "sparkles",
@@ -122,14 +112,19 @@ const THERAPIES: Card[] = [
     body: "You get access to different treatment methods that other clinics don’t offer. Depending on your treatment plan, you’ll get an opportunity to try different healing methods from our extensive list of treatment options.",
   },
   {
-    icon: "clipboard",
-    title: "Comprehensive Assessment",
-    body: "You’ll get an in depth treatment plan that targets the root cause of your illness, not just your symptoms. Oftentimes, you don’t just have Lyme disease, mold illness, heavy metals, a root canal, or unhealed trauma. We look at your illness in the context of the whole system so we can uncover as much as possible to understand why you haven’t made progress in the past with other treatment methods. We will do this before prescribing a new treatment plan to you.",
-  },
-  {
     icon: "flask",
     title: "Research and Innovation",
     body: "Practitioners from around the world have traveled far and wide to learn directly from Dr. Klinghardt, for his research and innovation in finding new, effective methods for treating the root causes of chronic illness. Techniques and methods created by Dr. Klinghardt have revolutionized the way chronic illness is treated around the world.",
+  },
+  {
+    icon: "star",
+    title: "Experts On Treating Chronic Illness",
+    body: "You’ll receive treatment from one of the world’s leading experts on treating chronic illness. Sophia Health Institute is the home of Dr. Klinghardt, one of the world’s leading specialists in treating chronic illness. Dr. Klinghardt is the founder and medical director of the clinic and he has dedicated his life to research and innovation in the field of chronic illness.",
+  },
+  {
+    icon: "clipboard",
+    title: "Comprehensive Assessment",
+    body: "You’ll get an in depth treatment plan that targets the root cause of your illness, not just your symptoms. Oftentimes, you don’t just have Lyme disease, mold illness, heavy metals, a root canal, or unhealed trauma. We look at your illness in the context of the whole system so we can uncover as much as possible to understand why you haven’t made progress in the past with other treatment methods. We will do this before prescribing a new treatment plan to you.",
   },
   {
     icon: "user-check",
@@ -137,9 +132,14 @@ const THERAPIES: Card[] = [
     body: "You’ll get personalized care, attention, and support from a team of specialists who understand how you feel and have experience treating your symptoms. Our team is specially trained in helping you in all aspects of your healing. All of our doctors are very closely connected with Dr. Klinghardt. Dr.Klinghardt personally trains each doctor in administering best assessment protocols so they can find the missing links in your treatment to give you the support you’ve been searching for.",
   },
   {
-    icon: "team",
-    title: "Work With A Warm, Loving & Caring Team",
-    body: "We offer a warm, loving, and caring treatment facility full of people who will listen to you, empathize with you, and do everything their power to help you through this tough and trying experience.",
+    icon: "leaf",
+    title: "Traditional Therapies",
+    body: "Our approach brings together a range of therapies, including homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, PhotonWave, pulsed electromagnetic field therapy, and microcurrent.",
+  },
+  {
+    icon: "droplet",
+    title: "IV Therapies",
+    body: "At SHI by Dr.Klinghardt, personalized care starts with understanding what you need, we’ll help you explore the right options. For those seeking ongoing care, we can guide tailored recommendations, track your response to treatment, and inform adjustments as your needs evolve.",
   },
 ];
 
