@@ -31,7 +31,7 @@ import {
    AnimatedCounter needs, instead of the pre-formatted display strings
    ("25+", "10K") this carried before. */
 const STATS: { to: number; suffix?: string; format?: "k"; label: string }[] = [
-  { to: 25, suffix: "+", label: "Years of clinical experience" },
+  { to: 25, suffix: "+", label: "Years of experience" },
   { to: 10000, format: "k", label: "Patients treated worldwide" },
   { to: 5, label: "Levels of healing addressed" },
   { to: 100, suffix: "%", label: "Root-cause focused care" },
@@ -274,19 +274,26 @@ export function SophiaPage() {
 
         <Reveal className="feature-row__body" delay={90}>
           <p className="eyebrow">Who we are</p>
-          <h2>A Different Kind of Medicine, Built Around You</h2>
+          <h2>Our Approach</h2>
           <p className="feature-row__copy">
-            At Sophia Health Institute®, we believe real healing goes deeper than
-            managing symptoms. Our mission is simple: to provide comprehensive,
-            compassionate care that supports each person's journey toward optimal
-            physical, emotional, mental and spiritual well-being.
+            At Sophia Health Institute by Dr. Klinghardt™, we use Autonomic
+            Response Testing (A.R.T.®) Dr. Dietrich Klinghardt™ clinically
+            refined diagnostic system to uncover the hidden causes of illness
+            with remarkable precision. This tool allows us to tailor treatments
+            to each individual’s unique needs, ensuring that no layer of
+            dysfunction is overlooked.
           </p>
           <p className="feature-row__copy">
-            We are a centre for true healing, where advanced medicine meets deep,
-            individualised support. People come to us from all over the world
-            seeking answers to why they have been struggling, and we meet them
-            with cutting-edge science, genuine care and a commitment to
-            understanding the whole person.
+            Beyond the science, it’s our compassionate approach that makes the
+            difference. Our team is committed to creating a space where every
+            patient feels safe, heard, and genuinely supported. This combination
+            of cutting edge diagnostics and heartfelt care is what drives the
+            exceptional outcomes we’re known for.
+          </p>
+          <p className="feature-row__copy">
+            If you're dealing with chronic illness, you might be skeptical of new
+            treatment methods. Dr. Dietrich Klinghardt™ explains the pillars of
+            treating chronic illness.
           </p>
         </Reveal>
       </section>
