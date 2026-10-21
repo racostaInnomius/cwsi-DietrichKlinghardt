@@ -6517,7 +6517,7 @@ img.archive-viewer__media {
    not a background (the six cards would cover it and leave bottles peeking
    between them). Same radius as the cards below, a soft long shadow instead
    of a border, and a slow settle from a slight zoom as it reveals. 3:1 on
-   desktop, framed on the counter and the orchid; taller on phones. */
+   desktop, framed on the orchid and the counter; taller on phones. */
 .sophia-pillars-photo {
   position: relative;
   /* Same as .card-grid's gap, so the photo reads as part of the grid. */
@@ -6533,7 +6533,9 @@ img.archive-viewer__media {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 40%;
+  /* Framed high: the orchid whole, the counter and a single row of bottles
+     — calmer than the full shelves. */
+  object-position: 50% 18%;
   transform: scale(1.06);
   transition: transform 1.8s var(--ease);
 }
