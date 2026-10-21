@@ -2617,18 +2617,22 @@
    24px to spare top and bottom, and the stagger IS the drift — the columns
    cross by --ph-stagger in opposite directions over the hold, so the
    cluster still moves as layers but never leaves the frame. Square cards
-   keep the names on one line down to 1280×720 (measured 920–1920px: all
-   four photos 100% visible at every point of the hold). */
+   keep the names on one line (measured 920–1920px: all four photos 100%
+   visible at every point of the hold). */
 .courses-hero-photos__col--b {
   margin-top: 18%;
 }
 @media (min-width: 900px) {
   .courses-hero-photos {
-    --ph-pad: 24px;
-    --ph-gap: 16px;
-    --ph-stagger: 56px;
-    --ph-card: calc(
-      (var(--sophia-hero-dimension-height) - 2 * var(--ph-pad) - var(--ph-gap) - var(--ph-stagger)) / 2
+    /* Client (2026-10-21, follow-up): photos 15% bigger than the first fit
+       ((H − 120px) / 2). The room comes out of the edge margin, the gap and
+       the stagger, which takes whatever is left so the cluster still fits:
+       ~16px of drift at 1440×900, 12–33px across 1920×1080…1280×720. */
+    --ph-pad: 12px;
+    --ph-gap: 12px;
+    --ph-card: calc(1.15 * (var(--sophia-hero-dimension-height) - 120px) / 2);
+    --ph-stagger: calc(
+      var(--sophia-hero-dimension-height) - 2 * var(--ph-pad) - var(--ph-gap) - 2 * var(--ph-card)
     );
     display: flex;
     justify-content: flex-end;
