@@ -92,7 +92,9 @@ const STEPS = [
 ];
 
 // Client copy, 2026-10-21: three texts rewritten, "Joint & Back Problems"
-// replaced by "Treating Chronic Illness", four cards added (two rows of four).
+// replaced by "Treating Chronic Illness", four cards added (two rows of four;
+// the first row is IV, Chronic Illness, Traditional and Treatments Unavailable
+// Elsewhere, per the client's follow-up the same day).
 const THERAPIES = [
   {
     icon: <DropletIcon />,
@@ -110,6 +112,11 @@ const THERAPIES = [
     body: "Our approach brings together a range of therapies, including homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, PhotonWave, pulsed electromagnetic field therapy, and microcurrent.",
   },
   {
+    icon: <SparklesIcon />,
+    title: "Treatments Unavailable Elsewhere",
+    body: "You get access to different treatment methods that other clinics don’t offer. Depending on your treatment plan, you’ll get an opportunity to try different healing methods from our extensive list of treatment options.",
+  },
+  {
     icon: <ClipboardCheckIcon />,
     title: "Comprehensive Assessment",
     body: "You’ll get an in depth treatment plan that targets the root cause of your illness, not just your symptoms. Oftentimes, you don’t just have Lyme disease, mold illness, heavy metals, a root canal, or unhealed trauma. We look at your illness in the context of the whole system so we can uncover as much as possible to understand why you haven’t made progress in the past with other treatment methods. We will do this before prescribing a new treatment plan to you.",
@@ -123,11 +130,6 @@ const THERAPIES = [
     icon: <UserCheckIcon />,
     title: "Personalized Care",
     body: "You’ll get personalized care, attention, and support from a team of specialists who understand how you feel and have experience treating your symptoms. Our team is specially trained in helping you in all aspects of your healing. All of our doctors are very closely connected with Dr. Klinghardt. Dr.Klinghardt personally trains each doctor in administering best assessment protocols so they can find the missing links in your treatment to give you the support you’ve been searching for.",
-  },
-  {
-    icon: <SparklesIcon />,
-    title: "Treatments Unavailable Elsewhere",
-    body: "You get access to different treatment methods that other clinics don’t offer. Depending on your treatment plan, you’ll get an opportunity to try different healing methods from our extensive list of treatment options.",
   },
   {
     icon: <TeamIcon />,
