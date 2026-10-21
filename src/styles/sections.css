@@ -6753,6 +6753,34 @@ ul.sophia-therapies-grid h3 {
 .hero--split .hero__eyebrow {
   color: var(--white);
 }
+/* Client (2026-10-21): the heading and the subtitle on one line each, and
+   the lead a line shorter. Desktop only (the stacked mobile hero keeps its
+   sizes): the live mock gets a capped column (400px, shrinking with the
+   panel) and a tighter gap, so the copy takes the rest; the heading drops
+   the shared `.hero h1` 13ch cap and both lines scale with the copy column
+   (container units) — a longer CMS title still wraps instead of overflowing.
+   Measured 920–1920px: heading and subtitle 1 line, lead −1 line, Join Now
+   inside the fixed-height panel. */
+@media (min-width: 901px) {
+  .hero--split .hero__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(400px, 38%));
+    column-gap: clamp(28px, 3vw, 44px);
+  }
+  .hero--split .hero__inner > :first-child {
+    container-type: inline-size;
+  }
+  .hero--split h1 {
+    max-width: none;
+    font-size: min(clamp(36px, 5.2vw, 84px), 10cqi);
+  }
+  .hero--split .hero__subtitle {
+    max-width: none;
+    font-size: min(clamp(17px, 1.5vw, 20px), 3.3cqi);
+  }
+  .hero--split .hero__lead {
+    max-width: none;
+  }
+}
 .talks-band__media img {
   display: block;
   width: 100%;
