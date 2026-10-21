@@ -22,6 +22,12 @@ function figure(label: string): { to: number; suffix?: string; format?: "k" } | 
     : { to: value, suffix: match[3] || undefined };
 }
 
+/** The alt text an uploaded image carries in the CMS, if any. */
+function imageAlt(media: unknown): string {
+  const alt = media && typeof media === "object" ? (media as { alt?: unknown }).alt : undefined;
+  return typeof alt === "string" ? alt.trim() : "";
+}
+
 // Every block on this page is a Page Contents row (copy in src/data/blocks.ts
 // until the row has it): sophia-home, -figures, -our-approach, -six-pillars,
 // -cutting-edge-science, -naturopathic-care, -what-we-treat and the shared
@@ -144,6 +150,19 @@ export function SophiaPage() {
           {pillars.eyebrow ? <p className="eyebrow"><Marked text={pillars.eyebrow} /></p> : null}
           <h2><Marked text={pillars.title} /></h2>
         </Reveal>
+        {/* Client (2026-10-21): the block's Hero image (Page Contents →
+            sophia-six-pillars), when one is set, as a wide banner between
+            the heading and the cards. */}
+        {pillars.image ? (
+          <Reveal className="sophia-pillars-photo" shift={16}>
+            <img
+              src={pillars.image}
+              alt={imageAlt(pillars.raw?.heroImage) || "The reception at Sophia Health Institute"}
+              loading="lazy"
+              decoding="async"
+            />
+          </Reveal>
+        ) : null}
         <ul className="card-grid card-grid--3 sophia-pillars-grid">
           {pillars.cards.map((pillar, index) => (
             <Reveal as="li" key={`${index}-${pillar.title}`} className="card" delay={index * 60} shift={12}>

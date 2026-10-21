@@ -6512,6 +6512,57 @@ img.archive-viewer__media {
 .sophia-pillars-heading .eyebrow {
   margin-bottom: 5px;
 }
+/* Client (2026-10-21): the photo the clinic set on the Six Pillars block, as
+   a banner between the heading and the cards — "donde se vea menos peor":
+   not a background (the six cards would cover it and leave bottles peeking
+   between them). Same radius as the cards below, a soft long shadow instead
+   of a border, and a slow settle from a slight zoom as it reveals. 3:1 on
+   desktop, framed on the counter and the orchid; taller on phones. */
+.sophia-pillars-photo {
+  position: relative;
+  /* Same as .card-grid's gap, so the photo reads as part of the grid. */
+  margin: 0 0 clamp(16px, 2vw, 26px);
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  box-shadow: 0 28px 60px -34px rgb(2 56 102 / 0.45);
+}
+.sophia-pillars-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  transform: scale(1.06);
+  transition: transform 1.8s var(--ease);
+}
+.sophia-pillars-photo.is-visible img {
+  transform: none;
+}
+/* A whisper of warmth at the bottom edge, so the photo settles into the
+   page's light ground instead of ending on a hard line. */
+.sophia-pillars-photo::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 28%;
+  background: linear-gradient(180deg, transparent, rgb(2 22 40 / 0.12));
+  pointer-events: none;
+}
+@media (max-width: 700px) {
+  .sophia-pillars-photo {
+    aspect-ratio: 16 / 10;
+  }
+  .sophia-pillars-photo img {
+    object-position: 45% 45%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sophia-pillars-photo img {
+    transform: none;
+  }
+}
 /* Client (2026-09-18): same "sube un 50%... al titulo inmediatamente
    superior" treatment, now for "Healing the Whole Person" -> its card
    grid. Only the gap to the grid was requested here, not the eyebrow gap
