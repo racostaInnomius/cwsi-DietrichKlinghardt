@@ -17,6 +17,8 @@ import type { Card } from "@/lib/sections";
 export interface BlockDefault {
   /** Where it shows (documentation for editors and the seed). */
   page: string;
+  /** Page Contents → "Página del sitio": the list's filter-by-page buttons. */
+  sitePage: string;
   kind: "page" | "section" | "component";
   eyebrow?: string;
   title?: string;
@@ -28,6 +30,7 @@ export interface BlockDefault {
 export const BLOCKS: Record<string, BlockDefault> = {
   "home-hero": {
     page: "/",
+    sitePage: "Home",
     kind: "section",
     eyebrow: "Dr. Dietrich Klinghardt™",
     title: "Healing Beyond",
@@ -39,6 +42,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "home-intro": {
     page: "/",
+    sitePage: "Home",
     kind: "section",
     title: "Dr. Klinghardt Akademie™",
     paragraphs: [
@@ -47,6 +51,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "home-events": {
     page: "/ and /events",
+    sitePage: "Home",
     kind: "section",
     eyebrow: "Events & webinars",
     title: "Learn Directly from Dr. Klinghardt",
@@ -56,6 +61,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "home-art": {
     page: "/",
+    sitePage: "Home",
     kind: "section",
     eyebrow: "Diagnostic method",
     title: "A.R.T. Klinghardt™",
@@ -66,6 +72,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "home-sophia": {
     page: "/",
+    sitePage: "Home",
     kind: "section",
     eyebrow: "Our clinic",
     title: "Sophia Health Institute by Dr. Dietrich Klinghardt™",
@@ -75,6 +82,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "home-talks": {
     page: "/",
+    sitePage: "Home",
     kind: "section",
     eyebrow: "Exclusive material",
     title: "Join My Weekly Talks",
@@ -85,6 +93,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "home-shop": {
     page: "/",
+    sitePage: "Home",
     kind: "section",
     title: "Explore the Shop",
     paragraphs: [
@@ -93,6 +102,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "newsletter": {
     page: "most pages",
+    sitePage: "Newsletter",
     kind: "page",
     eyebrow: "Stay connected",
     title: "Join Our Newsletter",
@@ -102,6 +112,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "about": {
     page: "/about",
+    sitePage: "About",
     kind: "page",
     eyebrow: "About",
     title: "Dr. Dietrich Klinghardt™",
@@ -111,6 +122,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "about-chapters": {
     page: "/about",
+    sitePage: "About",
     kind: "section",
     title: "About — Chapters",
     cards: [
@@ -122,6 +134,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "about-timeline": {
     page: "/about",
+    sitePage: "About",
     kind: "section",
     eyebrow: "Timeline",
     title: "A Life Dedicated to Healing",
@@ -136,6 +149,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "academy": {
     page: "/academy",
+    sitePage: "Akademie",
     kind: "page",
     title: "Dr. Klinghardt Akademie™",
     paragraphs: [
@@ -144,6 +158,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "academy-find-art-therapists": {
     page: "/academy",
+    sitePage: "Akademie",
     kind: "section",
     eyebrow: "Global network",
     title: "Find A.R.T.® Therapists",
@@ -154,6 +169,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "academy-art-klinghardt": {
     page: "/academy",
+    sitePage: "Akademie",
     kind: "section",
     eyebrow: "Signature method",
     title: "A.R.T Klinghardt™",
@@ -163,6 +179,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "academy-5-levels-of-healing": {
     page: "/academy",
+    sitePage: "Akademie",
     kind: "section",
     eyebrow: "Five levels",
     title: "The 5 Levels of Healing™",
@@ -173,6 +190,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "academy-publications": {
     page: "/academy",
+    sitePage: "Akademie",
     kind: "section",
     eyebrow: "Research & books",
     title: "Publications and Educational Resources",
@@ -182,6 +200,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "academy-klinghardt-akademie": {
     page: "/academy",
+    sitePage: "Akademie",
     kind: "section",
     eyebrow: "Learning center",
     title: "Klinghardt Akademie",
@@ -192,6 +211,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "academy-klinghardt-foundation": {
     page: "/academy",
+    sitePage: "Akademie",
     kind: "section",
     eyebrow: "Research & impact",
     title: "Dr. Klinghardt Foundation™",
@@ -201,6 +221,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "art": {
     page: "/academy/art",
+    sitePage: "Akademie · A.R.T. Klinghardt",
     kind: "page",
     eyebrow: "Signature method",
     title: "Autonomic Response Testing",
@@ -212,6 +233,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "art-quote": {
     page: "/academy/art",
+    sitePage: "Akademie · A.R.T. Klinghardt",
     kind: "section",
     title: "A.R.T. — Quote",
     subtitle: "— Dr. Dietrich Klinghardt™",
@@ -223,6 +245,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "art-next-steps": {
     page: "/academy/art",
+    sitePage: "Akademie · A.R.T. Klinghardt",
     kind: "section",
     eyebrow: "Next steps",
     title: "Learn it, or find someone who has",
@@ -232,6 +255,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "five-levels": {
     page: "/academy/five-levels",
+    sitePage: "Akademie · The 5 Levels of Healing",
     kind: "page",
     eyebrow: "A framework for wholeness",
     title: "The 5 Levels of Healing™",
@@ -242,6 +266,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "five-levels-quote": {
     page: "/academy/five-levels",
+    sitePage: "Akademie · The 5 Levels of Healing",
     kind: "section",
     title: "The 5 Levels — Quote",
     subtitle: "— Dr. Dietrich Klinghardt™",
@@ -251,6 +276,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "therapists": {
     page: "/academy/therapists",
+    sitePage: "Akademie · Find A.R.T. Therapists",
     kind: "page",
     eyebrow: "Global practitioner directory",
     title: "Are You Looking For an A.R.T.® Klinghardt® Therapist?",
@@ -260,6 +286,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "courses": {
     page: "/courses",
+    sitePage: "Online Courses",
     kind: "page",
     eyebrow: "Online courses",
     title: "Learn the Klinghardt Method",
@@ -269,6 +296,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "foundation": {
     page: "/foundation",
+    sitePage: "Foundation",
     kind: "page",
     title: "Preserving Knowledge. Advancing Education. Supporting the Future of Healing.",
     paragraphs: [
@@ -277,6 +305,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "foundation-purpose": {
     page: "/foundation",
+    sitePage: "Foundation",
     kind: "section",
     eyebrow: "Our purpose",
     title: "Preserving Knowledge for Future Generations",
@@ -286,6 +315,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "foundation-commitments": {
     page: "/foundation",
+    sitePage: "Foundation",
     kind: "section",
     eyebrow: "Four central commitments",
     title: "Its Work Will Be Organized Around Four Central Commitments:",
@@ -298,6 +328,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "foundation-quote": {
     page: "/foundation",
+    sitePage: "Foundation",
     kind: "section",
     title: "Foundation — Quote",
     subtitle: "— Dr. Dietrich Klinghardt™",
@@ -307,6 +338,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "donate": {
     page: "/foundation/donate",
+    sitePage: "Foundation · Donate",
     kind: "page",
     eyebrow: "Klinghardt Foundation™",
     title: "Support the Foundation",
@@ -316,6 +348,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "donate-where-a-contribution-goes": {
     page: "/foundation/donate",
+    sitePage: "Foundation · Donate",
     kind: "section",
     title: "Where a contribution goes",
     paragraphs: [
@@ -326,6 +359,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "donate-donations-open-soon": {
     page: "/foundation/donate",
+    sitePage: "Foundation · Donate",
     kind: "section",
     eyebrow: "Not open yet",
     title: "Donations open soon",
@@ -335,6 +369,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "contact": {
     page: "/contact",
+    sitePage: "Contact",
     kind: "page",
     eyebrow: "Get in touch",
     title: "Contact Us",
@@ -344,6 +379,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "contact-cards": {
     page: "/contact",
+    sitePage: "Contact",
     kind: "section",
     title: "Contact — Cards",
     cards: [
@@ -355,6 +391,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "contact-please-note": {
     page: "/contact",
+    sitePage: "Contact",
     kind: "section",
     title: "Contact — Please note",
     paragraphs: [
@@ -363,6 +400,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "store-intro": {
     page: "/store",
+    sitePage: "Store",
     kind: "section",
     eyebrow: "Shop",
     title: "Explore the Klinghardt® Store",
@@ -372,6 +410,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "music": {
     page: "/music",
+    sitePage: "Music",
     kind: "page",
     eyebrow: "Sound and healing",
     title: "Music as Medicine",
@@ -381,6 +420,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "music-discography": {
     page: "/music",
+    sitePage: "Music",
     kind: "section",
     eyebrow: "Recordings",
     title: "Discography",
@@ -388,6 +428,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "weekly-talks": {
     page: "/weekly-talks",
+    sitePage: "Weekly Talks",
     kind: "page",
     eyebrow: "Exclusive membership",
     title: "Join My Weekly Talks",
@@ -399,6 +440,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "weekly-talks-benefits": {
     page: "/weekly-talks",
+    sitePage: "Weekly Talks",
     kind: "section",
     title: "Weekly Talks — Benefits",
     cards: [
@@ -410,18 +452,21 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "weekly-talks-pricing": {
     page: "/weekly-talks",
+    sitePage: "Weekly Talks",
     kind: "section",
     eyebrow: "Pricing",
     title: "Learn, Connect, Grow Together",
   },
   "weekly-talks-faq": {
     page: "/weekly-talks",
+    sitePage: "Weekly Talks",
     kind: "section",
     eyebrow: "FAQ",
     title: "Frequently Asked Questions",
   },
   "archives-home": {
     page: "/archives",
+    sitePage: "Archives",
     kind: "section",
     eyebrow: "A living archive",
     title: "The Klinghardt Living Archive",
@@ -432,6 +477,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "archives-six-collections": {
     page: "/archives",
+    sitePage: "Archives",
     kind: "section",
     eyebrow: "What’s inside",
     title: "Six Collections, One Archive",
@@ -442,6 +488,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "archives-how-it-works": {
     page: "/archives",
+    sitePage: "Archives",
     kind: "section",
     eyebrow: "How it works",
     title: "One New Piece, Every Week",
@@ -453,6 +500,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-home": {
     page: "/sophia",
+    sitePage: "Sophia",
     kind: "page",
     eyebrow: "Sophia Health Institute by Dr. Klinghardt™",
     title: "Founded by Dr. Dietrich Klinghardt™ Built for True Healing",
@@ -462,6 +510,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-figures": {
     page: "/sophia",
+    sitePage: "Sophia",
     kind: "section",
     title: "Sophia — Figures",
     cards: [
@@ -473,6 +522,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-our-approach": {
     page: "/sophia",
+    sitePage: "Sophia",
     kind: "section",
     eyebrow: "Who we are",
     title: "Our Approach",
@@ -484,6 +534,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-six-pillars": {
     page: "/sophia",
+    sitePage: "Sophia",
     kind: "section",
     eyebrow: "What makes Sophia unique",
     title: "Six Pillars of A Different Approach",
@@ -498,6 +549,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-cutting-edge-science": {
     page: "/sophia",
+    sitePage: "Sophia",
     kind: "section",
     eyebrow: "Our approach",
     title: "Cutting-edge Science Meets Heartfelt Care",
@@ -514,6 +566,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-naturopathic-care": {
     page: "/sophia",
+    sitePage: "Sophia",
     kind: "section",
     eyebrow: "Naturopathic care",
     title: "Healing the Whole Person, Mind, Body, and Spirit",
@@ -530,6 +583,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-what-we-treat": {
     page: "/sophia",
+    sitePage: "Sophia",
     kind: "section",
     eyebrow: "What we treat",
     title: "Complex Conditions. Real Answers",
@@ -546,6 +600,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-cta-stop-wondering": {
     page: "/sophia, /sophia/team",
+    sitePage: "Sophia",
     kind: "component",
     eyebrow: "Ready to begin",
     title: "Stop Wondering.",
@@ -556,6 +611,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-team": {
     page: "/sophia/team",
+    sitePage: "Sophia · Our Team",
     kind: "page",
     eyebrow: "Sophia Health Institute™",
     title: "Meet Our Team",
@@ -565,6 +621,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "new-patients": {
     page: "/sophia/new-patients",
+    sitePage: "Sophia · New Patients",
     kind: "page",
     title: "New Patient Information",
     paragraphs: [
@@ -573,6 +630,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-new-patients-welcome": {
     page: "/sophia/new-patients",
+    sitePage: "Sophia · New Patients",
     kind: "section",
     eyebrow: "Welcome",
     title: "We Know You Have Been Through a Lot",
@@ -584,6 +642,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-new-patients-you-may-be-wondering": {
     page: "/sophia/new-patients",
+    sitePage: "Sophia · New Patients",
     kind: "section",
     eyebrow: "Frequently asked",
     title: "You May Be Wondering…",
@@ -600,6 +659,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-new-patients-what-makes-this-different": {
     page: "/sophia/new-patients",
+    sitePage: "Sophia · New Patients",
     kind: "section",
     eyebrow: "Our approach",
     title: "What Makes This Different",
@@ -615,6 +675,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-new-patients-what-to-expect": {
     page: "/sophia/new-patients",
+    sitePage: "Sophia · New Patients",
     kind: "section",
     eyebrow: "Your first steps",
     title: "What to Expect as a Patient",
@@ -626,6 +687,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-cta-ready-to-take-the-next-step": {
     page: "/sophia/new-patients, /sophia/accommodations",
+    sitePage: "Sophia",
     kind: "component",
     eyebrow: "Ready to begin",
     title: "Ready to",
@@ -636,6 +698,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "accommodations": {
     page: "/sophia/accommodations",
+    sitePage: "Sophia · Travel & Accommodations",
     kind: "page",
     eyebrow: "Get started",
     title: "How to Find Us",
@@ -646,6 +709,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
   },
   "sophia-accommodations-hotels": {
     page: "/sophia/accommodations",
+    sitePage: "Sophia · Travel & Accommodations",
     kind: "section",
     eyebrow: "Accommodations",
     title: "Hotels in The Local Area",
