@@ -1,6 +1,6 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
-import { useSection, SECTION } from "@/lib/sections";
+import { useSection, useCards, SECTION, type Card } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Marked } from "@/components/Marked";
@@ -22,6 +22,8 @@ import {
   UserCheckIcon,
   SparklesIcon,
   TeamIcon,
+  GlobeIcon,
+  StarIcon,
 } from "@/components/Icons";
 
 /* Client (2026-09-12), via the designer: "para los numeros... podemos
@@ -91,52 +93,76 @@ const STEPS = [
   },
 ];
 
+// The Naturopathic care cards are edited in the CMS since 2026-10-21 (Page
+// Contents → "sophia-naturopathic-care" → Tarjetas: icon, title, text, order).
+// These are the fallback until that row exists, and its first content.
 // Client copy, 2026-10-21: three texts rewritten, "Joint & Back Problems"
 // replaced by "Treating Chronic Illness", four cards added (two rows of four;
 // the first row is IV, Chronic Illness, Traditional and Treatments Unavailable
 // Elsewhere, per the client's follow-up the same day).
-const THERAPIES = [
+const THERAPIES: Card[] = [
   {
-    icon: <DropletIcon />,
+    icon: "droplet",
     title: "IV Therapies",
     body: "At SHI by Dr.Klinghardt, personalized care starts with understanding what you need, we’ll help you explore the right options. For those seeking ongoing care, we can guide tailored recommendations, track your response to treatment, and inform adjustments as your needs evolve.",
   },
   {
-    icon: <PulseIcon />,
+    icon: "pulse",
     title: "Treating Chronic Illness",
     body: "If you're dealing with chronic illness, you might be skeptical of new treatment methods. It's natural to wonder what makes Sophia Health Institute by Dr.Klinghardt better than other clinics and treatment methods you've tried.",
   },
   {
-    icon: <LeafIcon />,
+    icon: "leaf",
     title: "Traditional Therapies",
     body: "Our approach brings together a range of therapies, including homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, PhotonWave, pulsed electromagnetic field therapy, and microcurrent.",
   },
   {
-    icon: <SparklesIcon />,
+    icon: "sparkles",
     title: "Treatments Unavailable Elsewhere",
     body: "You get access to different treatment methods that other clinics don’t offer. Depending on your treatment plan, you’ll get an opportunity to try different healing methods from our extensive list of treatment options.",
   },
   {
-    icon: <ClipboardCheckIcon />,
+    icon: "clipboard",
     title: "Comprehensive Assessment",
     body: "You’ll get an in depth treatment plan that targets the root cause of your illness, not just your symptoms. Oftentimes, you don’t just have Lyme disease, mold illness, heavy metals, a root canal, or unhealed trauma. We look at your illness in the context of the whole system so we can uncover as much as possible to understand why you haven’t made progress in the past with other treatment methods. We will do this before prescribing a new treatment plan to you.",
   },
   {
-    icon: <FlaskIcon />,
+    icon: "flask",
     title: "Research and Innovation",
     body: "Practitioners from around the world have traveled far and wide to learn directly from Dr. Klinghardt, for his research and innovation in finding new, effective methods for treating the root causes of chronic illness. Techniques and methods created by Dr. Klinghardt have revolutionized the way chronic illness is treated around the world.",
   },
   {
-    icon: <UserCheckIcon />,
+    icon: "user-check",
     title: "Personalized Care",
     body: "You’ll get personalized care, attention, and support from a team of specialists who understand how you feel and have experience treating your symptoms. Our team is specially trained in helping you in all aspects of your healing. All of our doctors are very closely connected with Dr. Klinghardt. Dr.Klinghardt personally trains each doctor in administering best assessment protocols so they can find the missing links in your treatment to give you the support you’ve been searching for.",
   },
   {
-    icon: <TeamIcon />,
+    icon: "team",
     title: "Work With A Warm, Loving & Caring Team",
     body: "We offer a warm, loving, and caring treatment facility full of people who will listen to you, empathize with you, and do everything their power to help you through this tough and trying experience.",
   },
 ];
+
+
+/** CMS icon keys (Page Contents → Cards → Icon) → this site's drawings. */
+const CARD_ICONS: Record<string, typeof DropletIcon> = {
+  droplet: DropletIcon,
+  pulse: PulseIcon,
+  leaf: LeafIcon,
+  sparkles: SparklesIcon,
+  clipboard: ClipboardCheckIcon,
+  flask: FlaskIcon,
+  "user-check": UserCheckIcon,
+  team: TeamIcon,
+  heart: HeartIcon,
+  shield: ShieldIcon,
+  target: TargetIcon,
+  layers: LayersIcon,
+  sprout: SproutIcon,
+  bolt: BoltIcon,
+  globe: GlobeIcon,
+  star: StarIcon,
+};
 
 const CONDITIONS = [
   "Lyme disease",
@@ -159,6 +185,10 @@ const CONDITIONS = [
  * in the whole audit (D2).
  */
 export function SophiaPage() {
+  const care = useCards(SECTION.sophiaCare, {
+    title: "Healing the Whole Person, Mind, Body, and Spirit",
+    cards: THERAPIES,
+  });
   const page = useSection(SECTION.sophiaHome, {
     title: "Founded by Dr. Dietrich Klinghardt™ Built for True Healing",
     paragraphs: [
@@ -322,16 +352,19 @@ export function SophiaPage() {
       <section className="section wrap" id="naturopathic-care">
         <Reveal className="section-heading section-heading--center sophia-therapies-heading">
           <p className="eyebrow">Naturopathic care</p>
-          <h2>Healing the Whole Person, Mind, Body, and Spirit</h2>
+          <h2><Marked text={care.title} /></h2>
         </Reveal>
         <ul className="card-grid card-grid--4 sophia-therapies-grid">
-          {THERAPIES.map((therapy, index) => (
-            <Reveal as="li" key={therapy.title} className="card" delay={index * 60} shift={12}>
-              <div className="card__icon">{therapy.icon}</div>
-              <h3>{therapy.title}</h3>
-              <p>{therapy.body}</p>
-            </Reveal>
-          ))}
+          {care.cards.map((therapy, index) => {
+            const Icon = CARD_ICONS[therapy.icon] ?? LeafIcon;
+            return (
+              <Reveal as="li" key={`${index}-${therapy.title}`} className="card" delay={(index % 4) * 60} shift={12}>
+                <div className="card__icon"><Icon /></div>
+                <h3>{therapy.title}</h3>
+                {therapy.body ? <p>{therapy.body}</p> : null}
+              </Reveal>
+            );
+          })}
         </ul>
         <Reveal className="section-actions" delay={120}>
           <Link className="btn btn-primary" to="/sophia/new-patients">

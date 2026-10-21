@@ -39,6 +39,7 @@ export const SECTION = {
   weeklyTalks: "weekly-talks",
 
   sophiaHome: "sophia-home",
+  sophiaCare: "sophia-naturopathic-care",
   sophiaTeam: "sophia-team",
   newPatients: "new-patients",
   accommodations: "accommodations",
@@ -118,4 +119,32 @@ export function useRecords(
     .map((line) => line.split("|").map((cell) => cell.trim()))
     .filter((cells) => cells.length >= fields && cells.every(Boolean));
   return rows.length ? rows : fallback;
+}
+
+export interface Card {
+  /** Icon key chosen in the CMS (Page Contents → Cards); each page maps it. */
+  icon: string;
+  title: string;
+  body: string;
+}
+
+/**
+ * The cards of a block, from Page Contents → "Tarjetas" (`items`), in the
+ * order the editor dragged them into. With no row, or a row without cards, the
+ * design's cards ship instead — same per-field fallback idea as useSection.
+ */
+export function useCards(
+  slug: string,
+  fallback: { title?: string; cards: Card[] },
+): { title: string; cards: Card[] } {
+  const section = useSection(slug, { title: fallback.title });
+  const items = Array.isArray(section.raw?.items) ? (section.raw.items as Record<string, unknown>[]) : [];
+  const cards = items
+    .map((item) => ({
+      icon: typeof item.icon === "string" ? item.icon : "",
+      title: typeof item.title === "string" ? item.title.trim() : "",
+      body: typeof item.body === "string" ? item.body.trim() : "",
+    }))
+    .filter((card) => card.title);
+  return { title: section.title, cards: cards.length ? cards : fallback.cards };
 }
