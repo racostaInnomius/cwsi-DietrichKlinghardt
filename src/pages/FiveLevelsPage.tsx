@@ -1,4 +1,5 @@
 import { Seo } from "@/components/Seo";
+import { Emphasis } from "@/components/Emphasis";
 import { useSection, SECTION } from "@/lib/sections";
 import { videoEmbed } from "@/lib/cms";
 import { Reveal } from "@/components/motion/Reveal";
@@ -23,13 +24,9 @@ import { FIVE_LEVELS_VIDEO, PYRAMID_VIDEO } from "@/data/media";
  * poster frame.
  */
 export function FiveLevelsPage() {
-  const page = useSection(SECTION.fiveLevels, {
-    title: "The 5 Levels of Healing™",
-    paragraphs: [
-      "According to Dr. Dietrich Klinghardt™, humans exist in several dimensions at once: the physical body lives within a sphere of invisible bodies that surround and permeate it.",
-      "Each higher level organises the ones below it, while the lower levels supply energy — so a problem can begin on any level and travel downward until it becomes visible.",
-    ],
-  });
+  const page = useSection(SECTION.fiveLevels);
+  // Italic runs in the CMS text (or *…* in blocks.ts) stay italic.
+  const quote = useSection("five-levels-quote");
 
   // A film uploaded to the CMS wins; otherwise the one we host ourselves.
   const embedded = videoEmbed(page.raw?.featuredVideo);
@@ -47,7 +44,7 @@ export function FiveLevelsPage() {
           items={[{ label: "Akademie", href: "/academy" }, { label: "The 5 Levels of Healing" }]}
         />
         <Reveal>
-          <p className="eyebrow">A framework for wholeness</p>
+          {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h1><Marked text={page.title} /></h1>
           {page.lead ? <p className="lead">{page.lead}</p> : null}
         </Reveal>
@@ -74,16 +71,12 @@ export function FiveLevelsPage() {
 
       <section className="section wrap">
         <Reveal as="blockquote" className="levels__quote">
-          <p>
-            “I have tried to establish some guidelines for therapists who aspire
-            to a higher level in their work.{" "}
-            <em>
-              When improvements occur, both patient and physician should show
-              gratitude and humility.
-            </em>
-            ”
-          </p>
-          <cite>— Dr. Dietrich Klinghardt™</cite>
+          {quote.marked.map((paragraph) => (
+            <p key={paragraph}>
+              <Emphasis text={paragraph} />
+            </p>
+          ))}
+          {quote.subtitle ? <cite><Marked text={quote.subtitle} /></cite> : null}
         </Reveal>
       </section>
     </>

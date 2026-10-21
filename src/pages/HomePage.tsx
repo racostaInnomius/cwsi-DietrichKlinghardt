@@ -4,6 +4,7 @@ import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
+import { Marked } from "@/components/Marked";
 import { splitByTime } from "@/lib/format";
 import { withoutIncludedDays } from "@/lib/dayPasses";
 import { featuredProducts, usedCategories, useStoreProducts } from "@/lib/store";
@@ -29,38 +30,17 @@ import { FIVE_LEVELS_VIDEO, SOPHIA_WELCOME_VIDEO } from "@/data/media";
  * none rather than showing an empty shelf.
  */
 export function HomePage() {
-  const intro = useSection(SECTION.homeIntro, {
-    title: "Dr. Klinghardt Akademie™",
-    paragraphs: [
-      "Training programmes and certifications for practitioners who want to bring Autonomic Response Testing and the 5 Levels of Healing into their own practice — taught by Dr. Klinghardt and the team he has trained worldwide.",
-    ],
-  });
-  const eventsCopy = useSection(SECTION.homeEvents, {
-    title: "Learn Directly from Dr. Klinghardt",
-    paragraphs: [
-      "Workshops, seminars and live webinars — in person and online.",
-    ],
-  });
-  const art = useSection(SECTION.homeArt, {
-    // The frame's own heading. "Autonomic Response Testing" is the line the
-    // design sets underneath it, in Fraunces — not the heading itself.
-    title: "A.R.T. Klinghardt™",
-    paragraphs: [
-      "A.R.T. is a diagnostic method that reads the body's own regulation to find what is driving illness — infections, toxicity, unresolved trauma — and in which order it must be addressed.",
-    ],
-  });
-  const shop = useSection(SECTION.homeShop, {
-    title: "Explore the Shop",
-    paragraphs: [
-      "Books, work materials, testing kits and professional resources, curated by Dr. Klinghardt.",
-    ],
-  });
-  const talks = useSection(SECTION.homeTalks, {
-    title: "Join My Weekly Talks",
-    paragraphs: [
-      "Every week, a live session with Dr. Klinghardt: a short teaching, then open questions from the community.",
-    ],
-  });
+  // Copy for every block below lives in Page Contents (src/data/blocks.ts
+  // until a row has it). Art: "Autonomic Response Testing®" is its subtitle,
+  // the line the design sets under the heading in Fraunces.
+  const hero = useSection(SECTION.homeHero);
+  const intro = useSection(SECTION.homeIntro);
+  const eventsCopy = useSection(SECTION.homeEvents);
+  const art = useSection(SECTION.homeArt);
+  const clinic = useSection(SECTION.homeSophia);
+  const shop = useSection(SECTION.homeShop);
+  const talks = useSection(SECTION.homeTalks);
+  const heroWords = hero.cards.map((card) => card.title);
 
   // The whole opening line (title + first paragraph) reveals as one
   // continuous letter cascade (2026-09-04: "quiero que animes todo el
@@ -319,10 +299,17 @@ export function HomePage() {
           />
           <div className="wrap hero__inner">
             <Reveal>
-              <p className="eyebrow hero__eyebrow">Dr. Dietrich Klinghardt™</p>
+              {hero.eyebrow ? (
+                <p className="eyebrow hero__eyebrow"><Marked text={hero.eyebrow} /></p>
+              ) : null}
               <h1 className="display-xl">
-                Healing Beyond{" "}
-                <RotatingWord words={["Symptoms", "Diagnosis", "Labels"]} />
+                <Marked text={hero.title} />
+                {heroWords.length ? (
+                  <>
+                    {" "}
+                    <RotatingWord words={heroWords} />
+                  </>
+                ) : null}
               </h1>
               <div className="hero__actions">
                 <Link className="btn btn-light" to="/about">
@@ -392,7 +379,7 @@ export function HomePage() {
       {(upcoming.length > 0 || past.length > 0) && (
         <section className="section wrap home-events">
           <SectionHeading
-            eyebrow="Events & webinars"
+            eyebrow={eventsCopy.eyebrow}
             title={eventsCopy.title}
             lead={eventsCopy.lead}
             link={{ label: "View all events", to: "/events" }}
@@ -451,11 +438,13 @@ export function HomePage() {
             <SelfHostedVideo {...FIVE_LEVELS_VIDEO} />
           </Reveal>
           <Reveal className="home-art__body">
-            <p className="eyebrow">Diagnostic method</p>
-            <h2>{art.title}</h2>
-            <p className="accent home-art__accent">
-              Autonomic Response Testing<sup className="tm">®</sup>
-            </p>
+            {art.eyebrow ? <p className="eyebrow"><Marked text={art.eyebrow} /></p> : null}
+            <h2><Marked text={art.title} /></h2>
+            {art.subtitle ? (
+              <p className="accent home-art__accent">
+                <Marked text={art.subtitle} />
+              </p>
+            ) : null}
             {art.paragraphs.map((paragraph) => (
               <p key={paragraph} className="home-art__copy">
                 {paragraph}
@@ -489,15 +478,13 @@ export function HomePage() {
           />
         </Reveal>
         <Reveal className="feature-row__body" delay={90}>
-          <p className="eyebrow">Our clinic</p>
-          <h2>Sophia Health Institute by Dr. Dietrich Klinghardt™</h2>
-          <p className="feature-row__copy">
-            A world-renowned healing centre offering a truly individualised,
-            root-cause approach to complex chronic illness — one that looks
-            beyond symptoms to the deeper origins of disease, supporting each
-            person's journey toward optimal physical, emotional, mental and
-            spiritual well-being.
-          </p>
+          {clinic.eyebrow ? <p className="eyebrow"><Marked text={clinic.eyebrow} /></p> : null}
+          <h2><Marked text={clinic.title} /></h2>
+          {clinic.paragraphs.map((paragraph) => (
+            <p key={paragraph} className="feature-row__copy">
+              {paragraph}
+            </p>
+          ))}
           <div className="feature-row__actions">
             <Link className="btn btn-ghost" to="/sophia">
               Learn more
@@ -529,8 +516,10 @@ export function HomePage() {
             </Reveal>
 
             <Reveal className="talks-band__body" delay={110}>
-              <p className="eyebrow">Exclusive material</p>
-              <h3 className="display-md">Join Now For Full Access</h3>
+              {talks.eyebrow ? <p className="eyebrow"><Marked text={talks.eyebrow} /></p> : null}
+              {talks.subtitle ? (
+                <h3 className="display-md"><Marked text={talks.subtitle} /></h3>
+              ) : null}
               <p>{talks.lead}</p>
               <Link className="btn btn-ghost" to="/weekly-talks">
                 Join my talks

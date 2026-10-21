@@ -16,12 +16,7 @@ import { NewsletterSection } from "@/components/sections/NewsletterSection";
  * involves) and the dates (what you can actually book).
  */
 export function CoursesPage() {
-  const page = useSection("courses", {
-    title: "Learn the Klinghardt Method",
-    paragraphs: [
-      "Five training paths, taught by Dr. Klinghardt and the practitioners he has certified. Each one can be taken level by level, and each level is bookable on its own.",
-    ],
-  });
+  const page = useSection("courses");
   const paths = useTrainingPaths();
 
   return (
@@ -42,7 +37,7 @@ export function CoursesPage() {
         <AnimatedGradient variant="card-warm" intensity="normal" className="courses-hero">
           <div className="wrap courses-hero__inner">
             <Reveal>
-              <p className="eyebrow">Online courses</p>
+              {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
               <h1><Marked text={page.title} /></h1>
               {page.lead ? <p className="lead">{page.lead}</p> : null}
             </Reveal>

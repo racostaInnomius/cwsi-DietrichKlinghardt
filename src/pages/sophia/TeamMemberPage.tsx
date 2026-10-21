@@ -1,4 +1,5 @@
 import { Seo } from "@/components/Seo";
+import { SECTION } from "@/lib/sections";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
 import { mediaUrl, richTextBlocks } from "@/lib/cms";
@@ -106,17 +107,7 @@ export function TeamMemberPage() {
         </Reveal>
       </section>
 
-      <CtaBand
-        className="cta-band--dark"
-        title={
-          <>
-            Stop Wondering.
-            <br />
-            Start Finding Answers
-          </>
-        }
-        body="The Sophia Health Institute by Dr. Klinghardt™ team is ready to help you. Before you become a patient, it is natural to have questions — our patient coordinator would be happy to answer them."
-      >
+      <CtaBand className="cta-band--dark" slug={SECTION.sophiaCtaStopWondering}>
         <Link className="btn btn-light" to="/sophia/new-patients">
           Become a new patient <span aria-hidden="true">→</span>
         </Link>

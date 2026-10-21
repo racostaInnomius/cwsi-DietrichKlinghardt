@@ -17,11 +17,12 @@ type Action = {
 };
 
 type Branch = {
-  eyebrow: string;
-  title: string;
-  /** Fraunces line under the heading, where the design has one. */
-  accent?: string;
-  body: string;
+  /**
+   * The Page Contents block with the branch's words: eyebrow, title, subtitle
+   * (the Fraunces line under the heading, where the design has one) and text.
+   * Copy in src/data/blocks.ts until the row has it.
+   */
+  slug: string;
   actions: Action[];
   /** `media: "right"` puts the picture on the right, as the frame alternates. */
   media?: {
@@ -38,21 +39,16 @@ type Branch = {
 };
 
 /**
- * The six branches, transcribed from the Figma frame `0:3213` — eyebrow,
- * heading, the Fraunces line where there is one, the body copy and the button
- * labels. The design alternates which side the picture sits on, and that
- * alternation is what `side` carries.
+ * The six branches, transcribed from the Figma frame `0:3213` — the picture,
+ * the buttons and which side the picture sits on (the design alternates). Their
+ * words are Page Contents blocks, one per branch (client, 2026-10-21).
  *
- * These stay a constant rather than CMS rows: they are the site's own
- * structure, and an editor deleting one would break the navigation. The copy is
- * the client's and can move to the CMS later without touching the layout.
+ * The rows themselves stay a constant: they are the site's own structure, and
+ * an editor deleting one would break the navigation.
  */
 const BRANCHES: Branch[] = [
   {
-    eyebrow: "Global network",
-    title: "Find A.R.T.® Therapists",
-    accent: "Browse our directory to find practitioners near you.",
-    body: "Looking for a certified A.R.T.® therapist or consultant near you? Our therapist directory helps you find qualified practitioners and clinics in your area, ready to support you on your journey toward health and wellbeing. Each listing links to the therapist's own website, where you can read about their approach, specialities and the services they offer.",
+    slug: "academy-find-art-therapists",
     actions: [{ label: "Learn more", to: "/academy/therapists" }],
     // Client (2026-09-11): "el mapa interactivo seria solo una imagen no un
     // mapa interactivo... puedes tomar este mapa" — the client's own asset,
@@ -66,9 +62,7 @@ const BRANCHES: Branch[] = [
     side: "left",
   },
   {
-    eyebrow: "Signature method",
-    title: "A.R.T Klinghardt™",
-    body: "A.R.T Klinghardt™ (AUTONOMIC RESPONSE TESTING®) is a holistic method that works on an energetic level to support personal well-being. Using a kinesiological muscle test, it observes how the body responds to different stimuli to reveal possible energetic imbalances. It offers a complementary holistic assessment and is not a substitute for medical or psychotherapeutic care.",
+    slug: "academy-art-klinghardt",
     // Client (2026-09-11, against the Figma): "el boton de Course dates...
     // son 2 botones y asi deben de quedar" — reversed from the first pass:
     // "About the course" is the outline one, "Course dates" is filled with
@@ -86,10 +80,7 @@ const BRANCHES: Branch[] = [
     side: "right",
   },
   {
-    eyebrow: "Five levels",
-    title: "The 5 Levels of Healing™",
-    accent: "Autonomic Response Testing®",
-    body: "According to Dr. Dietrich Klinghardt™, humans exist in several dimensions at once: the physical body lives within a sphere of invisible bodies that surround and permeate it. Each higher level organises the ones below it, while the lower levels supply energy — so a problem can begin on any level and travel downward until it becomes visible.",
+    slug: "academy-5-levels-of-healing",
     actions: [{ label: "Learn more", to: "/academy/five-levels" }],
     // Client (2026-09-10): "5 levels of healing falta el grafico" — the
     // Figma shows the same pyramid /academy/five-levels already builds in
@@ -108,9 +99,7 @@ const BRANCHES: Branch[] = [
     side: "left",
   },
   {
-    eyebrow: "Research & books",
-    title: "Publications and Educational Resources",
-    body: "Throughout his career, Dr. Dietrich Klinghardt™ has written and contributed to books, articles, clinical papers, protocols, teaching manuals, interviews and educational presentations exploring biological and integrative medicine. This collection brings together selected works reflecting the evolution of his clinical thinking — from his early work in neural therapy and psycho-kinesiology to his later writing on neurobiology, environmental influences, chronic illness and The 5 Levels of Healing™.",
+    slug: "academy-publications",
     // Client (2026-09-11, against the Figma): "el boton de Research & books
     // debe quedar identico" — outline here, unlike the filled "Learn more"
     // the other branches use.
@@ -124,10 +113,7 @@ const BRANCHES: Branch[] = [
     side: "right",
   },
   {
-    eyebrow: "Learning center",
-    title: "Klinghardt Akademie",
-    accent: "Dr. Klinghardt's academy in Europe",
-    body: "Based in Europe, the Klinghardt Akademie is Dr. Klinghardt's European training centre. It carries his diagnostic and therapeutic methods forward as a living system, continuously shaped by his clinical practice, research and decades of experience. Here, therapists and health-minded individuals can train directly in his core methods — A.R.T Klinghardt™ and Psycho-Kinesiology — grounded in The 5 Levels of Healing™. Seminars and materials are offered primarily in Europe.",
+    slug: "academy-klinghardt-akademie",
     actions: [{ label: "Go to site", to: "/academy/akademie" }],
     // Client (2026-09-14): real exported panel, replacing the drawn
     // gradient + wordmark this branch opened with — same media slot every
@@ -142,9 +128,7 @@ const BRANCHES: Branch[] = [
     side: "left",
   },
   {
-    eyebrow: "Research & impact",
-    title: "Dr. Klinghardt Foundation™",
-    body: "The Dietrich Klinghardt Foundation™ is dedicated to helping people understand the deeper forces that shape human health and the capacity for healing. Continuing Dr. Klinghardt's life's work, the Foundation supports a more conscious approach to medicine — one that honours the whole person and helps people live with greater health and purpose.",
+    slug: "academy-klinghardt-foundation",
     actions: [
       { label: "Learn more", to: "/foundation" },
       { label: "Donate now", to: "/foundation/donate", ghost: true },
@@ -204,12 +188,7 @@ export function AcademyPage() {
   // del homepage que esta abajo de la foto del hero" — same fallback copy
   // as SECTION.homeIntro (HomePage.tsx), word for word, rather than this
   // page's own placeholder.
-  const page = useSection("academy", {
-    title: "Dr. Klinghardt Akademie™",
-    paragraphs: [
-      "Training programmes and certifications for practitioners who want to bring Autonomic Response Testing and the 5 Levels of Healing into their own practice — taught by Dr. Klinghardt and the team he has trained worldwide.",
-    ],
-  });
+  const page = useSection("academy");
 
   // Client (2026-09-11, against the Figma): the reference bolds one clause
   // mid-paragraph ("ut labore et dolore magna" in its own lorem ipsum) —
@@ -283,35 +262,43 @@ export function AcademyPage() {
       </AnimatedGradient>
 
       {BRANCHES.map((branch) => (
-        <section
-          key={branch.title}
-          className={`section wrap feature-row feature-row--${branch.side}`}
-        >
-          {branch.media ? (
-            <Reveal className="feature-row__media">
-              <img
-                className={branch.media.square ? "feature-row__media-img--square" : undefined}
-                src={branch.media.src}
-                alt={branch.media.alt}
-                width={branch.media.width}
-                height={branch.media.height}
-                loading="lazy"
-                decoding="async"
-              />
-            </Reveal>
-          ) : null}
-
-          <Reveal className="feature-row__body" delay={90}>
-            <p className="eyebrow">{branch.eyebrow}</p>
-            <h2><Marked text={branch.title} /></h2>
-            {branch.accent ? <p className="accent">{branch.accent}</p> : null}
-            <p className="feature-row__copy">{branch.body}</p>
-            <Actions actions={branch.actions} />
-          </Reveal>
-        </section>
+        <BranchRow key={branch.slug} branch={branch} />
       ))}
 
       <NewsletterSection />
     </div>
+  );
+}
+
+function BranchRow({ branch }: { branch: Branch }) {
+  const copy = useSection(branch.slug);
+  return (
+    <section
+      className={`section wrap feature-row feature-row--${branch.side}`}
+    >
+      {branch.media ? (
+        <Reveal className="feature-row__media">
+          <img
+            className={branch.media.square ? "feature-row__media-img--square" : undefined}
+            src={branch.media.src}
+            alt={branch.media.alt}
+            width={branch.media.width}
+            height={branch.media.height}
+            loading="lazy"
+            decoding="async"
+          />
+        </Reveal>
+      ) : null}
+
+      <Reveal className="feature-row__body" delay={90}>
+        {copy.eyebrow ? <p className="eyebrow"><Marked text={copy.eyebrow} /></p> : null}
+        <h2><Marked text={copy.title} /></h2>
+        {copy.subtitle ? <p className="accent"><Marked text={copy.subtitle} /></p> : null}
+        {copy.paragraphs.map((paragraph) => (
+          <p key={paragraph} className="feature-row__copy">{paragraph}</p>
+        ))}
+        <Actions actions={branch.actions} />
+      </Reveal>
+    </section>
   );
 }

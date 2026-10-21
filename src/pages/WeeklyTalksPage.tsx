@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
-import { useSection, useRecords, SECTION } from "@/lib/sections";
+import { useSection, useCardList, SECTION } from "@/lib/sections";
 import {
   eventLongDate,
   eventTimeLabel,
@@ -40,17 +40,10 @@ function formatPlanPrice(cents: number, currency: string): string {
   return formatted;
 }
 
-/**
- * Benefits list shown on every plan card. Not plan-specific data in the
- * membership_plans schema (title/description/interval/price only), so it
- * stays a shared CMS-editable row rather than per-plan content.
- */
-const BENEFITS_FALLBACK = [
-  ["Live weekly talks every Wednesday"],
-  ["Full recordings archive (all past sessions)"],
-  ["Live Q&A with Dr. Dietrich Klinghardt™"],
-  ["Priority access to special guest sessions"],
-];
+/* The benefits on every plan card are cards of the "weekly-talks-benefits"
+   Page Contents block (one card per benefit, title only, reorderable; copy in
+   src/data/blocks.ts until the row has it). Not plan-specific data in the
+   membership_plans schema, so a shared block rather than per-plan content. */
 
 /**
  * The five questions the frame lists. It draws them closed, with no answers
@@ -83,13 +76,9 @@ const FAQ_FALLBACK = [
  * which is honest, instead of showing a button that cannot charge.
  */
 export function WeeklyTalksPage() {
-  const page = useSection(SECTION.weeklyTalks, {
-    title: "Join My Weekly Talks",
-    paragraphs: [
-      "Every week, a live session with Dr. Klinghardt: a short teaching on what he is working through clinically, then open questions from the community.",
-      "Members get the live session, the replay, and the archive of everything that came before.",
-    ],
-  });
+  const page = useSection(SECTION.weeklyTalks);
+  const pricing = useSection("weekly-talks-pricing");
+  const faqHeading = useSection("weekly-talks-faq");
 
   // Read early: the next-live poll below needs to wait for this to settle
   // before its first request (see nextLiveSession).
@@ -151,7 +140,7 @@ export function WeeklyTalksPage() {
     nextLiveIsHeroTalk ? freeSession?.status : nextLiveSession?.status,
   );
 
-  const benefits = useRecords("weekly-talks-benefits", 1, BENEFITS_FALLBACK);
+  const benefits = useCardList("weekly-talks-benefits", 1, ([title]) => ({ icon: "", title, body: "" })).cards;
 
   // Real membership plans (Stripe-backed), published for this site, cheapest
   // interval first — replaces the old hardcoded price/CTA page-contents rows.
@@ -252,13 +241,15 @@ export function WeeklyTalksPage() {
         <p className="hero--split__watermark" aria-hidden="true">Weekly Talks</p>
         <div className="wrap hero__inner">
           <Reveal>
-            <p className="eyebrow hero__eyebrow">Exclusive membership</p>
+            {page.eyebrow ? <p className="eyebrow hero__eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1 className="display-xl"><Marked text={page.title} /></h1>
             {/* The frame sets this line in the display face, a size down from
                 the heading — a subtitle, not body copy. */}
-            <p className="hero__subtitle">
-              Live Answers, Every Week, Directly From Dr. Klinghardt.
-            </p>
+            {page.subtitle ? (
+              <p className="hero__subtitle">
+                <Marked text={page.subtitle} />
+              </p>
+            ) : null}
             <p className="hero__lead">{page.lead}</p>
             {/* The date and the calendar link live in their own band below, so
                 they are not repeated here. One button, matching the frame —
@@ -357,8 +348,8 @@ export function WeeklyTalksPage() {
       {/* ── Pricing ──────────────────────────────────────────────── */}
       <section className="section wrap" id="pricing">
         <Reveal className="section-heading section-heading--center">
-          <p className="eyebrow">Pricing</p>
-          <h2>Learn, Connect, Grow Together</h2>
+          {pricing.eyebrow ? <p className="eyebrow"><Marked text={pricing.eyebrow} /></p> : null}
+          <h2><Marked text={pricing.title} /></h2>
         </Reveal>
 
         {authStatus === "authenticated" ? (
@@ -443,8 +434,8 @@ export function WeeklyTalksPage() {
 
                   <div className="plan__body">
                     <ul className="tick-list plan__benefits">
-                      {benefits.map(([benefit]) => (
-                        <li key={benefit}>{benefit}</li>
+                      {benefits.map((benefit, index) => (
+                        <li key={`${index}-${benefit.title}`}><Marked text={benefit.title} /></li>
                       ))}
                     </ul>
 
@@ -505,8 +496,8 @@ export function WeeklyTalksPage() {
 
       <section className="section wrap" id="faq">
         <Reveal className="section-heading section-heading--center">
-          <p className="eyebrow">FAQ</p>
-          <h2>Frequently Asked Questions</h2>
+          {faqHeading.eyebrow ? <p className="eyebrow"><Marked text={faqHeading.eyebrow} /></p> : null}
+          <h2><Marked text={faqHeading.title} /></h2>
         </Reveal>
         <Accordion
           items={faqs.length ? faqs : FAQ_FALLBACK}

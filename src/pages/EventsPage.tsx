@@ -40,7 +40,7 @@ export function EventsPage() {
       <AnimatedGradient variant="plain" intensity="soft" className="page-hero events-page__hero">
         <div className="wrap page-hero__inner events-page__hero-inner">
           <Reveal className="events-page__intro">
-            <p className="eyebrow">Events & webinars</p>
+            {copy.eyebrow ? <p className="eyebrow"><Marked text={copy.eyebrow} /></p> : null}
             {copy.title === "Learn Directly from Dr. Klinghardt" ? (
               <h1>
                 <span>Learn Directly</span>

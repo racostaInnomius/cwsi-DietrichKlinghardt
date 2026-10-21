@@ -131,6 +131,40 @@ function blockNodes(node: unknown): unknown[] {
   return item?.type === "list" ? (item.children ?? []) : [node];
 }
 
+/** Lexical text-node format bits (TextNode.format). */
+const IS_BOLD = 1;
+const IS_ITALIC = 2;
+
+function lexicalMarked(node: unknown): string {
+  if (!node || typeof node !== "object") return "";
+  const item = node as LexicalNode & { format?: number };
+  if (item.type === "linebreak") return "\n";
+  if (typeof item.text === "string") {
+    const format = typeof item.format === "number" ? item.format : 0;
+    if (!item.text.trim()) return item.text;
+    if (format & IS_BOLD) return `**${item.text}**`;
+    if (format & IS_ITALIC) return `*${item.text}*`;
+    return item.text;
+  }
+  return item.children?.map(lexicalMarked).join("") ?? "";
+}
+
+/**
+ * Like richTextBlocks, but bold and italic runs come back wrapped in ** and *
+ * — for the few blocks that render emphasis (components/Emphasis.tsx).
+ */
+export function richTextMarked(doc: unknown): string[] {
+  if (!doc || typeof doc !== "object") return [];
+  const root = (doc as { root?: { children?: unknown[] } }).root;
+  return (
+    root?.children
+      ?.flatMap(blockNodes)
+      .map(lexicalMarked)
+      .map((value) => value.trim())
+      .filter(Boolean) ?? []
+  );
+}
+
 export function richTextBlocks(doc: unknown): string[] {
   if (!doc || typeof doc !== "object") return [];
   const root = (doc as { root?: { children?: unknown[] } }).root;

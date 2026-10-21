@@ -8,54 +8,20 @@ import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { EventMetaIcon } from "@/components/Icons";
 
-type Hotel = {
-  name: string;
-  address: string;
-  phone?: string;
-  site?: string;
-  note?: string;
-};
+/* The hotels are cards of the "sophia-accommodations-hotels" Page Contents
+   block (client, 2026-10-21: editable and reorderable by the clinic): title =
+   name, "Más datos" → subtitle = address, phone, link = site; text = the note.
+   Their first content is in src/data/blocks.ts. */
 
-/**
- * The clinic's hotels, transcribed from the Figma frame `0:7840` with their
- * addresses, phone numbers, sites and the discount note each one carries.
- * (Client, 2026-10-21: Willows Lodge removed; Heathman Hotel and Residence Inn without their links.)
- *
- * They are a constant rather than CMS rows because they are the clinic's own
- * referral list, not editorial content — and because getting one of these
- * numbers wrong matters more than most copy on the site. If the clinic wants to
- * maintain them, they move to a collection; the layout does not change.
- */
-const HOTELS: Hotel[] = [
-  {
-    name: "Heathman Hotel",
-    address: "220 Kirkland Avenue, Kirkland, WA 98033",
-    phone: "(425) 284-5800",
-    note: "Use promo code SINVA for a discounted rate, or call the hotel directly.",
-  },
-  {
-    name: "Hampton Inn & Suites",
-    address: "19211 Woodinville Snohomish Rd, Woodinville, WA 98072",
-    note: "Get the best discounted rate when you mention you are a patient of Sophia HI.",
-  },
-  {
-    name: "Residence Inn",
-    address: "1920 Northeast 195th Street, Bothell, WA 98011",
-    phone: "(425) 485-3030",
-  },
-  {
-    name: "Comfort Inn & Suites",
-    address: "1414 228th Street Southeast, Bothell, WA 98021",
-    phone: "(425) 402-0900",
-    site: "comfortinn.com",
-  },
-  {
-    name: "Country Inn & Suites",
-    address: "19333 North Creek Parkway, Bothell, WA 98011",
-    phone: "(425) 485-5557",
-    site: "countryinns.com",
-  },
-];
+/** "comfortinn.com" or a full URL → a link the browser can follow. */
+function siteHref(site: string) {
+  return /^https?:\/\//i.test(site) ? site : `https://${site}`;
+}
+
+/** The site as the reader should see it, without the scheme. */
+function siteLabel(site: string) {
+  return site.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+}
 
 /** Digits only — what a phone link needs, from what a reader should see. */
 function telHref(phone: string) {
@@ -76,13 +42,8 @@ const FALLBACK_MAP_EMBED =
  * previously carried only the first heading (D8).
  */
 export function AccommodationsPage() {
-  const page = useSection(SECTION.accommodations, {
-    title: "How to Find Us",
-    paragraphs: [
-      "Sophia Health Institute by Dr. Klinghardt™ sits in Woodinville, about 30 miles north-east of downtown Seattle — a town known for its scenic river valley, small-town charm, and lively mix of breweries, wineries and distilleries.",
-      "We chose it for the calm it offers away from the city, plus easy access to the outdoors for hiking, walking and biking.",
-    ],
-  });
+  const page = useSection(SECTION.accommodations);
+  const hotels = useSection(SECTION.accommodationsHotels);
 
   const map = mapEmbedUrl(page.raw?.mapEmbedUrl) ?? FALLBACK_MAP_EMBED;
 
@@ -117,7 +78,7 @@ export function AccommodationsPage() {
         </Reveal>
 
         <Reveal className="feature-row__body" delay={90}>
-          <p className="eyebrow">Get started</p>
+          {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h1><Marked text={page.title} /></h1>
           {page.paragraphs.map((paragraph) => (
             <p key={paragraph} className="feature-row__copy">
@@ -139,42 +100,39 @@ export function AccommodationsPage() {
 
       <section className="section wrap">
         <Reveal>
-          <h2 className="section-title">Hotels in The Local Area</h2>
-          <p className="lead">
-            Many of the accommodations listed below have offered a discounted rate
-            to Sophia Health Institute by Dr. Klinghardt™ patients, depending on
-            occupancy. Please enquire about a discounted rate when booking your
-            reservation.
-          </p>
+          <h2 className="section-title"><Marked text={hotels.title} /></h2>
+          {hotels.lead ? <p className="lead">{hotels.lead}</p> : null}
         </Reveal>
 
-        <Reveal>
-          <p className="eyebrow">Accommodations</p>
-        </Reveal>
+        {hotels.eyebrow ? (
+          <Reveal>
+            <p className="eyebrow"><Marked text={hotels.eyebrow} /></p>
+          </Reveal>
+        ) : null}
 
         <ul className="card-grid card-grid--3 hotels">
-          {HOTELS.map((hotel, index) => (
-            <Reveal as="li" key={hotel.name} className="card hotel" delay={index * 60} shift={12}>
+          {hotels.cards.map((hotel, index) => (
+            <Reveal as="li" key={`${index}-${hotel.title}`} className="card hotel" delay={index * 60} shift={12}>
               <div className="hotel__header">
                 <span className="hotel__icon">
                   <EventMetaIcon kind="pin" />
                 </span>
-                <h3>{hotel.name}</h3>
+                <h3><Marked text={hotel.title} /></h3>
               </div>
-              <address>{hotel.address}</address>
+              {hotel.subtitle ? <address>{hotel.subtitle}</address> : null}
               {hotel.phone ? (
                 <p className="hotel__phone">
                   <a href={telHref(hotel.phone)}>{hotel.phone}</a>
                 </p>
               ) : null}
-              {hotel.site ? (
+              {hotel.link ? (
                 <p className="hotel__site">
-                  <a href={`https://${hotel.site}`} target="_blank" rel="noreferrer">
-                    {hotel.site} <span aria-hidden="true">↗</span>
+                  <a href={siteHref(hotel.link)} target="_blank" rel="noreferrer">
+                    {siteLabel(hotel.link)} <span aria-hidden="true">↗</span>
                   </a>
                 </p>
               ) : null}
-              {hotel.note ? <p className="hotel__note">{hotel.note}</p> : null}
+              {hotel.body ? <p className="hotel__note">{hotel.body}</p> : null}
             </Reveal>
           ))}
         </ul>
@@ -182,14 +140,7 @@ export function AccommodationsPage() {
 
       <CtaBand
         className="cta-band--dark"
-        title={
-          <>
-            Ready to
-            <br />
-            Take The Next Step
-          </>
-        }
-        body="Our friendly team is here to help. Fill out the form and we will review your message and respond as soon as possible during our regular business hours."
+        slug={SECTION.sophiaCtaNextStep}
         subject="Travel and accommodation enquiry"
         formSplitName
       />

@@ -29,12 +29,7 @@ const PAGE_SIZE = 12;
  * directory is crawlable and works before (and without) JavaScript.
  */
 export function DirectoryPage() {
-  const page = useSection("therapists", {
-    title: "Are You Looking For an A.R.T.® Klinghardt® Therapist?",
-    paragraphs: [
-      "Browse our directory to find practitioners near you. Visit their personal websites to learn more about the services and approach each of them offers.",
-    ],
-  });
+  const page = useSection("therapists");
 
   const people = usePractitioners();
   const [query, setQuery] = useState("");
@@ -76,7 +71,7 @@ export function DirectoryPage() {
           items={[{ label: "Akademie", href: "/academy" }, { label: "Find a therapist" }]}
         />
         <Reveal>
-          <p className="eyebrow">Global practitioner directory</p>
+          {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h1><Marked text={page.title} /></h1>
           {page.lead ? <p className="lead">{page.lead}</p> : null}
         </Reveal>

@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { Marked } from "@/components/Marked";
+import { useSection } from "@/lib/sections";
 
 /**
  * The closing band the design repeats across the Sophia pages — an inset
@@ -14,18 +16,25 @@ import { ContactForm } from "@/components/sections/ContactForm";
  * Repeating the markup would have meant repeating the eventual fixes too.
  */
 export function CtaBand({
-  eyebrow = "Ready to begin",
-  title,
-  body,
+  slug,
+  eyebrow: eyebrowProp,
+  title: titleProp,
+  body: bodyProp,
   subject,
   formSplitName,
   children,
   className,
 }: {
+  /**
+   * Page Contents block the band's words come from (eyebrow, title + subtitle
+   * as the heading's two lines, first paragraph as the body). Explicit props
+   * win over it.
+   */
+  slug?: string;
   eyebrow?: string;
   /** Rendered as given — the design breaks these headings over two lines. */
-  title: ReactNode;
-  body: string;
+  title?: ReactNode;
+  body?: string;
   /** When set, the band carries the contact form and this labels the enquiry. */
   subject?: string;
   /** Accommodations' dark band splits the name field into first/last, per its
@@ -36,6 +45,10 @@ export function CtaBand({
   /** Extra modifier class, for one-off variants (e.g. Sophia home's dark band). */
   className?: string;
 }) {
+  const block = useSection(slug ?? "");
+  const eyebrow = eyebrowProp ?? (block.eyebrow || "Ready to begin");
+  const title = titleProp ?? <TwoLineTitle title={block.title} subtitle={block.subtitle} />;
+  const body = bodyProp ?? block.lead;
   return (
     <section className="section wrap">
       <AnimatedGradient
@@ -64,5 +77,20 @@ export function CtaBand({
         </div>
       </AnimatedGradient>
     </section>
+  );
+}
+
+/** A heading the design sets on two lines: the block's title, then its subtitle. */
+export function TwoLineTitle({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <>
+      <Marked text={title} />
+      {subtitle ? (
+        <>
+          <br />
+          <Marked text={subtitle} />
+        </>
+      ) : null}
+    </>
   );
 }

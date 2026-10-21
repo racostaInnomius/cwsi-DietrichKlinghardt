@@ -1,33 +1,18 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
-import { useSection, useRecords, SECTION } from "@/lib/sections";
+import { useSection, useCardList, SECTION } from "@/lib/sections";
+import { CardIcon } from "@/components/CardIcon";
+import { Emphasis } from "@/components/Emphasis";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
-import { ArchiveIcon, GraduationCapIcon, FlaskIcon, GlobeIcon } from "@/components/Icons";
+import { ArchiveIcon } from "@/components/Icons";
 
-/** title | description — the four commitments, from the design. */
-const COMMITMENTS_FALLBACK: string[][] = [
-  [
-    "Preserving a Legacy",
-    "Creating a carefully maintained archive of Dr. Klinghardt's publications, lectures, interviews, protocols, correspondence and historical educational materials.",
-  ],
-  [
-    "Advancing Education",
-    "Supporting responsible educational programs, scholarships, lectures and professional training inspired by Dr. Klinghardt's interdisciplinary approach to health and healing.",
-  ],
-  [
-    "Encouraging Research",
-    "Promoting thoughtful scientific inquiry into questions arising from Dr. Klinghardt's clinical work and encouraging meaningful collaboration among practitioners, researchers and institutions.",
-  ],
-  [
-    "Expanding Access",
-    "Helping make educational resources available to communities and practitioners who might otherwise be unable to access advanced training and information.",
-  ],
-];
-
-/** One icon per commitment, in the same order as COMMITMENTS_FALLBACK/CMS records. */
-const COMMITMENT_ICONS = [ArchiveIcon, GraduationCapIcon, FlaskIcon, GlobeIcon];
+/* The four commitments are cards of the "foundation-commitments" Page
+   Contents block, each with its icon (copy in src/data/blocks.ts until the row
+   has it). Rows still written as "title | description" lines keep working,
+   with the design's icons in order. */
+const COMMITMENT_ICONS = ["archive", "graduation-cap", "flask", "globe"];
 
 /**
  * Splits "Sentence one. Sentence two. Last sentence." into everything before
@@ -56,19 +41,14 @@ function splitLastSentence(title: string): { lead: string; accent: string | null
  * reference wins per the client's own priority order.
  */
 export function FoundationPage() {
-  const page = useSection(SECTION.foundation, {
-    title: "Preserving Knowledge. Advancing Education. Supporting the Future of Healing.",
-    paragraphs: [
-      "The Dr. Klinghardt Foundation™ is being established to preserve and advance the life's work of Dietrich Klinghardt MD PhD™, while supporting education, thoughtful inquiry, and greater access to knowledge in biological and integrative medicine.",
-    ],
-  });
-  const purpose = useSection("foundation-purpose", {
-    title: "Preserving Knowledge for Future Generations",
-    paragraphs: [
-      "The Foundation's purpose is to ensure that decades of clinical observations, lectures, publications, protocols and educational materials are responsibly preserved and made accessible to future generations of practitioners, researchers, students and members of the public.",
-    ],
-  });
-  const commitments = useRecords("foundation-commitments", 2, COMMITMENTS_FALLBACK);
+  const page = useSection(SECTION.foundation);
+  const purpose = useSection("foundation-purpose");
+  const commitments = useCardList("foundation-commitments", 2, ([title, body], index) => ({
+    icon: COMMITMENT_ICONS[index % COMMITMENT_ICONS.length],
+    title,
+    body,
+  }));
+  const quote = useSection("foundation-quote");
   const { lead: titleLead, accent: titleAccent } = splitLastSentence(page.title);
 
   return (
@@ -117,8 +97,8 @@ export function FoundationPage() {
       <section className="section wrap foundation-purpose">
         <Reveal className="foundation-purpose__grid">
           <div className="foundation-purpose__copy">
-            <p className="eyebrow">Our purpose</p>
-            <h2>{purpose.title}</h2>
+            {purpose.eyebrow ? <p className="eyebrow"><Marked text={purpose.eyebrow} /></p> : null}
+            <h2><Marked text={purpose.title} /></h2>
             <div className="prose">
               {purpose.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -140,32 +120,29 @@ export function FoundationPage() {
           esa seccion asi" predates this reference. */}
       <section className="section wrap">
         <Reveal>
-          <p className="eyebrow">Four central commitments</p>
+          {commitments.eyebrow ? <p className="eyebrow"><Marked text={commitments.eyebrow} /></p> : null}
           <h2 className="section-title">
-            Its Work Will Be Organized Around Four Central Commitments:
+            <Marked text={commitments.title} />
           </h2>
         </Reveal>
         <ul className="commitments">
-          {commitments.map(([title, body], index) => {
-            const Icon = COMMITMENT_ICONS[index % COMMITMENT_ICONS.length];
-            return (
-              <Reveal
-                as="li"
-                key={title}
-                className="commitment"
-                delay={index * 80}
-                shift={14}
-              >
-                <span className="commitment__icon" aria-hidden="true">
-                  <Icon />
-                </span>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
-                </div>
-              </Reveal>
-            );
-          })}
+          {commitments.cards.map(({ icon, title, body }, index) => (
+            <Reveal
+              as="li"
+              key={`${index}-${title}`}
+              className="commitment"
+              delay={index * 80}
+              shift={14}
+            >
+              <span className="commitment__icon" aria-hidden="true">
+                <CardIcon name={icon} fallback={ArchiveIcon} />
+              </span>
+              <div>
+                <h3><Marked text={title} /></h3>
+                {body ? <p>{body}</p> : null}
+              </div>
+            </Reveal>
+          ))}
         </ul>
       </section>
 
@@ -186,16 +163,12 @@ export function FoundationPage() {
         <div className="wrap">
           <Reveal className="foundation-quote__inner">
             <blockquote className="foundation-quote__text">
-              <p>
-                “The Foundation is intended to serve as a living bridge between{" "}
-                <strong>
-                  Dr. Klinghardt's lifetime of work and the future of integrative
-                  healthcare
-                </strong>
-                —honoring what has been learned while encouraging new questions,
-                responsible investigation, and compassionate service.”
-              </p>
-              <cite>— Dr. Dietrich Klinghardt™</cite>
+              {quote.marked.map((paragraph) => (
+                <p key={paragraph}>
+                  <Emphasis text={paragraph} />
+                </p>
+              ))}
+              {quote.subtitle ? <cite><Marked text={quote.subtitle} /></cite> : null}
             </blockquote>
             <Link className="btn btn-primary foundation-quote__cta" to="/foundation/donate">
               Support the Foundation

@@ -22,12 +22,8 @@ import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
  * so plainly rather than showing a form that would fail at the last step.
  */
 export function DonatePage() {
-  const page = useSection("donate", {
-    title: "Support the Foundation",
-    paragraphs: [
-      "Every contribution goes to preserving the archive, funding scholarships, and keeping this body of work available to the practitioners who come next.",
-    ],
-  });
+  const page = useSection("donate");
+  const where = useSection("donate-where-a-contribution-goes");
   const { status, context } = useDonationContext();
 
   return (
@@ -44,7 +40,7 @@ export function DonatePage() {
             items={[{ label: "Foundation", href: "/foundation" }, { label: "Support" }]}
           />
           <Reveal>
-            <p className="eyebrow">Klinghardt Foundation™</p>
+            {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
           </Reveal>
@@ -53,21 +49,16 @@ export function DonatePage() {
 
       <section className="section wrap two-col">
         <Reveal className="prose">
-          <h2>Where a contribution goes</h2>
-          <p>
-            The Foundation preserves decades of clinical observation, lectures,
-            protocols and educational material, and makes them available to
-            practitioners, researchers and students who would otherwise have no
-            route to them.
-          </p>
-          <p>
-            Contributions fund the archive itself, scholarships for practitioners
-            in training, and research into questions raised by the clinical work.
-          </p>
-          <p className="donate-note">
-            Donations are processed by Stripe. Card details never reach this site
-            or the Foundation.
-          </p>
+          <h2><Marked text={where.title} /></h2>
+          {/* The last paragraph is the small payment note under the copy. */}
+          {where.paragraphs.map((paragraph, index) => (
+            <p
+              key={paragraph}
+              className={index > 0 && index === where.paragraphs.length - 1 ? "donate-note" : undefined}
+            >
+              {paragraph}
+            </p>
+          ))}
         </Reveal>
 
         <Reveal as="aside" className="donate-panel" delay={120}>
@@ -92,15 +83,16 @@ export function DonatePage() {
  * distinguish between them: to a donor they are the same fact.
  */
 function ClosedNotice() {
+  const notice = useSection("donate-donations-open-soon");
   return (
     <>
-      <p className="eyebrow">Not open yet</p>
-      <h2>Donations open soon</h2>
-      <p className="donate-panel__note">
-        The Foundation is still being established and cannot accept
-        contributions yet. If you would like to support it, write to us and we
-        will come back to you as soon as it can.
-      </p>
+      {notice.eyebrow ? <p className="eyebrow"><Marked text={notice.eyebrow} /></p> : null}
+      <h2><Marked text={notice.title} /></h2>
+      {notice.paragraphs.map((paragraph) => (
+        <p key={paragraph} className="donate-panel__note">
+          {paragraph}
+        </p>
+      ))}
       <Link className="btn btn-primary donate-panel__cta" to="/contact">
         Get in touch
       </Link>

@@ -16,12 +16,7 @@ import { CtaBand } from "@/components/sections/CtaBand";
  * `order` field so the clinic controls who leads the grid.
  */
 export function SophiaTeamPage() {
-  const page = useSection(SECTION.sophiaTeam, {
-    title: "Meet Our Team",
-    paragraphs: [
-      "We are proud to offer a dedicated multidisciplinary team committed to guiding patients toward true healing. Led by Dr. Dietrich Klinghardt™, our team includes medical and naturopathic doctors, chiropractors, certified physician assistants, and registered nurses trained in Autonomic Response Testing™ (A.R.T™). We also have a dedicated clinical support staff who play an essential role in ensuring every step of the patient's care is seamless, compassionate, and effective from start to finish.",
-    ],
-  });
+  const page = useSection(SECTION.sophiaTeam);
 
   const team = [...useCollection("board-members")].sort(
     (a, b) => number(a, "order") - number(b, "order"),
@@ -43,7 +38,7 @@ export function SophiaTeamPage() {
         <div className="wrap page-hero__inner">
           <Breadcrumbs items={[{ label: "Sophia", href: "/sophia" }, { label: "Our team" }]} />
           <Reveal>
-            <p className="eyebrow">Sophia Health Institute™</p>
+            {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
           </Reveal>
@@ -101,16 +96,7 @@ export function SophiaTeamPage() {
         )}
       </section>
 
-      <CtaBand
-        title={
-          <>
-            Stop Wondering.
-            <br />
-            Start Finding Answers.
-          </>
-        }
-        body="The Sophia Health Institute by Dr. Klinghardt™ team is ready to help you. Before you become a patient, it is natural to have questions — our patient coordinator would be happy to answer them."
-      >
+      <CtaBand slug={SECTION.sophiaCtaStopWondering}>
         <Link className="btn btn-light" to="/sophia/new-patients">
           Become a new patient <span aria-hidden="true">→</span>
         </Link>

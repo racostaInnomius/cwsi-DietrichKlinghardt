@@ -1,179 +1,31 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
-import { useSection, useCards, SECTION, type Card } from "@/lib/sections";
+import { useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Marked } from "@/components/Marked";
+import { CardIcon } from "@/components/CardIcon";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { InViewVideo } from "@/components/sections/InViewVideo";
 import { SOPHIA_WELCOME_VIDEO } from "@/data/media";
-import {
-  ShieldIcon,
-  TargetIcon,
-  LayersIcon,
-  SproutIcon,
-  BoltIcon,
-  HeartIcon,
-  DropletIcon,
-  LeafIcon,
-  ClipboardCheckIcon,
-  PulseIcon,
-  FlaskIcon,
-  UserCheckIcon,
-  SparklesIcon,
-  TeamIcon,
-  GlobeIcon,
-  StarIcon,
-} from "@/components/Icons";
 
 /* Client (2026-09-12), via the designer: "para los numeros... podemos
-   hacer un conteo" — split into the numeric target + suffix/format
-   AnimatedCounter needs, instead of the pre-formatted display strings
-   ("25+", "10K") this carried before. */
-const STATS: { to: number; suffix?: string; format?: "k"; label: string }[] = [
-  { to: 25, suffix: "+", label: "Years of experience" },
-  { to: 10000, format: "k", label: "Patients treated worldwide" },
-  { to: 5, label: "Levels of healing addressed" },
-  { to: 100, suffix: "%", label: "Root-cause focused care" },
-];
+   hacer un conteo" — each figure counts up. In the CMS a figure is written the
+   way it reads ("25+", "10K", "100%", in the card's Label); this splits it
+   into the target number + suffix/format AnimatedCounter needs. */
+function figure(label: string): { to: number; suffix?: string; format?: "k" } | null {
+  const match = /^\s*(\d+(?:[.,]\d+)?)\s*(k)?\s*(.*)$/i.exec(label);
+  if (!match) return null;
+  const value = Number(match[1].replace(",", "."));
+  return match[2]
+    ? { to: value * 1000, format: "k", suffix: match[3] || undefined }
+    : { to: value, suffix: match[3] || undefined };
+}
 
-const PILLARS = [
-  {
-    icon: <ShieldIcon />,
-    title: "World-Class Leadership",
-    body: "Care led by Dr. Dietrich Klinghardt, a globally recognised pioneer in the treatment of chronic illness, chronic infections, environmental toxicity and unresolved trauma.",
-  },
-  {
-    icon: <TargetIcon />,
-    title: "Precision Diagnostics — A.R.T Klinghardt™",
-    body: "Autonomic Response Testing uncovers the hidden causes of illness. Every practitioner on our team is certified in A.R.T Klinghardt™.",
-  },
-  {
-    icon: <LayersIcon />,
-    title: "The 5 Levels of Healing™",
-    body: "Dr. Klinghardt's signature framework addresses the physical, energetic, emotional, mental and spiritual dimensions of health, treating the whole person.",
-  },
-  {
-    icon: <SproutIcon />,
-    title: "Root-Cause Resolution",
-    body: "We look at your entire system to understand why you haven't made progress before — not just managing Lyme, mould, heavy metals or trauma in isolation.",
-  },
-  {
-    icon: <BoltIcon />,
-    title: "A Hub of Research & Innovation",
-    body: "Practitioners travel from around the world to learn from Dr. Klinghardt, and techniques created here have revolutionised how chronic illness is treated globally.",
-  },
-  {
-    icon: <HeartIcon />,
-    title: "Warm, Personalised Care",
-    body: "Every case of chronic illness is unique. You'll receive dedicated attention from a team that listens, empathises and understands how you feel.",
-  },
-];
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Intake & History Review",
-    body: "Deep-dive into your complete health history, environment and prior treatments.",
-  },
-  {
-    n: "02",
-    title: "A.R.T Klinghardt™ Assessment",
-    body: "Bioenergetic testing to identify hidden root causes and organ-level dysfunction.",
-  },
-  {
-    n: "03",
-    title: "Individualized Protocol",
-    body: "A unique treatment plan addressing all relevant levels of illness.",
-  },
-  {
-    n: "04",
-    title: "Ongoing Support",
-    body: "Regular follow-up, protocol adjustments and access to the SHI team.",
-  },
-];
-
-// The Naturopathic care cards are edited in the CMS since 2026-10-21 (Page
-// Contents → "sophia-naturopathic-care" → Tarjetas: icon, title, text, order).
-// These are the fallback until that row exists, and its first content.
-// Client copy, 2026-10-21: three texts rewritten, "Joint & Back Problems"
-// replaced by "Treating Chronic Illness", four cards added (two rows of four;
-// the first row is IV, Chronic Illness, Traditional and Treatments Unavailable
-// Elsewhere, per the client's follow-up the same day).
-const THERAPIES: Card[] = [
-  {
-    icon: "pulse",
-    title: "Treating Chronic Illness",
-    body: "If you're dealing with chronic illness, you might be skeptical of new treatment methods. It's natural to wonder what makes Sophia Health Institute by Dr.Klinghardt better than other clinics and treatment methods you've tried.",
-  },
-  {
-    icon: "sparkles",
-    title: "Treatments Unavailable Elsewhere",
-    body: "You get access to different treatment methods that other clinics don’t offer. Depending on your treatment plan, you’ll get an opportunity to try different healing methods from our extensive list of treatment options.",
-  },
-  {
-    icon: "flask",
-    title: "Research and Innovation",
-    body: "Practitioners from around the world have traveled far and wide to learn directly from Dr. Klinghardt, for his research and innovation in finding new, effective methods for treating the root causes of chronic illness. Techniques and methods created by Dr. Klinghardt have revolutionized the way chronic illness is treated around the world.",
-  },
-  {
-    icon: "star",
-    title: "Experts On Treating Chronic Illness",
-    body: "You’ll receive treatment from one of the world’s leading experts on treating chronic illness. Sophia Health Institute is the home of Dr. Klinghardt, one of the world’s leading specialists in treating chronic illness. Dr. Klinghardt is the founder and medical director of the clinic and he has dedicated his life to research and innovation in the field of chronic illness.",
-  },
-  {
-    icon: "clipboard",
-    title: "Comprehensive Assessment",
-    body: "You’ll get an in depth treatment plan that targets the root cause of your illness, not just your symptoms. Oftentimes, you don’t just have Lyme disease, mold illness, heavy metals, a root canal, or unhealed trauma. We look at your illness in the context of the whole system so we can uncover as much as possible to understand why you haven’t made progress in the past with other treatment methods. We will do this before prescribing a new treatment plan to you.",
-  },
-  {
-    icon: "user-check",
-    title: "Personalized Care",
-    body: "You’ll get personalized care, attention, and support from a team of specialists who understand how you feel and have experience treating your symptoms. Our team is specially trained in helping you in all aspects of your healing. All of our doctors are very closely connected with Dr. Klinghardt. Dr.Klinghardt personally trains each doctor in administering best assessment protocols so they can find the missing links in your treatment to give you the support you’ve been searching for.",
-  },
-  {
-    icon: "leaf",
-    title: "Traditional Therapies",
-    body: "Our approach brings together a range of therapies, including homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, PhotonWave, pulsed electromagnetic field therapy, and microcurrent.",
-  },
-  {
-    icon: "droplet",
-    title: "IV Therapies",
-    body: "At SHI by Dr.Klinghardt, personalized care starts with understanding what you need, we’ll help you explore the right options. For those seeking ongoing care, we can guide tailored recommendations, track your response to treatment, and inform adjustments as your needs evolve.",
-  },
-];
-
-
-/** CMS icon keys (Page Contents → Cards → Icon) → this site's drawings. */
-const CARD_ICONS: Record<string, typeof DropletIcon> = {
-  droplet: DropletIcon,
-  pulse: PulseIcon,
-  leaf: LeafIcon,
-  sparkles: SparklesIcon,
-  clipboard: ClipboardCheckIcon,
-  flask: FlaskIcon,
-  "user-check": UserCheckIcon,
-  team: TeamIcon,
-  heart: HeartIcon,
-  shield: ShieldIcon,
-  target: TargetIcon,
-  layers: LayersIcon,
-  sprout: SproutIcon,
-  bolt: BoltIcon,
-  globe: GlobeIcon,
-  star: StarIcon,
-};
-
-const CONDITIONS = [
-  "Lyme disease",
-  "Chronic fatigue",
-  "Sleep & digestive disorders",
-  "Chronic pain",
-  "Mold illness",
-  "Heavy metal toxicity",
-  "Hormone imbalances",
-  "Premature aging",
-];
+// Every block on this page is a Page Contents row (copy in src/data/blocks.ts
+// until the row has it): sophia-home, -figures, -our-approach, -six-pillars,
+// -cutting-edge-science, -naturopathic-care, -what-we-treat and the shared
+// sophia-cta-stop-wondering. Cards are reordered by dragging them in the CMS.
 
 /**
  * Sophia Health Institute — the clinic's own landing.
@@ -185,16 +37,13 @@ const CONDITIONS = [
  * in the whole audit (D2).
  */
 export function SophiaPage() {
-  const care = useCards(SECTION.sophiaCare, {
-    title: "Healing the Whole Person, Mind, Body, and Spirit",
-    cards: THERAPIES,
-  });
-  const page = useSection(SECTION.sophiaHome, {
-    title: "Founded by Dr. Dietrich Klinghardt™ Built for True Healing",
-    paragraphs: [
-      "Sophia Health Institute by Dr. Klinghardt™ is a world-renowned healing centre dedicated to restoring health on every level — physical, emotional, mental and spiritual. We provide a truly individualised, root-cause approach to complex chronic illness.",
-    ],
-  });
+  const page = useSection(SECTION.sophiaHome);
+  const figures = useSection(SECTION.sophiaFigures);
+  const approach = useSection(SECTION.sophiaOurApproach);
+  const pillars = useSection(SECTION.sophiaSixPillars);
+  const science = useSection(SECTION.sophiaCuttingEdgeScience);
+  const care = useSection(SECTION.sophiaCare);
+  const conditions = useSection(SECTION.sophiaWhatWeTreat);
 
   return (
     <>
@@ -247,7 +96,7 @@ export function SophiaPage() {
         </Reveal>
 
         <Reveal className="feature-row__body" delay={90}>
-          <p className="eyebrow">Sophia Health Institute by Dr. Klinghardt™</p>
+          {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h2 className="sophia-welcome-title"><Marked text={page.title} /></h2>
           {page.lead ? <p className="feature-row__copy">{page.lead}</p> : null}
           <Link className="btn btn-primary" to="/sophia/new-patients">
@@ -262,53 +111,45 @@ export function SophiaPage() {
             its own as you scroll to it, staggered, instead of the whole
             grid fading up as one flat block. */}
         <div className="feature-row__media stat-grid">
-          {STATS.map((stat, index) => (
-            <Reveal as="div" key={stat.label} className="stat" delay={index * 80} shift={12}>
-              <p className="stat__value">
-                <AnimatedCounter to={stat.to} suffix={stat.suffix} format={stat.format} />
-              </p>
-              <p className="stat__label">{stat.label}</p>
-            </Reveal>
-          ))}
+          {figures.cards.map((stat, index) => {
+            const count = figure(stat.label ?? "");
+            return (
+              <Reveal as="div" key={`${index}-${stat.title}`} className="stat" delay={index * 80} shift={12}>
+                <p className="stat__value">
+                  {count ? (
+                    <AnimatedCounter to={count.to} suffix={count.suffix} format={count.format} />
+                  ) : (
+                    stat.label
+                  )}
+                </p>
+                <p className="stat__label">{stat.title}</p>
+              </Reveal>
+            );
+          })}
         </div>
 
         <Reveal className="feature-row__body" delay={90}>
-          <p className="eyebrow">Who we are</p>
-          <h2>Our Approach</h2>
-          <p className="feature-row__copy">
-            At Sophia Health Institute by Dr. Klinghardt™, we use Autonomic
-            Response Testing (A.R.T.®) Dr. Dietrich Klinghardt™ clinically
-            refined diagnostic system to uncover the hidden causes of illness
-            with remarkable precision. This tool allows us to tailor treatments
-            to each individual’s unique needs, ensuring that no layer of
-            dysfunction is overlooked.
-          </p>
-          <p className="feature-row__copy">
-            Beyond the science, it’s our compassionate approach that makes the
-            difference. Our team is committed to creating a space where every
-            patient feels safe, heard, and genuinely supported. This combination
-            of cutting edge diagnostics and heartfelt care is what drives the
-            exceptional outcomes we’re known for.
-          </p>
-          <p className="feature-row__copy">
-            If you're dealing with chronic illness, you might be skeptical of new
-            treatment methods. Dr. Dietrich Klinghardt™ explains the pillars of
-            treating chronic illness.
-          </p>
+          {approach.eyebrow ? <p className="eyebrow"><Marked text={approach.eyebrow} /></p> : null}
+          <h2><Marked text={approach.title} /></h2>
+          {approach.paragraphs.map((paragraph) => (
+            <p key={paragraph} className="feature-row__copy">
+              {paragraph}
+            </p>
+          ))}
         </Reveal>
       </section>
 
       <section className="section wrap">
         <Reveal className="section-heading section-heading--center sophia-pillars-heading">
-          <p className="eyebrow">What makes Sophia unique</p>
-          <h2>Six Pillars of A Different Approach</h2>
+          {pillars.eyebrow ? <p className="eyebrow"><Marked text={pillars.eyebrow} /></p> : null}
+          <h2><Marked text={pillars.title} /></h2>
         </Reveal>
         <ul className="card-grid card-grid--3 sophia-pillars-grid">
-          {PILLARS.map((pillar, index) => (
-            <Reveal as="li" key={pillar.title} className="card" delay={index * 60} shift={12}>
-              <div className="card__icon">{pillar.icon}</div>
-              <h3>{pillar.title}</h3>
-              <p>{pillar.body}</p>
+          {pillars.cards.map((pillar, index) => (
+            <Reveal as="li" key={`${index}-${pillar.title}`} className="card" delay={index * 60} shift={12}>
+              <div className="card__icon"><CardIcon name={pillar.icon} /></div>
+              <h3><Marked text={pillar.title} /></h3>
+              {pillar.body ? <p>{pillar.body}</p> : null}
             </Reveal>
           ))}
         </ul>
@@ -326,12 +167,12 @@ export function SophiaPage() {
       <section className="section wrap feature-row feature-row--right">
         <div className="feature-row__media steps">
           <ol>
-            {STEPS.map((step, index) => (
-              <Reveal as="li" key={step.n} className="step" delay={index * 90} shift={12}>
-                <span className="step__n">{step.n}</span>
+            {science.cards.map((step, index) => (
+              <Reveal as="li" key={`${index}-${step.title}`} className="step" delay={index * 90} shift={12}>
+                <span className="step__n">{step.label || String(index + 1).padStart(2, "0")}</span>
                 <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.body}</p>
+                  <h3><Marked text={step.title} /></h3>
+                  {step.body ? <p>{step.body}</p> : null}
                 </div>
               </Reveal>
             ))}
@@ -339,39 +180,29 @@ export function SophiaPage() {
         </div>
 
         <Reveal className="feature-row__body" delay={90}>
-          <p className="eyebrow">Our approach</p>
-          <h2>Cutting-edge Science Meets Heartfelt Care</h2>
-          <p className="feature-row__copy">
-            At Sophia Health Institute by Dr. Klinghardt™, we don't just look at
-            your symptoms. We look at your entire health history and current
-            health profile — chronic infections, environmental toxicity, dental
-            history, epigenetics, diet, lifestyle, your family system and more —
-            to find and treat the root causes of why you are ill.
-          </p>
-          <p className="feature-row__copy">
-            Beyond the science, it is our compassionate approach that makes the
-            difference: a space where every patient feels safe, heard and
-            genuinely supported.
-          </p>
+          {science.eyebrow ? <p className="eyebrow"><Marked text={science.eyebrow} /></p> : null}
+          <h2><Marked text={science.title} /></h2>
+          {science.paragraphs.map((paragraph) => (
+            <p key={paragraph} className="feature-row__copy">
+              {paragraph}
+            </p>
+          ))}
         </Reveal>
       </section>
 
       <section className="section wrap" id="naturopathic-care">
         <Reveal className="section-heading section-heading--center sophia-therapies-heading">
-          <p className="eyebrow">Naturopathic care</p>
+          {care.eyebrow ? <p className="eyebrow"><Marked text={care.eyebrow} /></p> : null}
           <h2><Marked text={care.title} /></h2>
         </Reveal>
         <ul className="card-grid card-grid--4 sophia-therapies-grid">
-          {care.cards.map((therapy, index) => {
-            const Icon = CARD_ICONS[therapy.icon] ?? LeafIcon;
-            return (
-              <Reveal as="li" key={`${index}-${therapy.title}`} className="card" delay={(index % 4) * 60} shift={12}>
-                <div className="card__icon"><Icon /></div>
-                <h3>{therapy.title}</h3>
-                {therapy.body ? <p>{therapy.body}</p> : null}
-              </Reveal>
-            );
-          })}
+          {care.cards.map((therapy, index) => (
+            <Reveal as="li" key={`${index}-${therapy.title}`} className="card" delay={(index % 4) * 60} shift={12}>
+              <div className="card__icon"><CardIcon name={therapy.icon} /></div>
+              <h3><Marked text={therapy.title} /></h3>
+              {therapy.body ? <p>{therapy.body}</p> : null}
+            </Reveal>
+          ))}
         </ul>
         <Reveal className="section-actions" delay={120}>
           <Link className="btn btn-primary" to="/sophia/new-patients">
@@ -382,28 +213,19 @@ export function SophiaPage() {
 
       <section className="section wrap" id="chronic-illness">
         <Reveal className="section-heading section-heading--center sophia-conditions-heading">
-          <p className="eyebrow">What we treat</p>
-          <h2>Complex Conditions. Real Answers</h2>
+          {conditions.eyebrow ? <p className="eyebrow"><Marked text={conditions.eyebrow} /></p> : null}
+          <h2><Marked text={conditions.title} /></h2>
         </Reveal>
         <Reveal className="pill-list sophia-conditions-pills" delay={90}>
-          {CONDITIONS.map((condition) => (
-            <span key={condition} className="pill">
-              {condition}
+          {conditions.cards.map((condition, index) => (
+            <span key={`${index}-${condition.title}`} className="pill">
+              <Marked text={condition.title} />
             </span>
           ))}
         </Reveal>
       </section>
 
-      <CtaBand
-        className="cta-band--dark"
-        title={
-          <>
-            Stop Wondering.
-            <br />
-            Start Finding Answers
-          </>
-        }
-        body="The Sophia Health Institute by Dr. Klinghardt™ team is ready to help you. Before you become a patient, it is natural to have questions — our patient coordinator would be happy to answer them."
+      <CtaBand className="cta-band--dark" slug={SECTION.sophiaCtaStopWondering}
       >
         <Link className="btn btn-light" to="/sophia/new-patients">
           Become a new patient <span aria-hidden="true">→</span>

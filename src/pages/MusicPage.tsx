@@ -64,12 +64,7 @@ function discographyPrice(cents: number, currency = "usd"): string {
  * page that renders an arbitrary iframe from public CMS data.
  */
 export function MusicPage() {
-  const page = useSection(SECTION.music, {
-    title: "Music as Medicine",
-    paragraphs: [
-      "Sound reaches levels of the nervous system that words do not. These recordings are made to be listened to slowly.",
-    ],
-  });
+  const page = useSection(SECTION.music);
   const links = useRecords(SECTION.musicLinks, 2, LINKS_FALLBACK)
     .map(([label, href]) => [label, externalUrl(href)] as const)
     .filter((entry): entry is readonly [string, string] => Boolean(entry[1]));
@@ -81,6 +76,9 @@ export function MusicPage() {
   // Recordings sold as digital products — the discography. F6 moves these into
   // the cart; until then each one links straight to its own Stripe link.
   const albums = useRecords("music-discography", 5, DISCOGRAPHY_FALLBACK);
+  // The heading and its lead (Subtitle) of the same row; the albums stay its
+  // "title | format | credits | price | cover" lines.
+  const discography = useSection("music-discography");
 
   const records = useCollection("digital-products").filter(
     (product) => product.status === "active" && Boolean(product.accessTrack),
@@ -97,7 +95,7 @@ export function MusicPage() {
       <AnimatedGradient variant="card" intensity="normal" className="page-hero page-hero--center music-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
-            <p className="eyebrow">Sound and healing</p>
+            {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1><Marked text={page.title} /></h1>
             {page.lead ? <p className="lead">{page.lead}</p> : null}
             {links.length ? (
@@ -132,13 +130,9 @@ export function MusicPage() {
 
       <section className="section wrap">
         <Reveal>
-          <p className="eyebrow">Recordings</p>
-          <h2 className="section-title">Discography</h2>
-          <p className="lead">
-            All recordings are available as high-quality digital downloads.
-            Proceeds support the ongoing research work of the Klinghardt
-            Foundation.
-          </p>
+          {discography.eyebrow ? <p className="eyebrow"><Marked text={discography.eyebrow} /></p> : null}
+          <h2 className="section-title"><Marked text={discography.title} /></h2>
+          {discography.subtitle ? <p className="lead">{discography.subtitle}</p> : null}
         </Reveal>
 
         {records.length ? (

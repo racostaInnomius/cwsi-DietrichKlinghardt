@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
-import { useSection, useRecords, SECTION } from "@/lib/sections";
+import { useSection, useCardList, SECTION } from "@/lib/sections";
+import { CardIcon } from "@/components/CardIcon";
+import { Emphasis } from "@/components/Emphasis";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -16,20 +18,10 @@ function cardIcon(label: string) {
   return MailIcon;
 }
 
-/** label | email | what this address is for */
-/**
- * The four contact routes, transcribed from the Figma frame `0:5829`.
- *
- * The labels AND the addresses are the design's. Both had been invented here —
- * which matters more for the addresses than for the wording: mail sent to an
- * address nobody owns simply disappears.
- */
-const CARDS_FALLBACK: string[][] = [
-  ["General Inquiries", "hello@dietrich-klinghardt.com", "Questions about Dr. Klinghardt's work, website, publications, or educational resources."],
-  ["Media & Press", "media@dietrich-klinghardt.com", "Interviews, press inquiries, podcasts, documentaries, and media opportunities."],
-  ["Speaking & Events", "speaking@dietrich-klinghardt.com", "Conference invitations, lectures, professional seminars, and educational appearances."],
-  ["Dr. Klinghardt Foundation", "foundation@dietrich-klinghardt.com", "Educational initiatives, archival projects, partnerships, and future programs."],
-];
+/* The four cards are the "contact-cards" Page Contents block (copy in
+   src/data/blocks.ts until the row has it): title, text, "Más datos" → Correo,
+   and an icon (picked from the label when the card has none). Rows still
+   written as "label | email | text" lines keep working. */
 
 /**
  * Contact — four addressed cards.
@@ -42,13 +34,14 @@ const CARDS_FALLBACK: string[][] = [
  * (Figma over an older written note once the two disagree).
  */
 export function ContactPage() {
-  const contact = useSection(SECTION.contact, {
-    title: "Contact Us",
-    paragraphs: [
-      "Four ways in, depending on what you need. We answer every message, though seminar weeks can slow us down.",
-    ],
-  });
-  const cards = useRecords(SECTION.contactCards, 3, CARDS_FALLBACK);
+  const contact = useSection(SECTION.contact);
+  const cards = useCardList(SECTION.contactCards, 3, ([title, email, body]) => ({
+    icon: "",
+    title,
+    email,
+    body,
+  }));
+  const note = useSection("contact-please-note");
 
   return (
     <>
@@ -64,7 +57,7 @@ export function ContactPage() {
       <AnimatedGradient variant="card" intensity="soft" className="page-hero page-hero--center contact-hero">
         <div className="wrap page-hero__inner">
           <Reveal>
-            <p className="eyebrow">Get in touch</p>
+            {contact.eyebrow ? <p className="eyebrow"><Marked text={contact.eyebrow} /></p> : null}
             <h1><Marked text={contact.title} /></h1>
             {contact.lead ? <p className="lead">{contact.lead}</p> : null}
           </Reveal>
@@ -73,32 +66,30 @@ export function ContactPage() {
 
       <section className="section wrap section--tight-top contact-section">
         <ul className="contact-grid contact-grid--joined">
-          {cards.map(([label, email, description], index) => {
-            const Icon = cardIcon(label);
-            return (
-              <Reveal as="li" key={email} className="contact-card" delay={index * 80}>
-                <span className="contact-card__icon">
-                  <Icon />
-                </span>
-                <h2>{label}</h2>
-                <p>{description}</p>
+          {cards.cards.map(({ icon, title: label, email, body: description }, index) => (
+            <Reveal as="li" key={`${index}-${label}`} className="contact-card" delay={index * 80}>
+              <span className="contact-card__icon">
+                <CardIcon name={icon} fallback={cardIcon(label)} />
+              </span>
+              <h2><Marked text={label} /></h2>
+              {description ? <p>{description}</p> : null}
+              {email ? (
                 <a className="contact-card__email" href={`mailto:${email}`}>
                   <MailIcon /> {email}
                 </a>
-              </Reveal>
-            );
-          })}
+              ) : null}
+            </Reveal>
+          ))}
         </ul>
 
         {/* The frame carries this warning under the four cards, and it is the
             kind of line a medical site cannot quietly drop. */}
         <Reveal className="contact-note" delay={220}>
-          <p>
-            <strong>Please note:</strong> do not send private medical records,
-            test results or urgent healthcare requests through these email
-            addresses. This website does not provide individualised medical
-            advice, and messages are not monitored for medical emergencies.
-          </p>
+          {note.marked.map((paragraph) => (
+            <p key={paragraph}>
+              <Emphasis text={paragraph} />
+            </p>
+          ))}
           <Link className="btn btn-primary contact-note__cta" to="/sophia/accommodations">
             Contact for Dietrich Klinghardt Health Institute™
           </Link>

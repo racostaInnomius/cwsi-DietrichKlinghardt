@@ -26,12 +26,7 @@ export function StorePage() {
   const categories = useMemo(() => usedCategories(products), [products]);
   const [category, setCategory] = useState("");
 
-  const intro = useSection("store-intro", {
-    title: "Explore the Klinghardt® Store",
-    paragraphs: [
-      "Discover books, work materials, testing kits, scripts and other professional resources used in neurobiological practice.",
-    ],
-  });
+  const intro = useSection("store-intro");
 
   const visible = category
     ? products.filter((product) => product.categoryKey === category)
@@ -49,7 +44,7 @@ export function StorePage() {
 
       <section className="section wrap store-intro">
         <Reveal className="section-heading section-heading--center">
-          <p className="eyebrow">Shop</p>
+          {intro.eyebrow ? <p className="eyebrow"><Marked text={intro.eyebrow} /></p> : null}
           <h1><Marked text={intro.title} /></h1>
           {intro.lead ? <p className="lead">{intro.lead}</p> : null}
         </Reveal>

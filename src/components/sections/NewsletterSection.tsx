@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { env } from "@/lib/env";
 import { useSection, SECTION } from "@/lib/sections";
+import { Marked } from "@/components/Marked";
 import { themeForPath } from "@/components/shell/navigation";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -36,7 +37,7 @@ type Status = "idle" | "sending" | "done" | "error";
  * colour story.
  */
 export function NewsletterSection({
-  eyebrow = "Stay connected",
+  eyebrow: eyebrowProp,
   title,
   lead,
   id = "newsletter",
@@ -53,12 +54,8 @@ export function NewsletterSection({
   const { pathname } = useLocation();
   const isPinned = pathname !== "/" && themeForPath(pathname) === "dk";
 
-  const section = useSection(SECTION.newsletter, {
-    title: "Join Our Newsletter",
-    paragraphs: [
-      "Receive insights, upcoming event announcements, and healing wisdom from Dr. Dietrich Klinghardt™ directly to your inbox.",
-    ],
-  });
+  const section = useSection(SECTION.newsletter);
+  const eyebrow = eyebrowProp ?? section.eyebrow;
 
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
@@ -160,7 +157,7 @@ export function NewsletterSection({
     >
       <div className="wrap newsletter__inner">
         <Reveal>
-          <p className="eyebrow">{eyebrow}</p>
+          {eyebrow ? <p className="eyebrow"><Marked text={eyebrow} /></p> : null}
           <h2>{title ?? section.title}</h2>
           {(lead ?? section.lead) ? (
             <p className="newsletter__lead">{lead ?? section.lead}</p>

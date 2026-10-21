@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
+import { Marked } from "@/components/Marked";
+import { useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { useAuth } from "@/features/auth/useAuth";
 import {
@@ -111,20 +113,11 @@ const COLLECTIONS: Record<ArchiveCollection, CollectionCopy> = {
   },
 };
 
-const STEPS = [
-  {
-    title: "Restore",
-    text: "Each piece is carefully digitized, curated, and authenticated from the original source materials.",
-  },
-  {
-    title: "Reveal",
-    text: "One new item unlocks every week — surfacing knowledge that has never been publicly accessible.",
-  },
-  {
-    title: "Explore",
-    text: "Navigate by topic, date, or medium. Search the full archive as it grows over time.",
-  },
-];
+/* The hero, the collections' heading and "How it works" (its steps are
+   cards, reorderable) are Page Contents blocks: archives-home,
+   archives-six-collections, archives-how-it-works (copy in src/data/blocks.ts
+   until the rows have it). The six collections themselves stay here: each is
+   tied to ArchiveItems' `collection` value and its count. */
 
 function broadcastDate(iso: string): string {
   return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" }).format(
@@ -139,6 +132,9 @@ function scrollToId(id: string) {
 }
 
 export function ArchivesPage() {
+  const hero = useSection(SECTION.archivesHome);
+  const collectionsHead = useSection("archives-six-collections");
+  const how = useSection("archives-how-it-works");
   const { status: authStatus, signIn } = useAuth();
   const [items, setItems] = useState<ArchiveListItem[] | null>(null);
   const [error, setError] = useState<ArchivesError | null>(null);
@@ -228,17 +224,16 @@ export function ArchivesPage() {
 
       <section className="archive-hero wrap">
         <Reveal>
-          <p className="eyebrow">A living archive</p>
-          <h1>The Klinghardt Living Archive</h1>
-          <p className="archive-hero__subtitle">A Lifetime of Discovery, Rediscovered</p>
-          <p className="archive-hero__lead">
-            For over four decades, Dr. Dietrich Klinghardt has accumulated an extraordinary body of
-            knowledge — in written notes, recorded lectures, hand-drawn diagrams, private
-            correspondence, and rare seminar footage. Most of it has never been seen by the public.
-            The Klinghardt Living Archive is being carefully assembled — one piece at a time — to
-            bring this lifetime of discovery into the world. Each week, a new item unlocks. Some
-            have never left the clinic walls. All of them matter.
-          </p>
+          {hero.eyebrow ? <p className="eyebrow"><Marked text={hero.eyebrow} /></p> : null}
+          <h1><Marked text={hero.title} /></h1>
+          {hero.subtitle ? (
+            <p className="archive-hero__subtitle"><Marked text={hero.subtitle} /></p>
+          ) : null}
+          {hero.paragraphs.map((paragraph) => (
+            <p key={paragraph} className="archive-hero__lead">
+              {paragraph}
+            </p>
+          ))}
           <button
             type="button"
             className="btn btn-primary archive-hero__cta"
@@ -251,13 +246,14 @@ export function ArchivesPage() {
 
       <section className="archive-collections wrap" aria-labelledby="archive-collections-title">
         <Reveal className="archive-section-head">
-          <p className="eyebrow">What’s inside</p>
-          <h2 id="archive-collections-title">Six Collections, One Archive</h2>
-          <p>Newly restored materials, unveiled every week</p>
-          <p>
-            Six collections are being prepared for release. Each week, one new piece is added to the
-            Archive — the rest remain sealed until it&apos;s their turn.
-          </p>
+          {collectionsHead.eyebrow ? (
+            <p className="eyebrow"><Marked text={collectionsHead.eyebrow} /></p>
+          ) : null}
+          <h2 id="archive-collections-title"><Marked text={collectionsHead.title} /></h2>
+          {collectionsHead.subtitle ? <p><Marked text={collectionsHead.subtitle} /></p> : null}
+          {collectionsHead.paragraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
         </Reveal>
 
         <ul className="archive-collection-grid">
@@ -341,16 +337,16 @@ export function ArchivesPage() {
 
       <section className="archive-how wrap" aria-labelledby="archive-how-title">
         <Reveal className="archive-section-head">
-          <p className="eyebrow">How it works</p>
-          <h2 id="archive-how-title">One New Piece, Every Week</h2>
+          {how.eyebrow ? <p className="eyebrow"><Marked text={how.eyebrow} /></p> : null}
+          <h2 id="archive-how-title"><Marked text={how.title} /></h2>
         </Reveal>
         <Reveal as="ol" className="archive-steps">
-          {STEPS.map((step, index) => (
-            <li key={step.title}>
+          {how.cards.map((step, index) => (
+            <li key={`${index}-${step.title}`}>
               <p className="archive-steps__label">Step {String(index + 1).padStart(2, "0")}</p>
-              <h3>{step.title}</h3>
+              <h3><Marked text={step.title} /></h3>
               <span className="archive-steps__rule" aria-hidden="true" />
-              <p>{step.text}</p>
+              {step.body ? <p>{step.body}</p> : null}
             </li>
           ))}
         </Reveal>
