@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import { useSection, SECTION } from "@/lib/sections";
+import { BLOCKS } from "@/data/blocks";
 
 /**
  * The staggered instructor-photo cluster on the Courses hero's right side,
@@ -14,35 +16,25 @@ import { useEffect, useRef } from "react";
  * `.courses-hero` (sections.css) clips this with overflow: hidden, so the
  * drift is only ever visible inside the hero's own frame, never past it.
  */
-const PEOPLE = [
-  {
-    name: "Dr. Dietrich Klinghardt™",
-    title: "Medicine Doctor",
-    image: "/images/dietrich-klinghardt-course.webp",
-    column: "a" as const,
-  },
-  {
-    name: "Michaela Jezzard",
-    title: "Medicine Doctor",
-    image: "/images/michaela-jezzard.webp",
-    column: "a" as const,
-  },
-  {
-    name: "Daniela Deiosso",
-    title: "Medicine Doctor",
-    image: "/images/daniela-deiosso.webp",
-    column: "b" as const,
-  },
-  {
-    name: "Gilian Crowther",
-    title: "Scientific Advisor",
-    image: "/images/gilian-crowther.webp",
-    column: "b" as const,
-  },
-];
+/* The instructors are the cards of the "courses-instructors" Page Contents
+   block (client, 2026-10-21: the clinic changes them): Foto, title = name,
+   subtitle = role, in the order dragged in the CMS — the first two fill the
+   left column, the next two the right. The layout is two columns of two, so
+   only the first four show. A card without a photo keeps the bundled photo
+   of the same person (matched by name, src/data/blocks.ts), so reordering
+   never puts one person's face under another's name. */
+const SHOWN = 4;
 
 export function CoursesHeroPhotos() {
   const ref = useRef<HTMLDivElement | null>(null);
+  const bundled = BLOCKS[SECTION.coursesInstructors]?.cards ?? [];
+  const people = useSection(SECTION.coursesInstructors)
+    .cards.slice(0, SHOWN)
+    .map((card) => ({
+      name: card.title,
+      title: card.subtitle ?? "",
+      image: card.image || bundled.find((b) => b.title === card.title)?.image || "",
+    }));
 
   useEffect(() => {
     const node = ref.current;
@@ -111,13 +103,13 @@ export function CoursesHeroPhotos() {
   return (
     <div className="courses-hero-photos" ref={ref} aria-label="Instructors">
       <div className="courses-hero-photos__col courses-hero-photos__col--a">
-        {PEOPLE.filter((p) => p.column === "a").map((person) => (
-          <PhotoCard key={person.name} {...person} />
+        {people.slice(0, 2).map((person, index) => (
+          <PhotoCard key={`a-${index}-${person.name}`} {...person} />
         ))}
       </div>
       <div className="courses-hero-photos__col courses-hero-photos__col--b">
-        {PEOPLE.filter((p) => p.column === "b").map((person) => (
-          <PhotoCard key={person.name} {...person} />
+        {people.slice(2, 4).map((person, index) => (
+          <PhotoCard key={`b-${index}-${person.name}`} {...person} />
         ))}
       </div>
     </div>
@@ -135,7 +127,7 @@ function PhotoCard({
 }) {
   return (
     <figure className="courses-hero-photos__card">
-      <img src={image} alt="" loading="lazy" decoding="async" />
+      {image ? <img src={image} alt="" loading="lazy" decoding="async" /> : null}
       <figcaption>
         <b>{name}</b>
         <span>{title}</span>

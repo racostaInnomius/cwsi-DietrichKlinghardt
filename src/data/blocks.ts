@@ -284,6 +284,18 @@ export const BLOCKS: Record<string, BlockDefault> = {
       "Browse our directory to find practitioners near you. Visit their personal websites to learn more about the services and approach each of them offers.",
     ],
   },
+  "courses-instructors": {
+    page: "/courses",
+    sitePage: "Online Courses",
+    kind: "section",
+    title: "Online Courses — Instructors",
+    cards: [
+      { "icon": "", "title": "Dr. Dietrich Klinghardt™", "body": "", "subtitle": "Medicine Doctor", "image": "/images/dietrich-klinghardt-course.webp" },
+      { "icon": "", "title": "Michaela Jezzard", "body": "", "subtitle": "Medicine Doctor", "image": "/images/michaela-jezzard.webp" },
+      { "icon": "", "title": "Daniela Deiosso", "body": "", "subtitle": "Medicine Doctor", "image": "/images/daniela-deiosso.webp" },
+      { "icon": "", "title": "Gilian Crowther", "body": "", "subtitle": "Scientific Advisor", "image": "/images/gilian-crowther.webp" },
+    ],
+  },
   "courses": {
     page: "/courses",
     sitePage: "Online Courses",

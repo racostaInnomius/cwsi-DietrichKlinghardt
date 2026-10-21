@@ -61,6 +61,8 @@ export const SECTION = {
   accommodations: "accommodations",
   accommodationsHotels: "sophia-accommodations-hotels",
 
+  coursesInstructors: "courses-instructors",
+
   /* Client (2026-09-18): "Archives" — migrated from klinghardt-akademie.de
      (password-protected legacy site), kept in German on purpose. Own slugs
      rather than reusing e.g. SECTION.fiveLevels: same subject as the
@@ -84,6 +86,8 @@ export interface Card {
   email?: string;
   phone?: string;
   link?: string;
+  /** Cards → Foto (a CMS upload), or a bundled path in BLOCKS. */
+  image?: string;
 }
 
 export interface Section {
@@ -133,6 +137,7 @@ function itemCards(doc: ContentDoc | undefined): Card[] {
       email: text(item.email),
       phone: text(item.phone),
       link: text(item.link),
+      image: mediaUrl(item.image),
     }))
     .filter((card) => card.title);
 }
