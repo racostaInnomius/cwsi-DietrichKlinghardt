@@ -141,6 +141,24 @@ export function ClipboardCheckIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 3.5h6v2H9z" /><path d="M8.5 13l2.2 2.2L15.5 11" /></svg>;
 }
 
+/* Sophia naturopathic-care cards added 2026-10-21 (client): outline icons in
+   the same plain style — .card__icon's CSS decides fill/stroke. */
+export function PulseIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2.5-6 4 12 2.5-6H21" /></svg>;
+}
+
+export function UserCheckIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0" /><path d="m16 11 2 2 4-4" /></svg>;
+}
+
+export function SparklesIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3l1.8 4.7 4.7 1.8-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8Z" /><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8Z" /></svg>;
+}
+
+export function TeamIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0" /><path d="M16 4.5a3.5 3.5 0 0 1 0 7" /><path d="M18 14.2a6.5 6.5 0 0 1 3.5 5.8" /></svg>;
+}
+
 /* ── Event meta icons: person, time, calendar, tag, pin, language, seats ──
    16x16 viewBox, stroke-only, matching the treatment `.event-card__details
    svg` and `.event-panel__fact svg` apply (fill: none, stroke: currentColor

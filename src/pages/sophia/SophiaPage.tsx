@@ -15,9 +15,13 @@ import {
   BoltIcon,
   HeartIcon,
   DropletIcon,
-  JointIcon,
   LeafIcon,
   ClipboardCheckIcon,
+  PulseIcon,
+  FlaskIcon,
+  UserCheckIcon,
+  SparklesIcon,
+  TeamIcon,
 } from "@/components/Icons";
 
 /* Client (2026-09-12), via the designer: "para los numeros... podemos
@@ -87,26 +91,48 @@ const STEPS = [
   },
 ];
 
+// Client copy, 2026-10-21: three texts rewritten, "Joint & Back Problems"
+// replaced by "Treating Chronic Illness", four cards added (two rows of four).
 const THERAPIES = [
   {
     icon: <DropletIcon />,
     title: "IV Therapies",
-    body: "Biological intravenous therapies including ozone, intravascular laser therapy and intravenous nutrition.",
+    body: "At SHI by Dr.Klinghardt, personalized care starts with understanding what you need, we’ll help you explore the right options. For those seeking ongoing care, we can guide tailored recommendations, track your response to treatment, and inform adjustments as your needs evolve.",
   },
   {
-    icon: <JointIcon />,
-    title: "Joint & Back Problems",
-    body: "A unique approach, without opiates or other addictive substances.",
+    icon: <PulseIcon />,
+    title: "Treating Chronic Illness",
+    body: "If you're dealing with chronic illness, you might be skeptical of new treatment methods. It's natural to wonder what makes Sophia Health Institute by Dr.Klinghardt better than other clinics and treatment methods you've tried.",
   },
   {
     icon: <LeafIcon />,
     title: "Traditional Therapies",
-    body: "Homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, pulsed magnetic fields and microcurrent.",
+    body: "Our approach brings together a range of therapies, including homeopathy, neural therapy, liver flushes, castor oil packs, hot and cold baths, sauna, PhotonWave, pulsed electromagnetic field therapy, and microcurrent.",
   },
   {
     icon: <ClipboardCheckIcon />,
     title: "Comprehensive Assessment",
-    body: "Physical, nutritional, hormonal and biodental evaluation at every visit, with individualised interpretation of your labs, history and imaging.",
+    body: "You’ll get an in depth treatment plan that targets the root cause of your illness, not just your symptoms. Oftentimes, you don’t just have Lyme disease, mold illness, heavy metals, a root canal, or unhealed trauma. We look at your illness in the context of the whole system so we can uncover as much as possible to understand why you haven’t made progress in the past with other treatment methods. We will do this before prescribing a new treatment plan to you.",
+  },
+  {
+    icon: <FlaskIcon />,
+    title: "Research and Innovation",
+    body: "Practitioners from around the world have traveled far and wide to learn directly from Dr. Klinghardt, for his research and innovation in finding new, effective methods for treating the root causes of chronic illness. Techniques and methods created by Dr. Klinghardt have revolutionized the way chronic illness is treated around the world.",
+  },
+  {
+    icon: <UserCheckIcon />,
+    title: "Personalized Care",
+    body: "You’ll get personalized care, attention, and support from a team of specialists who understand how you feel and have experience treating your symptoms. Our team is specially trained in helping you in all aspects of your healing. All of our doctors are very closely connected with Dr. Klinghardt. Dr.Klinghardt personally trains each doctor in administering best assessment protocols so they can find the missing links in your treatment to give you the support you’ve been searching for.",
+  },
+  {
+    icon: <SparklesIcon />,
+    title: "Treatments Unavailable Elsewhere",
+    body: "You get access to different treatment methods that other clinics don’t offer. Depending on your treatment plan, you’ll get an opportunity to try different healing methods from our extensive list of treatment options.",
+  },
+  {
+    icon: <TeamIcon />,
+    title: "Work With A Warm, Loving & Caring Team",
+    body: "We offer a warm, loving, and caring treatment facility full of people who will listen to you, empathize with you, and do everything their power to help you through this tough and trying experience.",
   },
 ];
 
