@@ -2608,14 +2608,43 @@
    of the same movement stretched out slower. --from tuned again the same
    day (client, via devtools) from -50px to -129px — a longer upward
    sweep, --to left as-is. */
+/* Client (2026-10-21): the two lower photos' names (Michaela Jezzard,
+   Gilian Crowther) never showed — a column is two 4:5 cards (~730px) in a
+   576px frame, and the columns swept in opposite directions, so the left
+   one hid its lower card while the right barely revealed its own. Now both
+   columns rise over the hold, at different rates so the cluster still reads
+   as layered, and the cluster is narrower (below): the top two names are
+   whole when the pin starts and all four are whole from ~40% of the hold on
+   at 1440–1920px (measured; ~60% at 1024px, ~80% at 1280×720). */
 .courses-hero-photos__col--a {
-  --from: -129px;
-  --to: 110px;
+  --from: 0px;
+  --to: -150px;
 }
 .courses-hero-photos__col--b {
-  --from: 90px;
-  --to: -170px;
+  --from: 20px;
+  --to: -200px;
   margin-top: 18%;
+}
+@media (min-width: 900px) {
+  .courses-hero-photos {
+    max-width: 470px;
+    margin-left: auto;
+  }
+}
+/* Below 900px the hero is not pinned (progress stays 0), so the fixed
+   cluster height only clipped the lower cards: the photos sit still at their
+   natural height there, all four names whole. */
+@media (max-width: 899px) {
+  .courses-hero-photos {
+    height: auto;
+  }
+  .courses-hero-photos__col {
+    --from: 0px;
+    --to: 0px;
+  }
+  .courses-hero-photos__col--b {
+    margin-top: 12%;
+  }
 }
 .courses-hero-photos__card {
   position: relative;
