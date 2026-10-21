@@ -19,7 +19,7 @@ type Hotel = {
 /**
  * The clinic's hotels, transcribed from the Figma frame `0:7840` with their
  * addresses, phone numbers, sites and the discount note each one carries.
- * (Client, 2026-10-21: Willows Lodge removed; Heathman Hotel without its link.)
+ * (Client, 2026-10-21: Willows Lodge removed; Heathman Hotel and Residence Inn without their links.)
  *
  * They are a constant rather than CMS rows because they are the clinic's own
  * referral list, not editorial content — and because getting one of these
@@ -42,7 +42,6 @@ const HOTELS: Hotel[] = [
     name: "Residence Inn",
     address: "1920 Northeast 195th Street, Bothell, WA 98011",
     phone: "(425) 485-3030",
-    site: "cwp.marriott.com/seabo/sophia",
   },
   {
     name: "Comfort Inn & Suites",
