@@ -17,8 +17,9 @@ type Hotel = {
 };
 
 /**
- * The six hotels, transcribed from the Figma frame `0:7840` with their
+ * The clinic's hotels, transcribed from the Figma frame `0:7840` with their
  * addresses, phone numbers, sites and the discount note each one carries.
+ * (Client, 2026-10-21: Willows Lodge removed; Heathman Hotel without its link.)
  *
  * They are a constant rather than CMS rows because they are the clinic's own
  * referral list, not editorial content — and because getting one of these
@@ -30,15 +31,7 @@ const HOTELS: Hotel[] = [
     name: "Heathman Hotel",
     address: "220 Kirkland Avenue, Kirkland, WA 98033",
     phone: "(425) 284-5800",
-    site: "heathmankirkland.com",
     note: "Use promo code SINVA for a discounted rate, or call the hotel directly.",
-  },
-  {
-    name: "Willows Lodge",
-    address: "14580 Northeast 145th Street, Woodinville, WA 98072",
-    phone: "(425) 424-3900",
-    site: "willowslodge.com",
-    note: "15% off the lowest rate when you mention you are a patient of Sophia HI.",
   },
   {
     name: "Hampton Inn & Suites",
@@ -79,7 +72,7 @@ const FALLBACK_MAP_EMBED =
 /**
  * Travel & Accommodations.
  *
- * Rebuilt from frame `0:7840`: how to find the clinic, the six hotels with the
+ * Rebuilt from frame `0:7840`: how to find the clinic, the hotels with the
  * rates they hold for Sophia patients, and the closing band. The page
  * previously carried only the first heading (D8).
  */
