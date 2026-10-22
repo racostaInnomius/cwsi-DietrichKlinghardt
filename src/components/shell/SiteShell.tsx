@@ -17,9 +17,10 @@ const FLAT_ENDING_PATHS = new Set([
   "/courses/art",
   "/academy/therapists",
   "/academy/five-levels",
-  // "/weekly-talks" left this list on 2026-10-21 (client: "con el efecto de
-  // gradiente... de naranja a navy"): still no newsletter there, so it gets
-  // the footer's static amber→navy fade (shell.css), not Home's pinned one.
+  // Back on 2026-10-22: its FAQ now ends the page on the footer's navy
+  // itself (the newsletter's pinned effect, WeeklyTalksPage useFaqPin), so
+  // the footer's static amber fade would only add a stray band of amber.
+  "/weekly-talks",
 ]);
 /* Client (2026-09-18): "Necesito terminación plana para '/archives/*'" —
  * a whole section (the landing page plus every migrated subpage), not one

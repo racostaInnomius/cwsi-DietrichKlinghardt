@@ -5366,6 +5366,67 @@ img.archive-viewer__media {
   transform: rotate(180deg);
 }
 
+/* Weekly Talks' FAQ with the newsletter's pinned amber→navy closing effect
+   (client, 2026-10-22; WeeklyTalksPage.tsx useFaqPin): same palette and
+   background slide as .newsletter-pin .plain-section.newsletter, and the
+   a white blend for the text as the background turns navy — here also the
+   rules between questions and the round buttons (navy on cream → white on
+   navy). The 100vh spacer after the card is the dwell. */
+.faq-pin {
+  position: relative;
+}
+.faq-pin__dwell {
+  height: 100vh;
+}
+.faq-pin__card {
+  /* Later and quicker than the newsletter's (0.15→0.35): the FAQ is read,
+     not glanced at, and white only clears dark copy's contrast once the
+     background behind the text is past the gold (ink 8:1 on the amber,
+     white 8:1 on the brown → navy), so the flip happens around there. */
+  --faq-white-mix: clamp(0%, calc((var(--faq-scroll, 0) - 0.6) * 833%), 100%);
+  position: sticky;
+  top: var(--faq-pin-top, 0px);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+  background-image: linear-gradient(
+    180deg,
+    #f4f6f5 0%,
+    #f2e4c9 10%,
+    #eaaa58 22%,
+    #f79b09 34%,
+    var(--gold-deep) 55%,
+    #6b4a1f 80%,
+    #023866 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 calc(var(--faq-scroll, 0) * 100%);
+}
+.faq-pin__card > .section {
+  width: 100%;
+}
+.faq-pin__card .eyebrow {
+  color: color-mix(in srgb, white var(--faq-white-mix), var(--eyebrow-text));
+}
+.faq-pin__card h2,
+.faq-pin__card .accordion__item summary {
+  color: color-mix(in srgb, white var(--faq-white-mix), var(--on-surface));
+}
+.faq-pin__card .accordion__answer p {
+  color: color-mix(in srgb, white var(--faq-white-mix), var(--ink-soft));
+}
+.faq-pin__card .accordion--flat,
+.faq-pin__card .accordion--flat .accordion__item {
+  border-color: color-mix(in srgb, rgb(255 255 255 / 0.35) var(--faq-white-mix), var(--line));
+}
+.faq-pin__card .accordion--flat .accordion__mark {
+  background: color-mix(in srgb, white var(--faq-white-mix), var(--brand));
+}
+.faq-pin__card .accordion--flat .accordion__chevron {
+  stroke: color-mix(in srgb, var(--brand) var(--faq-white-mix), white);
+}
+
 /* ── 5 Levels pyramid ─────────────────────────────────────────── */
 
 /* Client (2026-09-16, Figma): this hero used to be the shared .page-hero

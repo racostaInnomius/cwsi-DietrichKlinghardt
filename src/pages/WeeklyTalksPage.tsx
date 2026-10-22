@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
@@ -79,6 +79,9 @@ export function WeeklyTalksPage() {
   const page = useSection(SECTION.weeklyTalks);
   const pricing = useSection("weekly-talks-pricing");
   const faqHeading = useSection("weekly-talks-faq");
+  const faqPin = useRef<HTMLDivElement | null>(null);
+  const faqCard = useRef<HTMLElement | null>(null);
+  useFaqPin(faqPin, faqCard);
 
   // Read early: the next-live poll below needs to wait for this to settle
   // before its first request (see nextLiveSession).
@@ -494,16 +497,58 @@ export function WeeklyTalksPage() {
         </div>
       </section>
 
-      <section className="section wrap" id="faq">
-        <Reveal className="section-heading section-heading--center">
-          {faqHeading.eyebrow ? <p className="eyebrow"><Marked text={faqHeading.eyebrow} /></p> : null}
-          <h2><Marked text={faqHeading.title} /></h2>
-        </Reveal>
-        <Accordion
-          items={faqs.length ? faqs : FAQ_FALLBACK}
-          className="accordion--flat accordion--narrow"
-        />
-      </section>
+      {/* Client (2026-10-22): the FAQ closes the page with the newsletter's own
+          pinned amber→navy effect (this page has no newsletter): the section
+          holds on screen while its background slides down to the footer's
+          navy and its text turns white. See useFaqPin below. */}
+      <div className="faq-pin" ref={faqPin}>
+        <section className="faq-pin__card" id="faq" ref={faqCard}>
+          <div className="section wrap">
+            <Reveal className="section-heading section-heading--center">
+              {faqHeading.eyebrow ? <p className="eyebrow"><Marked text={faqHeading.eyebrow} /></p> : null}
+              <h2><Marked text={faqHeading.title} /></h2>
+            </Reveal>
+            <Accordion
+              items={faqs.length ? faqs : FAQ_FALLBACK}
+              className="accordion--flat accordion--narrow"
+            />
+          </div>
+        </section>
+        <div className="faq-pin__dwell" aria-hidden="true" />
+      </div>
     </>
   );
+}
+
+/**
+ * The FAQ's pin, same rig as NewsletterSection's: --faq-scroll is the card's
+ * 0→1 progress through its dwell (the 100vh spacer after it), which
+ * sections.css reads to slide the card's oversized background and blend its
+ * text toward white. Unlike the newsletter the card's height changes (answers
+ * open), so when it is taller than the screen it sticks by its bottom edge
+ * (--faq-pin-top < 0) and no answer is ever cut off.
+ */
+function useFaqPin(
+  wrapperRef: RefObject<HTMLDivElement | null>,
+  cardRef: RefObject<HTMLElement | null>,
+) {
+  useEffect(() => {
+    let frame: number;
+    function raf() {
+      const wrapper = wrapperRef.current;
+      const card = cardRef.current;
+      if (wrapper && card) {
+        const cardHeight = card.offsetHeight;
+        const top = Math.min(0, window.innerHeight - cardHeight);
+        const dwell = wrapper.offsetHeight - cardHeight;
+        const progress =
+          dwell > 0 ? Math.min(1, Math.max(0, (top - wrapper.getBoundingClientRect().top) / dwell)) : 0;
+        card.style.setProperty("--faq-pin-top", `${top}px`);
+        card.style.setProperty("--faq-scroll", String(progress));
+      }
+      frame = requestAnimationFrame(raf);
+    }
+    frame = requestAnimationFrame(raf);
+    return () => cancelAnimationFrame(frame);
+  }, [wrapperRef, cardRef]);
 }
