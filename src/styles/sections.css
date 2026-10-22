@@ -2557,6 +2557,14 @@
 .courses-hero .lead {
   margin-top: -40px;
 }
+/* Client (2026-10-22): the -40px above is tuned for the desktop heading's
+   ~52px bottom margin; on the stacked hero that margin is ~27px, so it
+   pulled the lead 13px INTO the title. Leaves ~17px there instead. */
+@media (max-width: 899px) {
+  .courses-hero .lead {
+    margin-top: -10px;
+  }
+}
 
 /* Instructor photo cluster (CoursesHeroPhotos.tsx), rebuilt 2026-10-22 after
    several rounds of the client's notes ("están muy pequeñas", the lower
