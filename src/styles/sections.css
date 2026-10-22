@@ -2558,125 +2558,77 @@
   margin-top: -40px;
 }
 
-/* Instructor photo cluster, replacing the old text-only teacher marquee
-   now that real photos exist for it (2026-09-09) — two columns, the right
-   one offset down to interlock with the left, matching the client's own
-   reference screenshot. Each column drifts vertically at its own rate as
-   the page scrolls (--courses-photos-scroll, CoursesHeroPhotos.tsx),
-   reading as one layered cluster rather than a flat grid — the same brief
-   TeachersStrip's own comment already cited ("el header replica
-   new.consciouslife.com"), just vertical/scroll-driven here instead of a
-   horizontal auto-drifting strip. */
+/* Instructor photo cluster (CoursesHeroPhotos.tsx), rebuilt 2026-10-22 after
+   several rounds of the client's notes ("están muy pequeñas", the lower
+   names never showing, Dr. Klinghardt's photo cut at the top). What it does
+   now, at desktop, while the hero is pinned:
+   - the cluster is a window exactly the height of the hero's content box,
+     clipped, with its top and bottom edges softly faded (mask), so photos
+     never leave the hero and an edge reads as a fade, not a hard crop;
+   - the cards are 4:5 portraits sized from that window: as large as the
+     column allows, capped so that at the end of the hold the lower photos
+     sit whole AND the upper ones still show their name and role (two cards
+     + gap + one caption + the two fades fit the window);
+   - each column travels from "top photo whole" to "bottom photo whole" over
+     the hold, the right one starting lower so they move as layers; travel
+     is measured live (resize-safe) and eased like GSAP's scrub: 0.5.
+   Below 900px the hero is not pinned: the photos sit still at their natural
+   height, all four whole. */
 .courses-hero-photos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(12px, 1.6vw, 20px);
-  height: clamp(360px, 42vw, 560px);
+  gap: 16px;
 }
-/* Client (2026-09-18): "el cortado de imagenes es parte del diseño" —
-   reverted the max-width/height overrides tried here for
-   sophia_hero_dimension (2026-09-17): this cluster spilling past the
-   fixed-height hero and getting clipped by .gradient-card's own
-   overflow:hidden is the intended interactive effect (see
-   CoursesHeroPhotos.tsx's own comment: "the drift is only ever visible
-   inside the hero's own frame, never past it"), not a bug to size around.
-   .courses-hero itself keeps its sophia_hero_dimension fixed height —
-   only this page-specific request to shrink the photos to avoid the crop
-   is undone. */
-/* Client (2026-09-11): "la imagen que esta mas abajo no se alcanza a
-   mostrar completamente... que suban mas las de la derecha y bajen mas
-   las de la izquierda" — each column now interpolates between its own
-   --from/--to across the pin's raw 0→1 progress (CoursesHeroPhotos.tsx),
-   instead of both columns sharing one pre-scaled scroll value and just
-   flipping sign. Column b's --to is negative (ends ABOVE its resting
-   spot, not just back at 0), which is what actually pulls its lower photo
-   (previously clipped by the card's own overflow: hidden) into frame by
-   the end of the hold; column a's --to is positive to move opposite. */
 .courses-hero-photos__col {
-  --from: 0px;
-  --to: 0px;
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 1.6vw, 20px);
-  transform: translateY(
-    calc(var(--from) + (var(--to) - var(--from)) * var(--courses-photos-progress, 0))
-  );
+  gap: 16px;
 }
-/* Client (2026-09-26): wider travel to match the longer dwell above
-   (was -30px/70px, a 100px sweep) — same direction/proportions, just
-   further, so the extra scroll distance reads as more movement instead
-   of the same movement stretched out slower. --from tuned again the same
-   day (client, via devtools) from -50px to -129px — a longer upward
-   sweep, --to left as-is. */
-/* Client (2026-10-21): every photo whole, name included, for the whole
-   hold. A column used to be two 4:5 cards (~730px) in a 461–600px frame,
-   so the drift only chose which photo got cut (first the lower names, then
-   — once both columns rose — Dr. Klinghardt's photo at the top). Now, at
-   desktop, the cards are sized from the frame itself
-   (--sophia-hero-dimension-height): two cards + gap + the stagger fit with
-   24px to spare top and bottom, and the stagger IS the drift — the columns
-   cross by --ph-stagger in opposite directions over the hold, so the
-   cluster still moves as layers but never leaves the frame. Square cards
-   keep the names on one line (measured 920–1920px: all four photos 100%
-   visible at every point of the hold). */
 .courses-hero-photos__col--b {
-  margin-top: 18%;
+  margin-top: 12%;
 }
 @media (min-width: 900px) {
   .courses-hero-photos {
-    /* Client (2026-10-21, follow-up): photos 15% bigger than the first fit
-       ((H − 120px) / 2). The room comes out of the edge margin, the gap and
-       the stagger, which takes whatever is left so the cluster still fits:
-       ~16px of drift at 1440×900, 12–33px across 1920×1080…1280×720. */
-    --ph-pad: 12px;
-    --ph-gap: 12px;
-    --ph-card: calc(1.15 * (var(--sophia-hero-dimension-height) - 120px) / 2);
-    --ph-stagger: calc(
-      var(--sophia-hero-dimension-height) - 2 * var(--ph-pad) - var(--ph-gap) - 2 * var(--ph-card)
-    );
-    display: flex;
-    justify-content: flex-end;
+    --ph-gap: 16px;
+    --ph-fade: 16px;
+    /* Room for one name + role line under a card (~90px measured). */
+    --ph-caption: 92px;
+    /* Inline room so the cards' shadows are not clipped at the sides. */
+    --ph-side: 14px;
+    /* = .courses-hero__inner's content box (its desktop padding-block). */
+    --ph-window: calc(var(--sophia-hero-dimension-height) - 2 * clamp(24px, 3vw, 40px));
+    --ph-card-h: calc(var(--ph-window) - 2 * var(--ph-fade) - var(--ph-gap) - var(--ph-caption));
+    --ph-card-w: calc(var(--ph-card-h) * 0.8);
     gap: var(--ph-gap);
-    height: calc(2 * var(--ph-card) + var(--ph-gap) + var(--ph-stagger));
+    width: min(100% + var(--ph-side), calc(2 * var(--ph-card-w) + var(--ph-gap) + 2 * var(--ph-side)));
+    height: var(--ph-window);
+    margin-left: auto;
+    margin-right: calc(-1 * var(--ph-side));
+    padding-inline: var(--ph-side);
+    align-items: start;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 var(--ph-fade), #000 calc(100% - var(--ph-fade)), transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 var(--ph-fade), #000 calc(100% - var(--ph-fade)), transparent 100%);
   }
   .courses-hero-photos__col {
-    flex: none;
-    width: var(--ph-card);
     gap: var(--ph-gap);
-  }
-  .courses-hero-photos__col--a {
-    --from: 0px;
-    --to: var(--ph-stagger);
+    will-change: transform;
   }
   .courses-hero-photos__col--b {
-    --from: var(--ph-stagger);
-    --to: 0px;
     margin-top: 0;
   }
   .courses-hero-photos__card {
-    height: var(--ph-card);
-    aspect-ratio: auto;
+    container-type: inline-size;
   }
   .courses-hero-photos__card img {
-    object-position: 50% 25%;
+    object-position: 50% 22%;
   }
-  .courses-hero-photos__card figcaption {
-    padding: 24px 14px 12px;
-  }
-}
-/* Below 900px the hero is not pinned (progress stays 0), so the fixed
-   cluster height only clipped the lower cards: the photos sit still at their
-   natural height there, all four names whole. */
-@media (max-width: 899px) {
-  .courses-hero-photos {
-    height: auto;
-  }
-  .courses-hero-photos__col {
-    --from: 0px;
-    --to: 0px;
-  }
-  .courses-hero-photos__col--b {
-    margin-top: 12%;
+  /* The name on one line on the narrower cards (1280×720 and below):
+     "Dr. Dietrich Klinghardt™" otherwise wraps and its caption outgrows
+     the room the sizing above reserves for it. (Two classes: the base
+     caption rules sit later in this file.) */
+  .courses-hero-photos .courses-hero-photos__card figcaption b {
+    font-size: min(var(--fs-sm), 7cqi);
   }
 }
 .courses-hero-photos__card {

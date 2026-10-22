@@ -10,11 +10,11 @@ import { BLOCKS } from "@/data/blocks";
  * scroll-parallax of photo cards instead of a horizontal auto-drifting
  * text strip.
  *
- * Two columns, the right one offset down to interlock with the left —
- * each column drifts vertically at its own rate as the page scrolls, a
- * few pixels apart so the cluster reads as layered rather than flat.
- * `.courses-hero` (sections.css) clips this with overflow: hidden, so the
- * drift is only ever visible inside the hero's own frame, never past it.
+ * Two columns, the right one starting lower so they interlock and move as
+ * layers. While the hero is pinned, each column travels from "top photo
+ * whole" to "bottom photo whole", inside a clipped, edge-faded window the
+ * height of the hero's content box — sizing and the why are in
+ * sections.css (.courses-hero-photos).
  */
 /* The instructors are the cards of the "courses-instructors" Page Contents
    block (client, 2026-10-21: the clinic changes them): Foto, title = name,
@@ -39,61 +39,78 @@ export function CoursesHeroPhotos() {
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const desktop = window.matchMedia("(min-width: 900px)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+    // Where the columns are drawn (0→1), easing toward where the scroll says
+    // they should be — GSAP's `scrub: 0.5` feel, frame-rate independent.
+    let shown = -1;
+    let last = performance.now();
+    let stuckOffset = -1;
     let frame: number;
-    function raf() {
-      const el = ref.current;
-      // Client (2026-09-10): the hero is now pinned (.courses-hero-pin,
-      // sections.css) instead of scrolling past freely — the drift is
-      // driven off that pin's own 0→1 progress (same dwell/progress math
-      // as HomePage.tsx's hero/newsletter pins) rather than the card's
-      // free-floating position relative to the viewport's centre, so the
-      // photos settle into place exactly once over the hold instead of
-      // nudging back and forth as the whole page scrolls past.
+
+    function raf(now: number) {
       const wrapper = document.querySelector<HTMLElement>(".courses-hero-pin");
       const card = document.querySelector<HTMLElement>(".courses-hero-pin .courses-hero");
       const stickyHeader = document.querySelector<HTMLElement>(".site-shell__sticky-top");
-      if (el && wrapper && card) {
-        // Client (2026-09-18): "ese pequeño gap de movimiento en la página
-        // es la que no me gusta" — .courses-hero's sticky top was a flat 0,
-        // so scrolling had to cover the sticky header's own height (~127px)
-        // before the card's static position even reached that threshold and
-        // actually stuck; until then, the whole hero (copy and photos
-        // together) just scrolled normally like any other section, which
-        // read as a stray jolt before the pin/drift took over. Tracked live
-        // (the announcement bar's own height changes on scroll) rather than
-        // a hardcoded px, and shared with sections.css via this custom
-        // property so the card's `top` always matches exactly what's
-        // actually stuck above it.
+      const columns = node
+        ? [...node.querySelectorAll<HTMLElement>(".courses-hero-photos__col")]
+        : [];
+      if (node && wrapper && card) {
+        // The card's sticky `top` matches what is actually stuck above it
+        // (the announcement bar's height changes on scroll; client,
+        // 2026-09-18: no stray jolt before the pin takes over).
         const headerOffset = stickyHeader?.getBoundingClientRect().height ?? 0;
-        document.documentElement.style.setProperty(
-          "--courses-hero-sticky-offset",
-          `${headerOffset}px`,
-        );
-        // The card's own height (80vh, sections.css), not window.innerHeight
-        // — sticky actually releases at wrapperHeight - cardHeight, and the
-        // card here is shorter than the viewport (client, 2026-09-11: "el
-        // hero quedo muy alto... del mismo tamano que home"), so using the
-        // full window height would release the pin too early and desync
-        // this progress from where it actually unsticks.
+        // Written only when it changes: a custom property on <html> every
+        // frame would make the browser recalculate styles every frame.
+        if (headerOffset !== stuckOffset) {
+          stuckOffset = headerOffset;
+          document.documentElement.style.setProperty(
+            "--courses-hero-sticky-offset",
+            `${headerOffset}px`,
+          );
+        }
+        // Progress through the pin's hold: sticky releases at wrapper height
+        // minus the card's own (shorter than the viewport) height, counted
+        // from the instant the card locks under the header.
         const dwell = wrapper.getBoundingClientRect().height - card.getBoundingClientRect().height;
-        // Offset by the same headerOffset the card's own sticky `top` now
-        // uses, so the drift starts counting from the instant the card
-        // actually locks (scroll ≈ 0) instead of from wherever it would
-        // have stuck under the old top: 0 (scroll ≈ headerOffset) — without
-        // this, the first headerOffset px of the dwell would hold the photos
-        // still (already pinned, just not yet drifting) before anything
-        // visibly moved.
         const progress =
           dwell > 0
             ? Math.min(1, Math.max(0, (headerOffset - wrapper.getBoundingClientRect().top) / dwell))
             : 0;
-        // Raw 0→1: each column (sections.css) interpolates its own
-        // --from/--to across this directly, rather than both sharing one
-        // pre-scaled pixel value.
-        el.style.setProperty("--courses-photos-progress", String(progress));
+
+        if (!desktop.matches) {
+          // Stacked mobile hero, not pinned: the photos sit still.
+          for (const column of columns) column.style.transform = "";
+          shown = -1;
+        } else {
+          // Reduced motion: no travel, the end of the hold, where every
+          // photo shows its name and role.
+          const target = reducedMotion.matches ? 1 : progress;
+          const step = 1 - Math.pow(1 - 0.16, Math.min(64, now - last) / 16.7);
+          shown = shown < 0 || reducedMotion.matches ? target : shown + (target - shown) * step;
+          if (Math.abs(target - shown) < 0.0005) shown = target;
+
+          // Travel measured live (resize-safe): each column from "top photo
+          // whole under the top fade" to "bottom photo whole above the
+          // bottom fade"; the right one starts lower, so they move as layers.
+          const windowHeight = node.clientHeight;
+          const fade = parseFloat(getComputedStyle(node).getPropertyValue("--ph-fade")) || 16;
+          const cardHeight = columns[0]?.firstElementChild?.getBoundingClientRect().height ?? 0;
+          const stagger = Math.max(0, Math.min(48, windowHeight - 2 * fade - cardHeight));
+          columns.forEach((column, index) => {
+            const from = fade + (index === 1 ? stagger : 0);
+            // Never rise past the point where the top photo's name and role
+            // would slip under the top fade — even if a CMS name runs long.
+            const top = column.firstElementChild;
+            const caption = top?.querySelector("figcaption")?.getBoundingClientRect().height ?? 0;
+            const keepCaption = fade + caption - (top?.getBoundingClientRect().height ?? 0);
+            const to = Math.min(from, Math.max(windowHeight - fade - column.offsetHeight, keepCaption));
+            column.style.transform = `translate3d(0, ${(from + (to - from) * shown).toFixed(2)}px, 0)`;
+          });
+        }
       }
+      last = now;
       frame = requestAnimationFrame(raf);
     }
     frame = requestAnimationFrame(raf);
