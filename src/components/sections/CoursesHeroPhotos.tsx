@@ -25,9 +25,15 @@ import { BLOCKS } from "@/data/blocks";
    never puts one person's face under another's name. */
 const SHOWN = 4;
 
-/** Mobile parallax travel each side of rest, px: left column, right column. */
-const MOBILE_TRAVEL_SLOW = 16;
-const MOBILE_TRAVEL_FAST = 36;
+/**
+ * Mobile parallax travel each side of rest, px. The columns move in OPPOSITE
+ * directions (left down, right up — a scissor), so they slide past each other
+ * by twice their travel. Client, 2026-10-23: the first ±16/±36 same-way drift
+ * was "demasiado sutil". sections.css gives the cluster 40px of room above and
+ * below on mobile, so this never reaches the lead text or the hero's edge.
+ */
+const MOBILE_TRAVEL_LEFT = 56;
+const MOBILE_TRAVEL_RIGHT = 72;
 
 export function CoursesHeroPhotos() {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -94,10 +100,9 @@ export function CoursesHeroPhotos() {
           } else {
             // Stacked mobile hero (client, 2026-10-23: "que sí se muevan, algo
             // similar a web"): NOT pinned — holding the page on a phone would
-            // hijack the scroll — but a gentle parallax while the cluster
-            // crosses the screen. Both columns rise as you scroll, the right
-            // one faster, like the desktop hold; small travel so names stay
-            // readable and nothing leaves the hero (48px of room below).
+            // hijack the scroll — but a parallax while the cluster crosses the
+            // screen: the left column sinks and the right one rises, eased like
+            // the desktop hold, every card staying inside the hero.
             const rect = node.getBoundingClientRect();
             const viewport = window.innerHeight;
             const target = Math.min(1, Math.max(0, (viewport - rect.top) / (viewport + rect.height)));
@@ -105,8 +110,10 @@ export function CoursesHeroPhotos() {
             mobileShown = mobileShown < 0 ? target : mobileShown + (target - mobileShown) * step;
             if (Math.abs(target - mobileShown) < 0.0005) mobileShown = target;
             columns.forEach((column, index) => {
-              const travel = index === 1 ? MOBILE_TRAVEL_FAST : MOBILE_TRAVEL_SLOW;
-              const y = travel - 2 * travel * mobileShown;
+              const y =
+                index === 1
+                  ? MOBILE_TRAVEL_RIGHT * (1 - 2 * mobileShown) // +72 → −72: rises
+                  : MOBILE_TRAVEL_LEFT * (2 * mobileShown - 1); // −56 → +56: sinks
               column.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
             });
           }

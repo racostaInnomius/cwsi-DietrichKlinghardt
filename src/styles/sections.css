@@ -2581,9 +2581,9 @@
      the hold, the right one starting lower so they move as layers; travel
      is measured live (resize-safe) and eased like GSAP's scrub: 0.5.
    Below 900px the hero is not pinned (a held page hijacks a phone's
-   scroll): all four photos sit whole at their natural height and drift as a
-   gentle two-speed parallax while they cross the screen (2026-10-23), off
-   under reduced motion. */
+   scroll): all four photos sit whole at their natural height and slide past
+   each other (left column down, right up) while they cross the screen
+   (2026-10-23), off under reduced motion. */
 .courses-hero-photos {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2596,6 +2596,17 @@
 }
 .courses-hero-photos__col--b {
   margin-top: 12%;
+}
+/* Mobile parallax room (CoursesHeroPhotos.tsx MOBILE_TRAVEL_*): 40px above
+   and below the cluster, so the columns' ±56/±72px travel never reaches the
+   lead text above or the hero's bottom edge. */
+@media (max-width: 899px) {
+  .courses-hero-photos {
+    padding-block: 40px;
+  }
+  .courses-hero-photos__col {
+    will-change: transform;
+  }
 }
 @media (min-width: 900px) {
   .courses-hero-photos {
