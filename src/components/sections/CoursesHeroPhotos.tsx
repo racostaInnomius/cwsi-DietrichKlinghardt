@@ -25,6 +25,10 @@ import { BLOCKS } from "@/data/blocks";
    never puts one person's face under another's name. */
 const SHOWN = 4;
 
+/** Mobile parallax travel each side of rest, px: left column, right column. */
+const MOBILE_TRAVEL_SLOW = 16;
+const MOBILE_TRAVEL_FAST = 36;
+
 export function CoursesHeroPhotos() {
   const ref = useRef<HTMLDivElement | null>(null);
   const bundled = BLOCKS[SECTION.coursesInstructors]?.cards ?? [];
@@ -47,6 +51,9 @@ export function CoursesHeroPhotos() {
     let shown = -1;
     let last = performance.now();
     let stuckOffset = -1;
+    // The same easing for the mobile parallax (its own 0→1: the cluster's
+    // trip across the viewport).
+    let mobileShown = -1;
     let frame: number;
 
     function raf(now: number) {
@@ -80,10 +87,31 @@ export function CoursesHeroPhotos() {
             : 0;
 
         if (!desktop.matches) {
-          // Stacked mobile hero, not pinned: the photos sit still.
-          for (const column of columns) column.style.transform = "";
           shown = -1;
+          if (reducedMotion.matches) {
+            for (const column of columns) column.style.transform = "";
+            mobileShown = -1;
+          } else {
+            // Stacked mobile hero (client, 2026-10-23: "que sí se muevan, algo
+            // similar a web"): NOT pinned — holding the page on a phone would
+            // hijack the scroll — but a gentle parallax while the cluster
+            // crosses the screen. Both columns rise as you scroll, the right
+            // one faster, like the desktop hold; small travel so names stay
+            // readable and nothing leaves the hero (48px of room below).
+            const rect = node.getBoundingClientRect();
+            const viewport = window.innerHeight;
+            const target = Math.min(1, Math.max(0, (viewport - rect.top) / (viewport + rect.height)));
+            const step = 1 - Math.pow(1 - 0.16, Math.min(64, now - last) / 16.7);
+            mobileShown = mobileShown < 0 ? target : mobileShown + (target - mobileShown) * step;
+            if (Math.abs(target - mobileShown) < 0.0005) mobileShown = target;
+            columns.forEach((column, index) => {
+              const travel = index === 1 ? MOBILE_TRAVEL_FAST : MOBILE_TRAVEL_SLOW;
+              const y = travel - 2 * travel * mobileShown;
+              column.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+            });
+          }
         } else {
+          mobileShown = -1;
           // Reduced motion: no travel, the end of the hold, where every
           // photo shows its name and role.
           const target = reducedMotion.matches ? 1 : progress;
