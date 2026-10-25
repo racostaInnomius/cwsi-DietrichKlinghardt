@@ -2573,10 +2573,11 @@
    - the cluster is a window exactly the height of the hero's content box,
      clipped, with its top and bottom edges softly faded (mask), so photos
      never leave the hero and an edge reads as a fade, not a hard crop;
-   - the cards are 4:5 portraits sized from that window: as large as the
-     column allows, capped so that at the end of the hold the lower photos
-     sit whole AND the upper ones still show their name and role (two cards
-     + gap + one caption + the two fades fit the window);
+   - the cards are the size of consciouslife.com's hero experts (client,
+     2026-10-25: "el mismo tamaño de las imágenes en CL"): 19vw wide at
+     1:1.42, from the window's width only, so a shorter or taller window no
+     longer resizes them. Past ~1510px the pair is wider than its grid
+     column and extends into the free space right of the content;
    - each column travels from "top photo whole" to "bottom photo whole" over
      the hold, the right one starting lower so they move as layers; travel
      is measured live (resize-safe) and eased like GSAP's scrub: 0.5.
@@ -2612,16 +2613,14 @@
   .courses-hero-photos {
     --ph-gap: 16px;
     --ph-fade: 16px;
-    /* Room for one name + role line under a card (~90px measured). */
-    --ph-caption: 92px;
     /* Inline room so the cards' shadows are not clipped at the sides. */
     --ph-side: 14px;
     /* = .courses-hero__inner's content box (its desktop padding-block). */
     --ph-window: calc(var(--sophia-hero-dimension-height) - 2 * clamp(24px, 3vw, 40px));
-    --ph-card-h: calc(var(--ph-window) - 2 * var(--ph-fade) - var(--ph-gap) - var(--ph-caption));
-    --ph-card-w: calc(var(--ph-card-h) * 0.8);
+    --ph-card-w: 19vw;
+    grid-template-columns: repeat(2, var(--ph-card-w));
     gap: var(--ph-gap);
-    width: min(100% + var(--ph-side), calc(2 * var(--ph-card-w) + var(--ph-gap) + 2 * var(--ph-side)));
+    width: calc(2 * var(--ph-card-w) + var(--ph-gap) + 2 * var(--ph-side));
     height: var(--ph-window);
     margin-left: auto;
     margin-right: calc(-1 * var(--ph-side));
@@ -2640,6 +2639,10 @@
   }
   .courses-hero-photos__card {
     container-type: inline-size;
+  }
+  /* Two classes: the base 4:5 rule sits later in this file. */
+  .courses-hero-photos .courses-hero-photos__card {
+    aspect-ratio: 100 / 142;
   }
   .courses-hero-photos__card img {
     object-position: 50% 22%;

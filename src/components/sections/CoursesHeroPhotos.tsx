@@ -132,16 +132,28 @@ export function CoursesHeroPhotos() {
           const windowHeight = node.clientHeight;
           const fade = parseFloat(getComputedStyle(node).getPropertyValue("--ph-fade")) || 16;
           const cardHeight = columns[0]?.firstElementChild?.getBoundingClientRect().height ?? 0;
-          const stagger = Math.max(0, Math.min(48, windowHeight - 2 * fade - cardHeight));
-          columns.forEach((column, index) => {
-            const from = fade + (index === 1 ? stagger : 0);
-            // Never rise past the point where the top photo's name and role
-            // would slip under the top fade — even if a CMS name runs long.
-            const top = column.firstElementChild;
+          const gap = parseFloat(getComputedStyle(columns[0] ?? node).rowGap) || 0;
+          // Client, 2026-10-25: "intercaladas como ladrillos" — the right
+          // column always sits half a photo lower, so no two photos are ever
+          // level (same as consciouslife.com's experts).
+          const brick = (cardHeight + gap) / 2;
+          const from = fade;
+          // Travel all the way (client, 2026-10-25), so every photo is seen
+          // whole on the way down: the hold ends with the right column's
+          // bottom photo whole above the bottom fade.
+          let to = Math.min(from, windowHeight - fade - (columns[1]?.offsetHeight ?? 0) - brick);
+          // Reduced motion holds still at the end, so there it stops where
+          // the left column's top photo still shows its name and role (even
+          // a long CMS name).
+          if (reducedMotion.matches) {
+            const top = columns[0]?.firstElementChild;
             const caption = top?.querySelector("figcaption")?.getBoundingClientRect().height ?? 0;
-            const keepCaption = fade + caption - (top?.getBoundingClientRect().height ?? 0);
-            const to = Math.min(from, Math.max(windowHeight - fade - column.offsetHeight, keepCaption));
-            column.style.transform = `translate3d(0, ${(from + (to - from) * shown).toFixed(2)}px, 0)`;
+            to = Math.min(from, Math.max(to, fade + caption - cardHeight));
+          }
+          const y = from + (to - from) * shown;
+          columns.forEach((column, index) => {
+            const offset = index === 1 ? brick : 0;
+            column.style.transform = `translate3d(0, ${(y + offset).toFixed(2)}px, 0)`;
           });
         }
       }
