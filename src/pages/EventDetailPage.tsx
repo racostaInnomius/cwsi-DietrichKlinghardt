@@ -3,6 +3,7 @@ import { Seo } from "@/components/Seo";
 import type { ContentDoc } from "@/data/demo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number, textList } from "@/lib/content";
+import { useSection, SECTION } from "@/lib/sections";
 import { externalUrl, richTextBlocks, richTextSections, richTextMarked } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { eventDateBlock, eventDateRange, eventLocation, eventTimeLabel, splitByTime } from "@/lib/format";
@@ -30,6 +31,9 @@ export function EventDetailPage() {
   const { slug } = useParams();
   const events = useCollection("events");
   const event = events.find((row) => row.slug === slug);
+  // Headings this page prints around the event's own copy (CMS: the
+  // "event-page" block), so they are the tenant's words, not the code's.
+  const eventCopy = useSection(SECTION.eventPage);
 
   if (!event) {
     return (
@@ -238,7 +242,7 @@ export function EventDetailPage() {
 
             {paragraphs.length ? (
               <div className="event-copy__section">
-                <h2>About the Programme</h2>
+                <h2><Marked text={eventCopy.title} /></h2>
                 {paragraphs.map((paragraph) => (
                   <p key={paragraph}><Emphasis text={paragraph} /></p>
                 ))}

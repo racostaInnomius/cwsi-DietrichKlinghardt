@@ -53,6 +53,12 @@ export const BLOCKS: Record<string, BlockDefault> = {
       "Training programmes and certifications for practitioners who want to bring Autonomic Response Testing and the 5 Levels of Healing into their own practice — taught by Dr. Klinghardt and the team he has trained worldwide.",
     ],
   },
+  "event-page": {
+    page: "/events/<event>",
+    sitePage: "Events",
+    kind: "component",
+    title: "About the Programme",
+  },
   "home-events": {
     page: "/ and /events",
     sitePage: "Home",

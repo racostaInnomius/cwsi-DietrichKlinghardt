@@ -1229,6 +1229,10 @@
   max-width: 62ch;
   color: var(--muted);
   font-style: italic;
+  /* The CMS summary is a plain textarea, so the editor's own line breaks are
+     part of the text — keep them instead of collapsing the whole thing into
+     one paragraph (client, 2026-10-26). Runs of spaces still collapse. */
+  white-space: pre-line;
 }
 .event-copy__section {
   margin-top: 32px;

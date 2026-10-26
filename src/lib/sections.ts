@@ -63,6 +63,11 @@ export const SECTION = {
 
   coursesInstructors: "courses-instructors",
 
+  /* Headings the event page prints around each event's own copy. They belong
+     to the site, not to one event, so they live in a single block every event
+     page reads (client, 2026-10-26: "About the Programme" was hard-coded). */
+  eventPage: "event-page",
+
   /* Client (2026-09-18): "Archives" — migrated from klinghardt-akademie.de
      (password-protected legacy site), kept in German on purpose. Own slugs
      rather than reusing e.g. SECTION.fiveLevels: same subject as the
