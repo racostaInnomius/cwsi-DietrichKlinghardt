@@ -137,8 +137,17 @@ const IS_ITALIC = 2;
 
 function lexicalMarked(node: unknown): string {
   if (!node || typeof node !== "object") return "";
-  const item = node as LexicalNode & { format?: number };
+  const item = node as LexicalNode & { format?: number; fields?: { url?: unknown; newTab?: unknown } };
   if (item.type === "linebreak") return "\n";
+  // A link the editor made with the toolbar: kept as [text](url) so the
+  // paragraph stays a string all the way to <Emphasis>, which renders it as a
+  // real anchor (client, 2026-10-26: "si escribió un link debe llevar al link
+  // cuando se le dé clic").
+  if (item.type === "link" || item.type === "autolink") {
+    const inner = item.children?.map(lexicalMarked).join("") ?? "";
+    const url = typeof item.fields?.url === "string" ? item.fields.url.trim() : "";
+    return url ? `[${inner}](${url})` : inner;
+  }
   if (typeof item.text === "string") {
     const format = typeof item.format === "number" ? item.format : 0;
     if (!item.text.trim()) return item.text;

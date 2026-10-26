@@ -7,7 +7,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { externalUrl, richTextBlocks, richTextSections, richTextMarked } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { eventDateBlock, eventDateRange, eventLocation, eventTimeLabel, splitByTime } from "@/lib/format";
-import { dayPassLabel, dayPassesOf, packagesIncluding } from "@/lib/dayPasses";
+import { dayPassLabel, dayPassesOf } from "@/lib/dayPasses";
 import { CheckoutLink, CurrencyNote, Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -84,9 +84,9 @@ export function EventDetailPage() {
   const soldOut = event.status === "sold_out" || event.soldOut === true;
   const mapUrl = text(event, "mapUrl");
   // A multi-day course also sold per day (CMS "Day passes"): its days show as
-  // cards with their own Buy button; a day's page links back to its course.
+  // cards with their own Buy button. The reverse line ("Also part of <course>"
+  // on a day's own page) was removed at the client's request, 2026-10-26.
   const dayPasses = dayPassesOf(event, events);
-  const packages = packagesIncluding(event, events);
   const ctaLabel =
     registrationType !== "paid"
       ? "Register / learn more"
@@ -238,7 +238,11 @@ export function EventDetailPage() {
           <Reveal className="event-copy" delay={100}>
             {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
             <h1><Marked text={title} /></h1>
-            {summary ? <p className="event-copy__lead">{summary}</p> : null}
+            {/* Through <Emphasis> so an address the editor typed here is a
+                real link (client, 2026-10-26). */}
+            {summary ? (
+              <p className="event-copy__lead"><Emphasis text={summary} /></p>
+            ) : null}
 
             {paragraphs.length ? (
               <div className="event-copy__section">
@@ -278,17 +282,6 @@ export function EventDetailPage() {
                   ))}
                 </div>
               </div>
-            ) : null}
-
-            {packages.length ? (
-              <p className="event-copy__package">
-                {packages.map((pkg, index) => (
-                  <span key={String(pkg.id)}>
-                    {index ? " · " : "Also part of "}
-                    <Link to={`/events/${text(pkg, "slug")}`}>{text(pkg, "title")}</Link>
-                  </span>
-                ))}
-              </p>
             ) : null}
 
             {disclosure.length ? (

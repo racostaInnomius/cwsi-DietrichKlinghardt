@@ -56,7 +56,7 @@ const BRANCHES: Branch[] = [
     // not a live/interactive map.
     media: {
       src: "/images/art-therapists-map.png",
-      alt: "Map of A.R.T. therapist locations across Europe",
+      alt: "Map of A.R.T. practitioner locations across Europe",
       width: 509,
       height: 411,
     },

@@ -178,10 +178,10 @@ export const BLOCKS: Record<string, BlockDefault> = {
     sitePage: "Akademie",
     kind: "section",
     eyebrow: "Global network",
-    title: "Find A.R.T.® Therapists",
+    title: "Find A.R.T.® Practitioners",
     subtitle: "Browse our directory to find practitioners near you.",
     paragraphs: [
-      "Looking for a certified A.R.T.® therapist or consultant near you? Our therapist directory helps you find qualified practitioners and clinics in your area, ready to support you on your journey toward health and wellbeing. Each listing links to the therapist's own website, where you can read about their approach, specialities and the services they offer.",
+      "Looking for a certified A.R.T.® practitioner or consultant near you? Our practitioner directory helps you find qualified practitioners and clinics in your area, ready to support you on your journey toward health and wellbeing. Each listing links to the practitioner's own website, where you can read about their approach, specialities and the services they offer.",
     ],
   },
   "academy-art-klinghardt": {
@@ -223,7 +223,7 @@ export const BLOCKS: Record<string, BlockDefault> = {
     title: "Klinghardt Akademie",
     subtitle: "Dr. Klinghardt's academy in Europe",
     paragraphs: [
-      "Based in Europe, the Klinghardt Akademie is Dr. Klinghardt's European training centre. It carries his diagnostic and therapeutic methods forward as a living system, continuously shaped by his clinical practice, research and decades of experience. Here, therapists and health-minded individuals can train directly in his core methods — A.R.T Klinghardt™ and Psycho-Kinesiology — grounded in The 5 Levels of Healing™. Seminars and materials are offered primarily in Europe.",
+      "Based in Europe, the Klinghardt Akademie is Dr. Klinghardt's European training centre. It carries his diagnostic and therapeutic methods forward as a living system, continuously shaped by his clinical practice, research and decades of experience. Here, practitioners and health-minded individuals can train directly in his core methods — A.R.T Klinghardt™ and Psycho-Kinesiology — grounded in The 5 Levels of Healing™. Seminars and materials are offered primarily in Europe.",
     ],
   },
   "academy-klinghardt-foundation": {
@@ -288,15 +288,15 @@ export const BLOCKS: Record<string, BlockDefault> = {
     title: "The 5 Levels — Quote",
     subtitle: "— Dr. Dietrich Klinghardt™",
     paragraphs: [
-      "“I have tried to establish some guidelines for therapists who aspire to a higher level in their work. *When improvements occur, both patient and physician should show gratitude and humility.*”",
+      "“I have tried to establish some guidelines for practitioners who aspire to a higher level in their work. *When improvements occur, both patient and physician should show gratitude and humility.*”",
     ],
   },
   "therapists": {
     page: "/academy/therapists",
-    sitePage: "Akademie · Find A.R.T. Therapists",
+    sitePage: "Akademie · Find A.R.T. Practitioners",
     kind: "page",
     eyebrow: "Global practitioner directory",
-    title: "Are You Looking For an A.R.T.® Klinghardt® Therapist?",
+    title: "Are You Looking For an A.R.T.® Klinghardt® Practitioner?",
     paragraphs: [
       "Browse our directory to find practitioners near you. Visit their personal websites to learn more about the services and approach each of them offers.",
     ],

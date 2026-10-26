@@ -45,7 +45,7 @@ export const teamBios: Record<string, TeamBio> = {
   },
   "kim-dines": {
     paragraphs: [
-      "Kim Dines is an integrative manual therapist whose work bridges advanced physical rehabilitation with mind–body therapeutics, cranial and visceral approaches, and autonomic nervous system regulation.",
+      "Kim Dines is an integrative manual practitioner whose work bridges advanced physical rehabilitation with mind–body therapeutics, cranial and visceral approaches, and autonomic nervous system regulation.",
       "Her clinical training encompasses myofascial release, craniosacral therapy, craniofacial mobilization, neuromanipulation, visceral manipulation, manual lymphatic drainage, scar release, trigger point therapy, acupressure, and functional nutritional therapy — addressing chronic illness, mobility issues, pain, neurological conditions, and complex presentations across musculoskeletal, fascial, visceral, cranial, lymphatic, and energetic layers.",
       "At Sophia Health Institute, Kim collaborates with Dr. Dietrich Klinghardt and is especially recommended for patients with developmental or neurological needs, including autism-spectrum conditions, with the goal of restoring function, comfort, nervous system balance, and embodied well-being.",
     ],

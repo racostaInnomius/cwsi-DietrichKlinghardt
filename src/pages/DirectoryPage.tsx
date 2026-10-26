@@ -61,14 +61,14 @@ export function DirectoryPage() {
   return (
     <>
       <Seo
-        title={"Find an A.R.T.® Therapist — Dr. Dietrich Klinghardt™"}
+        title={"Find an A.R.T.® Practitioner — Dr. Dietrich Klinghardt™"}
         description="Global directory of practitioners certified in Autonomic Response Testing, Psycho-Kinesiology and Mental Field Techniques."
         path="/academy/therapists"
       />
 
       <section className="section wrap directory-hero">
         <Breadcrumbs
-          items={[{ label: "Akademie", href: "/academy" }, { label: "Find a therapist" }]}
+          items={[{ label: "Akademie", href: "/academy" }, { label: "Find a practitioner" }]}
         />
         <Reveal>
           {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
@@ -135,7 +135,7 @@ export function DirectoryPage() {
         ) : null}
 
         <h2 className="section-title directory-heading">
-          <Marked text="A.R.T.® Klinghardt® Therapists" />
+          <Marked text="A.R.T.® Klinghardt® Practitioners" />
         </h2>
 
         {visible.length ? (

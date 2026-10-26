@@ -14,7 +14,7 @@ import type { ContentDoc } from "@/data/demo";
 
 export const QUALIFICATIONS = [
   { key: "master_ank", label: "Master ANK" },
-  { key: "certified_therapist", label: "Certified Therapist" },
+  { key: "certified_therapist", label: "Certified Practitioner" },
   { key: "certified_advisor", label: "Certified Advisor" },
   { key: "art", label: "A.R.T.® (Autonomic Response Testing®)" },
   { key: "pk", label: "PK (Psycho-Kinesiology)" },
@@ -43,7 +43,7 @@ export interface Practitioner {
   id: string;
   name: string;
   academicTitle?: string;
-  /** "Therapist" / "Advisor" — the source's gendered titles collapse here. */
+  /** "Practitioner" / "Advisor" — the source's gendered titles collapse here. */
   role: string;
   /** Kept in the original language: regulated titles have no honest translation. */
   professionalTitle?: string;
@@ -99,7 +99,7 @@ function normalise(doc: ContentDoc): Practitioner {
     id: String(doc.id ?? ""),
     name: str(doc.name) ?? "",
     academicTitle: str(doc.academicTitle),
-    role: doc.role === "advisor" ? "Advisor" : "Therapist",
+    role: doc.role === "advisor" ? "Advisor" : "Practitioner",
     professionalTitle: str(doc.professionalTitle),
     street: str(doc.street),
     zip: str(doc.zip),

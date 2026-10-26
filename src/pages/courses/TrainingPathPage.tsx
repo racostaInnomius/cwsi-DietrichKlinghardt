@@ -160,7 +160,7 @@ export function TrainingPathPage() {
                 <Reveal>
                   <h2 className="section-title">
                     Course of training to become a{" "}
-                    <Marked text={path.abbreviation} /> therapist
+                    <Marked text={path.abbreviation} /> practitioner
                   </h2>
                 </Reveal>
                 <ol className="curriculum">

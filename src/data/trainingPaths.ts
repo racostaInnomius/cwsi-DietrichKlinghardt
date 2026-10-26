@@ -69,7 +69,7 @@ export const trainingPaths: TrainingPath[] = [
       "People in training for therapeutic professions",
     ],
     languages: ["German", "English"],
-    diploma: "Training to become a certified A.R.T.® therapist",
+    diploma: "Training to become a certified A.R.T.® practitioner",
     about: [
       "A.R.T Klinghardt™ AUTONOMIC RESPONSE TESTING®, developed by Dr. Dietrich Klinghardt™, is a holistic approach that can provide stimulation on an energetic level. Its goal is to promote general well-being.",
       "Initially, kinesiological muscle testing can be used to observe how the body reacts to certain stimuli. This can reveal clues to energetic imbalances or stressful issues. This method serves as a complementary holistic approach.",
@@ -94,7 +94,7 @@ export const trainingPaths: TrainingPath[] = [
         note: "The PK IV course provides the opportunity for intensive self-experience of the major themes of our lives.",
       },
     ],
-    finalStep: "Examination with certificate (A.R.T.® therapist)",
+    finalStep: "Examination with certificate (A.R.T.® practitioner)",
     footnotes: [
       "*The MFT I course can also be attended after A.R.T.® II, but is a prerequisite for PK II. The MFT I online course is only valid until PK II, after which the on-site course is required.",
       "**Before PK IV, participation in three family constellations and at least one personal constellation is recommended.",
