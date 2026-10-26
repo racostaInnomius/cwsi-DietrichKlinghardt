@@ -20,6 +20,10 @@ import { useEffect, useRef, useState, type ElementType } from "react";
  * but sharing one letter count so the second doesn't restart the stagger
  * from zero.
  *
+ * Trademark marks (™, ®) are set small and raised, the same treatment
+ * `Marked` gives them in plain headings, so a brand name reads identically
+ * whether or not it cascades.
+ *
  * SSG-safe: the real text still exists as regular characters in the
  * static HTML (screen readers get the plain string via `aria-label`,
  * never the exploded spans), so nothing depends on JS running.
@@ -106,7 +110,16 @@ export function SplitReveal({
                 className="split-reveal__char"
                 style={{ transitionDelay: `${i * staggerMs}ms` }}
               >
-                {char}
+                {/* ™ and ® small and raised, exactly as <Marked> sets them
+                    everywhere else (client, 2026-10-26: Home's Academy line
+                    showed a full-size ™ while the rest of the site raises
+                    it). Done per character so the letter cascade is
+                    untouched. */}
+                {char === "™" || char === "®" ? (
+                  <sup className="tm">{char}</sup>
+                ) : (
+                  char
+                )}
               </span>
             );
           })}
