@@ -13,7 +13,7 @@ import { env } from "@/lib/env";
 import { money } from "@/lib/format";
 
 /**
- * Visitor-selected display currency (MXN / USD / EUR).
+ * Visitor-selected display currency (USD / EUR).
  *
  * DISPLAY ONLY. Prices are stored and charged in the currency set in the CMS
  * (USD today); a converted amount is an estimate from the Beytrax API's
@@ -26,7 +26,9 @@ import { money } from "@/lib/format";
  * visitor's currency kicks in right after mount.
  */
 
-export const CURRENCIES = ["usd", "mxn", "eur"] as const;
+// Client (2026-10-26): MXN dropped from the switch. A visitor whose stored
+// choice was "mxn" fails isCurrency() below and falls back to the guess.
+export const CURRENCIES = ["usd", "eur"] as const;
 export type Currency = (typeof CURRENCIES)[number];
 
 const STORAGE_KEY = "dkk-display-currency";
@@ -41,9 +43,9 @@ function isCurrency(value: unknown): value is Currency {
 }
 
 /**
- * First-visit guess: browser locale region (es-MX → MXN, de-DE → EUR), then
- * the timezone (Mexico's zones → MXN, Europe/* → EUR). Anything else keeps
- * the price's own currency (null).
+ * First-visit guess: browser locale region (de-DE → EUR, en-US → USD), then
+ * the timezone (Europe/* → EUR). Anything else keeps the price's own
+ * currency (null).
  */
 export function guessCurrency(
   languages: readonly string[],
@@ -52,14 +54,10 @@ export function guessCurrency(
   for (const tag of languages) {
     const region = tag.split(/[-_]/)[1]?.toUpperCase();
     if (!region) continue;
-    if (region === "MX") return "mxn";
     if (EURO_REGIONS.has(region)) return "eur";
     if (region === "US") return "usd";
   }
   if (timeZone) {
-    if (/^America\/(Mexico_City|Cancun|Merida|Monterrey|Matamoros|Chihuahua|Ciudad_Juarez|Ojinaga|Mazatlan|Bahia_Banderas|Hermosillo|Tijuana)$/.test(timeZone)) {
-      return "mxn";
-    }
     if (timeZone.startsWith("Europe/") && !/^Europe\/(London|Dublin|Lisbon|Zurich|Oslo|Stockholm|Copenhagen|Warsaw|Prague|Budapest|Bucharest|Sofia|Istanbul|Moscow|Kiev|Kyiv|Minsk)$/.test(timeZone)) {
       return "eur";
     }

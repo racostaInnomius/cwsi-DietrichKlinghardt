@@ -39,11 +39,14 @@ export const PRIMARY_NAV: NavItem[] = [
     mark: "™",
     theme: "sophia",
     children: [
-      { label: "What we treat", href: "/sophia#chronic-illness", theme: "sophia" },
-      { label: "Naturopathic care", href: "/sophia#naturopathic-care", theme: "sophia" },
-      { label: "Our team", href: "/sophia/team", theme: "sophia" },
-      { label: "New patients", href: "/sophia/new-patients", theme: "sophia" },
-      { label: "How to find us", href: "/sophia/accommodations", theme: "sophia" },
+      // Client (2026-10-26): submenu labels in Title Case ("What We Treat",
+      // not "What we treat"). Short link words stay lowercase, as the
+      // Akademie submenu's "The 5 Levels of Healing" already does.
+      { label: "What We Treat", href: "/sophia#chronic-illness", theme: "sophia" },
+      { label: "Naturopathic Care", href: "/sophia#naturopathic-care", theme: "sophia" },
+      { label: "Our Team", href: "/sophia/team", theme: "sophia" },
+      { label: "New Patients", href: "/sophia/new-patients", theme: "sophia" },
+      { label: "How to Find Us", href: "/sophia/accommodations", theme: "sophia" },
     ],
   },
   { label: "Events", href: "/events" },
@@ -61,9 +64,9 @@ export const PRIMARY_NAV: NavItem[] = [
       // Client (2026-09-23): links out to the real (German) Akademie site
       // rather than the internal /academy/akademie page.
       { label: "Klinghardt Akademie", href: "https://klinghardt-akademie.de/", external: true },
-      { label: "Diagnostic method", href: "/academy/art" },
+      { label: "Diagnostic Method", href: "/academy/art" },
       { label: "The 5 Levels of Healing", href: "/academy/five-levels", mark: "™" },
-      { label: "Global practitioners", href: "/academy/therapists" },
+      { label: "Global Practitioners", href: "/academy/therapists" },
       { label: "Publications", href: "/academy/publications" },
       { label: "Dr. Klinghardt Foundation", href: "/foundation", mark: "™" },
     ],

@@ -1,7 +1,7 @@
 import { CURRENCIES, useCurrency, type Currency } from "@/lib/currency";
 
 /**
- * Display-currency switch in the nav (MXN / USD / EUR). Only changes how
+ * Display-currency switch in the nav (USD / EUR). Only changes how
  * prices READ — see lib/currency.tsx; the charge stays in the CMS currency.
  * Until the visitor's currency is known (prerender, first paint) it shows USD,
  * the currency every price is set in today.
