@@ -450,7 +450,7 @@ export function HomePage() {
             ) : null}
             {art.paragraphs.map((paragraph) => (
               <p key={paragraph} className="home-art__copy">
-                {paragraph}
+                <Marked text={paragraph} />
               </p>
             ))}
             <div className="home-art__actions">

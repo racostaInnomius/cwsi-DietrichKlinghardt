@@ -158,9 +158,9 @@ export function NewsletterSection({
       <div className="wrap newsletter__inner">
         <Reveal>
           {eyebrow ? <p className="eyebrow"><Marked text={eyebrow} /></p> : null}
-          <h2>{title ?? section.title}</h2>
+          <h2><Marked text={title ?? section.title} /></h2>
           {(lead ?? section.lead) ? (
-            <p className="newsletter__lead">{lead ?? section.lead}</p>
+            <p className="newsletter__lead"><Marked text={lead ?? section.lead} /></p>
           ) : null}
 
           <form className="newsletter__form" onSubmit={submit}>

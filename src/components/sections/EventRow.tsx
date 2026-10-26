@@ -49,7 +49,7 @@ export function EventRow({
 
         <div className="event-row__body">
           {location ? <p className="eyebrow">{location}</p> : null}
-          <h3>{title}</h3>
+          <h3><Marked text={title} /></h3>
           {summary ? <p>{summary}</p> : null}
         </div>
 

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FOOTER_NAV, type NavItem } from "./navigation";
 import { FacebookIcon, InstagramIcon, TelegramIcon, VimeoIcon } from "@/components/Icons";
+import { Marked } from "@/components/Marked";
 import { env } from "@/lib/env";
 
 function Label({ item }: { item: NavItem }) {
@@ -80,7 +81,7 @@ export function SiteFooter({
       </p>
 
       <div className="site-footer__legal">
-        <span>© {year} Dietrich Klinghardt™ All rights reserved.</span>
+        <span>© {year} <Marked text="Dietrich Klinghardt™" /> All rights reserved.</span>
         <span className="site-footer__legal-links">
           <Link to="/privacy">Privacy Policy</Link>
           <Link to="/terms">Terms of Service</Link>
