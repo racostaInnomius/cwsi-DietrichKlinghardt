@@ -3,7 +3,7 @@ import { Seo } from "@/components/Seo";
 import type { ContentDoc } from "@/data/demo";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text, number, textList } from "@/lib/content";
-import { externalUrl, richTextBlocks, richTextSections } from "@/lib/cms";
+import { externalUrl, richTextBlocks, richTextSections, richTextMarked } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { eventDateBlock, eventDateRange, eventLocation, eventTimeLabel, splitByTime } from "@/lib/format";
 import { dayPassLabel, dayPassesOf, packagesIncluding } from "@/lib/dayPasses";
@@ -13,6 +13,7 @@ import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { EventMetaIcon } from "@/components/Icons";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { Emphasis } from "@/components/Emphasis";
 
 /**
  * Event detail: an "Event details" panel on the left (date, facts, price,
@@ -53,9 +54,9 @@ export function EventDetailPage() {
 
   const title = text(event, "title", "Event");
   const summary = text(event, "shortDescription");
-  const paragraphs = richTextBlocks(event.description);
+  const paragraphs = richTextMarked(event.description);
   const requirements = textList(event, "requirements");
-  const whatYouWillLearn = richTextBlocks(event.whatYouWillLearn);
+  const whatYouWillLearn = richTextMarked(event.whatYouWillLearn);
   // The purchase policy (CMS "Disclosure"): its first heading, when it opens
   // with one, is the collapsed title; the rest stays hidden until opened.
   const disclosure = richTextSections(event.disclosure);
@@ -239,7 +240,7 @@ export function EventDetailPage() {
               <div className="event-copy__section">
                 <h2>About the Programme</h2>
                 {paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph}><Emphasis text={paragraph} /></p>
                 ))}
               </div>
             ) : null}
@@ -259,7 +260,7 @@ export function EventDetailPage() {
               <div className="event-copy__section">
                 <h2>What You Will Learn</h2>
                 {whatYouWillLearn.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph}><Emphasis text={paragraph} /></p>
                 ))}
               </div>
             ) : null}

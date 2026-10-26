@@ -417,6 +417,10 @@
 .home-academy__copy--bold {
   font-weight: 700;
 }
+/* The editor's italic button, same path as the bold above (2026-10-26). */
+.home-academy__copy--italic {
+  font-style: italic;
+}
 /* Same style as the "Join my talks" button (.talks-band__body .btn) —
    client: "copiar el estilo de boton que hiciste para join my talks". */
 .home-academy .btn {

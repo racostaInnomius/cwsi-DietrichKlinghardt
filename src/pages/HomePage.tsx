@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { splitByTime } from "@/lib/format";
 import { withoutIncludedDays } from "@/lib/dayPasses";
 import { featuredProducts, usedCategories, useStoreProducts, useStoreVisible } from "@/lib/store";
@@ -48,34 +49,31 @@ export function HomePage() {
   // párrafo") — staggerMs is derived from its combined length so a longer
   // CMS edit still finishes cascading in about a second, not several.
   const introTitleChars = intro.title.split(" ").join("").length;
-  const introBodyChars = intro.paragraphs[0].split(" ").join("").length;
+  const introBodyChars = (intro.paragraphs[0] ?? "").split(" ").join("").length;
   const introStaggerMs = Math.max(
     4,
     Math.min(18, 1300 / (introTitleChars + introBodyChars)),
   );
 
-  // Client: only these two phrases carry bold in the Academy quote, the rest
-  // of the paragraph stays regular. Split around them (rather than hand-
-  // authoring three separate strings) so the CMS's own paragraph text still
-  // gets the same treatment as long as it contains these phrases verbatim.
-  // Each segment keeps its own charOffset so the letter cascade still reads
-  // as one continuous sweep across the whole line.
-  const introBoldPhrases = [
-    "Training programmes and certifications for practitioners",
-    "taught by Dr. Klinghardt",
-  ];
+  // Bold and italic come from the CMS editor's own buttons, not from phrases
+  // hard-coded here: `marked` keeps them as **bold** / *italic* runs, and each
+  // run becomes its own segment. Before this, two fixed phrases were the only
+  // thing that could ever be bold, so an editor's emphasis was dropped
+  // silently (client, 2026-10-26). Each segment keeps its own charOffset so
+  // the letter cascade still reads as one continuous sweep across the line.
   const introBodySegments = (() => {
-    const pattern = new RegExp(
-      `(${introBoldPhrases.map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
-    );
+    const source = intro.marked[0] ?? intro.paragraphs[0] ?? "";
     let offset = introTitleChars;
-    return intro.paragraphs[0]
-      .split(pattern)
+    return source
+      .split(/(\*\*[^*]+\*\*|\*[^*]+\*)/)
       .filter(Boolean)
-      .map((text) => {
+      .map((part) => {
+        const bold = part.startsWith("**") && part.endsWith("**") && part.length > 4;
+        const italic = !bold && part.startsWith("*") && part.endsWith("*") && part.length > 2;
+        const text = bold ? part.slice(2, -2) : italic ? part.slice(1, -1) : part;
         const charOffset = offset;
         offset += text.split(" ").join("").length;
-        return { text, bold: introBoldPhrases.includes(text), charOffset };
+        return { text, bold, italic, charOffset };
       });
   })();
 
@@ -343,15 +341,19 @@ export function HomePage() {
                 Both spans share one letter-index (charOffset) so the cascade
                 reads as a single sweep across the whole line. */}
             <p className="home-academy__copy">
-              <SplitReveal
-                as="span"
-                text={intro.title}
-                className="home-academy__title"
-                role="heading"
-                aria-level={2}
-                staggerMs={introStaggerMs}
-                triggerOn="load"
-              />
+              {/* Only when the CMS has one: an empty title must leave no
+                  empty heading behind (client, 2026-10-26). */}
+              {intro.title ? (
+                <SplitReveal
+                  as="span"
+                  text={`${intro.title} `}
+                  className="home-academy__title"
+                  role="heading"
+                  aria-level={2}
+                  staggerMs={introStaggerMs}
+                  triggerOn="load"
+                />
+              ) : null}
               {introBodySegments.map((segment, i) => (
                 <SplitReveal
                   key={i}
@@ -359,14 +361,20 @@ export function HomePage() {
                   text={segment.text}
                   charOffset={segment.charOffset}
                   staggerMs={introStaggerMs}
-                  className={segment.bold ? "home-academy__copy--bold" : undefined}
+                  className={
+                    segment.bold
+                      ? "home-academy__copy--bold"
+                      : segment.italic
+                        ? "home-academy__copy--italic"
+                        : undefined
+                  }
                   triggerOn="load"
                 />
               ))}
             </p>
-            {intro.paragraphs.slice(1).map((paragraph) => (
+            {intro.marked.slice(1).map((paragraph) => (
               <p key={paragraph} className="home-academy__copy">
-                {paragraph}
+                <Emphasis text={paragraph} />
               </p>
             ))}
             <Link className="btn btn-ghost" to="/academy">
@@ -384,7 +392,7 @@ export function HomePage() {
             title={eventsCopy.title}
             // Every paragraph of the block, not just the first: a second
             // paragraph written in the CMS used to be dropped here.
-            lead={eventsCopy.paragraphs}
+            lead={eventsCopy.marked}
             link={{ label: "View all events", to: "/events" }}
           />
 
@@ -448,7 +456,7 @@ export function HomePage() {
                 <Marked text={art.subtitle} />
               </p>
             ) : null}
-            {art.paragraphs.map((paragraph) => (
+            {art.marked.map((paragraph) => (
               <p key={paragraph} className="home-art__copy">
                 <Marked text={paragraph} />
               </p>
@@ -458,7 +466,7 @@ export function HomePage() {
                 About the course
               </Link>
               <Link className="btn btn-primary" to="/academy/therapists">
-                Find a therapist <span aria-hidden="true">→</span>
+                Find a practitioner <span aria-hidden="true">→</span>
               </Link>
             </div>
           </Reveal>
@@ -483,9 +491,9 @@ export function HomePage() {
         <Reveal className="feature-row__body" delay={90}>
           {clinic.eyebrow ? <p className="eyebrow"><Marked text={clinic.eyebrow} /></p> : null}
           <h2><Marked text={clinic.title} /></h2>
-          {clinic.paragraphs.map((paragraph) => (
+          {clinic.marked.map((paragraph) => (
             <p key={paragraph} className="feature-row__copy">
-              {paragraph}
+              <Emphasis text={paragraph} />
             </p>
           ))}
           <div className="feature-row__actions">

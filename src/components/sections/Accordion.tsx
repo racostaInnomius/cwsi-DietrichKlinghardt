@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/motion/Reveal";
+import { Emphasis } from "@/components/Emphasis";
 
 /**
  * FAQ accordion, built on `<details>` rather than React state.
@@ -49,7 +50,7 @@ export function Accordion({
             </summary>
             <div className="accordion__answer">
               {item.answer.split("\n").filter(Boolean).map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+                <p key={paragraph}><Emphasis text={paragraph} /></p>
               ))}
             </div>
           </details>

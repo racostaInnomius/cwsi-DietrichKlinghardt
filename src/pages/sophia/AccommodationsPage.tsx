@@ -4,6 +4,7 @@ import { mapEmbedUrl } from "@/lib/cms";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { EventMetaIcon } from "@/components/Icons";
@@ -80,9 +81,9 @@ export function AccommodationsPage() {
         <Reveal className="feature-row__body" delay={90}>
           {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h1><Marked text={page.title} /></h1>
-          {page.paragraphs.map((paragraph) => (
+          {page.marked.map((paragraph) => (
             <p key={paragraph} className="feature-row__copy">
-              {paragraph}
+              <Emphasis text={paragraph} />
             </p>
           ))}
           <div className="feature-row__actions">

@@ -5,6 +5,7 @@ import { videoEmbed } from "@/lib/cms";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { LineQuote } from "@/components/motion/LineQuote";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { VideoPlayer } from "@/components/sections/VideoPlayer";
@@ -53,8 +54,8 @@ export function ArtPage() {
 
       <section className="section wrap">
         <Reveal className="prose">
-          {page.paragraphs.slice(1).map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+          {page.marked.slice(1).map((paragraph) => (
+            <p key={paragraph}><Emphasis text={paragraph} /></p>
           ))}
         </Reveal>
       </section>
@@ -70,9 +71,9 @@ export function ArtPage() {
           <Reveal>
             {next.eyebrow ? <p className="eyebrow"><Marked text={next.eyebrow} /></p> : null}
             <h2><Marked text={next.title} /></h2>
-            {next.paragraphs.map((paragraph) => (
+            {next.marked.map((paragraph) => (
               <p key={paragraph} className="home-art__copy">
-                {paragraph}
+                <Emphasis text={paragraph} />
               </p>
             ))}
             <div className="home-art__actions">
@@ -80,7 +81,7 @@ export function ArtPage() {
                 Training paths
               </Link>
               <Link className="btn btn-ghost" to="/academy/therapists">
-                Find a therapist
+                Find a practitioner
               </Link>
             </div>
           </Reveal>

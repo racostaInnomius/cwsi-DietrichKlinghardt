@@ -44,7 +44,11 @@ export const BLOCKS: Record<string, BlockDefault> = {
     page: "/",
     sitePage: "Home",
     kind: "section",
-    title: "Dr. Klinghardt Akademie™",
+    // No fallback title on purpose (client, 2026-10-26): the opening words
+    // live in the CMS. A fallback here would reappear the moment the editor
+    // cleared the field — which is how the line ended up printed twice, once
+    // from this fallback and once inside the editor's own paragraph.
+    title: "",
     paragraphs: [
       "Training programmes and certifications for practitioners who want to bring Autonomic Response Testing and the 5 Levels of Healing into their own practice — taught by Dr. Klinghardt and the team he has trained worldwide.",
     ],

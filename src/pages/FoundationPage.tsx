@@ -100,8 +100,8 @@ export function FoundationPage() {
             {purpose.eyebrow ? <p className="eyebrow"><Marked text={purpose.eyebrow} /></p> : null}
             <h2><Marked text={purpose.title} /></h2>
             <div className="prose">
-              {purpose.paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+              {purpose.marked.map((paragraph) => (
+                <p key={paragraph}><Emphasis text={paragraph} /></p>
               ))}
             </div>
             <Link className="btn btn-primary foundation-purpose__cta" to="/foundation/donate">

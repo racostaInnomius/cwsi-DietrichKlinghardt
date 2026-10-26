@@ -46,6 +46,10 @@ export function CoursesPage() {
         </AnimatedGradient>
       </div>
 
+      {/* Hidden in the CMS: every path marked "Oculto" leaves the grid, and
+          with no path left the section goes too, rather than leaving its
+          empty spacing behind (client, 2026-10-26). */}
+      {paths.length > 0 && (
       <section className="section wrap">
         <ul className="course-path-grid">
           {paths.map((path, index) => (
@@ -93,6 +97,7 @@ export function CoursesPage() {
           ))}
         </ul>
       </section>
+      )}
 
       <NewsletterSection />
     </>

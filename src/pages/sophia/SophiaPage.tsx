@@ -4,6 +4,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { CardIcon } from "@/components/CardIcon";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { InViewVideo } from "@/components/sections/InViewVideo";
@@ -137,9 +138,9 @@ export function SophiaPage() {
         <Reveal className="feature-row__body" delay={90}>
           {approach.eyebrow ? <p className="eyebrow"><Marked text={approach.eyebrow} /></p> : null}
           <h2><Marked text={approach.title} /></h2>
-          {approach.paragraphs.map((paragraph) => (
+          {approach.marked.map((paragraph) => (
             <p key={paragraph} className="feature-row__copy">
-              {paragraph}
+              <Emphasis text={paragraph} />
             </p>
           ))}
         </Reveal>
@@ -201,9 +202,9 @@ export function SophiaPage() {
         <Reveal className="feature-row__body" delay={90}>
           {science.eyebrow ? <p className="eyebrow"><Marked text={science.eyebrow} /></p> : null}
           <h2><Marked text={science.title} /></h2>
-          {science.paragraphs.map((paragraph) => (
+          {science.marked.map((paragraph) => (
             <p key={paragraph} className="feature-row__copy">
-              {paragraph}
+              <Emphasis text={paragraph} />
             </p>
           ))}
         </Reveal>

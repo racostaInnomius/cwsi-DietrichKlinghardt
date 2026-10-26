@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { text } from "./content";
-import { fetchCollection, richTextBlocks } from "./cms";
+import { fetchCollection, richTextMarked } from "./cms";
 import { env } from "./env";
 import { trainingPaths as bundled, type TrainingPath } from "@/data/trainingPaths";
 import type { ContentDoc } from "@/data/demo";
@@ -43,8 +43,8 @@ function steps(value: unknown): { label: string; note?: string }[] {
 
 /** Only the fields the CMS row actually fills in override the bundled ones. */
 function merge(base: TrainingPath, doc: ContentDoc): TrainingPath {
-  const about = richTextBlocks(doc.about);
-  const duringTraining = richTextBlocks(doc.duringTraining);
+  const about = richTextMarked(doc.about);
+  const duringTraining = richTextMarked(doc.duringTraining);
   const curriculum = steps(doc.curriculum);
 
   return {
@@ -111,16 +111,27 @@ export function useTrainingPaths(): TrainingPath[] {
   }, [shouldRefresh]);
 
   return useMemo(() => {
-    const merged = bundled.map((base) => {
-      const doc = rows.find((row) => row.slug === base.slug);
-      return doc ? merge(base, doc) : base;
-    });
+    // "Oculto" in the CMS (Training Paths → Estado) takes a path off the site
+    // (client, 2026-10-26: Ana hid the lower cards on /courses and they kept
+    // showing). Filtering the fetch instead would not do it: these paths ship
+    // with the build and the CMS row only completes them, so a hidden row has
+    // to be seen here to suppress the bundled one.
+    const isHidden = (doc: ContentDoc | undefined) =>
+      typeof doc?.status === "string" && doc.status === "hidden";
+
+    const merged = bundled
+      .map((base) => {
+        const doc = rows.find((row) => row.slug === base.slug);
+        return { base, doc };
+      })
+      .filter(({ doc }) => !isHidden(doc))
+      .map(({ base, doc }) => (doc ? merge(base, doc) : base));
 
     // Paths the CMS adds that the bundle does not know about still show up —
     // otherwise a sixth method would be invisible until someone shipped code.
     const known = new Set(bundled.map((path) => path.slug));
     const extra = rows
-    .filter((row) => typeof row.slug === "string" && !known.has(row.slug))
+    .filter((row) => typeof row.slug === "string" && !known.has(row.slug) && !isHidden(row))
     .map((row) =>
       merge(
         {

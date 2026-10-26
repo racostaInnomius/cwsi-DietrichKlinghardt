@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { useAuth } from "@/features/auth/useAuth";
@@ -229,9 +230,9 @@ export function ArchivesPage() {
           {hero.subtitle ? (
             <p className="archive-hero__subtitle"><Marked text={hero.subtitle} /></p>
           ) : null}
-          {hero.paragraphs.map((paragraph) => (
+          {hero.marked.map((paragraph) => (
             <p key={paragraph} className="archive-hero__lead">
-              {paragraph}
+              <Emphasis text={paragraph} />
             </p>
           ))}
           <button
@@ -251,8 +252,8 @@ export function ArchivesPage() {
           ) : null}
           <h2 id="archive-collections-title"><Marked text={collectionsHead.title} /></h2>
           {collectionsHead.subtitle ? <p><Marked text={collectionsHead.subtitle} /></p> : null}
-          {collectionsHead.paragraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+          {collectionsHead.marked.map((paragraph) => (
+            <p key={paragraph}><Emphasis text={paragraph} /></p>
           ))}
         </Reveal>
 

@@ -10,6 +10,7 @@ import { useSection } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 
 /**
@@ -51,12 +52,12 @@ export function DonatePage() {
         <Reveal className="prose">
           <h2><Marked text={where.title} /></h2>
           {/* The last paragraph is the small payment note under the copy. */}
-          {where.paragraphs.map((paragraph, index) => (
+          {where.marked.map((paragraph, index) => (
             <p
               key={paragraph}
-              className={index > 0 && index === where.paragraphs.length - 1 ? "donate-note" : undefined}
+              className={index > 0 && index === where.marked.length - 1 ? "donate-note" : undefined}
             >
-              {paragraph}
+              <Emphasis text={paragraph} />
             </p>
           ))}
         </Reveal>
@@ -88,9 +89,9 @@ function ClosedNotice() {
     <>
       {notice.eyebrow ? <p className="eyebrow"><Marked text={notice.eyebrow} /></p> : null}
       <h2><Marked text={notice.title} /></h2>
-      {notice.paragraphs.map((paragraph) => (
+      {notice.marked.map((paragraph) => (
         <p key={paragraph} className="donate-panel__note">
-          {paragraph}
+          <Emphasis text={paragraph} />
         </p>
       ))}
       <Link className="btn btn-primary donate-panel__cta" to="/contact">

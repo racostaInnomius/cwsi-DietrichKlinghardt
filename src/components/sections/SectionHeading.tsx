@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 
 /**
  * The heading pattern every section of the design repeats: eyebrow,
@@ -35,7 +36,7 @@ export function SectionHeading({
           .filter((paragraph): paragraph is string => Boolean(paragraph?.trim()))
           .map((paragraph, index) => (
             <p key={index} className="lead">
-              <Marked text={paragraph} />
+              <Emphasis text={paragraph} />
             </p>
           ))}
       </div>

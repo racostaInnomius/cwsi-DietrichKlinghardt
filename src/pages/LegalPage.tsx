@@ -1,9 +1,10 @@
 import { Seo } from "@/components/Seo";
 import { useCollection, text } from "@/lib/content";
-import { richTextBlocks } from "@/lib/cms";
+import { richTextMarked } from "@/lib/cms";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 
 const HEADINGS: Record<string, string> = {
   privacy: "Privacy Policy",
@@ -22,7 +23,7 @@ const HEADINGS: Record<string, string> = {
 export function LegalPage({ type }: { type: "privacy" | "terms" | "refunds" }) {
   const doc = useCollection("legal-pages").find((row) => row.type === type);
   const title = text(doc, "title", HEADINGS[type]);
-  const paragraphs = richTextBlocks(doc?.body);
+  const paragraphs = richTextMarked(doc?.body);
   const effective = text(doc, "effectiveDate");
 
   return (
@@ -55,7 +56,7 @@ export function LegalPage({ type }: { type: "privacy" | "terms" | "refunds" }) {
         {paragraphs.length ? (
           <Reveal className="prose">
             {paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+              <p key={paragraph}><Emphasis text={paragraph} /></p>
             ))}
           </Reveal>
         ) : (

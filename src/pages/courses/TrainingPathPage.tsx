@@ -5,6 +5,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CheckIcon, MedalIcon } from "@/components/Icons";
+import { Emphasis } from "@/components/Emphasis";
 
 /**
  * A training path in full: what the certification involves, in what order, and
@@ -132,7 +133,7 @@ export function TrainingPathPage() {
             {path.about.length ? (
               <Reveal className="prose">
                 {path.about.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph}><Emphasis text={paragraph} /></p>
                 ))}
                 <div className="path-cta-group">
                   <Link className="btn btn-primary" to="/academy/art">
@@ -149,7 +150,7 @@ export function TrainingPathPage() {
               <Reveal className="prose">
                 <h2>During training</h2>
                 {path.duringTraining.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph}><Emphasis text={paragraph} /></p>
                 ))}
               </Reveal>
             ) : null}

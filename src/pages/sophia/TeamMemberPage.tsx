@@ -2,12 +2,13 @@ import { Seo } from "@/components/Seo";
 import { SECTION } from "@/lib/sections";
 import { Link, useParams } from "react-router-dom";
 import { useCollection, text } from "@/lib/content";
-import { mediaUrl, richTextBlocks } from "@/lib/cms";
+import { mediaUrl, richTextMarked } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { Emphasis } from "@/components/Emphasis";
 
 /**
  * "Learn more" page for one Sophia team member. Photo/name/role/title/bio
@@ -28,7 +29,7 @@ export function TeamMemberPage() {
   const person = useCollection("board-members").find(
     (row) => slugifyName(text(row, "name")) === slug,
   );
-  const cmsParagraphs = person ? richTextBlocks(person.bio) : [];
+  const cmsParagraphs = person ? richTextMarked(person.bio) : [];
   const paragraphs = cmsParagraphs.length
     ? cmsParagraphs
     : (slug ? teamBios[slug]?.paragraphs : undefined) ?? [];
@@ -102,7 +103,7 @@ export function TeamMemberPage() {
         <Reveal className="prose team-member-about">
           <p className="eyebrow">About</p>
           {paragraphs.slice(1).map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+            <p key={paragraph}><Emphasis text={paragraph} /></p>
           ))}
         </Reveal>
       </section>

@@ -5,6 +5,7 @@ import { useSection } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 
 type Action = {
@@ -294,8 +295,8 @@ function BranchRow({ branch }: { branch: Branch }) {
         {copy.eyebrow ? <p className="eyebrow"><Marked text={copy.eyebrow} /></p> : null}
         <h2><Marked text={copy.title} /></h2>
         {copy.subtitle ? <p className="accent"><Marked text={copy.subtitle} /></p> : null}
-        {copy.paragraphs.map((paragraph) => (
-          <p key={paragraph} className="feature-row__copy">{paragraph}</p>
+        {copy.marked.map((paragraph) => (
+          <p key={paragraph} className="feature-row__copy"><Emphasis text={paragraph} /></p>
         ))}
         <Actions actions={branch.actions} />
       </Reveal>

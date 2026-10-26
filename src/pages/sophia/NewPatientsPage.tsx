@@ -3,6 +3,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { Emphasis } from "@/components/Emphasis";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { Accordion } from "@/components/sections/Accordion";
 import { CtaBand } from "@/components/sections/CtaBand";
@@ -68,9 +69,9 @@ export function NewPatientsPage() {
         <Reveal className="feature-row__body" delay={90}>
           {welcome.eyebrow ? <p className="eyebrow"><Marked text={welcome.eyebrow} /></p> : null}
           <h2><Marked text={welcome.title} /></h2>
-          {welcome.paragraphs.map((paragraph) => (
+          {welcome.marked.map((paragraph) => (
             <p key={paragraph} className="feature-row__copy">
-              {paragraph}
+              <Emphasis text={paragraph} />
             </p>
           ))}
         </Reveal>
