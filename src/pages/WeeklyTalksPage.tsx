@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { Link } from "react-router-dom";
+import { ReadMoreText } from "@/components/ReadMoreText";
 import { Seo } from "@/components/Seo";
 import { useCollection, text, number } from "@/lib/content";
 import { useSection, useCardList, SECTION } from "@/lib/sections";
@@ -253,7 +254,7 @@ export function WeeklyTalksPage() {
                 <Marked text={page.subtitle} />
               </p>
             ) : null}
-            <p className="hero__lead">{page.lead}</p>
+            {page.lead ? <ReadMoreText className="hero__lead" text={page.lead} /> : null}
             {/* The date and the calendar link live in their own band below, so
                 they are not repeated here. One button, matching the frame —
                 "Watch live" moved down beside the date it actually refers to. */}

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, type NavItem } from "./navigation";
 import { CartButton } from "./CartButton";
+import { useStoreVisible } from "@/lib/store";
 import { CurrencySelect } from "./CurrencySelect";
 import { AccountButton } from "./AccountButton";
 
@@ -38,6 +39,8 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const menuId = useId();
+  // The cart goes with the store when it's switched off in the CMS.
+  const storeVisible = useStoreVisible();
 
   // Any navigation closes everything — otherwise a dropdown survives the route
   // change and hangs over the new page.
@@ -162,7 +165,7 @@ export function SiteHeader() {
             Contact us
           </Link>
           <CurrencySelect />
-          <CartButton />
+          {storeVisible ? <CartButton /> : null}
           <AccountButton />
           <button
             type="button"

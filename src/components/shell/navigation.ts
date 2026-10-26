@@ -86,7 +86,10 @@ export const PRIMARY_NAV: NavItem[] = [
   // cleared the same day (see src/pages/archives/*.tsx), so the dropdown
   // no longer has anything distinct to point at. Plain link now, straight
   // to /archives.
-  { label: "Archives", href: "/archives" },
+  // Client (Ana, 2026-10-26): "Klinghardt Archives" (was "Archives"), on two
+  // lines like "Online Courses" — on one line the longer label pushed the
+  // header 18–36px past the window from 1920px up.
+  { label: "Klinghardt", sublabel: "Archives", href: "/archives" },
 ];
 
 /** Footer columns, from the four-column footer that repeats on every frame. */

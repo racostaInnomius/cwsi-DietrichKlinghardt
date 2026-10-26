@@ -5,6 +5,7 @@ import { checkoutHref } from "./checkout";
 import { env } from "./env";
 import type { ContentDoc } from "@/data/demo";
 import type { CartItem } from "./cart";
+import { useSection } from "./sections";
 
 /**
  * The store catalogue, read from `digital-products`.
@@ -68,6 +69,16 @@ function normalise(doc: ContentDoc): StoreProduct {
     isPhysical: doc.isPhysical === true,
     buyHref: checkoutHref(doc.checkoutUrl),
   };
+}
+
+/**
+ * The store's on/off switch: Page Contents → Store block ("store-intro") →
+ * "Tienda visible" (client, 2026-10-26). Off hides the store's Home section
+ * and the header cart, and /store and /cart show "Coming soon". No row, or a
+ * row from before the switch existed, counts as on.
+ */
+export function useStoreVisible(): boolean {
+  return useSection("store-intro").raw?.storeVisible !== false;
 }
 
 export function useStoreProducts(): StoreProduct[] {

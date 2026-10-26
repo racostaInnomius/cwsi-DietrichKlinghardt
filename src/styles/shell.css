@@ -451,6 +451,12 @@
   .site-header__actions {
     gap: 6px;
   }
+  /* "Klinghardt Archives" (2026-10-26) is ~20px wider than "Archives" was;
+     7px between items instead of 10px gives that back here (header-scoped:
+     the ≤1900px block's 10px comes later in this file). */
+  .site-header .site-nav__list {
+    gap: 7px;
+  }
   .currency-select select {
     padding: 0 13px 0 4px;
     border-color: transparent;
@@ -765,6 +771,18 @@
        max-width actually wrapping long labels ("Dr. Klinghardt Akademie")
        instead of overflowing into the next item. */
     white-space: normal;
+  }
+  /* Client (2026-10-26), after several tries: "Klinghardt Akademie"'s arrow
+     sat ~58px away from the text (1440–1600px). Not a gap issue — a label
+     that wraps keeps its box at the full 15ch, so the space after the
+     shorter wrapped lines stayed inside the link. min-content shrinks the
+     box to its longest line, so the arrow follows the text by the row's
+     own 4px, like Sophia's. (Labels kept on one line by nowrap are
+     unaffected: their min-content is the whole line.) */
+  @media (min-width: 1130px) {
+    .site-nav__link {
+      width: min-content;
+    }
   }
   /* Client (2026-09-15): "que a ese item le des el espacio suficiente para
      que quede en 2 líneas solamente, no reduzcas el tamaño del texto" — the

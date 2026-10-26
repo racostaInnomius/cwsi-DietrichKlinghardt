@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCart } from "@/lib/cart";
-import { startCheckout, useStoreProducts } from "@/lib/store";
+import { startCheckout, useStoreProducts, useStoreVisible } from "@/lib/store";
 import { CurrencyNote, Price, useCurrency } from "@/lib/currency";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
+import { StoreComingSoon } from "@/components/sections/StoreComingSoon";
 
 /**
  * The cart.
@@ -22,6 +23,7 @@ export function CartPage() {
   const products = useStoreProducts();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const storeVisible = useStoreVisible();
 
   const needsShipping = items.some((item) => item.isPhysical);
   const currency = items[0]?.currency ?? "usd";
@@ -39,6 +41,16 @@ export function CartPage() {
       );
       setBusy(false);
     }
+  }
+
+  // Store switched off in the CMS: the cart closes with it (no checkout).
+  if (!storeVisible) {
+    return (
+      <>
+        <Seo title={"Your Cart — Dr. Dietrich Klinghardt™"} noindex />
+        <StoreComingSoon />
+      </>
+    );
   }
 
   return (

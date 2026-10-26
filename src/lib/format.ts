@@ -38,6 +38,35 @@ export function eventDateParts(doc: ContentDoc | undefined): { day: string; mont
   };
 }
 
+/**
+ * Every calendar day an event covers, in its own timezone: ["28", "29"] for a
+ * two-day course, one entry for a single-day event. The month reads "Jan", or
+ * "Jan – Feb" when the days cross into the next month. Past five days the
+ * list would outgrow the date block, so it collapses to its first and last
+ * day (["21", "27"]); `range` says so, to join them with a dash instead.
+ */
+export function eventDayParts(
+  doc: ContentDoc | undefined,
+): { days: string[]; month: string; range: boolean } {
+  const start = dateOf(doc);
+  if (!start) return { days: ["—"], month: "", range: false };
+  const timeZone = tzOf(doc);
+  const end = endDateOf(doc) ?? start;
+  // The calendar date (YYYY-MM-DD) each instant falls on at the venue.
+  const ymd = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone }).format(d);
+  const first = new Date(`${ymd(start)}T00:00:00Z`);
+  const last = new Date(`${ymd(end)}T00:00:00Z`);
+  const days: string[] = [];
+  for (let d = first; d <= last && days.length < 60; d = new Date(d.getTime() + 86_400_000)) {
+    days.push(String(d.getUTCDate()).padStart(2, "0"));
+  }
+  const monthOf = (d: Date) => new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" }).format(d);
+  const month =
+    monthOf(first) === monthOf(last) ? monthOf(first) : `${monthOf(first)} – ${monthOf(last)}`;
+  if (days.length > 5) return { days: [days[0], days[days.length - 1]], month, range: true };
+  return { days: days.length ? days : ["—"], month, range: false };
+}
+
 /** "14" / "August" / "2026" — the day block on the event detail panel. */
 export function eventDateBlock(
   doc: ContentDoc | undefined,

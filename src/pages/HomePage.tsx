@@ -7,7 +7,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { Marked } from "@/components/Marked";
 import { splitByTime } from "@/lib/format";
 import { withoutIncludedDays } from "@/lib/dayPasses";
-import { featuredProducts, usedCategories, useStoreProducts } from "@/lib/store";
+import { featuredProducts, usedCategories, useStoreProducts, useStoreVisible } from "@/lib/store";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { SplitReveal } from "@/components/motion/SplitReveal";
@@ -39,6 +39,7 @@ export function HomePage() {
   const art = useSection(SECTION.homeArt);
   const clinic = useSection(SECTION.homeSophia);
   const shop = useSection(SECTION.homeShop);
+  const storeVisible = useStoreVisible();
   const talks = useSection(SECTION.homeTalks);
   const heroWords = hero.cards.map((card) => card.title);
 
@@ -529,57 +530,60 @@ export function HomePage() {
         </AnimatedGradient>
       </section>
 
-      {/* ── Shop ─────────────────────────────────────────────────── */}
-      <section className="section wrap home-shop">
-        <Reveal className="section-heading section-heading--center">
-          <h2>{shop.title}</h2>
-          <p className="lead">{shop.lead}</p>
-        </Reveal>
+      {/* ── Shop ── hidden while the store is switched off in the CMS
+          (Page Contents → Store block → "Tienda visible", 2026-10-26). */}
+      {storeVisible ? (
+        <section className="section wrap home-shop">
+          <Reveal className="section-heading section-heading--center">
+            <h2>{shop.title}</h2>
+            <p className="lead">{shop.lead}</p>
+          </Reveal>
 
-        {categories.length > 0 && (
-          <Reveal className="home-shop__filters" delay={80}>
-            <ul className="pill-list">
-              {/* Links rather than filters: the filtering itself lives on the
-                  store page, and duplicating that state here would give the
-                  same catalogue two places to disagree about what is selected. */}
-              <li>
-                <Link className="pill pill--active" to="/store">
-                  All
-                </Link>
-              </li>
-              {categories.map((item) => (
-                <li key={item.key}>
-                  <Link className="pill" to="/store">
-                    {item.label}
+          {categories.length > 0 && (
+            <Reveal className="home-shop__filters" delay={80}>
+              <ul className="pill-list">
+                {/* Links rather than filters: the filtering itself lives on the
+                    store page, and duplicating that state here would give the
+                    same catalogue two places to disagree about what is selected. */}
+                <li>
+                  <Link className="pill pill--active" to="/store">
+                    All
                   </Link>
                 </li>
+                {categories.map((item) => (
+                  <li key={item.key}>
+                    <Link className="pill" to="/store">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link className="arrow-link" to="/store">
+                Shop all <span aria-hidden="true">↗</span>
+              </Link>
+            </Reveal>
+          )}
+
+          {shopPicks.length > 0 ? (
+            <ul className="product-strip">
+              {shopPicks.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  delay={index * 60}
+                  featured={index === 0}
+                />
               ))}
             </ul>
-            <Link className="arrow-link" to="/store">
-              Shop all <span aria-hidden="true">↗</span>
-            </Link>
-          </Reveal>
-        )}
-
-        {shopPicks.length > 0 ? (
-          <ul className="product-strip">
-            {shopPicks.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                delay={index * 60}
-                featured={index === 0}
-              />
-            ))}
-          </ul>
-        ) : (
-          <Reveal className="section-actions">
-            <Link className="btn btn-light" to="/store">
-              Visit the store
-            </Link>
-          </Reveal>
-        )}
-      </section>
+          ) : (
+            <Reveal className="section-actions">
+              <Link className="btn btn-light" to="/store">
+                Visit the store
+              </Link>
+            </Reveal>
+          )}
+        </section>
+      ) : null}
 
       <div className="home-newsletter-pin">
         <NewsletterSection />

@@ -5,12 +5,14 @@ import {
   featuredProducts,
   usedCategories,
   useStoreProducts,
+  useStoreVisible,
 } from "@/lib/store";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { ProductCard } from "@/components/sections/ProductCard";
 import { TopPicksSection } from "@/components/sections/TopPicksSection";
+import { StoreComingSoon } from "@/components/sections/StoreComingSoon";
 
 /**
  * The Klinghardt store: the month's picks, then the catalogue filtered by
@@ -27,10 +29,24 @@ export function StorePage() {
   const [category, setCategory] = useState("");
 
   const intro = useSection("store-intro");
+  const storeVisible = useStoreVisible();
 
   const visible = category
     ? products.filter((product) => product.categoryKey === category)
     : products;
+
+  if (!storeVisible) {
+    return (
+      <>
+        <Seo
+          title={"Store — Dr. Dietrich Klinghardt™"}
+          description="The Klinghardt® Store is coming soon."
+          path="/store"
+        />
+        <StoreComingSoon />
+      </>
+    );
+  }
 
   return (
     <>

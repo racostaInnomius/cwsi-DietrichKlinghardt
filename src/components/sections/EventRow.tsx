@@ -1,7 +1,8 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import type { ContentDoc } from "@/data/demo";
 import { text } from "@/lib/content";
-import { eventDateParts, eventLocation, eventTimeLabel } from "@/lib/format";
+import { eventDayParts, eventLocation, eventTimeLabel } from "@/lib/format";
 import { Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -27,7 +28,7 @@ export function EventRow({
    *  page and the full Events listing only (2026-09-04: "No poner precios"). */
   showPrice?: boolean;
 }) {
-  const { day, month } = eventDateParts(event);
+  const when = eventDayParts(event);
   const slug = text(event, "slug");
   const title = text(event, "title", "Untitled event");
   const summary = text(event, "shortDescription");
@@ -39,9 +40,11 @@ export function EventRow({
   return (
     <Reveal as="li" className="event-row" delay={delay} shift={16}>
       <Link to={slug ? `/events/${slug}` : "/events"} className="event-row__link">
-        <div className="event-row__date" aria-hidden="true">
-          <b>{day}</b>
-          <span>{month}</span>
+        <div
+          className={`event-row__date${when.days.length > 1 ? " event-row__date--multi" : ""}`}
+          aria-hidden="true"
+        >
+          <EventDays {...when} />
         </div>
 
         <div className="event-row__body">
@@ -69,7 +72,7 @@ export function EventRow({
 
 /** Three-column card used by the Events page. */
 export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: number }) {
-  const { day, month } = eventDateParts(event);
+  const when = eventDayParts(event);
   const slug = text(event, "slug");
   const title = text(event, "title", "Untitled event");
   const location = eventLocation(event);
@@ -97,9 +100,11 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
   return (
     <Reveal as="li" className="event-card" delay={delay} shift={16}>
       <Link to={href} className="event-card__main">
-        <div className="event-card__date" aria-hidden="true">
-          <b>{day}</b>
-          <span>{month}</span>
+        <div
+          className={`event-card__date${when.days.length > 1 ? " event-card__date--multi" : ""}`}
+          aria-hidden="true"
+        >
+          <EventDays {...when} />
         </div>
 
         <div className="event-card__body">
@@ -127,5 +132,26 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
         <span aria-hidden="true">↗</span>
       </Link>
     </Reveal>
+  );
+}
+
+/**
+ * The stacked date block's contents: the day ("30") over the month ("Oct"),
+ * or every day a multi-day event covers, "28 / 29" (client, 2026-10-26),
+ * with a light, smaller slash between them; past five days, "21 – 27".
+ */
+function EventDays({ days, month, range }: { days: string[]; month: string; range: boolean }) {
+  return (
+    <>
+      <b>
+        {days.map((day, index) => (
+          <Fragment key={`${index}-${day}`}>
+            {index > 0 ? <i className="event-date__sep">{range ? "–" : "/"}</i> : null}
+            {day}
+          </Fragment>
+        ))}
+      </b>
+      <span>{month}</span>
+    </>
   );
 }

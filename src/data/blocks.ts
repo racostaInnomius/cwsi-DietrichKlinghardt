@@ -91,6 +91,13 @@ export const BLOCKS: Record<string, BlockDefault> = {
       "Every week, a live session with Dr. Klinghardt: a short teaching, then open questions from the community.",
     ],
   },
+  "store-coming-soon": {
+    page: "/store",
+    sitePage: "Store",
+    kind: "section",
+    eyebrow: "Klinghardt® Store",
+    title: "Coming soon",
+  },
   "home-shop": {
     page: "/",
     sitePage: "Home",
