@@ -39,11 +39,11 @@ export const PRIMARY_NAV: NavItem[] = [
     mark: "™",
     theme: "sophia",
     children: [
-      { label: "Chronic illness", href: "/sophia#chronic-illness", theme: "sophia" },
+      { label: "What we treat", href: "/sophia#chronic-illness", theme: "sophia" },
       { label: "Naturopathic care", href: "/sophia#naturopathic-care", theme: "sophia" },
       { label: "Our team", href: "/sophia/team", theme: "sophia" },
       { label: "New patients", href: "/sophia/new-patients", theme: "sophia" },
-      { label: "Travel & accommodations", href: "/sophia/accommodations", theme: "sophia" },
+      { label: "How to find us", href: "/sophia/accommodations", theme: "sophia" },
     ],
   },
   { label: "Events", href: "/events" },
