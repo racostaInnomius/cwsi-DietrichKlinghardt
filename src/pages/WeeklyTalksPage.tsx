@@ -267,7 +267,7 @@ export function WeeklyTalksPage() {
           </Reveal>
 
           {/* When a free talk is actually live, it plays right here instead
-              of the mockup — the box itself never changes size either way
+              of the picture — the box itself never changes size either way
               (sophia_hero_dimension), LiveTalkStage just fills it. */}
           <Reveal className="hero__aside" delay={120}>
             {freeTalkIsLive ? (
@@ -275,34 +275,14 @@ export function WeeklyTalksPage() {
                 <LiveTalkStage session={freeSession} error={null} compact />
               </div>
             ) : (
-              <div className="live-mock" aria-hidden="true">
-                <div className="live-mock__bar">
-                  <span className="live-mock__dot live-mock__dot--red" />
-                  <span className="live-mock__dot live-mock__dot--yellow" />
-                  <span className="live-mock__dot live-mock__dot--green" />
-                  <span className="live-mock__url">weekly-talks.klinghardt-academy.com</span>
-                </div>
-                <div className="live-mock__screen">
-                  <div className="live-mock__top">
-                    <span className="live-mock__live">
-                      <span className="live-mock__live-dot" /> Live
-                    </span>
-                    <span className="live-mock__watching">247 watching</span>
-                  </div>
-                  <div className="live-mock__body">
-                    <span className="live-mock__avatar">K</span>
-                    <p className="live-mock__name">Dr. Dietrich Klinghardt</p>
-                    <p className="live-mock__status">Live now</p>
-                  </div>
-                  <div className="live-mock__controls">
-                    <span className="live-mock__play" />
-                    <span className="live-mock__track">
-                      <span className="live-mock__progress" />
-                    </span>
-                    <span className="live-mock__time">42:18</span>
-                  </div>
-                </div>
-              </div>
+              <img
+                className="live-shot"
+                src="/images/weekly-talks-live-2026.webp"
+                alt="Dr. Klinghardt live on a Weekly Talk"
+                width={1004}
+                height={704}
+                decoding="async"
+              />
             )}
           </Reveal>
         </div>

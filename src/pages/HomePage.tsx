@@ -506,10 +506,10 @@ export function HomePage() {
 
             <Reveal className="talks-band__media">
               <img
-                src="/images/weekly-talks-live.webp"
+                src="/images/weekly-talks-live-2026.webp"
                 alt="A live Weekly Talk session with Dr. Klinghardt"
-                width={388}
-                height={277}
+                width={1004}
+                height={704}
                 loading="lazy"
                 decoding="async"
               />
