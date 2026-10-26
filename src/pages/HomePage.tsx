@@ -382,7 +382,9 @@ export function HomePage() {
           <SectionHeading
             eyebrow={eventsCopy.eyebrow}
             title={eventsCopy.title}
-            lead={eventsCopy.lead}
+            // Every paragraph of the block, not just the first: a second
+            // paragraph written in the CMS used to be dropped here.
+            lead={eventsCopy.paragraphs}
             link={{ label: "View all events", to: "/events" }}
           />
 

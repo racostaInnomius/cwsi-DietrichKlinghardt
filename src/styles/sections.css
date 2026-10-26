@@ -338,6 +338,11 @@
 .section-heading .lead {
   margin-top: 14px;
 }
+/* A block whose CMS body has more than one paragraph: the paragraphs after
+   the first sit closer than the lead sits under the title (2026-10-26). */
+.section-heading .lead + .lead {
+  margin-top: 10px;
+}
 
 /* ── Home: intro + quote ──────────────────────────────────────── */
 
