@@ -50,17 +50,21 @@ export const PRIMARY_NAV: NavItem[] = [
   {
     // "Akademie", matching the German spelling — client-confirmed (see A14),
     // superseding the design's original "Akademy" navigation form.
-    label: "Dr. Klinghardt Akademie",
+    // Client (Ana, 2026-10-25): "Klinghardt Akademie" (was "Dr. Klinghardt
+    // Akademie"), the submenu in this order, "Diagnostic method" (was "A.R.T.
+    // Klinghardt") and "Global practitioners" (was "Find A.R.T. therapists").
+    // Links unchanged.
+    label: "Klinghardt Akademie",
     href: "/academy",
     mark: "™",
     children: [
-      { label: "Find A.R.T. therapists", href: "/academy/therapists" },
-      { label: "A.R.T. Klinghardt", href: "/academy/art", mark: "™" },
-      { label: "The 5 Levels of Healing", href: "/academy/five-levels", mark: "™" },
-      { label: "Publications", href: "/academy/publications" },
       // Client (2026-09-23): links out to the real (German) Akademie site
       // rather than the internal /academy/akademie page.
       { label: "Klinghardt Akademie", href: "https://klinghardt-akademie.de/", external: true },
+      { label: "Diagnostic method", href: "/academy/art" },
+      { label: "The 5 Levels of Healing", href: "/academy/five-levels", mark: "™" },
+      { label: "Global practitioners", href: "/academy/therapists" },
+      { label: "Publications", href: "/academy/publications" },
       { label: "Dr. Klinghardt Foundation", href: "/foundation", mark: "™" },
     ],
   },
