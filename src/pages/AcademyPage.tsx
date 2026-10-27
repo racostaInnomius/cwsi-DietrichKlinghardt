@@ -7,6 +7,8 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Emphasis } from "@/components/Emphasis";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { InViewVideo } from "@/components/sections/InViewVideo";
+import { PYRAMID_VIDEO } from "@/data/media";
 
 type Action = {
   label: string;
@@ -81,25 +83,6 @@ const BRANCHES: Branch[] = [
       height: 457,
     },
     side: "right",
-  },
-  {
-    slug: "academy-5-levels-of-healing",
-    actions: [{ label: "Learn more", to: "/academy/five-levels" }],
-    // Client (2026-09-10): "5 levels of healing falta el grafico" — the
-    // Figma shows the same pyramid /academy/five-levels already builds in
-    // full. Client (2026-09-11, follow-up, exact reference): "identico" —
-    // the condensed version this first tried (name only, no ordinals, no
-    // axis labels) wasn't close enough; <Pyramid compact /> matched pixel-
-    // for-pixel. Client (2026-09-14): swapped the live component for a
-    // static export of that same render — same media slot every other
-    // branch's photo uses.
-    media: {
-      src: "/images/5_levels.png",
-      alt: "The 5 Levels of Healing pyramid",
-      width: 556,
-      height: 458,
-    },
-    side: "left",
   },
   {
     slug: "academy-publications",
@@ -265,11 +248,45 @@ export function AcademyPage() {
       </AnimatedGradient>
 
       {BRANCHES.map((branch) => (
-        <BranchRow key={branch.slug} branch={branch} />
+        <Fragment key={branch.slug}>
+          <BranchRow branch={branch} />
+          {/* Client (2026-10-27): the 5-Levels row that used to sit here
+              (picture + copy + "Learn more") is gone; in its place, just the
+              pyramid animation, the whole of it a link to the page that row
+              pointed at. Keyed off the branch above it so the order stays
+              declared in BRANCHES, where every other row's order lives. */}
+          {branch.slug === "academy-art-klinghardt" ? <PyramidRow /> : null}
+        </Fragment>
       ))}
 
       <NewsletterSection />
     </div>
+  );
+}
+
+/**
+ * The pyramid, standing alone where the 5-Levels branch row used to be
+ * (client, 2026-10-27: "quita ... y pon el video de la piramide ... al darle
+ * click que nos lleve a /academy/five-levels").
+ *
+ * The same clip and the same play-once-when-it-scrolls-into-view treatment
+ * /academy/five-levels itself uses, so the hub shows exactly what the page it
+ * leads to shows. `5_levels.png` stays on as the poster frame, which is also
+ * what anyone with `prefers-reduced-motion` is left looking at.
+ */
+function PyramidRow() {
+  return (
+    <section className="section wrap academy-pyramid">
+      <Reveal>
+        <Link
+          className="academy-pyramid__link"
+          to="/academy/five-levels"
+          aria-label="The 5 Levels of Healing"
+        >
+          <InViewVideo {...PYRAMID_VIDEO} width={1920} height={1080} />
+        </Link>
+      </Reveal>
+    </section>
   );
 }
 

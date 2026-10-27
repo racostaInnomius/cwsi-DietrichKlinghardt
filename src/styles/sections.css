@@ -8445,3 +8445,45 @@ ul.sophia-therapies-grid h3 {
   width: 16px;
   height: 16px;
 }
+
+
+/* The pyramid standing alone on /academy (client, 2026-10-27), where the
+   5-Levels feature row used to be. Sized like the same clip on
+   /academy/five-levels (.levels__pyramid-image: 80% of .wrap, centred, its
+   own 16:9) so the two pages show it at one size, and the whole frame is the
+   link to that page. `contain`, not the feature row's `cover`: this is a
+   diagram, and cropping it would cut the "OBJECTIVE / SUBJECTIVE REALITY"
+   labels off its sides. */
+.academy-pyramid__link {
+  display: block;
+  width: 100%;
+  max-width: 80%;
+  margin-inline: auto;
+  border-radius: var(--radius-md, 14px);
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.academy-pyramid__link video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (hover: hover) {
+  .academy-pyramid__link:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+}
+
+/* The pointer lift is decoration; the focus ring is not. */
+@media (prefers-reduced-motion: reduce) {
+  .academy-pyramid__link {
+    transition: none;
+  }
+  .academy-pyramid__link:hover {
+    transform: none;
+  }
+}
