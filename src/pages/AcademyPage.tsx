@@ -293,10 +293,10 @@ function BranchRow({ branch }: { branch: Branch }) {
             className={branch.media.square ? "feature-row__media-img--square" : undefined}
             src={copy.image ?? branch.media.src}
             /* A picture the editor uploaded no longer matches the bundled
-               description, so it is named by the branch it illustrates
-               instead (client, 2026-10-27: the image must belong to the
-               content and be easy to change). */
-            alt={copy.image ? copy.title || branch.media.alt : branch.media.alt}
+               description: it is named by its own "Texto alternativo" in the
+               media library, which the editor owns, and by the branch it
+               illustrates only if that is empty. */
+            alt={copy.image ? copy.imageAlt || copy.title || branch.media.alt : branch.media.alt}
             width={branch.media.width}
             height={branch.media.height}
             loading="lazy"

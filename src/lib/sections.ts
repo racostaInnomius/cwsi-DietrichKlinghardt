@@ -1,5 +1,5 @@
 import { useCollection } from "./content";
-import { mediaUrl, richTextBlocks, richTextMarked } from "./cms";
+import { mediaAlt, mediaUrl, richTextBlocks, richTextMarked } from "./cms";
 import { plainText } from "@/components/Emphasis";
 import type { ContentDoc } from "@/data/demo";
 import { BLOCKS } from "@/data/blocks";
@@ -111,6 +111,8 @@ export interface Section {
   /** The block's cards, in the editor's order (Page Contents → Tarjetas). */
   cards: Card[];
   image?: string;
+  /** The uploaded image's own alt text (Media → "Texto alternativo"). */
+  imageAlt?: string;
   raw?: ContentDoc;
 }
 
@@ -169,6 +171,7 @@ export function useSection(slug: string, fallback: SectionFallback = {}): Sectio
     marked: marked.length ? marked : (defaults.paragraphs ?? []),
     cards: cards.length ? cards : (defaults.cards ?? []),
     image: mediaUrl(doc?.heroImage) ?? defaults.image,
+    imageAlt: mediaAlt(doc?.heroImage),
     raw: doc,
   };
 }

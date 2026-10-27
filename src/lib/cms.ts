@@ -208,6 +208,13 @@ export function richText(doc: unknown): string {
   return richTextBlocks(doc).join("\n\n");
 }
 
+/** The alt text the editor wrote on an uploaded file, when it has one. */
+export function mediaAlt(media: unknown): string | undefined {
+  if (!media || typeof media !== "object") return undefined;
+  const alt = (media as { alt?: unknown }).alt;
+  return typeof alt === "string" && alt.trim() ? alt.trim() : undefined;
+}
+
 export function mediaUrl(media: unknown): string | undefined {
   if (!media || typeof media !== "object") return undefined;
   const url = (media as { url?: unknown }).url;
