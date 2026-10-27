@@ -6,6 +6,7 @@ import { useCollection, text, number, textList } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { externalUrl, richTextBlocks, richTextSections, richTextMarked } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
+import { EventPrice, eventPriceInfo } from "@/components/EventPrice";
 import { eventDateBlock, eventDateRange, eventLocation, eventTimeLabel, splitByTime } from "@/lib/format";
 import { dayPassLabel, dayPassesOf } from "@/lib/dayPasses";
 import { CheckoutLink, CurrencyNote, Price } from "@/lib/currency";
@@ -76,7 +77,9 @@ export function EventDetailPage() {
   const instructor = text(event, "instructor", "Dietrich Klinghardt MD PhD™");
   const language = text(event, "language", "English");
   const capacity = number(event, "capacity");
-  const price = typeof event.price === "number" ? event.price : undefined;
+  // What the page shows: the Stripe price, or the price announced for an
+  // event sold elsewhere (CMS: "Precio informativo").
+  const priceInfo = eventPriceInfo(event);
   const registrationType = text(event, "registrationType", "open");
   const checkoutUrl = checkoutHref(event.checkoutUrl);
   const learnMoreUrl = externalUrl(event.learnMoreUrl);
@@ -191,16 +194,20 @@ export function EventDetailPage() {
             </div>
 
             <div className="event-panel__price">
-              {price != null ? (
+              {priceInfo ? (
                 <>
                   <p className="event-panel__price-value">
-                    <Price cents={price} currency={text(event, "currency", "usd")} />
+                    <EventPrice event={event} />
                     <span>per person</span>
                   </p>
-                  <CurrencyNote
-                    currency={text(event, "currency", "usd")}
-                    charge={registrationType === "paid" ? "selected" : "original"}
-                  />
+                  {/* An announced price is charged on the other site, so the
+                      cart's "you'll pay in…" note would be misleading. */}
+                  {priceInfo.announced ? null : (
+                    <CurrencyNote
+                      currency={priceInfo.currency}
+                      charge={registrationType === "paid" ? "selected" : "original"}
+                    />
+                  )}
                 </>
               ) : null}
 

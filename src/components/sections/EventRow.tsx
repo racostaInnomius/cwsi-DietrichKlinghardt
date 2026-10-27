@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import type { ContentDoc } from "@/data/demo";
 import { text } from "@/lib/content";
 import { eventDayParts, eventLocation, eventTimeLabel } from "@/lib/format";
-import { Price } from "@/lib/currency";
+import { EventPrice, eventPriceInfo } from "@/components/EventPrice";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { EventMetaIcon } from "@/components/Icons";
@@ -34,7 +34,7 @@ export function EventRow({
   const summary = text(event, "shortDescription");
   const category = text(event, "category");
   const location = eventLocation(event);
-  const price = typeof event.price === "number" ? event.price : undefined;
+  const priceInfo = eventPriceInfo(event);
   const soldOut = event.status === "sold_out" || event.soldOut === true;
 
   return (
@@ -56,9 +56,9 @@ export function EventRow({
         <div className="event-row__meta">
           {soldOut ? <span className="tag">Sold out</span> : null}
           {category ? <span className="tag">{category}</span> : null}
-          {showPrice && price != null ? (
+          {showPrice && priceInfo ? (
             <span className="event-row__price">
-              <Price cents={price} currency={text(event, "currency", "usd")} />
+              <EventPrice event={event} />
             </span>
           ) : null}
           <span className="event-row__arrow" aria-hidden="true">
@@ -91,9 +91,7 @@ export function EventCard({ event, delay = 0 }: { event: ContentDoc; delay?: num
   // numbers (so a real $0 price would print "$0"), which doesn't match
   // the literal "0.00" asked for here, so the fallback is spelled out
   // instead of routed through money(0, ...).
-  const price = typeof event.price === "number"
-    ? <Price cents={event.price} currency={text(event, "currency", "usd")} />
-    : "$0.00";
+  const price = eventPriceInfo(event) ? <EventPrice event={event} /> : "$0.00";
   const soldOut = event.status === "sold_out" || event.soldOut === true;
   const href = slug ? `/events/${slug}` : "/events";
 
