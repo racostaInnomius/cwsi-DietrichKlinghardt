@@ -29,6 +29,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { EventMetaIcon } from "@/components/Icons";
 import { Accordion } from "@/components/sections/Accordion";
+import { ButtonText } from "@/components/ButtonText";
 
 /** "2500" cents + "usd" → "$25". Whole-dollar plans only (none of DKK's are cents-precise). */
 function formatPlanPrice(cents: number, currency: string): string {
@@ -262,7 +263,7 @@ export function WeeklyTalksPage() {
               {/* Scrolls to the real plan cards below — pricing/checkout
                   lives in one place (membership_plans), not duplicated here. */}
               <a className="btn btn-primary" href="#pricing">
-                Join now
+                <ButtonText id="talks-join-now" />
               </a>
             </div>
           </Reveal>

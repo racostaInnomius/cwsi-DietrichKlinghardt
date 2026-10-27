@@ -7,6 +7,7 @@ import { Emphasis } from "@/components/Emphasis";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { Accordion } from "@/components/sections/Accordion";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { ButtonText } from "@/components/ButtonText";
 
 /* The questions, the approach and the first steps are cards of their own
    Page Contents blocks (copy in src/data/blocks.ts until the rows have it).
@@ -48,7 +49,7 @@ export function NewPatientsPage() {
             {page.lead ? <p className="lead">{page.lead}</p> : null}
             <div className="page-hero__actions page-hero__actions--center">
               <a className="btn btn-primary" href="#contact">
-                Become a Patient <span aria-hidden="true">→</span>
+                <ButtonText id="new-patients-become" /> <span aria-hidden="true">→</span>
               </a>
             </div>
           </Reveal>
@@ -109,7 +110,7 @@ export function NewPatientsPage() {
         </ul>
         <div className="section-actions">
           <a className="btn btn-primary" href="#contact">
-            Become a Patient <span aria-hidden="true">→</span>
+            <ButtonText id="new-patients-become" /> <span aria-hidden="true">→</span>
           </a>
         </div>
       </section>

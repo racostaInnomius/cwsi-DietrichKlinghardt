@@ -9,6 +9,7 @@ import { CardIcon } from "@/components/CardIcon";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { InViewVideo } from "@/components/sections/InViewVideo";
 import { SOPHIA_WELCOME_VIDEO } from "@/data/media";
+import { ButtonText } from "@/components/ButtonText";
 
 /* Client (2026-09-12), via the designer: "para los numeros... podemos
    hacer un conteo" — each figure counts up. In the CMS a figure is written the
@@ -84,11 +85,11 @@ export function SophiaPage() {
             />
             <div className="sophia-hero__actions">
               <Link className="btn btn-light" to="/sophia/new-patients">
-                <span className="btn-label">Become a new patient</span>
+                <span className="btn-label"><ButtonText id="sophia-hero-new-patient" /></span>
                 <span aria-hidden="true">→</span>
               </Link>
               <Link className="btn btn-ghost" to="/sophia/accommodations">
-                <span className="btn-label">Travel & accommodation</span>
+                <span className="btn-label"><ButtonText id="sophia-hero-travel" /></span>
                 <span aria-hidden="true">→</span>
               </Link>
             </div>
@@ -107,7 +108,7 @@ export function SophiaPage() {
           <h2 className="sophia-welcome-title"><Marked text={page.title} /></h2>
           {page.lead ? <p className="feature-row__copy">{page.lead}</p> : null}
           <Link className="btn btn-primary" to="/sophia/new-patients">
-            New patients <span aria-hidden="true">→</span>
+            <ButtonText id="sophia-new-patients" /> <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
       </section>
@@ -175,7 +176,7 @@ export function SophiaPage() {
         </ul>
         <Reveal className="section-actions" delay={120}>
           <Link className="btn btn-primary" to="/sophia/new-patients">
-            New patients <span aria-hidden="true">→</span>
+            <ButtonText id="sophia-new-patients" /> <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
       </section>
@@ -226,7 +227,7 @@ export function SophiaPage() {
         </ul>
         <Reveal className="section-actions" delay={120}>
           <Link className="btn btn-primary" to="/sophia/new-patients">
-            Become a new patient <span aria-hidden="true">→</span>
+            <ButtonText id="sophia-become-a-new-patient" /> <span aria-hidden="true">→</span>
           </Link>
         </Reveal>
       </section>
@@ -248,7 +249,7 @@ export function SophiaPage() {
       <CtaBand className="cta-band--dark" slug={SECTION.sophiaCtaStopWondering}
       >
         <Link className="btn btn-light" to="/sophia/new-patients">
-          Become a new patient <span aria-hidden="true">→</span>
+          <ButtonText id="sophia-become-a-new-patient" /> <span aria-hidden="true">→</span>
         </Link>
       </CtaBand>
     </>

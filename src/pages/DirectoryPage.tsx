@@ -9,6 +9,7 @@ import {
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
+import { ButtonText } from "@/components/ButtonText";
 
 // Leaflet only exists in the browser, so the map is split out of the static
 // build entirely and mounted after hydration.
@@ -106,7 +107,7 @@ export function DirectoryPage() {
             </select>
           </label>
           <button className="btn btn-primary" type="submit">
-            Search
+            <ButtonText id="directory-search" />
           </button>
         </form>
 
@@ -208,7 +209,7 @@ export function DirectoryPage() {
                 className="btn btn-outline load-more"
                 onClick={() => setShown((count) => count + PAGE_SIZE)}
               >
-                Load more
+                <ButtonText id="load-more" />
               </button>
             ) : null}
           </>

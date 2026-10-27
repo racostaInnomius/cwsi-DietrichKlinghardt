@@ -6,6 +6,7 @@ import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CheckIcon, MedalIcon } from "@/components/Icons";
 import { Emphasis } from "@/components/Emphasis";
+import { ButtonText } from "@/components/ButtonText";
 
 /**
  * A training path in full: what the certification involves, in what order, and
@@ -30,7 +31,7 @@ export function TrainingPathPage() {
           <h1>This training path is no longer listed.</h1>
           <p className="lead">Browse the current methods instead.</p>
           <Link className="btn btn-primary" to="/courses">
-            All courses
+            <ButtonText id="courses-all-courses" />
           </Link>
         </section>
       </>
@@ -105,7 +106,7 @@ export function TrainingPathPage() {
 
               <div className="path-panel__foot">
                 <Link className="btn btn-primary path-panel__cta" to={datesHref}>
-                  Course dates <span aria-hidden="true">→</span>
+                  <ButtonText id="path-course-dates" /> <span aria-hidden="true">→</span>
                 </Link>
               </div>
             </div>
@@ -137,10 +138,10 @@ export function TrainingPathPage() {
                 ))}
                 <div className="path-cta-group">
                   <Link className="btn btn-primary" to="/academy/art">
-                    About the course <span aria-hidden="true">→</span>
+                    <ButtonText id="path-about-course" /> <span aria-hidden="true">→</span>
                   </Link>
                   <Link className="btn btn-outline" to={datesHref}>
-                    To the online course dates
+                    <ButtonText id="path-online-dates" />
                   </Link>
                 </div>
               </Reveal>
@@ -257,7 +258,7 @@ export function TrainingPathPage() {
                 </ul>
                 <Reveal>
                   <Link className="btn btn-primary path-body__final-cta" to={datesHref}>
-                    To the online course dates <span aria-hidden="true">↗</span>
+                    <ButtonText id="path-online-dates" /> <span aria-hidden="true">↗</span>
                   </Link>
                 </Reveal>
               </div>

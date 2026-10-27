@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cotización · NowOpen.tv × Beytrax</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900: #170636;
+    --purple-800: #220950;
+    --purple-700: #2E0D6A;
+    --purple-600: #3A1184;
+    --purple: #45169E;
+    --purple-400: #9B3EF0;
+    --purple-200: #CCB1F4;
+    --purple-100: #E5D8FA;
+    --purple-50: #F4EEFD;
+    --lavender: #EDE7FA;
+    --ink: #0D0C0A;
+    --ink-700: #3F3F46;
+    --ink-500: #6B6B74;
+    --paper: #FFFFFF;
+    --paper-soft: #FBFAFE;
+    --ok: #16A34A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--lavender);
+    color: var(--ink);
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: clamp(16px, 4vw, 48px) clamp(16px, 4vw, 48px) 80px;
+  }
+
+  .sheet {
+    background: var(--paper);
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(23, 6, 54, 0.18);
+    overflow: hidden;
+  }
+
+  /* ── Header ───────────────────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, var(--purple-900) 0%, var(--purple) 55%, var(--purple-400) 130%);
+    padding: clamp(28px, 5vw, 48px) clamp(24px, 5vw, 48px);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto auto;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 70%);
+    pointer-events: none;
+  }
+  .header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .logo-mark img { height: 34px; width: auto; display: block; filter: brightness(0) invert(1); }
+  .doc-tag {
+    text-align: right;
+  }
+  .doc-tag .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--purple-200);
+    margin: 0 0 6px;
+  }
+  .doc-tag h1 {
+    margin: 0;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(26px, 4vw, 34px);
+    letter-spacing: 0.01em;
+  }
+  .doc-meta {
+    margin-top: clamp(24px, 4vw, 36px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 18px;
+    position: relative;
+  }
+  .doc-meta .label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple-200);
+    margin: 0 0 3px;
+  }
+  .doc-meta .value {
+    font-size: 14.5px;
+    font-weight: 600;
+    margin: 0;
+    color: #fff;
+  }
+  .doc-meta .value small {
+    display: block;
+    font-weight: 400;
+    font-size: 12.5px;
+    color: var(--purple-100);
+    margin-top: 2px;
+  }
+
+  /* ── Body ─────────────────────────────────────────────── */
+  .body {
+    padding: clamp(24px, 5vw, 48px);
+  }
+
+  .intro p {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink-700);
+    margin: 0 0 16px;
+  }
+  .intro strong { color: var(--ink); }
+
+  .section-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--purple-900);
+    margin: 40px 0 6px;
+  }
+  .section-sub {
+    font-size: 13.5px;
+    color: var(--ink-500);
+    margin: 0 0 20px;
+  }
+
+  /* ── Line items ───────────────────────────────────────── */
+  .items {
+    border: 1px solid var(--purple-100);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--purple-50);
+    background: var(--paper);
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .item:nth-child(even) { background: var(--paper-soft); }
+  .item:last-child { border-bottom: none; }
+  .item-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .item-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--purple-50);
+    color: var(--purple);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex: none;
+  }
+  .item-desc {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-700);
+    margin: 0;
+    max-width: 58ch;
+  }
+  .item-price {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--purple-900);
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+
+  .totals {
+    margin-top: 22px;
+    display: flex;
+    justify-content: flex-end;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .totals-box {
+    width: min(100%, 320px);
+    background: var(--purple-900);
+    border-radius: 14px;
+    padding: 20px 24px;
+    color: #fff;
+  }
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13.5px;
+    color: var(--purple-200);
+    margin-bottom: 6px;
+  }
+  .totals-row.grand {
+    margin-top: 10px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .totals-row.grand span:last-child { font-family: "Cormorant Garamond", Georgia, serif; font-size: 26px; }
+
+  .totals-note {
+    font-size: 11.5px;
+    color: var(--purple-200);
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  /* ── Maintenance plan ─────────────────────────────────── */
+  .keep { break-inside: avoid; page-break-inside: avoid; }
+  .plan {
+    border: 1px solid var(--purple-100);
+    border-radius: 16px;
+    padding: 22px 22px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .plan-includes {
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+  .plan-includes li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-700);
+  }
+  .plan-includes .tag {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    margin-top: 1px;
+  }
+  .tag.free { background: #DCFCE7; color: #166534; }
+  .tag.bank { background: var(--purple-50); color: var(--purple); }
+  .plan-price { text-align: right; }
+  .plan-price .big {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--purple-900);
+    white-space: nowrap;
+  }
+  .plan-price .calc {
+    font-size: 12.5px;
+    color: var(--ink-500);
+    margin-top: 3px;
+    white-space: nowrap;
+  }
+
+  /* ── Investment summary ───────────────────────────────── */
+  .summary {
+    margin-top: 36px;
+    background: var(--purple-900);
+    border-radius: 16px;
+    padding: 22px 26px;
+    color: #fff;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .summary h3 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 21px;
+    margin: 0 0 12px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(255,255,255,0.16);
+  }
+  .summary-row .what { font-size: 14px; font-weight: 600; }
+  .summary-row .what small { display: block; font-weight: 400; font-size: 12px; color: var(--purple-200); margin-top: 2px; }
+  .summary-row .amount { font-family: "Cormorant Garamond", Georgia, serif; font-size: 25px; font-weight: 600; white-space: nowrap; }
+
+  /* ── Value props ──────────────────────────────────────── */
+  .why {
+    margin-top: 44px;
+    background: var(--purple-50);
+    border-radius: 16px;
+    padding: 24px 26px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .why h3 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--purple-900);
+    margin: 0 0 14px;
+  }
+  .why ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+  .why li {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-700);
+    padding-left: 24px;
+    position: relative;
+  }
+  .why li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ok);
+    font-weight: 800;
+  }
+
+  /* ── Terms / CTA ──────────────────────────────────────── */
+  .terms {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .terms .block .label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin: 0 0 6px;
+  }
+  .terms .block p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-700);
+  }
+
+  .signoff {
+    margin-top: 44px;
+    padding-top: 28px;
+    border-top: 1px solid var(--purple-100);
+  }
+  .signoff p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-700);
+    margin: 0 0 16px;
+  }
+  .signature {
+    margin-top: 20px;
+  }
+  .signature .name {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--purple-900);
+  }
+  .signature .role {
+    font-size: 13px;
+    color: var(--ink-500);
+    margin-top: 2px;
+  }
+  .signature .contact {
+    font-size: 13px;
+    color: var(--purple);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 28px 24px 0;
+    font-size: 11.5px;
+    color: var(--ink-500);
+  }
+
+  @media (max-width: 520px) {
+    .item { grid-template-columns: 1fr; }
+    .item-price { font-size: 16px; }
+    .doc-meta { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { padding: 0; }
+    .sheet { box-shadow: none; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="sheet">
+
+      <header class="header">
+        <div class="header-row">
+          <div class="logo-mark">
+            <img src="beytrax-logo.png" alt="Beytrax" />
+          </div>
+          <div class="doc-tag">
+            <p class="eyebrow">Propuesta comercial</p>
+            <h1>Cotización de servicios</h1>
+          </div>
+        </div>
+        <div class="doc-meta">
+          <div>
+            <p class="label">Preparado para</p>
+            <p class="value">Ana Pavón<small>NowOpen.tv</small></p>
+          </div>
+          <div>
+            <p class="label">Preparado por</p>
+            <p class="value">Rodrigo Acosta Valdez<small>rodrigo.acosta@certusitm.com.mx</small></p>
+          </div>
+          <div>
+            <p class="label">Fecha</p>
+            <p class="value">12 de octubre, 2026</p>
+          </div>
+          <div>
+            <p class="label">Validez</p>
+            <p class="value">30 días</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="body">
+
+        <div class="intro">
+          <p>Estimada Ana,</p>
+          <p>Gracias por la confianza de evaluar a <strong>Beytrax</strong> como la plataforma detrás de Dietrich-Klinghardt.com. A continuación encontrarás el detalle de los módulos que conversamos, cada uno ya probado en producción sobre nuestra infraestructura: no desarrollo especulativo, sino funcionalidad que hoy mismo opera con transacciones reales, contenido en vivo y miles de usuarios en otros sitios de la plataforma.</p>
+          <p>El objetivo de esta propuesta es simple: que Dietrich-Klinghardt.com tenga el control total sobre quién entra, qué paga, qué transmite y qué vende, sin que ustedes tengan que construir ni mantener nada de esa infraestructura.</p>
+        </div>
+
+        <h2 class="section-title">Alcance de la propuesta</h2>
+        <p class="section-sub">Ocho módulos, cada uno resolviendo una necesidad específica del negocio.</p>
+
+        <div class="items">
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">🔐</span>Portal seguro de Login para clientes</p>
+              <p class="item-desc">Autenticación real por cuenta, no un enlace compartible que cualquiera puede reenviar. Cada cliente entra con su propia sesión, lo que protege el valor de las transmisiones privadas y evita que el acceso se filtre fuera del círculo de quienes pagaron por él.</p>
+            </div>
+            <div class="item-price">$370.00</div>
+          </div>
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">📼</span>Portal seguro de Archives</p>
+              <p class="item-desc">Convierte cada transmisión en un activo permanente, no en un momento que se pierde al apagar la cámara. Incluye la migración y el respaldo de las transmisiones en vivo anteriores, para que ese contenido ya producido empiece a generar valor desde el primer día en lugar de quedar enterrado.</p>
+            </div>
+            <div class="item-price">$330.00</div>
+          </div>
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">📡</span>Live Streaming (de cobro y sin cobro)</p>
+              <p class="item-desc">Un mismo motor de transmisión para dos modelos de negocio a la vez: contenido abierto para crecer audiencia, y contenido de pago con control de acceso real integrado al checkout. Sin tener que elegir entre uno u otro, ni operar dos sistemas distintos.</p>
+            </div>
+            <div class="item-price">$300.00</div>
+          </div>
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">💬</span>Live Chat</p>
+              <p class="item-desc">Conversación en tiempo real junto a la transmisión, con moderación integrada. La diferencia entre una audiencia que mira pasivamente y una comunidad que vuelve cada semana suele estar exactamente aquí.</p>
+            </div>
+            <div class="item-price">$250.00</div>
+          </div>
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">🎟️</span>Gestión de emisión y consumo de Tickets con QR codes</p>
+              <p class="item-desc">Cada lugar comprado genera su propio boleto con código QR, a nombre del asistente, que llega en el correo de confirmación. En la puerta, el equipo valida desde cualquier celular sin usuario ni contraseña: verde para entrar, rojo si el boleto ya se usó. Incluye reglas de reingreso por evento, pases por día que la puerta del curso completo también acepta, conteo en vivo de asistentes y anulación automática del boleto cuando se reembolsa la compra.</p>
+            </div>
+            <div class="item-price">$350.00</div>
+          </div>
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">🔳</span>QR Inteligentes: códigos dinámicos con analítica de escaneo</p>
+              <p class="item-desc">Códigos QR que siguen trabajando después de imprimirse: el destino se cambia en cualquier momento sin reimprimir un solo flyer, se pueden pausar y cada escaneo se cuenta, con su gráfica de los últimos 30 días. Se diseñan desde el panel con los colores y las figuras de la marca, y se descargan listos para imprenta en PNG de alta resolución o en SVG vectorial.</p>
+            </div>
+            <div class="item-price">$280.00</div>
+          </div>
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">📦</span>Venta de productos físicos</p>
+              <p class="item-desc">Tienda integrada con checkout real de Stripe, carrito multi-producto y captura de dirección de envío, para que NowOpen.tv pueda monetizar más allá de la suscripción: libros, mercancía, materiales de trabajo, lo que la marca necesite vender.</p>
+            </div>
+            <div class="item-price">$250.00</div>
+          </div>
+
+          <div class="item">
+            <div>
+              <p class="item-title"><span class="item-icon">🎵</span>Music Player</p>
+              <p class="item-desc">Reproductor embebido para contenido de audio (pistas, episodios, música de marca), integrado de forma nativa al resto del sitio, sin depender de un reproductor externo que rompa la experiencia visual.</p>
+            </div>
+            <div class="item-price">$100.00</div>
+          </div>
+
+        </div>
+
+        <div class="totals">
+          <div class="totals-box">
+            <div class="totals-row"><span>Subtotal (8 módulos)</span><span>$2,230.00</span></div>
+            <div class="totals-row grand"><span>Total</span><span>$2,230.00 USD</span></div>
+            <p class="totals-note">Pago único de implementación</p>
+          </div>
+        </div>
+
+        <div class="keep">
+        <h2 class="section-title">Plan de mantenimiento mensual</h2>
+        <p class="section-sub">Una bolsa de horas para que el sitio siga sano y siga creciendo, mes con mes.</p>
+
+        <div class="plan">
+          <div>
+            <p class="item-title"><span class="item-icon">🛠️</span>Bolsa de 10 horas al mes</p>
+            <p class="item-desc">Un equipo que ya conoce la plataforma a fondo, disponible cada mes para Dietrich-Klinghardt.com. La regla es sencilla y está a su favor: lo que no funciona como debe se corrige sin tocar sus horas, y la bolsa completa queda para hacer crecer el sitio.</p>
+            <ul class="plan-includes">
+              <li><span class="tag free">Sin cargo</span><span>Atención de los errores detectados, sin cargo a la bolsa de horas.</span></li>
+              <li><span class="tag bank">Con cargo</span><span>Desarrollo de nuevas funcionalidades, con cargo a la bolsa de horas.</span></li>
+            </ul>
+          </div>
+          <div class="plan-price">
+            <div class="big">$400.00 / mes</div>
+            <div class="calc">10 h × $40.00 USD</div>
+          </div>
+        </div>
+        </div>
+
+        <div class="totals">
+          <div class="totals-box">
+            <div class="totals-row"><span>10 horas × $40.00</span><span>$400.00</span></div>
+            <div class="totals-row grand"><span>Total</span><span>$400.00 USD</span></div>
+            <p class="totals-note">Pago mensual</p>
+          </div>
+        </div>
+
+        <div class="summary">
+          <h3>Resumen de inversión</h3>
+          <div class="summary-row">
+            <span class="what">Implementación de los 8 módulos<small>Pago único, contra entrega y puesta en producción</small></span>
+            <span class="amount">$2,230.00 USD</span>
+          </div>
+          <div class="summary-row">
+            <span class="what">Plan de mantenimiento<small>Bolsa de 10 horas al mes</small></span>
+            <span class="amount">$400.00 USD / mes</span>
+          </div>
+        </div>
+
+        <div class="why">
+          <h3>Por qué estos módulos ya son una ventaja, no un riesgo</h3>
+          <ul>
+            <li>Cada módulo listado arriba está en operación hoy, en producción, procesando pagos y transmisiones reales: no es una promesa de roadmap.</li>
+            <li>Login, Archives, Live Streaming y la tienda comparten la misma base de datos y el mismo sistema de pagos: nada de integrar herramientas sueltas que luego hay que mantener por separado.</li>
+            <li>El control de acceso a transmisiones de pago vive en el mismo lugar que el checkout: un solo sistema decide quién paga y quién ve, sin huecos de seguridad entre ambos.</li>
+            <li>La migración de tu contenido existente a Archives está incluida: no empiezas de cero, empiezas con tu historial ya disponible para monetizar.</li>
+            <li>Los boletos con QR salen del mismo checkout y del mismo correo de confirmación: cada compra genera sus boletos sola, sin listas en papel ni pasos manuales en la puerta.</li>
+            <li>Los QR Inteligentes nunca caducan con el material impreso: si cambia la página, el evento o la promoción, el mismo código lleva al nuevo destino.</li>
+            <li>Con el plan de mantenimiento, los errores nunca consumen tus horas: cada hora de la bolsa se invierte en hacer crecer el sitio.</li>
+          </ul>
+        </div>
+
+        <div class="terms">
+          <div class="block">
+            <p class="label">Forma de pago</p>
+            <p>Contra entrega y puesta en producción.</p>
+          </div>
+          <div class="block">
+            <p class="label">Tiempo estimado</p>
+            <p>Ya desarrollado y funcionando.</p>
+          </div>
+          <div class="block">
+            <p class="label">Mantenimiento</p>
+            <p>Pago mensual por la bolsa de 10 horas.</p>
+          </div>
+        </div>
+
+        <div class="signoff">
+          <p>Ana, quedo atento a cualquier ajuste que necesites sobre el alcance o el orden de prioridad de los módulos. Podemos adaptar esta propuesta a como mejor convenga a NowOpen.tv. Será un gusto acompañarlos en este siguiente paso.</p>
+          <div class="signature">
+            <div class="name">Rodrigo Acosta Valdez</div>
+            <div class="role">Beytrax</div>
+            <div class="contact">rodrigo.acosta@certusitm.com.mx</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <p class="footer">Esta cotización es confidencial y se presenta exclusivamente para evaluación de NowOpen.tv · Beytrax</p>
+  </div>
+</body>
+</html>

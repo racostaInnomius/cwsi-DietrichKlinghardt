@@ -6,6 +6,7 @@ import { CartButton } from "./CartButton";
 import { useStoreVisible } from "@/lib/store";
 import { CurrencySelect } from "./CurrencySelect";
 import { AccountButton } from "./AccountButton";
+import { ButtonText } from "@/components/ButtonText";
 
 // Hash-anchor children (e.g. "/sophia#chronic-illness") share a pathname with
 // their parent page and several siblings, so pathname alone can't tell which
@@ -186,7 +187,7 @@ export function SiteHeader() {
 
         <div className="site-header__actions">
           <Link className="btn btn-light site-header__cta" to="/contact">
-            Contact us
+            <ButtonText id="header-contact" />
           </Link>
           <CurrencySelect />
           {storeVisible ? <CartButton /> : null}

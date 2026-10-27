@@ -12,6 +12,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Emphasis } from "@/components/Emphasis";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
+import { ButtonText } from "@/components/ButtonText";
 
 /**
  * Support the Foundation.
@@ -95,7 +96,7 @@ function ClosedNotice() {
         </p>
       ))}
       <Link className="btn btn-primary donate-panel__cta" to="/contact">
-        Get in touch
+        <ButtonText id="donate-get-in-touch" />
       </Link>
     </>
   );

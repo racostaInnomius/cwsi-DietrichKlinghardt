@@ -16,6 +16,8 @@ import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { EventMetaIcon } from "@/components/Icons";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { Emphasis } from "@/components/Emphasis";
+import { ButtonText } from "@/components/ButtonText";
+import { useButtonLabel } from "@/lib/buttons";
 
 /**
  * Event detail: an "Event details" panel on the left (date, facts, price,
@@ -50,7 +52,7 @@ export function EventDetailPage() {
             instead.
           </p>
           <Link className="btn btn-primary" to="/events">
-            All events
+            <ButtonText id="events-all-events" />
           </Link>
         </section>
       </>
@@ -90,12 +92,15 @@ export function EventDetailPage() {
   // cards with their own Buy button. The reverse line ("Also part of <course>"
   // on a day's own page) was removed at the client's request, 2026-10-26.
   const dayPasses = dayPassesOf(event, events);
+  const registerLabel = useButtonLabel("event-register");
+  const bookFullCourseLabel = useButtonLabel("event-book-full-course");
+  const bookNowLabel = useButtonLabel("event-book-now");
   const ctaLabel =
     registrationType !== "paid"
-      ? "Register / learn more"
+      ? registerLabel
       : dayPasses.length
-        ? "Book the full course"
-        : "Book now";
+        ? bookFullCourseLabel
+        : bookNowLabel;
   const noteText = text(event, "soldOutMessage", "This date is fully booked.");
 
   const eyebrow = [category, month && year ? `${month} ${year}` : ""]
@@ -355,6 +360,11 @@ function DayPassCard({ pkg, day }: { pkg: ContentDoc; day: ContentDoc }) {
   const past = splitByTime([day]).past.length > 0;
   const seats = number(day, "capacity");
   const dayWord = label.startsWith("Day ") ? label.split(" — ")[0] : "";
+  // "Book Day 2" borrows the verb from the event's own Book button, so the
+  // day passes follow the wording the editor set there.
+  const bookNow = useButtonLabel("event-book-now");
+  const bookWord = bookNow.split(" ")[0];
+  const register = useButtonLabel("event-register");
 
   return (
     <article className="day-pass">
@@ -381,7 +391,7 @@ function DayPassCard({ pkg, day }: { pkg: ContentDoc; day: ContentDoc }) {
           <p className="day-pass__note">{text(day, "soldOutMessage", "This date is fully booked.")}</p>
         ) : href ? (
           <EventCta className="btn btn-primary day-pass__cta" paid={paid} href={href} event={day}>
-            {paid ? (dayWord ? `Book ${dayWord}` : "Book now") : "Register / learn more"}
+            {paid ? (dayWord ? `${bookWord} ${dayWord}` : bookNow) : register}
           </EventCta>
         ) : null}
         {!past && !soldOut && seats > 0 ? (

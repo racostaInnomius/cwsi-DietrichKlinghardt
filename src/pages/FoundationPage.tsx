@@ -7,6 +7,7 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { ArchiveIcon } from "@/components/Icons";
+import { ButtonText } from "@/components/ButtonText";
 
 /* The four commitments are cards of the "foundation-commitments" Page
    Contents block, each with its icon (copy in src/data/blocks.ts until the row
@@ -105,7 +106,7 @@ export function FoundationPage() {
               ))}
             </div>
             <Link className="btn btn-primary foundation-purpose__cta" to="/foundation/donate">
-              Support the Foundation
+              <ButtonText id="foundation-support" />
               <span aria-hidden="true">→</span>
             </Link>
           </div>
@@ -171,7 +172,7 @@ export function FoundationPage() {
               {quote.subtitle ? <cite><Marked text={quote.subtitle} /></cite> : null}
             </blockquote>
             <Link className="btn btn-primary foundation-quote__cta" to="/foundation/donate">
-              Support the Foundation
+              <ButtonText id="foundation-support" />
               <span aria-hidden="true">→</span>
             </Link>
           </Reveal>

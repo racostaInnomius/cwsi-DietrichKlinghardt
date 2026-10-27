@@ -20,6 +20,7 @@ import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
 import { InViewVideo } from "@/components/sections/InViewVideo";
 import { FIVE_LEVELS_VIDEO, SOPHIA_WELCOME_VIDEO } from "@/data/media";
+import { ButtonText } from "@/components/ButtonText";
 
 /**
  * Home — the frame the rest of the site is measured against.
@@ -312,10 +313,10 @@ export function HomePage() {
               </h1>
               <div className="hero__actions">
                 <Link className="btn btn-light" to="/about">
-                  Learn more
+                  <ButtonText id="home-about-learn-more" />
                 </Link>
                 <Link className="btn btn-ghost" to="/events">
-                  Upcoming events
+                  <ButtonText id="home-about-events" />
                 </Link>
               </div>
             </Reveal>
@@ -378,7 +379,7 @@ export function HomePage() {
               </p>
             ))}
             <Link className="btn btn-ghost" to="/academy">
-              Learn more
+              <ButtonText id="home-academy-learn-more" />
             </Link>
           </Reveal>
         </div>
@@ -463,10 +464,10 @@ export function HomePage() {
             ))}
             <div className="home-art__actions">
               <Link className="btn btn-outline" to="/courses/art">
-                About the course
+                <ButtonText id="home-art-course" />
               </Link>
               <Link className="btn btn-primary" to="/academy/therapists">
-                Find a practitioner <span aria-hidden="true">→</span>
+                <ButtonText id="home-art-practitioners" /> <span aria-hidden="true">→</span>
               </Link>
             </div>
           </Reveal>
@@ -498,10 +499,10 @@ export function HomePage() {
           ))}
           <div className="feature-row__actions">
             <Link className="btn btn-ghost" to="/sophia">
-              Learn more
+              <ButtonText id="home-sophia-learn-more" />
             </Link>
             <Link className="btn btn-primary" to="/sophia/new-patients">
-              New patients <span aria-hidden="true">→</span>
+              <ButtonText id="home-sophia-new-patients" /> <span aria-hidden="true">→</span>
             </Link>
           </div>
         </Reveal>
@@ -533,7 +534,7 @@ export function HomePage() {
               ) : null}
               <p>{talks.lead}</p>
               <Link className="btn btn-ghost" to="/weekly-talks">
-                Join my talks
+                <ButtonText id="home-talks-join" />
               </Link>
             </Reveal>
           </div>
@@ -588,7 +589,7 @@ export function HomePage() {
           ) : (
             <Reveal className="section-actions">
               <Link className="btn btn-light" to="/store">
-                Visit the store
+                <ButtonText id="home-store-visit" />
               </Link>
             </Reveal>
           )}

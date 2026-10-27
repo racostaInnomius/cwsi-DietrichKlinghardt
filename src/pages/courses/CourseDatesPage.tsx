@@ -11,6 +11,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { ButtonText } from "@/components/ButtonText";
 
 const PAGE_SIZE = 6;
 
@@ -41,7 +42,7 @@ export function CourseDatesPage() {
         <section className="section wrap">
           <h1>This training path is no longer listed.</h1>
           <Link className="btn btn-primary" to="/courses">
-            All courses
+            <ButtonText id="courses-all-courses" />
           </Link>
         </section>
       </>
@@ -193,7 +194,7 @@ export function CourseDatesPage() {
                 className="btn btn-outline load-more"
                 onClick={() => setShown((count) => count + PAGE_SIZE)}
               >
-                Load more
+                <ButtonText id="load-more" />
               </button>
             ) : null}
           </>

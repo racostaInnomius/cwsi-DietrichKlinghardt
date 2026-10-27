@@ -7,6 +7,7 @@ import { Marked } from "@/components/Marked";
 import { themeForPath } from "@/components/shell/navigation";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
+import { useButtonLabel } from "@/lib/buttons";
 
 type Status = "idle" | "sending" | "done" | "error";
 
@@ -56,6 +57,7 @@ export function NewsletterSection({
 
   const section = useSection(SECTION.newsletter);
   const eyebrow = eyebrowProp ?? section.eyebrow;
+  const joinLabel = useButtonLabel("newsletter-join");
 
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
@@ -189,7 +191,7 @@ export function NewsletterSection({
               <input name="website" tabIndex={-1} autoComplete="off" />
             </label>
             <button className="btn btn-primary" disabled={status === "sending"}>
-              {status === "sending" ? "Joining…" : "Join now"}
+              {status === "sending" ? "Joining…" : joinLabel}
             </button>
             <p className="newsletter__note">No spam. Unsubscribe at any time.</p>
           </form>

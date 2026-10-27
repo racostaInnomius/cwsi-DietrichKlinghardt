@@ -48,12 +48,26 @@ const ContentContext = createContext<ContentMap>(demoContent);
  * a full course curriculum it never renders.
  */
 export async function loadSiteContent(): Promise<LoaderContent> {
-  const [pages, menus, events, faqs, board, products, videos, music, legal, membershipPlans] =
-    await Promise.all([
+  const [
+    pages,
+    menus,
+    buttons,
+    events,
+    faqs,
+    board,
+    products,
+    videos,
+    music,
+    legal,
+    membershipPlans,
+  ] = await Promise.all([
       fetchPageContents(),
       // The header menu, editable in the CMS (Site Menus). An empty answer
       // keeps the menu bundled in components/shell/navigation.ts.
       fetchCollection("site-menus"),
+      // Button wording, editable in the CMS (Site Buttons). An empty answer
+      // keeps the labels bundled in src/data/buttons.ts.
+      fetchCollection("site-buttons"),
       fetchEvents(),
       fetchCollection("faqs"),
       fetchCollection("board-members"),
@@ -68,6 +82,7 @@ export async function loadSiteContent(): Promise<LoaderContent> {
   return {
     "page-contents": pages,
     "site-menus": menus,
+    "site-buttons": buttons,
     events,
     faqs,
     "board-members": board,

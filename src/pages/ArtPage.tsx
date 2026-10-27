@@ -10,6 +10,7 @@ import { LineQuote } from "@/components/motion/LineQuote";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { VideoPlayer } from "@/components/sections/VideoPlayer";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { ButtonText } from "@/components/ButtonText";
 
 /**
  * A.R.T. Klinghardt — what Autonomic Response Testing is, for the reader who
@@ -78,10 +79,10 @@ export function ArtPage() {
             ))}
             <div className="home-art__actions">
               <Link className="btn btn-light" to="/courses">
-                Training paths
+                <ButtonText id="art-training-paths" />
               </Link>
               <Link className="btn btn-ghost" to="/academy/therapists">
-                Find a practitioner
+                <ButtonText id="art-find-practitioner" />
               </Link>
             </div>
           </Reveal>

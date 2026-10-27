@@ -9,6 +9,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { Emphasis } from "@/components/Emphasis";
+import { ButtonText } from "@/components/ButtonText";
 
 /**
  * "Learn more" page for one Sophia team member. Photo/name/role/title/bio
@@ -44,7 +45,7 @@ export function TeamMemberPage() {
             They may no longer be with Sophia Health Institute. See the current team instead.
           </p>
           <Link className="btn btn-primary" to="/sophia/team">
-            Meet our team
+            <ButtonText id="sophia-member-meet-team" />
           </Link>
         </section>
       </>
@@ -92,7 +93,7 @@ export function TeamMemberPage() {
               ) : null}
               <p className="lead">{paragraphs[0]}</p>
               <Link className="btn btn-primary team-member-header__cta" to="/contact">
-                Contact us <span aria-hidden="true">→</span>
+                <ButtonText id="sophia-member-contact" /> <span aria-hidden="true">→</span>
               </Link>
             </div>
           </Reveal>
@@ -110,7 +111,7 @@ export function TeamMemberPage() {
 
       <CtaBand className="cta-band--dark" slug={SECTION.sophiaCtaStopWondering}>
         <Link className="btn btn-light" to="/sophia/new-patients">
-          Become a new patient <span aria-hidden="true">→</span>
+          <ButtonText id="sophia-become-a-new-patient" /> <span aria-hidden="true">→</span>
         </Link>
       </CtaBand>
     </>

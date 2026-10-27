@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { env } from "@/lib/env";
 import { SendIcon } from "@/components/Icons";
+import { useButtonLabel } from "@/lib/buttons";
 
 type Status = "idle" | "sending" | "done" | "error";
 
@@ -23,6 +24,7 @@ export function ContactForm({
 }) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const sendLabel = useButtonLabel("contact-send");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -137,13 +139,13 @@ export function ContactForm({
       <button className="btn btn-primary" disabled={status === "sending"}>
         {splitName ? (
           <>
-            {status === "sending" ? "Sending…" : "Send message"}
+            {status === "sending" ? "Sending…" : sendLabel}
             <SendIcon />
           </>
         ) : status === "sending" ? (
           "Sending…"
         ) : (
-          "Send message"
+          sendLabel
         )}
       </button>
     </form>

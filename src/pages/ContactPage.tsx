@@ -7,6 +7,7 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { MailIcon, BriefcaseIcon, MicrophoneIcon, HeartIcon } from "@/components/Icons";
+import { ButtonText } from "@/components/ButtonText";
 
 /** Category badge icon per card — matched against the label text so CMS
  * rows (any wording) still fall back to a plain envelope. */
@@ -91,7 +92,7 @@ export function ContactPage() {
             </p>
           ))}
           <Link className="btn btn-primary contact-note__cta" to="/sophia/accommodations">
-            Contact for Dietrich Klinghardt Health Institute™
+            <ButtonText id="contact-health-institute" />
           </Link>
         </Reveal>
       </section>

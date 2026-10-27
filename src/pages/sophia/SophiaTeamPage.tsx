@@ -9,6 +9,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { ButtonText } from "@/components/ButtonText";
 
 /**
  * Meet Our Team, from the `board-members` collection — the CMS's people
@@ -76,11 +77,11 @@ export function SophiaTeamPage() {
                         className="btn btn-primary team-card__cta"
                         to={`/sophia/team/${slug}`}
                       >
-                        Learn more <span aria-hidden="true">→</span>
+                        <ButtonText id="sophia-team-learn-more" /> <span aria-hidden="true">→</span>
                       </Link>
                     ) : (
                       <button type="button" className="btn btn-primary team-card__cta">
-                        Learn more <span aria-hidden="true">→</span>
+                        <ButtonText id="sophia-team-learn-more" /> <span aria-hidden="true">→</span>
                       </button>
                     )}
                   </div>
@@ -98,7 +99,7 @@ export function SophiaTeamPage() {
 
       <CtaBand slug={SECTION.sophiaCtaStopWondering}>
         <Link className="btn btn-light" to="/sophia/new-patients">
-          Become a new patient <span aria-hidden="true">→</span>
+          <ButtonText id="sophia-become-a-new-patient" /> <span aria-hidden="true">→</span>
         </Link>
       </CtaBand>
     </>

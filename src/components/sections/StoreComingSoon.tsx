@@ -3,6 +3,7 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { useSection } from "@/lib/sections";
+import { ButtonText } from "@/components/ButtonText";
 
 /**
  * What /store (and /cart) show while the store is switched off in the CMS
@@ -21,7 +22,7 @@ export function StoreComingSoon() {
           {copy.lead ? <p className="lead">{copy.lead}</p> : null}
           <div className="store-coming-soon__actions">
             <Link className="btn btn-primary" to="/">
-              Back to home
+              <ButtonText id="store-back-home" />
             </Link>
           </div>
         </Reveal>
