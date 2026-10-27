@@ -1198,11 +1198,19 @@
   font-weight: 500;
   color: var(--muted);
 }
-.event-panel__price-value .price-approx {
-  /* A converted price (lib/currency.tsx) is a span too — keep it at the
-     price's own size, not the "per person" label's. */
+.event-panel__price-value .price-approx,
+.event-panel__price-value .price-range {
+  /* A converted price (lib/currency.tsx) is a span too, and so is a price
+     range (components/EventPrice.tsx) — keep both at the price's own size,
+     not the "per person" label's. */
   font: inherit;
   color: inherit;
+}
+/* An announced range is two prices wide. In this column it only fits on one
+   line in the event's own currency, so it is allowed to break at its dash
+   (client, 2026-10-27, looking at a converted range in EUR). */
+.event-panel__price-value {
+  flex-wrap: wrap;
 }
 /* Approximate-currency disclaimer under a price (lib/currency.tsx). */
 .currency-note {
@@ -1317,12 +1325,16 @@
   font-size: 28px;
   color: var(--brand);
 }
-.day-pass__price span:last-child {
+/* The "per person" label — a direct child. Without the `>` this also caught
+   the second amount of a price range, which is itself the last span inside
+   .price-range, and printed it small and grey. */
+.day-pass__price > span:last-child {
   font-family: var(--font-sans);
   font-size: var(--fs-xs);
   color: var(--muted);
 }
-.day-pass__price .price-approx {
+.day-pass__price .price-approx,
+.day-pass__price .price-range {
   font: inherit;
   color: inherit;
 }

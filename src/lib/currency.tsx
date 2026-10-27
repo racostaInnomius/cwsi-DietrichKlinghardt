@@ -150,7 +150,11 @@ export function useCurrency() {
 
 /** Converted amounts are estimates: whole units only, never false precision. */
 function approxMoney(cents: number, currency: Currency): string {
-  return `≈ ${money(Math.round(cents / 100) * 100, currency)}`;
+  // A non-breaking space: "≈ €227" is one word. In a narrow column — the
+  // event panel, where two of these sit side by side as a range — a normal
+  // space let the line break between the sign and the amount (client,
+  // 2026-10-27: "se descompone cuando lo muestra").
+  return `≈\u00A0${money(Math.round(cents / 100) * 100, currency)}`;
 }
 
 /**

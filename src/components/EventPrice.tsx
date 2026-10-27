@@ -55,11 +55,18 @@ export function EventPrice({ event }: { event: ContentDoc | undefined }): ReactN
   const info = eventPriceInfo(event);
   if (!info) return null;
   if (info.to == null) return <Price cents={info.from} currency={info.currency} />;
+  /*
+   * One element for the whole range, so a layout that lays its price out with
+   * flex (the event panel) treats "from – to" as a single item instead of
+   * three, and the range wraps as a unit when the column is narrow. Each
+   * amount is unbreakable on its own (see approxMoney), so a wrap can only
+   * happen at the dash.
+   */
   return (
-    <>
+    <span className="price-range">
       <Price cents={info.from} currency={info.currency} />
       {" – "}
       <Price cents={info.to} currency={info.currency} />
-    </>
+    </span>
   );
 }
