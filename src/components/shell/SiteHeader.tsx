@@ -17,11 +17,20 @@ function isChildCurrent(pathname: string, href: string): boolean {
 }
 
 /** Trademark marks render small and raised everywhere in the brand. */
+/**
+ * A menu option's first line. Its trademark mark belongs at the end of the
+ * name, so an option whose name runs over two lines ("Sophia Health
+ * Institute" / "by Dr. Klinghardt") carries the mark on the second one only —
+ * it used to print on both, which read as two marks for one name (client,
+ * 2026-10-27: "hay que quitar el tm que está después del Sophia Health
+ * Institute"). The rest of the site writes that name the same way: "Sophia
+ * Health Institute by Dr. Klinghardt™".
+ */
 function Label({ item }: { item: NavItem }) {
   return (
     <>
       {item.label}
-      {item.mark ? <sup className="tm">{item.mark}</sup> : null}
+      {item.mark && !item.sublabel ? <sup className="tm">{item.mark}</sup> : null}
     </>
   );
 }

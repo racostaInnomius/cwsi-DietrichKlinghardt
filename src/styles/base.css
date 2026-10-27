@@ -132,13 +132,41 @@ h3,
   font-size: var(--fs-display-xl);
 }
 
-/* Trademark marks ride high and small — the brand always renders ™/® this way. */
+/*
+ * Trademark marks ride high and small — the brand always renders ™/® this way.
+ *
+ * ONE rule for the whole site (client, 2026-10-27: "que en todo el sitio los
+ * TM no sean ni muy grandes ni muy pequeños, que todos vayan acorde al tamaño
+ * del texto que acompañan y a una distancia adecuada"). It replaces four
+ * per-place overrides (nav, footer, the A.R.T. accent, the Sophia welcome
+ * title) that had each been nudged on its own over the months, until the same
+ * mark ranged from 4px next to body copy to larger than the text it followed.
+ *
+ * A single ratio cannot serve 12px labels and 105px display lines — that is
+ * what produced those overrides. So the size is a ratio with both ends
+ * clamped: proportional in between, never smaller than legible, never heavy
+ * next to a display line. Marks therefore take a smaller share of the text as
+ * the text grows, which is how they are set in print.
+ *
+ *   12px label  → 8px (the floor)      36px card title → 15px
+ *   16px nav    → 8px                  57px heading    → 22px (the ceiling)
+ *   18px lead   → 8px                  86px display    → 22px
+ *
+ * The rise is `super`, the font's own superscript offset, measured against
+ * the text the mark follows rather than against the mark itself. That is what
+ * keeps the distance right at every size: an em-length here would be relative
+ * to the mark's own (clamped) size, and it was exactly that indirection that
+ * made every size change drag a vertical-align fix along with it.
+ */
 .tm {
   font-family: var(--font-sans);
-  font-size: 0.32em;
+  font-size: clamp(8px, 0.42em, 22px);
   letter-spacing: 0;
-  vertical-align: 0.75em;
-  margin-left: 0.08em;
+  vertical-align: super;
+  margin-left: 0.1em;
+  /* The raised mark must not grow the line box, or it would push the lines of
+     a wrapped heading apart (the normalize.css treatment of sub/sup). */
+  line-height: 0;
 }
 
 .eyebrow {

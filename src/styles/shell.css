@@ -265,23 +265,6 @@
   opacity: 0.92;
   transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
 }
-/* The shared .tm (base.css) sizes off the 12px sublabel/eyebrow scale —
-   at the nav's own 16px it renders under 6px, unreadable next to
-   "AKADEMIE". Its own literal here instead of touching that shared rule.
-   Bumped +40% (client: "hacer el TM aun mas grande, por fa un 30%-50%")
-   after the first pass at 0.77em still wasn't visible enough. vertical-align
-   is also overridden: it's a length in the .tm element's own font-size, so
-   the base rule's 0.75em floats noticeably higher once font-size grows —
-   client: "baja de altura el TM, se ve muy alto". */
-.site-nav__link .tm {
-  font-size: 1.08em;
-  /* 0.05em still read as floating above the text's own top edge (client,
-     2026-09-18: "baja los TM al margen superior del texto para que
-     queden nivelados en la parte superior") — pulled down further so the
-     mark's top lines up with the cap-height of the label next to it
-     instead of sitting above it. */
-  vertical-align: -0.15em;
-}
 .site-nav__link:hover,
 .site-nav__link[aria-current="page"] {
   opacity: 1;
@@ -665,18 +648,6 @@
 }
 .site-footer nav a:hover {
   opacity: 1;
-}
-/* Client (2026-09-22): "los TMs en el footer hacerlos un 50% mas grandes",
-   then (same day, follow-up): "siguen siendo muy pequeños, hazlos mucho mas
-   notorios" (0.48em -> 0.85em), then (2026-09-23, another follow-up): "20%
-   mas grandes" on top of that (0.85 * 1.2 = 1.02em). Same fix as
-   .site-nav__link .tm above each time: the shared .tm's vertical-align is
-   a length in its own font-size, so it floats higher once font-size grows —
-   pulled back down to keep the mark sitting near the label's cap-height
-   rather than above it. */
-.site-footer .tm {
-  font-size: 1.02em;
-  vertical-align: 0.24em;
 }
 
 /* Oversized signature bleeding off the bottom edge, as in every frame. */

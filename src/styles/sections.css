@@ -1440,19 +1440,6 @@
   font-style: italic;
   text-transform: uppercase;
 }
-/* Same fix as .site-nav__link .tm (shell.css): the shared .tm sizes off the
-   12px sublabel/eyebrow scale, so at this line's own 16px the ® rendered
-   under 6px — effectively invisible (2026-09-05: "el signo de la R no se
-   ve"). Bumped four times since (client 2026-09-09, twice "mas grande",
-   then +20%, then +10%) — 0.55em → 0.77em → 1.1em → 1.32em → 1.45em — with
-   vertical-align brought down each time to compensate, since the base .tm
-   rule's vertical-align is itself in em units relative to the mark's own
-   (now bigger) size; last request was explicitly to bring it down level
-   with the text's own cap-height instead of floating above it. */
-.home-art__accent .tm {
-  font-size: 1.45em;
-  vertical-align: 0em;
-}
 
 .new-patients__photo {
   margin-bottom: clamp(24px, 3vw, 40px);
@@ -6605,15 +6592,6 @@ img.archive-viewer__media {
     height: auto;
     aspect-ratio: 558 / 457;
   }
-}
-/* Client (2026-09-18): "el '™' mas grande... proporcional al texto" — .tm
-   (base.css) is shared by every trademark mark site-wide at 0.32em, sized
-   for the much larger display headings it usually rides inside; this h2's
-   own font-size is smaller, so the mark read tiny in comparison. Scoped to
-   just this heading rather than the shared class. */
-.sophia-welcome-title .tm {
-  font-size: 0.5em;
-  vertical-align: 0.65em;
 }
 /* Client (2026-09-18): "disminuye la distancia un 50%" between "Six Pillars
    of A Different Approach." and its eyebrow. The space between them is
