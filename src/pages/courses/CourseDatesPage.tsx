@@ -36,11 +36,15 @@ export function CourseDatesPage() {
     return (
       <>
         <Seo
-        title={"Training path not found — Dr. Dietrich Klinghardt™"}
+        title={"Coming Soon — Dr. Dietrich Klinghardt™"}
         noindex
       />
         <section className="section wrap">
-          <h1>This training path is no longer listed.</h1>
+          {/* A training path the CMS has not published yet, or has hidden
+              again, lands here — "/courses/art" while A.R.T. is hidden is
+              the case the client was looking at (2026-10-27). It reads as
+              something on its way rather than something withdrawn. */}
+          <h1>Coming Soon</h1>
           <Link className="btn btn-primary" to="/courses">
             <ButtonText id="courses-all-courses" />
           </Link>
