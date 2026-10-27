@@ -400,11 +400,16 @@
   padding-top: calc(clamp(48px, 7vw, 88px) * 0.35);
 }
 .home-academy__copy {
-  font-family: var(--font-serif);
-  /* 400 → 300 (client, 2026-09-18: "utiliza el texto mas delgado" against a
-     reference of thin-weight Fraunces body copy) — the lightest weight the
-     site already loads, so no new Google Fonts weight needed. */
-  font-weight: 300;
+  /* Kalice, the face every heading uses, not the secondary serif (client,
+     2026-10-27: "la tipografía ... se ve muy distinta al del resto del
+     sitio", comparing this paragraph with the Events heading below it).
+     Fraunces reads as a different voice beside Kalice at this size — it was
+     drawn for the small italic accents, not for a 35px block of copy. */
+  font-family: var(--font-display);
+  /* Kalice's lightest face is Regular, so the "texto mas delgado" of
+     2026-09-18 (a 300 against Fraunces) now means 400; asking for 300 here
+     would resolve to the same face and only misdescribe it. */
+  font-weight: 400;
   font-size: var(--fs-display-sm);
   line-height: 1.4;
   color: var(--ink);
