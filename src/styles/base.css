@@ -160,7 +160,7 @@ h3,
  */
 .tm {
   font-family: var(--font-sans);
-  font-size: clamp(8px, 0.42em, 22px);
+  font-size: clamp(11px, calc(0.42em + 3px), 25px);
   letter-spacing: 0;
   vertical-align: super;
   margin-left: 0.1em;

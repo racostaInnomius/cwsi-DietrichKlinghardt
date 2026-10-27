@@ -42,6 +42,15 @@
      and animate oddly on its own). */
   margin-right: 0.26em;
 }
+/* A ™ or ® that the copy's emphasis runs left standing as a word of its own
+   (the CMS marks it bold separately from the name) must still hug the name:
+   the word before it has already paid for a space, so this takes it back —
+   client, 2026-10-27: "este espacio entre la palabra y el TM está muy
+   extraño". It cancels that space across two adjacent SplitReveal spans too,
+   which is where the gap actually showed. */
+.split-reveal__word--mark {
+  margin-left: -0.26em;
+}
 .split-reveal__char {
   display: inline-block;
   opacity: 0;

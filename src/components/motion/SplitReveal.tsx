@@ -89,8 +89,16 @@ export function SplitReveal({
     return () => observer.disconnect();
   }, [triggerOn]);
 
-  const words = text.split(" ");
+  /**
+   * Words, with the empty ones dropped: a run that ends in a space (the CMS
+   * writes its bold runs that way) would otherwise leave an empty word whose
+   * own word-space still took up room.
+   */
+  const words = text.split(" ").filter((word) => word.length > 0);
   let charIndex = charOffset;
+
+  /** A word that is only a trademark mark belongs against the word before it. */
+  const isMarkOnly = (word: string) => /^[™®]+$/.test(word);
 
   return (
     <Tag
@@ -100,7 +108,11 @@ export function SplitReveal({
       {...rest}
     >
       {words.map((word, wi) => (
-        <span className="split-reveal__word" key={wi} aria-hidden="true">
+        <span
+          className={`split-reveal__word${isMarkOnly(word) ? " split-reveal__word--mark" : ""}`}
+          key={wi}
+          aria-hidden="true"
+        >
           {word.split("").map((char, ci) => {
             const i = charIndex;
             charIndex += 1;
