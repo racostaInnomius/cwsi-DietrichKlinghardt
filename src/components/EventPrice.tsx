@@ -15,6 +15,7 @@ import type { ContentDoc } from "@/data/demo";
  */
 
 export interface EventPriceInfo {
+  /** Always in cents, whichever field it came from. */
   from: number;
   /** Present only for an announced range. */
   to?: number;
@@ -35,13 +36,16 @@ export function eventPriceInfo(event: ContentDoc | undefined): EventPriceInfo | 
     return { from: paid, currency: text(event, "currency", "usd"), announced: false };
   }
 
+  // An announced price is written the way it is advertised ("250"), not in
+  // cents like the Stripe one — the editor types what the other site shows
+  // (client, 2026-10-27). Converted here so both paths render identically.
   const from = positive(event, "announcedPriceFrom");
   if (from == null) return null;
   const to = positive(event, "announcedPriceTo");
   return {
-    from,
+    from: from * 100,
     // A "to" at or below "from" is not a range, it is a typo: show one price.
-    to: to != null && to > from ? to : undefined,
+    to: to != null && to > from ? to * 100 : undefined,
     currency: text(event, "announcedPriceCurrency", "eur"),
     announced: true,
   };

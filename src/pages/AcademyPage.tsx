@@ -68,9 +68,11 @@ const BRANCHES: Branch[] = [
     // son 2 botones y asi deben de quedar" — reversed from the first pass:
     // "About the course" is the outline one, "Course dates" is filled with
     // an arrow.
+    // Client (2026-10-27): "About the course" → "More information",
+    // "Course dates" → "Seminar dates".
     actions: [
-      { label: "About the course", to: "/academy/art", ghost: true },
-      { label: "Course dates", to: "/courses", arrow: true },
+      { label: "More information", to: "/academy/art", ghost: true },
+      { label: "Seminar dates", to: "/courses", arrow: true },
     ],
     media: {
       src: "/images/art-klinghardt.webp",
@@ -271,6 +273,14 @@ export function AcademyPage() {
   );
 }
 
+/**
+ * One branch row. Its words come from the branch's Page Contents block, and
+ * so does its picture: "Imagen principal" in that same block replaces the
+ * bundled file, which stays as the fallback (client, 2026-10-27: "revisar que
+ * ... la imagen esté relacionada al contenido y pueda ser cambiada
+ * fácilmente"). The CSS gives the slot its own ratio and crops to it, so an
+ * upload of any size lands in the layout the design draws.
+ */
 function BranchRow({ branch }: { branch: Branch }) {
   const copy = useSection(branch.slug);
   return (
@@ -281,8 +291,12 @@ function BranchRow({ branch }: { branch: Branch }) {
         <Reveal className="feature-row__media">
           <img
             className={branch.media.square ? "feature-row__media-img--square" : undefined}
-            src={branch.media.src}
-            alt={branch.media.alt}
+            src={copy.image ?? branch.media.src}
+            /* A picture the editor uploaded no longer matches the bundled
+               description, so it is named by the branch it illustrates
+               instead (client, 2026-10-27: the image must belong to the
+               content and be easy to change). */
+            alt={copy.image ? copy.title || branch.media.alt : branch.media.alt}
             width={branch.media.width}
             height={branch.media.height}
             loading="lazy"
