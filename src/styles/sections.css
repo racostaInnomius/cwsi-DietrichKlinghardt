@@ -6494,12 +6494,16 @@ img.archive-viewer__media {
    AcademyPage.tsx comment above), rendered where it normally lives:
    .home-academy__copy. Matched verbatim rather than eyeballing a size off
    the screenshot — same font-family, font-size, weight, line-height,
-   justification and colour. */
+   justification and colour.
+   Its twin moved to the heading face on 2026-10-27 and this one stayed
+   behind, so the same paragraph read in two different serifs depending on
+   the page; the client asked for this one to follow (same day). The two
+   rules are meant to stay identical: change one, change the other. */
 .academy-hero .lead {
   max-width: 56ch;
   margin-top: clamp(20px, 2.6vw, 32px);
   margin-inline: auto;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: var(--fs-display-sm);
   line-height: 1.4;
