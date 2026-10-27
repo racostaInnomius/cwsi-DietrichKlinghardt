@@ -1244,13 +1244,19 @@
   padding-top: 32px;
   border-top: 1px solid var(--line);
 }
+/* Client (2026-10-27, on an event's "About the Programme" block): "los
+   espacios entre líneas ... son muy grandes esos espacios redúcelos en un
+   40%". Both gaps inside the block come down by that much — the heading to
+   its first line (14px → 8px) and one paragraph to the next (1.1em →
+   0.66em). The block's own 32px separation from the section above it is what
+   keeps the sections apart, so it stays. */
 .event-copy__section h2 {
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   font-size: var(--fs-display-sm);
 }
 .event-copy__section p {
   max-width: var(--maxw-prose);
-  margin-bottom: 1.1em;
+  margin-bottom: 0.66em;
   color: var(--muted);
 }
 .event-copy__section p:last-child {
