@@ -78,13 +78,13 @@ export const BUTTONS: Record<string, ButtonDefault> = {
   },
 
   "art-training-paths": {
-    page: "Akademie · A.R.T.",
-    where: "Portada, primer botón",
+    page: "Akademie",
+    where: "A.R.T.: portada, primer botón",
     label: "Training paths",
   },
   "art-find-practitioner": {
-    page: "Akademie · A.R.T.",
-    where: "Portada, segundo botón",
+    page: "Akademie",
+    where: "A.R.T.: portada, segundo botón",
     label: "Find a practitioner",
   },
 
@@ -104,28 +104,28 @@ export const BUTTONS: Record<string, ButtonDefault> = {
     label: "New patients",
   },
   "sophia-become-a-new-patient": {
-    page: "Sophia, Sophia · Equipo, ficha de cada integrante",
-    where: "Llamado final “Become a new patient”",
+    page: "Sophia",
+    where: "Llamado final de Sophia, Equipo y fichas de integrante",
     label: "Become a new patient",
   },
   "sophia-team-learn-more": {
-    page: "Sophia · Equipo",
-    where: "Botón de cada tarjeta del equipo",
+    page: "Sophia",
+    where: "Equipo: botón de cada tarjeta",
     label: "Learn more",
   },
   "sophia-member-meet-team": {
-    page: "Ficha de cada integrante",
-    where: "Botón de regreso, arriba",
+    page: "Sophia",
+    where: "Ficha de integrante: botón de regreso, arriba",
     label: "Meet our team",
   },
   "sophia-member-contact": {
-    page: "Ficha de cada integrante",
-    where: "Botón junto al nombre",
+    page: "Sophia",
+    where: "Ficha de integrante: botón junto al nombre",
     label: "Contact us",
   },
   "new-patients-become": {
-    page: "Sophia · Pacientes nuevos",
-    where: "Botón “Become a Patient” (portada y cierre)",
+    page: "Sophia",
+    where: "Pacientes nuevos: botón “Become a Patient” (portada y cierre)",
     label: "Become a Patient",
   },
   "contact-health-institute": {
@@ -134,8 +134,8 @@ export const BUTTONS: Record<string, ButtonDefault> = {
     label: "Contact for Dietrich Klinghardt Health Institute™",
   },
   "contact-send": {
-    page: "Contacto y formularios de contacto",
-    where: "Botón de enviar el formulario",
+    page: "Contacto",
+    where: "Botón de enviar, en todos los formularios del sitio",
     label: "Send message",
   },
 
@@ -145,8 +145,8 @@ export const BUTTONS: Record<string, ButtonDefault> = {
     label: "Support the Foundation",
   },
   "donate-get-in-touch": {
-    page: "Fundación · Donar",
-    where: "Panel de donación",
+    page: "Fundación",
+    where: "Donar: panel de donación",
     label: "Get in touch",
   },
 
@@ -156,29 +156,29 @@ export const BUTTONS: Record<string, ButtonDefault> = {
     label: "Join now",
   },
   "newsletter-join": {
-    page: "Todo el sitio (boletín)",
-    where: "Botón de suscribirse",
+    page: "Todo el sitio",
+    where: "Boletín: botón de suscribirse",
     label: "Join now",
   },
 
   "courses-all-courses": {
-    page: "Cursos · ruta y fechas",
-    where: "Botón de regreso “All courses”",
+    page: "Cursos",
+    where: "Botón de regreso “All courses” (ruta y fechas)",
     label: "All courses",
   },
   "path-course-dates": {
-    page: "Cursos · ruta de formación",
-    where: "Panel lateral",
+    page: "Cursos",
+    where: "Ruta de formación: panel lateral",
     label: "Course dates",
   },
   "path-about-course": {
-    page: "Cursos · ruta de formación",
-    where: "Botón principal del cuerpo",
+    page: "Cursos",
+    where: "Ruta de formación: botón principal del cuerpo",
     label: "About the course",
   },
   "path-online-dates": {
-    page: "Cursos · ruta de formación",
-    where: "Botón “To the online course dates”",
+    page: "Cursos",
+    where: "Ruta de formación: botón “To the online course dates”",
     label: "To the online course dates",
   },
 
@@ -204,19 +204,19 @@ export const BUTTONS: Record<string, ButtonDefault> = {
   },
 
   "directory-search": {
-    page: "Akademie · Practitioners",
-    where: "Botón del buscador",
+    page: "Akademie",
+    where: "Practitioners: botón del buscador",
     label: "Search",
   },
   "load-more": {
-    page: "Listados (practitioners, fechas de curso)",
-    where: "Botón de cargar más resultados",
+    page: "Listados",
+    where: "Botón de cargar más (practitioners, fechas de curso)",
     label: "Load more",
   },
 
   "store-back-home": {
-    page: "Tienda (cuando está apagada)",
-    where: "Botón de regreso al inicio",
+    page: "Tienda",
+    where: "Cuando está apagada: botón de regreso al inicio",
     label: "Back to home",
   },
 };
