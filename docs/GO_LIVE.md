@@ -103,6 +103,13 @@ contenido ya esté cargado en la base. *(Pendiente B1.)*
 
 ## 2. Público en `dietrich-klinghardt.com`
 
+> ⚠️ **Esta sección quedó desactualizada.** El runbook vigente, verificado
+> contra producción el 2026-10-27, es `MIGRACION_PRODUCCION.md`. Lo que ya no
+> se sostiene aquí: la fila `sites` apunta al subdominio (no al dominio real),
+> el CORS de los dos servicios ya está hecho, los tiles ya son MapTiler y las
+> fuentes KALICE ya están licenciadas. El resumen de abajo se conserva solo
+> como contexto histórico.
+
 **No hacer hasta que el cliente decida retirar la landing.**
 
 1. Apuntar el Document Root del dominio a esta repo (la landing sale de escena).
