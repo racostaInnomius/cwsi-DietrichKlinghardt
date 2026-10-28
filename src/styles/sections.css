@@ -1380,6 +1380,15 @@
 .event-disclosure__body {
   margin-top: 18px;
 }
+/* Client (2026-10-28, on an event's "#purchase-policy"): "los espacios entre
+   lineas estan muy grandes, dejalos igual que en .event-copy__lead". Each
+   paragraph the editor wrote becomes its own <p>, so line to line was paying
+   the 0.66em of `.event-copy__section p` on top of the line-height, while the
+   lead is one <p> with `white-space: pre-line` and only the line-height. Drop
+   the margin here to match it; the h3 rule below still separates subsections. */
+.event-disclosure__body p {
+  margin-bottom: 0;
+}
 .event-disclosure__body h3 {
   margin: 1.4em 0 0.5em;
   font-size: var(--fs-lead);
