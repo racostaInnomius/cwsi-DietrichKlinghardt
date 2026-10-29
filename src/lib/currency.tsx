@@ -43,24 +43,50 @@ function isCurrency(value: unknown): value is Currency {
 }
 
 /**
- * First-visit guess: browser locale region (de-DE → EUR, en-US → USD), then
- * the timezone (Europe/* → EUR). Anything else keeps the price's own
- * currency (null).
+ * Timezones that mean Europe without carrying the `Europe/` prefix: the
+ * euro-zone's Atlantic and African territories, plus Cyprus and Iceland.
+ */
+const EURO_ZONES = new Set([
+  "Atlantic/Canary",    // Spain
+  "Atlantic/Madeira",   // Portugal
+  "Atlantic/Azores",    // Portugal
+  "Africa/Ceuta",       // Spain
+  "Asia/Nicosia",       // Cyprus
+  "Asia/Famagusta",     // Cyprus
+  "Atlantic/Faroe",
+  "Atlantic/Reykjavik",
+  "Arctic/Longyearbyen",
+]);
+
+/**
+ * First-visit guess: the timezone (Europe/* → EUR), then the browser locale
+ * region (de-DE → EUR, en-US → USD). Anything else keeps the price's own
+ * currency (null), which reads as USD — every price is set in USD today.
+ *
+ * Client (2026-10-29): "si el visitante está en Europa los precios deben
+ * mostrarse en EUR". The timezone arm used to exempt a long list of European
+ * cities, so a visitor in London, Zurich, Warsaw — and, wrongly, in Dublin or
+ * Lisbon, both euro-zone — fell through to USD. Now the whole `Europe/` tree
+ * means EUR: of the three currencies the site ever offered, it is the one
+ * closest to home even where the country keeps its own (UK, Switzerland,
+ * Norway, Sweden, Poland).
  */
 export function guessCurrency(
   languages: readonly string[],
   timeZone: string | undefined,
 ): Currency | null {
+  // The timezone comes first because it answers the question the client asked
+  // — where the visitor IS. The locale only says which language they prefer,
+  // and `en-US` is a very common browser default well outside the US, so
+  // reading it first showed USD to a visitor sitting in Berlin.
+  if (timeZone && (timeZone.startsWith("Europe/") || EURO_ZONES.has(timeZone))) {
+    return "eur";
+  }
   for (const tag of languages) {
     const region = tag.split(/[-_]/)[1]?.toUpperCase();
     if (!region) continue;
     if (EURO_REGIONS.has(region)) return "eur";
     if (region === "US") return "usd";
-  }
-  if (timeZone) {
-    if (timeZone.startsWith("Europe/") && !/^Europe\/(London|Dublin|Lisbon|Zurich|Oslo|Stockholm|Copenhagen|Warsaw|Prague|Budapest|Bucharest|Sofia|Istanbul|Moscow|Kiev|Kyiv|Minsk)$/.test(timeZone)) {
-      return "eur";
-    }
   }
   return null;
 }
