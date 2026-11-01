@@ -50,14 +50,14 @@ const CARD_ICONS: Record<string, typeof DropletIcon> = {
 };
 
 /**
- * The Dr. Klinghardt mark, the same drawing the browser tab carries. It is
- * the one card icon that is not a line drawing: it keeps its own colours and
- * fills the whole box, so the box drops its tinted background for it
- * (sections.css). Client (Ana, 2026-11-01): the generic line icons "se ven
- * de AI" and the mark is offered as an option in the CMS instead.
+ * The Dr. Klinghardt mark. It is the one card icon that is not a line
+ * drawing: it keeps its own colours, so it sits on the tinted square the
+ * other icons use rather than replacing it (client, 2026-11-01). The file is
+ * the client's own cut-out at 96px, three times the size it draws at, for
+ * dense screens.
  */
 function DkMarkIcon() {
-  return <img className="icon-mark" src="/images/dk-mark.svg" alt="" width={40} height={40} loading="lazy" />;
+  return <img className="icon-mark" src="/images/dk-mark.png" alt="" width={96} height={96} loading="lazy" />;
 }
 
 /** A card's icon by its CMS key; an unknown or empty key draws `fallback`. */
