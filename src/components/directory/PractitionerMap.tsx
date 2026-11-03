@@ -47,6 +47,7 @@ export function PractitionerMap({ people }: { people: Practitioner[] }) {
   // Create the map once.
   useEffect(() => {
     let cancelled = false;
+    let observer: ResizeObserver | undefined;
     void (async () => {
       const maplibregl = await import("maplibre-gl");
       if (cancelled || !container.current || map.current) return;
@@ -81,10 +82,20 @@ export function PractitionerMap({ people }: { people: Practitioner[] }) {
       });
 
       map.current = instance;
+
+      // MapLibre measures its container once, when it is created. Here that
+      // happens while the lazy chunk mounts, before the stylesheet has given
+      // the box its height, so the map concludes it is zero pixels tall and
+      // never requests a single tile: the pins land correctly and the ground
+      // stays the style's flat background colour. Watching the box and telling
+      // the map when it changes is what makes it draw a map.
+      observer = new ResizeObserver(() => instance.resize());
+      if (container.current) observer.observe(container.current);
     })();
 
     return () => {
       cancelled = true;
+      observer?.disconnect();
       map.current?.remove();
       map.current = null;
     };
