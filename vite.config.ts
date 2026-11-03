@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
-import { copyFileSync, existsSync } from "node:fs";
+import { copyFileSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
@@ -23,10 +23,18 @@ function copyMaplibreWorker(): Plugin {
   return {
     name: "copy-maplibre-worker",
     closeBundle() {
-      const source = join(root, "node_modules", "maplibre-gl", "dist", "maplibre-gl-worker.mjs");
-      const destination = join(root, "dist", "assets");
-      if (existsSync(source) && existsSync(destination)) {
-        copyFileSync(source, join(destination, "maplibre-gl-worker.mjs"));
+      const from = join(root, "node_modules", "maplibre-gl", "dist");
+      const to = join(root, "dist", "assets");
+      if (!existsSync(from) || !existsSync(to)) return;
+      // The worker and whatever it imports: in some releases it is one
+      // self-contained file, in others it pulls a shared chunk beside it, and
+      // a missing import fails exactly like a missing worker. Copying every
+      // production .mjs keeps this working across upgrades; the -dev builds
+      // are never requested.
+      for (const file of readdirSync(from)) {
+        if (file.endsWith(".mjs") && !file.includes("-dev") && file !== "maplibre-gl.mjs") {
+          copyFileSync(join(from, file), join(to, file));
+        }
       }
     },
   };
