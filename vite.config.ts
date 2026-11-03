@@ -6,6 +6,32 @@ import { join } from "node:path";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 
+/**
+ * maplibre-gl decodes vector tiles inside a Web Worker, which it loads as
+ * `new URL("maplibre-gl-worker.mjs", import.meta.url)` — a sibling of its own
+ * chunk. Rollup does not follow that reference, so the file never reaches
+ * `dist/assets/` and the request falls through to index.html; the worker
+ * refuses to start on a text/html response and the map paints its background
+ * and nothing else, with no error at build time.
+ *
+ * That is what the directory map had been doing in production: 136 pins over a
+ * flat blue rectangle, no coastlines, no country names (found 2026-11-02 while
+ * building the same map for another site). `optimizeDeps.exclude` below fixes
+ * the same breakage in dev; this fixes it in a build.
+ */
+function copyMaplibreWorker(): Plugin {
+  return {
+    name: "copy-maplibre-worker",
+    closeBundle() {
+      const source = join(root, "node_modules", "maplibre-gl", "dist", "maplibre-gl-worker.mjs");
+      const destination = join(root, "dist", "assets");
+      if (existsSync(source) && existsSync(destination)) {
+        copyFileSync(source, join(destination, "maplibre-gl-worker.mjs"));
+      }
+    },
+  };
+}
+
 function copyHtaccess(): Plugin {
   return {
     name: "copy-htaccess",
@@ -25,7 +51,7 @@ export default defineConfig(({ mode }) => {
   const apiTarget = buildEnv.VITE_DEV_API_PROXY_TARGET || "https://api.beytrax.com";
 
   return {
-    plugins: [react(), copyHtaccess()],
+    plugins: [react(), copyHtaccess(), copyMaplibreWorker()],
     resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
     // maplibre-gl bundles its vector-tile decoder as a Web Worker; Vite's
     // dev-time dependency pre-bundling rewrites that worker's internal
