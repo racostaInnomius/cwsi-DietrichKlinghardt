@@ -437,6 +437,36 @@
   border-width: 2px;
   font-size: 16px;
 }
+/* Client (2026-11-04): "esto no se ve bien en el cel". On a phone this
+   paragraph kept the desktop treatment — 26px justified — which there means
+   five words a line, so the justification opened rivers of white space,
+   "Klinghardt Akademie™" broke across the line, and the block filled the
+   whole screen. Desktop is untouched: at 1440px the same copy sets in three
+   long lines where justifying reads well. */
+@media (max-width: 640px) {
+  .home-academy__copy {
+    font-size: clamp(19px, 5.2vw, 23px);
+    line-height: 1.45;
+    /* Ragged right: justified text needs a line long enough to absorb the
+       extra space, and a phone column never is. */
+    text-align: left;
+    /* Keeps "Akademie™" and "Dr." from being left stranded alone on a line. */
+    text-wrap: pretty;
+    margin-bottom: 22px;
+  }
+  /* The block used to start right against the portrait above it. */
+  .home-academy__inner {
+    padding-top: calc(clamp(48px, 7vw, 88px) * 0.6);
+  }
+  /* A centred pill looks lost at this width; full width reads as the section's
+     own call to action, and is an easier tap target. */
+  .home-academy .btn {
+    width: 100%;
+    max-width: 320px;
+    padding-inline: 24px;
+  }
+}
+
 /* Academy sits directly above Events — bring the two closer than the page's
    normal section rhythm (2026-09-04: 30%, then "reduce un 15% mas" ->
    0.7 * 0.85 = 0.595 of the original gap). Scaling both sides of the gap by
