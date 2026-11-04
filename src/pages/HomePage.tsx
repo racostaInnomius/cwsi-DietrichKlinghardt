@@ -75,7 +75,27 @@ export function HomePage() {
         const charOffset = offset;
         offset += text.split(" ").join("").length;
         return { text, bold, italic, charOffset };
-      });
+      })
+      // A ™/® that opens the next run belongs to the name that closed the
+      // previous one: the CMS bolds "Dr. Klinghardt Akademie" and leaves the
+      // mark in the plain run after it, which put a space between the two.
+      // Harmless while the line was ragged; once justified, that space
+      // stretches with every other one and the mark drifts off its name.
+      .reduce<Array<{ text: string; bold: boolean; italic: boolean; charOffset: number }>>(
+        (parts, segment) => {
+          const previous = parts.at(-1);
+          const mark = /^([™®]+)(\s|$)/.exec(segment.text);
+          if (previous && mark) {
+            previous.text += mark[1];
+            const rest = segment.text.slice(mark[1].length).replace(/^\s+/, "");
+            if (rest) parts.push({ ...segment, text: rest });
+            return parts;
+          }
+          parts.push(segment);
+          return parts;
+        },
+        [],
+      );
   })();
 
   const { upcoming, past } = splitByTime(withoutIncludedDays(useCollection("events")));

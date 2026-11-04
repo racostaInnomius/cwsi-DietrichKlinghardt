@@ -35,20 +35,20 @@
   perspective: 400px;
 }
 .split-reveal__word {
+  /* Each word is its own inline-block so a line never breaks mid-word. The
+     space between words is a real space node now (SplitReveal.tsx), not the
+     0.26em margin this used to carry — a margin is not stretchable, so
+     justified text had nothing to distribute. */
   display: inline-block;
-  /* Stands in for the literal space characters SplitReveal.tsx doesn't
-     render between words (every word is its own inline-block so a line
-     never breaks mid-word; a real space node would sit outside that box
-     and animate oddly on its own). */
-  margin-right: 0.26em;
 }
 /* A ™ or ® that the copy's emphasis runs left standing as a word of its own
-   (the CMS marks it bold separately from the name) must still hug the name:
-   the word before it has already paid for a space, so this takes it back —
+   (the CMS marks it bold separately from the name) must still hug the name —
    client, 2026-10-27: "este espacio entre la palabra y el TM está muy
-   extraño". It cancels that space across two adjacent SplitReveal spans too,
-   which is where the gap actually showed. */
-.split-reveal__word--mark {
+   extraño". It used to take back a margin; now SplitReveal.tsx simply emits
+   no space before it, so there is nothing left to cancel. The rule stays for
+   the one case a space still precedes it: a mark opening a second, adjacent
+   SplitReveal, where the first span's trailing space is a real one. */
+.split-reveal__word--mark:first-child {
   margin-left: -0.26em;
 }
 .split-reveal__char {

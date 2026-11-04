@@ -447,11 +447,11 @@
   .home-academy__copy {
     font-size: clamp(19px, 5.2vw, 23px);
     line-height: 1.45;
-    /* Ragged right: justified text needs a line long enough to absorb the
-       extra space, and a phone column never is. */
-    text-align: left;
-    /* Keeps "Akademie™" and "Dr." from being left stranded alone on a line. */
-    text-wrap: pretty;
+    /* Client (2026-11-04, after seeing it ragged): justified, like the rest
+       of the phone's prose. Hyphenation is what makes that work in a narrow
+       column — without it the browser can only stretch the spaces. */
+    text-align: justify;
+    hyphens: auto;
     margin-bottom: 22px;
   }
   /* The block used to start right against the portrait above it. */
@@ -8587,5 +8587,54 @@ ul.sophia-therapies-grid h3 {
   }
   .academy-pyramid__link:hover {
     transform: none;
+  }
+}
+
+/* ── Teléfono: ajustes pedidos por el cliente (2026-11-04) ────────
+   Todo lo de aquí abajo vive bajo 640px y no toca el escritorio. */
+@media (max-width: 640px) {
+  /* "pon los iconos y titulos al mismo nivel solo mobile" — la tarjeta
+     apilaba icono, título y cuerpo en tres filas, y en una columna estrecha
+     eso deja al icono solo en su renglón. Ahora icono y título comparten
+     fila y el cuerpo pasa por debajo a todo el ancho. */
+  .card:has(> .card__icon) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 12px;
+  }
+  .card:has(> .card__icon) > .card__icon {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: 0;
+  }
+  .card:has(> .card__icon) > :not(.card__icon):not(h3) {
+    grid-column: 1 / -1;
+  }
+  .card:has(> .card__icon) > h3 {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  /* "En [Imagen 3] centra el botón" — Join my talks quedaba alineado a la
+     izquierda bajo un texto que ocupa todo el ancho. */
+  .talks-band__body .btn {
+    display: flex;
+    width: fit-content;
+    margin-inline: auto;
+  }
+}
+
+/* "revisa todos los textos solo en mobile que se vean justificados"
+   (cliente, 2026-11-04). Prosa de verdad únicamente: los párrafos cortos que
+   son etiquetas, precios o metadatos no entran, y los que el diseño centra
+   siguen centrados. `hyphens: auto` no es decorativo aquí — en una columna de
+   teléfono el justificado sin guiones sólo puede estirar los espacios, que es
+   exactamente lo que se veía mal. */
+@media (max-width: 640px) {
+  main :is(p, .lead):not(.eyebrow):not(.newsletter__lead):not(.cta-band__body):not(.about__lead):not([class*="center"]) {
+    text-align: justify;
+    hyphens: auto;
   }
 }

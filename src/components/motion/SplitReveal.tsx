@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ElementType } from "react";
+import { Fragment, useEffect, useRef, useState, type ElementType } from "react";
 
 /**
  * Reveals text one letter at a time, each rising into place with a slight
@@ -108,9 +108,18 @@ export function SplitReveal({
       {...rest}
     >
       {words.map((word, wi) => (
+        <Fragment key={wi}>
+        {/* A real space between words, not the margin this used to fake.
+            Justified text can only stretch actual spaces, so with a margin
+            there was nothing for it to work with and `text-align: justify`
+            silently did nothing (client, 2026-11-04, Home's Academy line).
+            Never before a lone ™/®: justification stretches every space it
+            finds, so a fixed negative margin can no longer cancel one — the
+            mark would drift off its name as the line grew (2026-10-27's fix,
+            undone by justifying). No space, nothing to stretch. */}
+        {wi > 0 && !isMarkOnly(word) ? " " : null}
         <span
           className={`split-reveal__word${isMarkOnly(word) ? " split-reveal__word--mark" : ""}`}
-          key={wi}
           aria-hidden="true"
         >
           {word.split("").map((char, ci) => {
@@ -136,7 +145,11 @@ export function SplitReveal({
             );
           })}
         </span>
+        </Fragment>
       ))}
+      {/* Two adjacent SplitReveals read as one sentence (title + copy), so the
+          first has to end in a space the second can sit after. */}
+      {words.length > 0 ? " " : null}
     </Tag>
   );
 }
