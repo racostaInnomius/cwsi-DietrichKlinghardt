@@ -12,10 +12,28 @@
  *
  * Runs after `vite-react-ssg build`; see the `build` script.
  */
-import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 const DIST = "dist";
+
+/**
+ * Vite reads `.env.production` for `import.meta.env`; this script runs as plain
+ * Node and would otherwise only see the shell. That gap published a PREVIEW
+ * robots.txt from a build whose env file said the opposite — silently, since
+ * each half was doing what it was told. So read the same file Vite reads, and
+ * let a real environment variable win over it, which is Vite's own precedence.
+ */
+function envFromFile(file) {
+  if (!existsSync(file)) return;
+  for (const line of readFileSync(file, "utf8").split("\n")) {
+    const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
+    if (!match || match[1] in process.env) continue;
+    process.env[match[1]] = match[2].trim().replace(/^["']|["']$/g, "");
+  }
+}
+envFromFile(".env.production");
+
 const SITE_URL = (process.env.VITE_PUBLIC_SITE_URL || "https://dietrich-klinghardt.com")
   .replace(/\/$/, "");
 const INDEXABLE = process.env.VITE_PUBLIC_INDEXABLE === "true";

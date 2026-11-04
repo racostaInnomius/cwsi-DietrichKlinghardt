@@ -11,34 +11,12 @@
  * yet), and a Sandbox link is treated as missing outside development, where it
  * would be indistinguishable from a working one.
  *
- * TEMPORARY EXCEPTION (client, 2026-10-05): dkk.beytrax.com is the site's
- * staging domain while the owner reviews it — client-facing demos happen
- * here before the real cutover to dietrich-klinghardt.com, and need a working
- * "Book now"/"Buy" click-through without DKK's live Stripe key existing yet.
- * Sandbox links are allowed ONLY when built for this exact site URL — read
- * from VITE_PUBLIC_SITE_URL (baked in at build time, same value on the server
- * prerender and the client, so there's nothing for hydration to disagree on)
- * rather than `window.location`, which this page's component tree never
- * actually recomputes after hydration (a separate, pre-existing issue this
- * sidesteps rather than fixes). This exception must be removed — delete
- * STAGING_HOSTNAME_TEST_LINKS_ALLOWED and its one use below — once the site
- * moves to dietrich-klinghardt.com, or the same gap Iconic hit reopens on the
- * real domain.
+ * The staging exception that allowed Sandbox links on dkk.beytrax.com was
+ * removed at the cutover to dietrich-klinghardt.com (2026-11-04), as it was
+ * always meant to be. Nothing may reopen the gap Iconic hit.
  */
 
 const LIVE_HOSTS = new Set(["buy.stripe.com", "checkout.stripe.com"]);
-const STAGING_HOSTNAME_TEST_LINKS_ALLOWED = "dkk.beytrax.com";
-
-function builtForStagingDomain(): boolean {
-  try {
-    return (
-      new URL(import.meta.env.VITE_PUBLIC_SITE_URL ?? "").hostname ===
-      STAGING_HOSTNAME_TEST_LINKS_ALLOWED
-    );
-  } catch {
-    return false;
-  }
-}
 
 export function checkoutHref(value: unknown): string | undefined {
   if (typeof value !== "string" || !value.trim()) return undefined;
@@ -52,13 +30,11 @@ export function checkoutHref(value: unknown): string | undefined {
   if (url.protocol !== "https:") return undefined;
 
   // Stripe Sandbox links carry a `test_` path segment. Allowed while developing
-  // so the flow can be exercised, or on the temporary staging build above;
-  // never served on the real production domain.
+  // so the flow can be exercised; never served in a production build.
   if (
     LIVE_HOSTS.has(url.hostname) &&
     url.pathname.split("/").some((part) => part.startsWith("test_")) &&
-    import.meta.env.PROD &&
-    !builtForStagingDomain()
+    import.meta.env.PROD
   ) {
     return undefined;
   }
