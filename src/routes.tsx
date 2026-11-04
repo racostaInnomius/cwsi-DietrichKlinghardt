@@ -238,14 +238,15 @@ export const routes: RouteRecord[] = [
             path: "archives/five-levels-of-healing",
             element: <ArchivesFiveLevelsPage />,
           },
+
+          // Inside the shell, so the 404 keeps the site's own header and
+          // footer. Prerendered to 404.html for Apache's ErrorDocument, and
+          // the catch-all so an unknown address shows it rather than
+          // silently redirecting to the home page.
+          { path: "404", element: <NotFoundPage /> },
+          { path: "*", element: <NotFoundPage /> },
         ],
       },
-
-      // Prerendered to 404.html so Apache can answer a real 404 with it, and
-      // used as the catch-all so an unknown address shows it rather than
-      // silently redirecting to the home page.
-      { path: "404", element: <NotFoundPage /> },
-      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ];
