@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import type { RouteRecord } from "vite-react-ssg";
 import { ContentProvider, loadSiteContent } from "@/lib/content";
 import { CartProvider } from "@/lib/cart";
@@ -8,6 +8,7 @@ import { fetchCollection, fetchEvents } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { trainingPaths } from "@/data/trainingPaths";
 import { SiteShell } from "@/components/shell/SiteShell";
+import { NotFoundPage } from "@/pages/NotFoundPage";
 import { HomePage } from "@/pages/HomePage";
 import { EventsPage } from "@/pages/EventsPage";
 import { EventDetailPage } from "@/pages/EventDetailPage";
@@ -240,7 +241,11 @@ export const routes: RouteRecord[] = [
         ],
       },
 
-      { path: "*", element: <Navigate to="/" replace /> },
+      // Prerendered to 404.html so Apache can answer a real 404 with it, and
+      // used as the catch-all so an unknown address shows it rather than
+      // silently redirecting to the home page.
+      { path: "404", element: <NotFoundPage /> },
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ];
