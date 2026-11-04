@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { Seo } from "@/components/Seo";
 import type { ContentDoc } from "@/data/demo";
 import { Link, useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useSection, SECTION } from "@/lib/sections";
 import { externalUrl, richTextBlocks, richTextSections, richTextMarked } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { EventPrice, eventPriceInfo } from "@/components/EventPrice";
-import { eventDateBlock, eventDateRange, eventLocation, eventTimeLabel, splitByTime } from "@/lib/format";
+import { eventDayBlock, eventDateRange, eventLocation, eventTimeLabel, splitByTime } from "@/lib/format";
 import { dayPassLabel, dayPassesOf } from "@/lib/dayPasses";
 import { CheckoutLink, CurrencyNote, Price } from "@/lib/currency";
 import { Reveal } from "@/components/motion/Reveal";
@@ -74,7 +74,7 @@ export function EventDetailPage() {
   const location = eventLocation(event);
   const date = eventDateRange(event);
   const time = eventTimeLabel(event);
-  const { day, month, year } = eventDateBlock(event);
+  const when = eventDayBlock(event);
   const category = text(event, "category");
   const instructor = text(event, "instructor", "Dietrich Klinghardt MD PhD™");
   const language = text(event, "language", "English");
@@ -103,7 +103,7 @@ export function EventDetailPage() {
         : bookNowLabel;
   const noteText = text(event, "soldOutMessage", "This date is fully booked.");
 
-  const eyebrow = [category, month && year ? `${month} ${year}` : ""]
+  const eyebrow = [category, when.month && when.year ? `${when.month} ${when.year}` : ""]
     .filter(Boolean)
     .join(" · ");
 
@@ -126,11 +126,20 @@ export function EventDetailPage() {
               <div className="event-panel__date">
                 <p className="event-panel__date-label">Event details</p>
                 <div className="event-panel__date-row">
-                  <b>{day}</b>
+                  <b>
+                    {when.days.map((value, index) => (
+                      <Fragment key={`${index}-${value}`}>
+                        {index > 0 ? (
+                          <i className="event-date__sep">{when.range ? "–" : "/"}</i>
+                        ) : null}
+                        {value}
+                      </Fragment>
+                    ))}
+                  </b>
                   <span>
-                    {month}
+                    {when.month}
                     <br />
-                    {year}
+                    {when.year}
                   </span>
                 </div>
               </div>
