@@ -28,7 +28,7 @@ export function MusicPlayer({
       className={`music-player${standalone ? " music-player--standalone" : ""}`}
       aria-labelledby={`music-${standalone ? "standalone" : "inline"}-title`}
     >
-      <p className="eyebrow">Listen our music</p>
+      <p className="eyebrow">Listen to our music</p>
       <h2 id={`music-${standalone ? "standalone" : "inline"}-title`}>
         {music.title}
       </h2>

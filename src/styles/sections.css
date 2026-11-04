@@ -2359,8 +2359,11 @@
 .soundcloud-frame--track {
   height: 166px;
 }
+/* Tall enough for the track plus a few rows of the list, which scrolls
+   inside the widget once there are more. 450px (SoundCloud's own suggestion)
+   left a block of empty white under a short playlist. */
 .soundcloud-frame--playlist {
-  height: 450px;
+  height: 340px;
 }
 .soundcloud-frame iframe {
   width: 100%;
@@ -6480,8 +6483,8 @@ img.archive-viewer__media {
     padding: 42px 24px 32px;
   }
   .soundcloud-frame--playlist {
-    height: min(450px, 115vw);
-    min-height: 340px;
+    height: min(340px, 115vw);
+    min-height: 300px;
   }
 }
 
