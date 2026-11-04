@@ -6,8 +6,8 @@ import { useCollection } from "@/lib/content";
 import { useSection, SECTION } from "@/lib/sections";
 import { Marked } from "@/components/Marked";
 import { Emphasis } from "@/components/Emphasis";
+import { groupPackagesWithDays } from "@/lib/dayPasses";
 import { splitByTime } from "@/lib/format";
-import { withoutIncludedDays } from "@/lib/dayPasses";
 import { featuredProducts, usedCategories, useStoreProducts, useStoreVisible } from "@/lib/store";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -98,9 +98,11 @@ export function HomePage() {
       );
   })();
 
-  const { upcoming, past } = splitByTime(withoutIncludedDays(useCollection("events")));
+  const { upcoming, past } = splitByTime(useCollection("events"));
   const [eventsTab, setEventsTab] = useState<"upcoming" | "past">("upcoming");
-  const featured = (eventsTab === "upcoming" ? upcoming : past).slice(0, 3);
+  // Five, not three: a package and its day passes are one group, and three
+  // slots could cut a group in half.
+  const featured = groupPackagesWithDays(eventsTab === "upcoming" ? upcoming : past).slice(0, 5);
 
   // The shop strip shows the month's picks, the same ones the store leads with,
   // and falls back to the whole catalogue when nothing is ranked yet.

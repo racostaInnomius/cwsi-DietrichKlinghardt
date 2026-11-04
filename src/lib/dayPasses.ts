@@ -24,17 +24,37 @@ export function dayPassesOf(event: ContentDoc | undefined, events: ContentDoc[])
   return sortByStart(events.filter((row) => ids.has(String(row.id)) && row.id !== event?.id));
 }
 
-/** Ids of events a visible package already sells as one of its days. */
-export function includedDayPassIds(events: ContentDoc[]): Set<string> {
-  const ids = new Set<string>();
-  for (const event of events) for (const id of dayPassIds(event)) ids.add(id);
-  return ids;
-}
-
-/** Home's short "upcoming" list shows the package, not each of its days too. */
-export function withoutIncludedDays(events: ContentDoc[]): ContentDoc[] {
-  const included = includedDayPassIds(events);
-  return included.size ? events.filter((event) => !included.has(String(event.id))) : events;
+/**
+ * A package and the days it sells, side by side and in that order.
+ *
+ * Both the package and each of its days are listed (client's call, 2026-11-04:
+ * the home strip used to hide the days). They share a start date, so plain
+ * date order can split a group apart and leave the package out of a short
+ * list: each day is pulled up right behind its own package instead.
+ */
+export function groupPackagesWithDays(events: ContentDoc[]): ContentDoc[] {
+  const sold = new Set<string>();
+  for (const event of events) for (const id of dayPassIds(event)) sold.add(id);
+  const claimed = new Set<string>();
+  const grouped: ContentDoc[] = [];
+  for (const event of events) {
+    const id = String(event.id);
+    // A day waits for its own package to pull it in, even when its date
+    // would otherwise place it first.
+    if (claimed.has(id) || sold.has(id)) continue;
+    grouped.push(event);
+    claimed.add(id);
+    for (const day of dayPassesOf(event, events)) {
+      const dayId = String(day.id);
+      if (claimed.has(dayId)) continue;
+      grouped.push(day);
+      claimed.add(dayId);
+    }
+  }
+  // A day whose package is not on the list (a draft, a past package) still
+  // belongs on it, in its own date order.
+  for (const event of events) if (!claimed.has(String(event.id))) grouped.push(event);
+  return grouped;
 }
 
 /** The visible packages that include this event as one of their days. */
