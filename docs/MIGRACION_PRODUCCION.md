@@ -1,5 +1,37 @@
 # Migración a producción — `dkk.beytrax.com` → `dietrich-klinghardt.com`
 
+> ## ✅ CORTE HECHO — 2026-11-04
+>
+> `dietrich-klinghardt.com` sirve el sitio definitivo desde
+> `/dkk/dist` (commit `bfdba6c`): 54 páginas, `robots.txt` en `Allow`,
+> sitemap con 28 URLs y las 28 responden 200, canónicas en el dominio real,
+> 404 reales. `dkk.beytrax.com` responde **301 permanente** conservando la
+> ruta.
+>
+> Tres cosas no salieron como decía este documento:
+>
+> 1. **`scripts/sitemap.mjs` no leía `.env.production`.** Vite sí lo lee para
+>    `import.meta.env`, pero el script corre como Node pelón y solo veía el
+>    shell, así que escribía un `robots.txt` de PREVIEW desde un build cuyo
+>    env decía lo contrario. El ensayo de octubre salió PREVIEW por esto, no
+>    porque el env estuviera en modo preview. Corregido en el mismo commit.
+> 2. **`plesk bin subdomain` no sabe convertir un subdominio a *forwarding*.**
+>    El 301 se hizo apuntando el www-root de `dkk.beytrax.com` a
+>    `/var/www/vhosts/beytrax.com/dkk-redirect`, una carpeta con un solo
+>    `.htaccess`. Se eligió así, y no un `.htaccess` dentro de `dist/`, porque
+>    ese repo sigue en modo auto: un push lo regenera y se llevaría la
+>    redirección por delante.
+> 3. **`plesk bin site --update -www-root` exige ruta relativa** a la
+>    suscripción (`dkk/dist`). Con ruta absoluta falla con
+>    *System error 13: Permission denied*, que no dice nada del problema real.
+>
+> Rollback, si hiciera falta: `plesk bin site --update
+> dietrich-klinghardt.com -www-root httpdocs/dist` y devolver el www-root del
+> subdominio a `dkk.beytrax.com/dist`.
+>
+> Queda pendiente, y no bloquea: probar a mano login/logout de miembro, alta
+> al boletín de punta a punta, y un directo o replay de Mux.
+
 > Runbook de corte. Sustituye a la §2 de `GO_LIVE.md`, que quedó desactualizada
 > (la fila `sites` ya se movió al subdominio el 2026-10-10, el CORS ya está
 > hecho y los tiles del mapa ya son MapTiler).
@@ -531,8 +563,20 @@ eso `INDEXABLE=true` va en el corte y no antes.
   vuelve casi trivial: `sites.rebuild_repo` ya es `javierpacher/cwsi-dietrich`,
   su workflow ya corre en el runner self-hosted del VPS, y el dominio real ya
   tira de ese mismo repo. Lo único que sobra es a qué hook golpea el workflow:
-  hoy el secret `PLESK_GIT_HOOK_UUID` lleva el UUID del **subdominio**, así que
-  una edición de contenido republicaría el 301 en vez del sitio.
+  hoy el secret `PLESK_GIT_HOOK_UUID` lleva el UUID del **subdominio**
+  (`212745bb-a473-80bf-9211-bb1a9fb86313`, la entrada `cwsi-dietrich.git` del
+  subdominio `dkk.beytrax.com`, en modo `auto`; verificado 2026-11-01 con dos
+  despliegues reales), así que una edición de contenido republicaría el 301 en
+  vez del sitio.
+
+  **Decisión del cliente (2026-11-01): el día del corte el dominio real se
+  despliega a mano, por SSH, y el secret se cambia después**, cuando el sitio
+  lleve unos días estable. El primer día no conviene que un push cualquiera
+  salga al público sin que nadie lo mire antes. Hasta entonces, una edición de
+  contenido en el CMS sigue republicando el subdominio, que a esas alturas ya
+  es un 301: inofensivo, pero quiere decir que **los cambios de contenido no
+  llegan solos al dominio real** y hay que publicarlos a mano. Es el precio de
+  la cautela y dura lo que tarde en cambiarse el secret.
 
   **Cambiar ese secret** a **`895cd56c-33ee-b349-db90-46cb6576cfb0`**, que es
   el hook de la entrada `cwsi-dietrich.git` creada en P5. **No** el
@@ -544,6 +588,11 @@ eso `INDEXABLE=true` va en el corte y no antes.
   Con el repo en modo `manual`, confirmar que el webhook igualmente despliega;
   si Plesk lo ignora, dejarlo en `auto` **después** del corte, que a partir de
   ese momento ya es lo deseable.
+- **MapTiler**: la clave del mapa viaja en el bundle y hoy **no tiene ninguna
+  restricción de dominio** (comprobado 2026-11-01: responde 200 con cualquier
+  `Referer`, incluido uno inventado). Por eso el mapa no se rompe al cambiar de
+  dominio y esto no bloquea el corte. Pedirle a Ana, después, que la limite a
+  los dos dominios en su panel: cualquiera que la copie gasta su cuota.
 - **Search Console**: dar de alta el dominio, enviar el sitemap y vigilar el
   informe de cobertura las primeras dos semanas.
 - **Cerrar lo que quedó abierto**: Payment Links live (A9), la política de
