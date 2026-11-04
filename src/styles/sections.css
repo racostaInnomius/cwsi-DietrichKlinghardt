@@ -6391,7 +6391,17 @@ img.archive-viewer__media {
        — see its own comment in tokens.css: this stacked layout makes the
        card tall enough that --grad-card's amber ending compresses into a
        visible seam against .home-academy's teal right below it. */
-    background: var(--grad-hero-mobile);
+    /* Client (2026-11-04): "ponle un fondo naranja degradado al estilo de
+       escritorio... algo que se vea muy acorde a la versión de escritorio".
+       The desktop card paints the animated SVG, whose lower half is the
+       amber this asks for; the phone was left on --grad-hero-mobile, which
+       ends teal and never gets there. Same artwork here, so the two read as
+       one design rather than two. The 2026-09-18 note against doing this
+       was about --grad-card compressing its amber into a seam on a tall
+       card — the SVG has no such stop to compress, it is a painted field. */
+    background:
+      url("/images/hero-bg-animated.svg") center / cover no-repeat,
+      var(--grad-hero-mobile);
     /* Client (2026-09-15): /sophia's own margin/radius, matching the other
        two .plain-section.hero rules now instead of the old Foundation-based
        values. */
@@ -6438,7 +6448,18 @@ img.archive-viewer__media {
        the largest pull that still leaves real clearance below the buttons
        at this breakpoint (measured ~20px gap) rather than a value tied to
        one specific heading line count. */
-    margin-top: 3%;
+    /* Client (2026-11-04): "disminuir en un 40% de la cabeza del Dr. al
+       borde del botón de Upcoming events". Measured on a 390px screen the
+       gap ran 108px, so 40% off is ~65px. The photo carries its own
+       headroom and this 4:3 box has no vertical crop room left (see above),
+       so the only way to close it is to pull the element itself up. */
+    margin-top: -5.6%;
+    /* Client, same note: "el Dr. Klinghardt puedes ponerlo centrado". The
+       source photo places him hard right — even object-position: 100% still
+       leaves his head 67px right of centre (measured), so the crop alone
+       cannot do it. Shifting the element can; the gap it opens on the right
+       shows the card's own gradient, which is what sits behind him anyway. */
+    transform: translateX(-22%);
   }
   .hero__inner {
     order: 1;
