@@ -4599,13 +4599,21 @@ img.archive-viewer__media {
   min-width: 0;
 }
 /* The slot takes an uploaded picture or clip as well as a video from a
-   video host, and each of them fills the column the wordmark card held. */
+   video host, and each of them fills the column the wordmark card held. A
+   picture takes that card's shape exactly — same ratio, same corners, and
+   cropped to fit — so replacing the card with a picture of it changes
+   nothing on screen. A film keeps its own height: cropping one would cut
+   the picture the editor chose. */
 .foundation-purpose__video > img,
 .foundation-purpose__video > video {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--radius-md, 14px);
+  border-radius: var(--radius-lg);
+}
+.foundation-purpose__video > img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 .foundation-purpose__card {
   display: flex;
@@ -4623,9 +4631,13 @@ img.archive-viewer__media {
   .foundation-purpose__grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .foundation-purpose__card {
+  .foundation-purpose__card,
+  .foundation-purpose__video > img {
     order: -1;
     aspect-ratio: 16 / 9;
+  }
+  .foundation-purpose__video {
+    order: -1;
   }
 }
 
