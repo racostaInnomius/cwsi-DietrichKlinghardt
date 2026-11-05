@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import { useSection } from "@/lib/sections";
-import { videoEmbed } from "@/lib/cms";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Emphasis } from "@/components/Emphasis";
-import { VideoPlayer } from "@/components/sections/VideoPlayer";
+import { sectionMedia, isPlayerVideo } from "@/components/sections/SectionMedia";
 import { InViewVideo } from "@/components/sections/InViewVideo";
 import { PYRAMID_VIDEO } from "@/data/media";
 
@@ -32,31 +31,18 @@ import { PYRAMID_VIDEO } from "@/data/media";
  */
 export function PyramidSlot({ linkTo }: { linkTo?: string }) {
   const block = useSection("five-levels-pyramid");
-  const video = videoEmbed(block.raw?.featuredVideo);
-  const image = block.image;
   const hasCopy = Boolean(block.title || block.eyebrow || block.paragraphs.length);
 
-  const alt = block.imageAlt || block.title || PYRAMID_VIDEO.title;
-  const uploadedFilm = image && block.imageMime?.startsWith("video/");
-
-  const media = video ? (
-    <VideoPlayer video={video} />
-  ) : uploadedFilm ? (
-    // The library takes video files as well as pictures, and the pyramid is
-    // one: same play-once-in-view treatment, and the bundled frame stands in
-    // while it loads and for anyone who asked for less motion.
-    <InViewVideo src={image} poster={PYRAMID_VIDEO.poster} title={alt} width={1920} height={1080} />
-  ) : image ? (
-    <img src={image} alt={alt} loading="lazy" decoding="async" />
-  ) : (
-    <InViewVideo {...PYRAMID_VIDEO} width={1920} height={1080} />
-  );
+  const media =
+    sectionMedia(block, { poster: PYRAMID_VIDEO.poster, title: PYRAMID_VIDEO.title }) ?? (
+      <InViewVideo {...PYRAMID_VIDEO} width={1920} height={1080} />
+    );
 
   // The whole picture is the link to the page the hub points at, but only
   // while it is a picture: wrapping a player in a link would steal the click
   // that starts it.
   const linkedMedia =
-    linkTo && !video ? (
+    linkTo && !isPlayerVideo(block) ? (
       <Link className="academy-pyramid__link" to={linkTo} aria-label={block.title || "The 5 Levels of Healing"}>
         {media}
       </Link>

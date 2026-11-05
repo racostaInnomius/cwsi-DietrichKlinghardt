@@ -4598,6 +4598,15 @@ img.archive-viewer__media {
   width: 100%;
   min-width: 0;
 }
+/* The slot takes an uploaded picture or clip as well as a video from a
+   video host, and each of them fills the column the wordmark card held. */
+.foundation-purpose__video > img,
+.foundation-purpose__video > video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md, 14px);
+}
 .foundation-purpose__card {
   display: flex;
   align-items: center;

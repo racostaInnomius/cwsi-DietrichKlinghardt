@@ -8,8 +8,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { ArchiveIcon } from "@/components/Icons";
 import { ButtonText } from "@/components/ButtonText";
-import { VideoPlayer } from "@/components/sections/VideoPlayer";
-import { videoEmbed } from "@/lib/cms";
+import { sectionMedia } from "@/components/sections/SectionMedia";
 
 /* The four commitments are cards of the "foundation-commitments" Page
    Contents block, each with its icon (copy in src/data/blocks.ts until the row
@@ -47,10 +46,14 @@ export function FoundationPage() {
   const page = useSection(SECTION.foundation);
   const purpose = useSection("foundation-purpose");
   // Client (2026-11-05, Ana): she had no way to put a video in this section.
-  // The CMS already offers "Video destacado" on every Page Contents row; this
-  // page simply never read it. With one set, it takes the slot the decorative
-  // wordmark card holds; with none, the card stays as designed.
-  const purposeVideo = videoEmbed(purpose.raw?.featuredVideo);
+  // The CMS offers three media fields on every Page Contents row and this
+  // page read none of them, so a video from a video host, an uploaded clip
+  // and an uploaded picture all land in the slot the decorative wordmark card
+  // holds. With none of them filled, the card stays as designed.
+  const purposeMedia = sectionMedia(purpose, {
+    poster: "/images/foundation-logo.svg",
+    title: "Klinghardt Foundation™",
+  });
   const commitments = useCardList("foundation-commitments", 2, ([title, body], index) => ({
     icon: COMMITMENT_ICONS[index % COMMITMENT_ICONS.length],
     title,
@@ -117,10 +120,8 @@ export function FoundationPage() {
               <span aria-hidden="true">→</span>
             </Link>
           </div>
-          {purposeVideo ? (
-            <div className="foundation-purpose__video">
-              <VideoPlayer video={purposeVideo} />
-            </div>
+          {purposeMedia ? (
+            <div className="foundation-purpose__video">{purposeMedia}</div>
           ) : (
             <div className="foundation-purpose__card" aria-hidden="true">
               <img src="/images/foundation-logo.svg" alt="" className="foundation-purpose__card-logo" />
