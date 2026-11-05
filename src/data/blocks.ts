@@ -418,6 +418,16 @@ export const BLOCKS: Record<string, BlockDefault> = {
       { "icon": "heart", "title": "Dr. Klinghardt Foundation", "body": "Educational initiatives, archival projects, partnerships, and future programs.", "email": "foundation@dietrich-klinghardt.com" },
     ],
   },
+  /* The pyramid slot on /academy and /academy/five-levels. Deliberately
+     wordless: with no title and no text the section shows only the media,
+     which is the design as it shipped. Ana fills "Video destacado" or
+     "Imagen principal" to replace the bundled animation, and adds a title or
+     a paragraph when she wants the two-column shape. */
+  "five-levels-pyramid": {
+    page: "/academy",
+    sitePage: "Academy",
+    kind: "section",
+  },
   "contact-please-note": {
     page: "/contact",
     sitePage: "Contact",

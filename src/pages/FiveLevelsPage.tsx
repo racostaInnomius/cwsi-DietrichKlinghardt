@@ -7,8 +7,8 @@ import { Marked } from "@/components/Marked";
 import { Breadcrumbs } from "@/components/shell/Breadcrumbs";
 import { VideoPlayer } from "@/components/sections/VideoPlayer";
 import { SelfHostedVideo } from "@/components/sections/SelfHostedVideo";
-import { InViewVideo } from "@/components/sections/InViewVideo";
-import { FIVE_LEVELS_VIDEO, PYRAMID_VIDEO } from "@/data/media";
+import { PyramidSlot } from "@/components/sections/PyramidSlot";
+import { FIVE_LEVELS_VIDEO } from "@/data/media";
 
 /**
  * The 5 Levels of Healing.
@@ -60,14 +60,7 @@ export function FiveLevelsPage() {
         </Reveal>
       </section>
 
-      <section className="section wrap levels">
-        <InViewVideo
-          className="levels__pyramid-image"
-          {...PYRAMID_VIDEO}
-          width={1920}
-          height={1080}
-        />
-      </section>
+      <PyramidSlot />
 
       <section className="section wrap">
         <Reveal as="blockquote" className="levels__quote">

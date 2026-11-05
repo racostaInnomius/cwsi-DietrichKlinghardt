@@ -131,7 +131,7 @@ export const BUTTONS: Record<string, ButtonDefault> = {
   "contact-health-institute": {
     page: "Contacto",
     where: "Nota del Health Institute",
-    label: "Contact for Dietrich Klinghardt Health Institute™",
+    label: "Contact Sophia Health Institute by Dr. Klinghardt™",
   },
   "contact-send": {
     page: "Contacto",

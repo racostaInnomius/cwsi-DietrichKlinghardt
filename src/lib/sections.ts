@@ -24,6 +24,7 @@ export const SECTION = {
   aboutTimeline: "about-timeline",
   contactCards: "contact-cards",
   fiveLevelsList: "five-levels-list",
+  fiveLevelsPyramid: "five-levels-pyramid",
   musicLinks: "music-links",
 
   homeHero: "home-hero",

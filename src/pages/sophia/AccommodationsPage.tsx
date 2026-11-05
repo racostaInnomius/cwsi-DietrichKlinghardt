@@ -1,6 +1,7 @@
 import { Seo } from "@/components/Seo";
 import { useSection, SECTION } from "@/lib/sections";
 import { mapEmbedUrl } from "@/lib/cms";
+import { siteHref, siteLabel, telHref } from "@/lib/contactLinks";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -13,21 +14,6 @@ import { EventMetaIcon } from "@/components/Icons";
    block (client, 2026-10-21: editable and reorderable by the clinic): title =
    name, "Más datos" → subtitle = address, phone, link = site; text = the note.
    Their first content is in src/data/blocks.ts. */
-
-/** "comfortinn.com" or a full URL → a link the browser can follow. */
-function siteHref(site: string) {
-  return /^https?:\/\//i.test(site) ? site : `https://${site}`;
-}
-
-/** The site as the reader should see it, without the scheme. */
-function siteLabel(site: string) {
-  return site.replace(/^https?:\/\//i, "").replace(/\/$/, "");
-}
-
-/** Digits only — what a phone link needs, from what a reader should see. */
-function telHref(phone: string) {
-  return `tel:${phone.replace(/[^\d+]/g, "")}`;
-}
 
 /* Same query the old text-only fallback linked out to — Google's query-embed
    form (no API key required) so the CMS's own mapEmbedUrl can still take over

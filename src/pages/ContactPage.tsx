@@ -7,6 +7,7 @@ import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { MailIcon, BriefcaseIcon, MicrophoneIcon, HeartIcon } from "@/components/Icons";
+import { siteHref, siteLabel, telHref } from "@/lib/contactLinks";
 import { ButtonText } from "@/components/ButtonText";
 
 /** Category badge icon per card — matched against the label text so CMS
@@ -20,9 +21,15 @@ function cardIcon(label: string) {
 }
 
 /* The four cards are the "contact-cards" Page Contents block (copy in
-   src/data/blocks.ts until the row has it): title, text, "Más datos" → Correo,
-   and an icon (picked from the label when the card has none). Rows still
-   written as "label | email | text" lines keep working. */
+   src/data/blocks.ts until the row has it): title, text, "Más datos" →
+   Subtítulo (an address), Correo, Teléfono and Liga, and an icon (picked from
+   the label when the card has none). Rows still written as
+   "label | email | text" lines keep working.
+
+   Client (2026-11-05, Ana): the address, phone and site she had filled in
+   "Más datos" were being dropped — the card only drew the email. Every field
+   the CMS offers on a card now shows, in the same shape as the hotel cards on
+   /sophia/accommodations. */
 
 /**
  * Contact — four addressed cards.
@@ -67,17 +74,30 @@ export function ContactPage() {
 
       <section className="section wrap section--tight-top contact-section">
         <ul className="contact-grid contact-grid--joined">
-          {cards.cards.map(({ icon, title: label, email, body: description }, index) => (
-            <Reveal as="li" key={`${index}-${label}`} className="contact-card" delay={index * 80}>
+          {cards.cards.map((card, index) => (
+            <Reveal as="li" key={`${index}-${card.title}`} className="contact-card" delay={index * 80}>
               <span className="contact-card__icon">
-                <CardIcon name={icon} fallback={cardIcon(label)} />
+                <CardIcon name={card.icon} fallback={cardIcon(card.title)} />
               </span>
-              <h2><Marked text={label} /></h2>
-              {description ? <p>{description}</p> : null}
-              {email ? (
-                <a className="contact-card__email" href={`mailto:${email}`}>
-                  <MailIcon /> {email}
+              <h2><Marked text={card.title} /></h2>
+              {card.body ? <p className="contact-card__text">{card.body}</p> : null}
+              {card.subtitle ? <address className="contact-card__address">{card.subtitle}</address> : null}
+              {card.email ? (
+                <a className="contact-card__email" href={`mailto:${card.email}`}>
+                  <MailIcon /> {card.email}
                 </a>
+              ) : null}
+              {card.phone ? (
+                <p className="contact-card__line">
+                  <a href={telHref(card.phone)}>{card.phone}</a>
+                </p>
+              ) : null}
+              {card.link ? (
+                <p className="contact-card__line">
+                  <a href={siteHref(card.link)} target="_blank" rel="noreferrer">
+                    {siteLabel(card.link)} <span aria-hidden="true">↗</span>
+                  </a>
+                </p>
               ) : null}
             </Reveal>
           ))}

@@ -4591,6 +4591,13 @@ img.archive-viewer__media {
    not the DK navy this card opened on — same exact gradient
    .brand-card--foundation already uses on /academy, so both placements of
    the Foundation card agree instead of each inventing its own colour. */
+/* The video takes the same slot as the wordmark card, so the two-column
+   grid keeps its shape whether the section carries one or not. */
+.foundation-purpose__video {
+  align-self: center;
+  width: 100%;
+  min-width: 0;
+}
 .foundation-purpose__card {
   display: flex;
   align-items: center;
@@ -5225,13 +5232,35 @@ img.archive-viewer__media {
   color: var(--ink);
   font-size: var(--fs-sm);
 }
+/* The text keeps the contact lines below it pinned to the bottom of the
+   card, so cards of different text lengths line their addresses up. It is
+   the text, and not the first contact line, that carries the auto margin:
+   several auto margins in one column would split the free space between
+   them and open gaps inside the contact group. */
+.contact-card__text {
+  margin-bottom: auto;
+}
+/* Address, phone and site: the rest of "Más datos", under the text and
+   above the email (client, 2026-11-05 — they were being dropped). */
+.contact-card__address {
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  font-style: normal;
+  line-height: 1.5;
+}
+.contact-card__line a {
+  color: var(--brand);
+  font-weight: 600;
+}
+.contact-card__line a:hover {
+  text-decoration: underline;
+}
 /* Client, same reference: no "write to us" button/popup — the mailto
    address shown directly, with its own small icon. */
 .contact-card__email {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: auto;
   color: var(--brand);
   font-size: var(--fs-sm);
   font-weight: 600;
@@ -8528,4 +8557,36 @@ ul.sophia-therapies-grid h3 {
     text-align: justify;
     hyphens: auto;
   }
+}
+
+/* The pyramid slot (PyramidSlot: /academy and /academy/five-levels).
+   On /academy/five-levels there is no link around the media, and since
+   2026-11-05 the media may also be a picture or a CMS video instead of the
+   bundled animation — all of them keep the 80%-of-.wrap cap and the 16:9 the
+   linked copy on /academy has, so the two pages show it at one size.
+   `contain`, like the link: this is a diagram, and cropping it would cut the
+   "OBJECTIVE / SUBJECTIVE REALITY" labels off its sides. */
+.academy-pyramid:not(.academy-pyramid--with-copy) > * > video,
+.academy-pyramid:not(.academy-pyramid--with-copy) > * > img,
+.academy-pyramid:not(.academy-pyramid--with-copy) > * > .video-frame {
+  display: block;
+  width: 100%;
+  max-width: 80%;
+  margin-inline: auto;
+}
+.academy-pyramid:not(.academy-pyramid--with-copy) > * > video,
+.academy-pyramid:not(.academy-pyramid--with-copy) > * > img {
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: contain;
+}
+/* With a title or a paragraph the section becomes the site's two-column row,
+   and the media fills its own column like every other feature row's picture.
+   The cap above would shrink it inside that column, so it is dropped here. */
+.academy-pyramid--with-copy .feature-row__media .academy-pyramid__link {
+  max-width: 100%;
+}
+.academy-pyramid--with-copy .feature-row__media img,
+.academy-pyramid--with-copy .feature-row__media video {
+  object-fit: contain;
 }
