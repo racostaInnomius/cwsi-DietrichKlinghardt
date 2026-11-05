@@ -17,8 +17,9 @@ import { PYRAMID_VIDEO } from "@/data/media";
  * imagen o texto con un video"). Now it is the "five-levels-pyramid" Page
  * Contents block, and what the editor fills decides what it shows:
  *
- *   - "Video destacado"  → the video, in the site's own player.
- *   - "Imagen principal" → the picture.
+ *   - "Video destacado"  → a film from a video host, in the site's player.
+ *   - "Imagen principal" → the file she uploaded: a picture, or a clip, which
+ *                          plays itself once the way the pyramid always has.
  *   - neither            → the bundled animation, exactly as before.
  *
  * Adding a title or a paragraph turns the section into the site's two-column
@@ -35,10 +36,18 @@ export function PyramidSlot({ linkTo }: { linkTo?: string }) {
   const image = block.image;
   const hasCopy = Boolean(block.title || block.eyebrow || block.paragraphs.length);
 
+  const alt = block.imageAlt || block.title || PYRAMID_VIDEO.title;
+  const uploadedFilm = image && block.imageMime?.startsWith("video/");
+
   const media = video ? (
     <VideoPlayer video={video} />
+  ) : uploadedFilm ? (
+    // The library takes video files as well as pictures, and the pyramid is
+    // one: same play-once-in-view treatment, and the bundled frame stands in
+    // while it loads and for anyone who asked for less motion.
+    <InViewVideo src={image} poster={PYRAMID_VIDEO.poster} title={alt} width={1920} height={1080} />
   ) : image ? (
-    <img src={image} alt={block.imageAlt || block.title || "The 5 Levels of Healing"} loading="lazy" decoding="async" />
+    <img src={image} alt={alt} loading="lazy" decoding="async" />
   ) : (
     <InViewVideo {...PYRAMID_VIDEO} width={1920} height={1080} />
   );

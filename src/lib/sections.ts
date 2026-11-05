@@ -1,5 +1,5 @@
 import { useCollection } from "./content";
-import { mediaAlt, mediaUrl, richTextBlocks, richTextMarked } from "./cms";
+import { mediaAlt, mediaMime, mediaUrl, richTextBlocks, richTextMarked } from "./cms";
 import { plainText } from "@/components/Emphasis";
 import type { ContentDoc } from "@/data/demo";
 import { BLOCKS } from "@/data/blocks";
@@ -114,6 +114,8 @@ export interface Section {
   image?: string;
   /** The uploaded image's own alt text (Media → "Texto alternativo"). */
   imageAlt?: string;
+  /** The uploaded file's type: the library takes video as well as pictures. */
+  imageMime?: string;
   raw?: ContentDoc;
 }
 
@@ -173,6 +175,7 @@ export function useSection(slug: string, fallback: SectionFallback = {}): Sectio
     cards: cards.length ? cards : (defaults.cards ?? []),
     image: mediaUrl(doc?.heroImage) ?? defaults.image,
     imageAlt: mediaAlt(doc?.heroImage),
+    imageMime: mediaMime(doc?.heroImage),
     raw: doc,
   };
 }

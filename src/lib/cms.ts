@@ -223,6 +223,17 @@ export function mediaUrl(media: unknown): string | undefined {
 }
 
 /**
+ * A media row's own type, so a slot can tell a picture from a film: the
+ * library accepts both since 2026-11-05, and an <img> pointed at an mp4 shows
+ * a broken image with no warning.
+ */
+export function mediaMime(media: unknown): string | undefined {
+  if (!media || typeof media !== "object") return undefined;
+  const mime = (media as { mimeType?: unknown }).mimeType;
+  return typeof mime === "string" && mime ? mime : undefined;
+}
+
+/**
  * Any URL that comes from the CMS and ends up in an `href`. Blocks
  * `javascript:` and every other scheme an editor could paste in.
  */
