@@ -310,10 +310,12 @@ export function HomePage() {
         <AnimatedGradient variant="plain" className="hero">
           {/* Decorative: the headline already names the subject, so an alt text
               here would only repeat it to a screen reader. */}
+          {/* The photo comes from "home-hero" in Page Contents; the bundled
+             one ships until an editor uploads another. */}
           <img
             className="hero__photo"
-            src="/images/hero-klinghardt-transparent.webp"
-            alt=""
+            src={hero.image ?? "/images/hero-klinghardt-transparent.webp"}
+            alt={hero.image ? hero.imageAlt || "" : ""}
             width={1920}
             height={1080}
             fetchPriority="high"
@@ -539,9 +541,14 @@ export function HomePage() {
             <h2 className="talks-band__title">{talks.title}</h2>
 
             <Reveal className="talks-band__media">
+              {/* From "home-talks" in Page Contents. */}
               <img
-                src="/images/weekly-talks-live-2026.webp"
-                alt="A live Weekly Talk session with Dr. Klinghardt"
+                src={talks.image ?? "/images/weekly-talks-live-2026.webp"}
+                alt={
+                  talks.image
+                    ? talks.imageAlt || talks.title
+                    : "A live Weekly Talk session with Dr. Klinghardt"
+                }
                 width={1004}
                 height={704}
                 loading="lazy"

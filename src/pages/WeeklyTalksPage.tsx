@@ -268,7 +268,8 @@ export function WeeklyTalksPage() {
             </div>
           </Reveal>
 
-          {/* When a free talk is actually live, it plays right here instead
+          {/* The picture is "weekly-talks" → Imagen principal in Page Contents.
+              When a free talk is actually live, it plays right here instead
               of the picture — the box itself never changes size either way
               (sophia_hero_dimension), LiveTalkStage just fills it. */}
           <Reveal className="hero__aside" delay={120}>
@@ -279,8 +280,12 @@ export function WeeklyTalksPage() {
             ) : (
               <img
                 className="live-shot"
-                src="/images/weekly-talks-live-2026.webp"
-                alt="Dr. Klinghardt live on a Weekly Talk"
+                src={page.image ?? "/images/weekly-talks-live-2026.webp"}
+                alt={
+                  page.image
+                    ? page.imageAlt || page.title
+                    : "Dr. Klinghardt live on a Weekly Talk"
+                }
                 width={1004}
                 height={704}
                 decoding="async"

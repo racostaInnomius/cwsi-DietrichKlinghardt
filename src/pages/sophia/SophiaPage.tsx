@@ -65,10 +65,11 @@ export function SophiaPage() {
           in the section below instead, next to the same photo the design
           repeats there. */}
       <section className="sophia-hero">
+        {/* From "sophia-home" in Page Contents. */}
         <img
           className="sophia-hero__photo"
-          src="/images/sophia-welcome.webp"
-          alt="Sophia Health Institute campus"
+          src={page.image ?? "/images/sophia-welcome.webp"}
+          alt={page.image ? page.imageAlt || "Sophia Health Institute campus" : "Sophia Health Institute campus"}
           width={1600}
           height={900}
           fetchPriority="high"
