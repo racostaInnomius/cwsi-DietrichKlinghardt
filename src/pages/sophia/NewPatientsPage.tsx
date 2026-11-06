@@ -58,9 +58,16 @@ export function NewPatientsPage() {
 
       <section className="section wrap feature-row feature-row--right feature-row--tight-top">
         <Reveal className="feature-row__media">
+          {/* The photo comes from this block's "Hero image" in Page Contents
+             (sophia-new-patients-welcome); the bundled one ships until the
+             clinic uploads its own. */}
           <img
-            src="/images/sophia-treatment.webp"
-            alt="The Sophia Health Institute in Woodinville"
+            src={welcome.image ?? "/images/sophia-treatment.webp"}
+            alt={
+              welcome.image
+                ? welcome.imageAlt || welcome.title
+                : "The Sophia Health Institute in Woodinville"
+            }
             width={1024}
             height={683}
             loading="lazy"
