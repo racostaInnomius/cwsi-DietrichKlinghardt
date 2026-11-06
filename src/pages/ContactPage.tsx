@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
-import { useSection, useCardList, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, useCardList, SECTION } from "@/lib/sections";
 import { CardIcon } from "@/components/CardIcon";
 import { Emphasis } from "@/components/Emphasis";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -67,7 +67,7 @@ export function ContactPage() {
           <Reveal>
             {contact.eyebrow ? <p className="eyebrow"><Marked text={contact.eyebrow} /></p> : null}
             <h1><Marked text={contact.title} /></h1>
-            {contact.lead ? <p className="lead">{contact.lead}</p> : null}
+            {contact.lead ? <p className="lead" style={alignStyle(contact, 0)}>{contact.lead}</p> : null}
           </Reveal>
         </div>
       </AnimatedGradient>
@@ -106,8 +106,8 @@ export function ContactPage() {
         {/* The frame carries this warning under the four cards, and it is the
             kind of line a medical site cannot quietly drop. */}
         <Reveal className="contact-note" delay={220}>
-          {note.marked.map((paragraph) => (
-            <p key={paragraph}>
+          {note.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(note, paraIndex)}>
               <Emphasis text={paragraph} />
             </p>
           ))}

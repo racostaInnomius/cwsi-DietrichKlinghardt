@@ -3,7 +3,7 @@ import Lenis from "lenis";
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCollection } from "@/lib/content";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { Marked } from "@/components/Marked";
 import { Emphasis } from "@/components/Emphasis";
 import { groupPackagesWithDays } from "@/lib/dayPasses";
@@ -479,8 +479,8 @@ export function HomePage() {
                 <Marked text={art.subtitle} />
               </p>
             ) : null}
-            {art.marked.map((paragraph) => (
-              <p key={paragraph} className="home-art__copy">
+            {art.marked.map((paragraph, paraIndex) => (
+              <p key={paragraph} style={alignStyle(art, paraIndex)} className="home-art__copy">
                 <Marked text={paragraph} />
               </p>
             ))}
@@ -514,8 +514,8 @@ export function HomePage() {
         <Reveal className="feature-row__body" delay={90}>
           {clinic.eyebrow ? <p className="eyebrow"><Marked text={clinic.eyebrow} /></p> : null}
           <h2><Marked text={clinic.title} /></h2>
-          {clinic.marked.map((paragraph) => (
-            <p key={paragraph} className="feature-row__copy">
+          {clinic.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(clinic, paraIndex)} className="feature-row__copy">
               <Emphasis text={paragraph} />
             </p>
           ))}
@@ -569,7 +569,7 @@ export function HomePage() {
         <section className="section wrap home-shop">
           <Reveal className="section-heading section-heading--center">
             <h2>{shop.title}</h2>
-            <p className="lead">{shop.lead}</p>
+            <p className="lead" style={alignStyle(shop, 0)}>{shop.lead}</p>
           </Reveal>
 
           {categories.length > 0 && (

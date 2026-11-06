@@ -1,6 +1,6 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
-import { useSection } from "@/lib/sections";
+import { alignStyle, useSection } from "@/lib/sections";
 import { videoEmbed } from "@/lib/cms";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -40,7 +40,7 @@ export function ArtPage() {
           <Reveal>
             {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
+            {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
           </Reveal>
         </div>
       </AnimatedGradient>
@@ -72,8 +72,8 @@ export function ArtPage() {
           <Reveal>
             {next.eyebrow ? <p className="eyebrow"><Marked text={next.eyebrow} /></p> : null}
             <h2><Marked text={next.title} /></h2>
-            {next.marked.map((paragraph) => (
-              <p key={paragraph} className="home-art__copy">
+            {next.marked.map((paragraph, paraIndex) => (
+              <p key={paragraph} style={alignStyle(next, paraIndex)} className="home-art__copy">
                 <Emphasis text={paragraph} />
               </p>
             ))}

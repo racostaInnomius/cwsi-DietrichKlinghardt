@@ -1,6 +1,6 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
-import { useSection, useCardList, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, useCardList, SECTION } from "@/lib/sections";
 import { CardIcon } from "@/components/CardIcon";
 import { Emphasis } from "@/components/Emphasis";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -96,7 +96,7 @@ export function FoundationPage() {
                 </>
               ) : null}
             </h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
+            {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
           </Reveal>
         </div>
       </AnimatedGradient>
@@ -111,8 +111,8 @@ export function FoundationPage() {
             {purpose.eyebrow ? <p className="eyebrow"><Marked text={purpose.eyebrow} /></p> : null}
             <h2><Marked text={purpose.title} /></h2>
             <div className="prose">
-              {purpose.marked.map((paragraph) => (
-                <p key={paragraph}><Emphasis text={paragraph} /></p>
+              {purpose.marked.map((paragraph, paraIndex) => (
+                <p key={paragraph} style={alignStyle(purpose, paraIndex)}><Emphasis text={paragraph} /></p>
               ))}
             </div>
             <Link className="btn btn-primary foundation-purpose__cta" to="/foundation/donate">
@@ -178,8 +178,8 @@ export function FoundationPage() {
         <div className="wrap">
           <Reveal className="foundation-quote__inner">
             <blockquote className="foundation-quote__text">
-              {quote.marked.map((paragraph) => (
-                <p key={paragraph}>
+              {quote.marked.map((paragraph, paraIndex) => (
+                <p key={paragraph} style={alignStyle(quote, paraIndex)}>
                   <Emphasis text={paragraph} />
                 </p>
               ))}

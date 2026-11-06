@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Seo } from "@/components/Seo";
 import { useCollection } from "@/lib/content";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { splitByTime } from "@/lib/format";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -49,7 +49,7 @@ export function EventsPage() {
             ) : (
               <h1><Marked text={copy.title} /></h1>
             )}
-            {copy.lead ? <p className="lead">{copy.lead}</p> : null}
+            {copy.lead ? <p className="lead" style={alignStyle(copy, 0)}>{copy.lead}</p> : null}
           </Reveal>
 
           <div className="tabs events-page__tabs" role="tablist" aria-label="Event dates">

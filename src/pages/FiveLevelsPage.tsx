@@ -1,6 +1,6 @@
 import { Seo } from "@/components/Seo";
 import { Emphasis } from "@/components/Emphasis";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { videoEmbed } from "@/lib/cms";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -46,7 +46,7 @@ export function FiveLevelsPage() {
         <Reveal>
           {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h1><Marked text={page.title} /></h1>
-          {page.lead ? <p className="lead">{page.lead}</p> : null}
+          {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
         </Reveal>
       </section>
 
@@ -64,8 +64,8 @@ export function FiveLevelsPage() {
 
       <section className="section wrap">
         <Reveal as="blockquote" className="levels__quote">
-          {quote.marked.map((paragraph) => (
-            <p key={paragraph}>
+          {quote.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(quote, paraIndex)}>
               <Emphasis text={paragraph} />
             </p>
           ))}

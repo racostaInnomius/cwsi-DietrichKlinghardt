@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
-import { useSection } from "@/lib/sections";
+import { alignStyle, useSection } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -299,8 +299,8 @@ function BranchRow({ branch }: { branch: Branch }) {
         {copy.eyebrow ? <p className="eyebrow"><Marked text={copy.eyebrow} /></p> : null}
         <h2><Marked text={copy.title} /></h2>
         {copy.subtitle ? <p className="accent"><Marked text={copy.subtitle} /></p> : null}
-        {copy.marked.map((paragraph) => (
-          <p key={paragraph} className="feature-row__copy"><Emphasis text={paragraph} /></p>
+        {copy.marked.map((paragraph, paraIndex) => (
+          <p key={paragraph} style={alignStyle(copy, paraIndex)} className="feature-row__copy"><Emphasis text={paragraph} /></p>
         ))}
         <Actions actions={branch.actions} />
       </Reveal>

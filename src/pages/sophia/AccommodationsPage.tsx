@@ -1,5 +1,5 @@
 import { Seo } from "@/components/Seo";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { mapEmbedUrl } from "@/lib/cms";
 import { siteHref, siteLabel, telHref } from "@/lib/contactLinks";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -67,8 +67,8 @@ export function AccommodationsPage() {
         <Reveal className="feature-row__body" delay={90}>
           {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h1><Marked text={page.title} /></h1>
-          {page.marked.map((paragraph) => (
-            <p key={paragraph} className="feature-row__copy">
+          {page.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(page, paraIndex)} className="feature-row__copy">
               <Emphasis text={paragraph} />
             </p>
           ))}
@@ -88,7 +88,7 @@ export function AccommodationsPage() {
       <section className="section wrap">
         <Reveal>
           <h2 className="section-title"><Marked text={hotels.title} /></h2>
-          {hotels.lead ? <p className="lead">{hotels.lead}</p> : null}
+          {hotels.lead ? <p className="lead" style={alignStyle(hotels, 0)}>{hotels.lead}</p> : null}
         </Reveal>
 
         {hotels.eyebrow ? (

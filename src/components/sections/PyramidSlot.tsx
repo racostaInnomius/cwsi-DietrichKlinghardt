@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useSection } from "@/lib/sections";
+import { alignStyle, useSection } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
 import { Emphasis } from "@/components/Emphasis";
@@ -65,8 +65,8 @@ export function PyramidSlot({ linkTo }: { linkTo?: string }) {
         {block.eyebrow ? <p className="eyebrow"><Marked text={block.eyebrow} /></p> : null}
         {block.title ? <h2><Marked text={block.title} /></h2> : null}
         {block.subtitle ? <p className="accent"><Marked text={block.subtitle} /></p> : null}
-        {block.marked.map((paragraph) => (
-          <p key={paragraph} className="feature-row__copy"><Emphasis text={paragraph} /></p>
+        {block.marked.map((paragraph, paraIndex) => (
+          <p key={paragraph} style={alignStyle(block, paraIndex)} className="feature-row__copy"><Emphasis text={paragraph} /></p>
         ))}
       </Reveal>
     </section>

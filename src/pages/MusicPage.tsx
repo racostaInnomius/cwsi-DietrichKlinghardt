@@ -1,6 +1,6 @@
 import { Seo } from "@/components/Seo";
 import { useCollection, text } from "@/lib/content";
-import { useSection, useRecords, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, useRecords, SECTION } from "@/lib/sections";
 import { externalUrl, mediaUrl, musicEmbed } from "@/lib/cms";
 import { checkoutHref } from "@/lib/checkout";
 import { CheckoutLink, Price } from "@/lib/currency";
@@ -57,7 +57,7 @@ export function MusicPage() {
           <Reveal>
             {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
+            {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
             {links.length ? (
               <p className="music-links">
                 {links.map(([label, href]) => (

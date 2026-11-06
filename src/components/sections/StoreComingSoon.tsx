@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
-import { useSection } from "@/lib/sections";
+import { alignStyle, useSection } from "@/lib/sections";
 import { ButtonText } from "@/components/ButtonText";
 
 /**
@@ -19,7 +19,7 @@ export function StoreComingSoon() {
         <Reveal>
           {copy.eyebrow ? <p className="eyebrow"><Marked text={copy.eyebrow} /></p> : null}
           <h1><Marked text={copy.title} /></h1>
-          {copy.lead ? <p className="lead">{copy.lead}</p> : null}
+          {copy.lead ? <p className="lead" style={alignStyle(copy, 0)}>{copy.lead}</p> : null}
           <div className="store-coming-soon__actions">
             <Link className="btn btn-primary" to="/">
               <ButtonText id="store-back-home" />

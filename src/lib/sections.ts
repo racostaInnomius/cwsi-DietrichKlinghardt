@@ -1,5 +1,13 @@
 import { useCollection } from "./content";
-import { mediaAlt, mediaMime, mediaUrl, richTextBlocks, richTextMarked } from "./cms";
+import {
+  mediaAlt,
+  mediaMime,
+  mediaUrl,
+  richTextAligns,
+  richTextBlocks,
+  richTextMarked,
+  type BlockAlign,
+} from "./cms";
 import { plainText } from "@/components/Emphasis";
 import type { ContentDoc } from "@/data/demo";
 import { BLOCKS } from "@/data/blocks";
@@ -109,6 +117,12 @@ export interface Section {
   lead: string;
   /** The paragraphs with **bold** / *italic* kept, for <Emphasis>. */
   marked: string[];
+  /**
+   * What the editor chose with the toolbar's alignment buttons, one entry per
+   * paragraph, in the same order as `paragraphs` and `marked`. Read it with
+   * `alignStyle`, never by index by hand.
+   */
+  aligns: Array<BlockAlign | undefined>;
   /** The block's cards, in the editor's order (Page Contents → Tarjetas). */
   cards: Card[];
   image?: string;
@@ -117,6 +131,28 @@ export interface Section {
   /** The uploaded file's type: the library takes video as well as pictures. */
   imageMime?: string;
   raw?: ContentDoc;
+}
+
+/**
+ * The alignment a paragraph should be drawn with, as a style for its own tag.
+ *
+ * The admin's rich-text toolbar has offered alignment buttons all along, but
+ * the site only ever read the words out of the document and dropped the
+ * block's `format`, so pressing them did nothing (client, 2026-11-05: Ana
+ * aligning right or centre with no effect). It is written inline on purpose:
+ * several blocks justify their copy in the stylesheet, and the editor's own
+ * choice has to win over that without an `!important` arms race.
+ *
+ * Left is the default and returns undefined, so nothing is written for the
+ * paragraphs nobody touched. An index past the end — a block falling back to
+ * the bundled copy, which carries no alignment — returns undefined too.
+ */
+export function alignStyle(
+  block: Pick<Section, "aligns">,
+  index: number,
+): { textAlign: BlockAlign } | undefined {
+  const align = block.aligns[index];
+  return align ? { textAlign: align } : undefined;
 }
 
 export interface SectionFallback {
@@ -162,6 +198,7 @@ export function useSection(slug: string, fallback: SectionFallback = {}): Sectio
   const doc = useCollection("page-contents").find((item) => item.slug === slug);
   const paragraphs = doc ? richTextBlocks(doc.body) : [];
   const marked = doc ? richTextMarked(doc.body) : [];
+  const aligns = doc ? richTextAligns(doc.body) : [];
   const resolved = paragraphs.length ? paragraphs : (defaults.paragraphs ?? []).map(plainText);
   const cards = itemCards(doc);
 
@@ -172,6 +209,7 @@ export function useSection(slug: string, fallback: SectionFallback = {}): Sectio
     paragraphs: resolved,
     lead: resolved[0] ?? "",
     marked: marked.length ? marked : (defaults.paragraphs ?? []),
+    aligns: marked.length ? aligns : [],
     cards: cards.length ? cards : (defaults.cards ?? []),
     image: mediaUrl(doc?.heroImage) ?? defaults.image,
     imageAlt: mediaAlt(doc?.heroImage),

@@ -1,7 +1,7 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCollection, text, number } from "@/lib/content";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { mediaUrl } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
@@ -41,7 +41,7 @@ export function SophiaTeamPage() {
           <Reveal>
             {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
+            {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
           </Reveal>
         </div>
       </AnimatedGradient>

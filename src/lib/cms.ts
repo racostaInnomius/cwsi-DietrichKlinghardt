@@ -131,6 +131,23 @@ function blockNodes(node: unknown): unknown[] {
   return item?.type === "list" ? (item.children ?? []) : [node];
 }
 
+/**
+ * How the editor aligned the block, from the alignment buttons the admin's
+ * rich-text toolbar already offers (Payload's AlignFeature writes it as the
+ * node's `format`). Left is the default and comes back undefined, so a caller
+ * only has to do something when the editor asked for something else. An item
+ * of a list carries the alignment of the list it belongs to when it has none
+ * of its own, which is how the toolbar aligns a whole list.
+ */
+export type BlockAlign = "center" | "right" | "justify";
+
+function lexicalAlign(node: unknown, inherited?: BlockAlign): BlockAlign | undefined {
+  const format = (node as { format?: unknown } | null)?.format;
+  return format === "center" || format === "right" || format === "justify"
+    ? format
+    : inherited;
+}
+
 /** Lexical text-node format bits (TextNode.format). */
 const IS_BOLD = 1;
 const IS_ITALIC = 2;
@@ -159,31 +176,45 @@ function lexicalMarked(node: unknown): string {
 }
 
 /**
+ * One pass over the document: each block's text (rendered by `render`, so the
+ * same walk serves plain and marked copy) together with its alignment. Empty
+ * blocks are dropped here, so text and alignment stay index-for-index.
+ */
+function richTextParts(
+  doc: unknown,
+  render: (node: unknown) => string,
+): Array<{ text: string; align?: BlockAlign }> {
+  if (!doc || typeof doc !== "object") return [];
+  const root = (doc as { root?: { children?: unknown[] } }).root;
+  return (root?.children ?? [])
+    .flatMap((node) => {
+      const inherited = lexicalAlign(node);
+      return blockNodes(node).map((block) => ({
+        text: render(block).trim(),
+        align: lexicalAlign(block, inherited),
+      }));
+    })
+    .filter((part) => part.text);
+}
+
+/**
  * Like richTextBlocks, but bold and italic runs come back wrapped in ** and *
  * — for the few blocks that render emphasis (components/Emphasis.tsx).
  */
 export function richTextMarked(doc: unknown): string[] {
-  if (!doc || typeof doc !== "object") return [];
-  const root = (doc as { root?: { children?: unknown[] } }).root;
-  return (
-    root?.children
-      ?.flatMap(blockNodes)
-      .map(lexicalMarked)
-      .map((value) => value.trim())
-      .filter(Boolean) ?? []
-  );
+  return richTextParts(doc, lexicalMarked).map((part) => part.text);
 }
 
 export function richTextBlocks(doc: unknown): string[] {
-  if (!doc || typeof doc !== "object") return [];
-  const root = (doc as { root?: { children?: unknown[] } }).root;
-  return (
-    root?.children
-      ?.flatMap(blockNodes)
-      .map(lexicalText)
-      .map((value) => value.trim())
-      .filter(Boolean) ?? []
-  );
+  return richTextParts(doc, lexicalText).map((part) => part.text);
+}
+
+/**
+ * The alignment of each paragraph, in the same order as richTextBlocks and
+ * richTextMarked, so a page can line them up by index.
+ */
+export function richTextAligns(doc: unknown): Array<BlockAlign | undefined> {
+  return richTextParts(doc, lexicalText).map((part) => part.align);
 }
 
 /**

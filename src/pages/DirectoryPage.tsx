@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useState, type FormEvent } from "react";
 import { Seo } from "@/components/Seo";
-import { useSection } from "@/lib/sections";
+import { alignStyle, useSection } from "@/lib/sections";
 import {
   QUALIFICATIONS,
   filterPractitioners,
@@ -74,7 +74,7 @@ export function DirectoryPage() {
         <Reveal>
           {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h1><Marked text={page.title} /></h1>
-          {page.lead ? <p className="lead">{page.lead}</p> : null}
+          {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
         </Reveal>
       </section>
 

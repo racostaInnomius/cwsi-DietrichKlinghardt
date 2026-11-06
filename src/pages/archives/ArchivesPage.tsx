@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { Marked } from "@/components/Marked";
 import { Emphasis } from "@/components/Emphasis";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { useAuth } from "@/features/auth/useAuth";
 import {
@@ -230,8 +230,8 @@ export function ArchivesPage() {
           {hero.subtitle ? (
             <p className="archive-hero__subtitle"><Marked text={hero.subtitle} /></p>
           ) : null}
-          {hero.marked.map((paragraph) => (
-            <p key={paragraph} className="archive-hero__lead">
+          {hero.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(hero, paraIndex)} className="archive-hero__lead">
               <Emphasis text={paragraph} />
             </p>
           ))}
@@ -252,8 +252,8 @@ export function ArchivesPage() {
           ) : null}
           <h2 id="archive-collections-title"><Marked text={collectionsHead.title} /></h2>
           {collectionsHead.subtitle ? <p><Marked text={collectionsHead.subtitle} /></p> : null}
-          {collectionsHead.marked.map((paragraph) => (
-            <p key={paragraph}><Emphasis text={paragraph} /></p>
+          {collectionsHead.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(collectionsHead, paraIndex)}><Emphasis text={paragraph} /></p>
           ))}
         </Reveal>
 

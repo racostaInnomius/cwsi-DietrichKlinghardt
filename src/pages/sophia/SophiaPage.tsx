@@ -1,6 +1,6 @@
 import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { Reveal } from "@/components/motion/Reveal";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Marked } from "@/components/Marked";
@@ -106,7 +106,7 @@ export function SophiaPage() {
         <Reveal className="feature-row__body" delay={90}>
           {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
           <h2 className="sophia-welcome-title"><Marked text={page.title} /></h2>
-          {page.lead ? <p className="feature-row__copy">{page.lead}</p> : null}
+          {page.lead ? <p className="feature-row__copy" style={alignStyle(page, 0)}>{page.lead}</p> : null}
           <Link className="btn btn-primary" to="/sophia/new-patients">
             <ButtonText id="sophia-new-patients" /> <span aria-hidden="true">→</span>
           </Link>
@@ -139,8 +139,8 @@ export function SophiaPage() {
         <Reveal className="feature-row__body" delay={90}>
           {approach.eyebrow ? <p className="eyebrow"><Marked text={approach.eyebrow} /></p> : null}
           <h2><Marked text={approach.title} /></h2>
-          {approach.marked.map((paragraph) => (
-            <p key={paragraph} className="feature-row__copy">
+          {approach.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(approach, paraIndex)} className="feature-row__copy">
               <Emphasis text={paragraph} />
             </p>
           ))}
@@ -203,8 +203,8 @@ export function SophiaPage() {
         <Reveal className="feature-row__body" delay={90}>
           {science.eyebrow ? <p className="eyebrow"><Marked text={science.eyebrow} /></p> : null}
           <h2><Marked text={science.title} /></h2>
-          {science.marked.map((paragraph) => (
-            <p key={paragraph} className="feature-row__copy">
+          {science.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(science, paraIndex)} className="feature-row__copy">
               <Emphasis text={paragraph} />
             </p>
           ))}

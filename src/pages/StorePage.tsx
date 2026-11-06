@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Seo } from "@/components/Seo";
-import { useSection } from "@/lib/sections";
+import { alignStyle, useSection } from "@/lib/sections";
 import {
   featuredProducts,
   usedCategories,
@@ -62,7 +62,7 @@ export function StorePage() {
         <Reveal className="section-heading section-heading--center">
           {intro.eyebrow ? <p className="eyebrow"><Marked text={intro.eyebrow} /></p> : null}
           <h1><Marked text={intro.title} /></h1>
-          {intro.lead ? <p className="lead">{intro.lead}</p> : null}
+          {intro.lead ? <p className="lead" style={alignStyle(intro, 0)}>{intro.lead}</p> : null}
         </Reveal>
       </section>
 

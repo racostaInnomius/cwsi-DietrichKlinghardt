@@ -6,7 +6,7 @@ import { Seo } from "@/components/Seo";
 const DonationForm = lazy(() => import("./DonationForm"));
 import { Link } from "react-router-dom";
 import { useDonationContext } from "@/lib/donations";
-import { useSection } from "@/lib/sections";
+import { alignStyle, useSection } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -44,7 +44,7 @@ export function DonatePage() {
           <Reveal>
             {page.eyebrow ? <p className="eyebrow"><Marked text={page.eyebrow} /></p> : null}
             <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
+            {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
           </Reveal>
         </div>
       </AnimatedGradient>
@@ -57,6 +57,7 @@ export function DonatePage() {
             <p
               key={paragraph}
               className={index > 0 && index === where.marked.length - 1 ? "donate-note" : undefined}
+              style={alignStyle(where, index)}
             >
               <Emphasis text={paragraph} />
             </p>
@@ -90,8 +91,8 @@ function ClosedNotice() {
     <>
       {notice.eyebrow ? <p className="eyebrow"><Marked text={notice.eyebrow} /></p> : null}
       <h2><Marked text={notice.title} /></h2>
-      {notice.marked.map((paragraph) => (
-        <p key={paragraph} className="donate-panel__note">
+      {notice.marked.map((paragraph, paraIndex) => (
+        <p key={paragraph} style={alignStyle(notice, paraIndex)} className="donate-panel__note">
           <Emphasis text={paragraph} />
         </p>
       ))}

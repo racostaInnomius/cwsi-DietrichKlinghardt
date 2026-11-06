@@ -1,5 +1,5 @@
 import { Seo } from "@/components/Seo";
-import { useSection, SECTION } from "@/lib/sections";
+import { alignStyle, useSection, SECTION } from "@/lib/sections";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
 import { Marked } from "@/components/Marked";
@@ -46,7 +46,7 @@ export function NewPatientsPage() {
           />
           <Reveal>
             <h1><Marked text={page.title} /></h1>
-            {page.lead ? <p className="lead">{page.lead}</p> : null}
+            {page.lead ? <p className="lead" style={alignStyle(page, 0)}>{page.lead}</p> : null}
             <div className="page-hero__actions page-hero__actions--center">
               <a className="btn btn-primary" href="#contact">
                 <ButtonText id="new-patients-become" /> <span aria-hidden="true">→</span>
@@ -70,8 +70,8 @@ export function NewPatientsPage() {
         <Reveal className="feature-row__body" delay={90}>
           {welcome.eyebrow ? <p className="eyebrow"><Marked text={welcome.eyebrow} /></p> : null}
           <h2><Marked text={welcome.title} /></h2>
-          {welcome.marked.map((paragraph) => (
-            <p key={paragraph} className="feature-row__copy">
+          {welcome.marked.map((paragraph, paraIndex) => (
+            <p key={paragraph} style={alignStyle(welcome, paraIndex)} className="feature-row__copy">
               <Emphasis text={paragraph} />
             </p>
           ))}
@@ -82,7 +82,7 @@ export function NewPatientsPage() {
         <Reveal>
           {wondering.eyebrow ? <p className="eyebrow"><Marked text={wondering.eyebrow} /></p> : null}
           <h2 className="section-title"><Marked text={wondering.title} /></h2>
-          {wondering.lead ? <p className="lead">{wondering.lead}</p> : null}
+          {wondering.lead ? <p className="lead" style={alignStyle(wondering, 0)}>{wondering.lead}</p> : null}
         </Reveal>
         <Accordion
           items={wondering.cards.map((question, index) => ({
@@ -98,7 +98,7 @@ export function NewPatientsPage() {
         <Reveal className="section-heading section-heading--center">
           {different.eyebrow ? <p className="eyebrow"><Marked text={different.eyebrow} /></p> : null}
           <h2><Marked text={different.title} /></h2>
-          {different.lead ? <p className="lead">{different.lead}</p> : null}
+          {different.lead ? <p className="lead" style={alignStyle(different, 0)}>{different.lead}</p> : null}
         </Reveal>
         <ul className="card-grid card-grid--2 card-grid--compact">
           {different.cards.map((item, index) => (
