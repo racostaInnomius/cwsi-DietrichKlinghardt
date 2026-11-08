@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { themeForPath } from "./navigation";
-import { useCollection, usePageContent, text } from "@/lib/content";
+import { usePageContent, text } from "@/lib/content";
 import { eventMonthDayOrdinal } from "@/lib/format";
 import { useNextWeeklyTalk } from "@/lib/useNextWeeklyTalk";
 

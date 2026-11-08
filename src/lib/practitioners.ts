@@ -21,7 +21,7 @@ export const QUALIFICATIONS = [
   { key: "mft", label: "MFT (Mental Field Techniques)" },
 ] as const;
 
-const QUALIFICATION_LABELS = new Map(QUALIFICATIONS.map((q) => [q.key, q.label]));
+const QUALIFICATION_LABELS = new Map<string, string>(QUALIFICATIONS.map((q) => [q.key, q.label]));
 
 /** ISO-2 → the country name shown on the card. */
 const COUNTRIES: Record<string, string> = {

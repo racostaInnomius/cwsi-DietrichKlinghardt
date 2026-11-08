@@ -32,7 +32,7 @@ function list(value: unknown, key: string): string[] {
 function steps(value: unknown): { label: string; note?: string }[] {
   if (!Array.isArray(value)) return [];
   return value
-    .map((item) => {
+    .map((item): { label: string; note?: string } | null => {
       const row = item as Record<string, unknown>;
       const label = typeof row?.label === "string" ? row.label.trim() : "";
       const note = typeof row?.note === "string" ? row.note.trim() : undefined;

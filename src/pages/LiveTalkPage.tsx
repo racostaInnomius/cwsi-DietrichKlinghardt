@@ -107,7 +107,7 @@ export function LiveTalkPage() {
 
         <div className="live-layout">
         <div className="live-stage" aria-live="polite">
-          <LiveTalkStage session={session} error={error} checkoutUrl={event?.checkoutUrl} onRetry={retry} />
+          <LiveTalkStage session={session} error={error} checkoutUrl={typeof event?.checkoutUrl === "string" ? event.checkoutUrl : undefined} onRetry={retry} />
         </div>
         {/* Keyed by event so switching talks starts a clean room. */}
         <Suspense fallback={null}>

@@ -26,7 +26,7 @@ export const CATEGORIES = [
   { key: "downloads", label: "Courses & downloads" },
 ] as const;
 
-const CATEGORY_LABELS = new Map(CATEGORIES.map((c) => [c.key, c.label]));
+const CATEGORY_LABELS = new Map<string, string>(CATEGORIES.map((c) => [c.key, c.label]));
 
 export interface StoreProduct {
   id: string;
