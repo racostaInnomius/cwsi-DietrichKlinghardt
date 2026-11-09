@@ -3398,6 +3398,7 @@
   margin-bottom: clamp(20px, 2.4vw, 32px);
 }
 .live-stage {
+  position: relative;
   margin-top: clamp(24px, 3vw, 40px);
   overflow: hidden;
   border-radius: var(--radius-lg);
@@ -3406,6 +3407,29 @@
 .live-stage mux-player {
   display: block;
   --controls-backdrop-color: rgba(28, 25, 22, 0.5);
+}
+.live-unmute {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  right: 16px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(28, 25, 22, 0.72);
+  color: var(--cream);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.hero__live-embed .live-unmute {
+  top: 10px;
+  right: 10px;
+  padding: 7px 12px;
+  font-size: 0.8rem;
+}
+.live-unmute:hover {
+  border-color: var(--gold-bright);
+  color: var(--gold-bright);
 }
 .live-notice {
   display: grid;
@@ -7161,6 +7185,7 @@ ul.sophia-therapies-grid h3 {
    box never grows to fit content (sophia_hero_dimension) — so this just
    fills it instead of sizing itself. */
 .hero__live-embed {
+  position: relative;
   width: 100%;
   max-width: 442px;
   margin-inline: auto;

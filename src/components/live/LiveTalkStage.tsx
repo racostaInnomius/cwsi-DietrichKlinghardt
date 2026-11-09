@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { MuxLiveError } from "@/lib/muxLive";
 import type { PublicMuxLiveSession } from "@/lib/muxLive";
@@ -32,6 +32,12 @@ export function LiveTalkStage({
   compact?: boolean;
 }) {
   const buyHref = error?.checkoutUrl ? checkoutHref(error.checkoutUrl) : checkoutHref(checkoutUrl);
+  const playerRef = useRef<HTMLElement & { muted: boolean }>(null);
+  // Starts muted so the stream can begin on its own: every browser blocks
+  // autoplay WITH sound, and a blocked attempt leaves a stopped player —
+  // exactly what we are trying to avoid. Unmuting needs a click, so the
+  // button below provides one.
+  const [muted, setMuted] = useState(true);
 
   // Live only: a finished talk is never replayed here — its recording moves
   // to the Archives (members), see the "ended" notice below.
@@ -39,9 +45,12 @@ export function LiveTalkStage({
     return (
       <Suspense fallback={<LiveNotice eyebrow="One moment" title="Loading the player…" />}>
         <MuxPlayer
+          ref={playerRef as never}
           playbackId={session.playbackId}
           tokens={session.tokens}
           streamType="live"
+          autoPlay
+          muted={muted}
           metadata={{ video_title: session.title, video_id: session.eventId }}
           accentColor="#bc8f44"
           primaryColor="#f4f0e5"
@@ -54,6 +63,20 @@ export function LiveTalkStage({
               : { width: "100%", aspectRatio: "16 / 9" }
           }
         />
+        {muted ? (
+          <button
+            type="button"
+            className="live-unmute"
+            onClick={() => {
+              // The click is the user gesture the browser requires, so this
+              // is the one moment unmuting is allowed to work.
+              if (playerRef.current) playerRef.current.muted = false;
+              setMuted(false);
+            }}
+          >
+            Tap for sound
+          </button>
+        ) : null}
       </Suspense>
     );
   }
