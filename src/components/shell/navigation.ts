@@ -47,6 +47,8 @@ export const PRIMARY_NAV: NavItem[] = [
       { label: "Our Team", href: "/sophia/team", theme: "sophia" },
       { label: "New Patients", href: "/sophia/new-patients", theme: "sophia" },
       { label: "How to Find Us", href: "/sophia/accommodations", theme: "sophia" },
+      // Client (Ana, 2026-11-09): under "How to Find Us", same shape as the rest.
+      { label: "Testimonials", href: "/sophia/testimonials", theme: "sophia" },
     ],
   },
   { label: "Events", href: "/events" },

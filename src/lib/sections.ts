@@ -68,6 +68,7 @@ export const SECTION = {
   newPatientsExpect: "sophia-new-patients-what-to-expect",
   sophiaCtaNextStep: "sophia-cta-ready-to-take-the-next-step",
   accommodations: "accommodations",
+  testimonials: "testimonials",
   accommodationsHotels: "sophia-accommodations-hotels",
 
   coursesInstructors: "courses-instructors",

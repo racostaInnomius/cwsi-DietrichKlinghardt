@@ -60,6 +60,7 @@ export async function loadSiteContent(): Promise<LoaderContent> {
     music,
     legal,
     membershipPlans,
+    testimonials,
   ] = await Promise.all([
       fetchPageContents(),
       // The header menu, editable in the CMS (Site Menus). An empty answer
@@ -78,6 +79,9 @@ export async function loadSiteContent(): Promise<LoaderContent> {
       fetchCollection("membership-plans", {
         where: { "where[status][equals]": "published" },
       }),
+      // What patients say (Testimonials). depth 1 expands the picked video so
+      // the page can play it without a second round trip.
+      fetchCollection("testimonials", { depth: 1 }),
     ]);
   return {
     "page-contents": pages,
@@ -91,6 +95,7 @@ export async function loadSiteContent(): Promise<LoaderContent> {
     "music-embeds": music,
     "legal-pages": legal,
     "membership-plans": membershipPlans,
+    testimonials,
   };
 }
 

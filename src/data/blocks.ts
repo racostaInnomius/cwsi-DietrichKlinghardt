@@ -746,6 +746,16 @@ export const BLOCKS: Record<string, BlockDefault> = {
       "We chose it for the calm it offers away from the city, plus easy access to the outdoors for hiking, walking and biking.",
     ],
   },
+  "testimonials": {
+    page: "/sophia/testimonials",
+    sitePage: "Sophia · Testimonials",
+    kind: "page",
+    eyebrow: "In their own words",
+    title: "Testimonials",
+    paragraphs: [
+      "Patients of the Sophia Health Institute by Dr. Klinghardt™ telling their own story, in their own words.",
+    ],
+  },
   "sophia-accommodations-hotels": {
     page: "/sophia/accommodations",
     sitePage: "Sophia · Travel & Accommodations",

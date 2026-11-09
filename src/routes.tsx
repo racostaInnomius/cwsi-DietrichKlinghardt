@@ -26,6 +26,7 @@ import { SophiaTeamPage } from "@/pages/sophia/SophiaTeamPage";
 import { TeamMemberPage } from "@/pages/sophia/TeamMemberPage";
 import { NewPatientsPage } from "@/pages/sophia/NewPatientsPage";
 import { AccommodationsPage } from "@/pages/sophia/AccommodationsPage";
+import { TestimonialsPage } from "@/pages/sophia/TestimonialsPage";
 import { ArchivesPage } from "@/pages/archives/ArchivesPage";
 import { ArchivesArtPage } from "@/pages/archives/ArchivesArtPage";
 import { ArchivesApnPage } from "@/pages/archives/ArchivesApnPage";
@@ -226,6 +227,7 @@ export const routes: RouteRecord[] = [
           },
           { path: "sophia/new-patients", element: <NewPatientsPage /> },
           { path: "sophia/accommodations", element: <AccommodationsPage /> },
+          { path: "sophia/testimonials", element: <TestimonialsPage /> },
 
           // ── Archives (migrated from klinghardt-akademie.de, 2026-09-18) ──
           { path: "archives", element: <ArchivesPage /> },

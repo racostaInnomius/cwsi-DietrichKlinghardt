@@ -3408,6 +3408,58 @@
   display: block;
   --controls-backdrop-color: rgba(28, 25, 22, 0.5);
 }
+/* Testimonials (client, Ana 2026-11-09). One column on a phone, two from
+   tablet up: a testimonial is a video or a paragraph of someone's words, and
+   three across makes both too small to take in. */
+.testimonial-grid {
+  display: grid;
+  gap: clamp(20px, 2.6vw, 34px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) {
+  .testimonial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.testimonial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(18px, 2vw, 26px);
+  border: 1px solid rgb(2 56 102 / 0.12);
+  border-radius: var(--radius-lg, 18px);
+  background: #fff;
+}
+.testimonial-card__avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.testimonial-card__quote {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--fs-md);
+  line-height: 1.6;
+}
+.testimonial-card__by {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+}
+.testimonial-card__name {
+  font-weight: 600;
+}
+.testimonial-card__role {
+  color: rgb(28 25 22 / 0.65);
+  font-size: var(--fs-sm);
+}
+.testimonial-empty {
+  margin: 0;
+  color: rgb(28 25 22 / 0.65);
+}
 .live-unmute {
   position: absolute;
   z-index: 2;
