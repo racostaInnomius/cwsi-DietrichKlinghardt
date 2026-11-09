@@ -13,7 +13,7 @@ import {
   fetchMe,
   signOutRemote,
 } from "@/lib/auth";
-import { clearTokens, getAccessToken, getRefreshToken, setTokens } from "./tokenStore";
+import { clearTokens, getAccessToken, getRefreshToken } from "./tokenStore";
 import type { MeResponse } from "./types";
 
 export type AuthStatus = "loading" | "authenticated" | "anonymous";

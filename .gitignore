@@ -4,6 +4,12 @@ dist
 .DS_Store
 *.local
 
+# This site uses npm: package-lock.json is the only lockfile, and it is what
+# scripts/plesk-deploy.sh installs from (`npm ci`). A stray `pnpm install`
+# creates these two files; keep them out so they can't drift. Use npm only.
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
 # Masters de vídeo/audio: pesan gigas y no se sirven desde la repo.
 # El original vive aquí para trabajarlo; lo que se publica sale de Mux.
 media-source/
