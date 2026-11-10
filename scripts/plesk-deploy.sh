@@ -38,6 +38,15 @@ else
 fi
 
 echo "✓ Build complete → dist/"
+
+# Make dist/ readable by Apache. Every build Plesk runs here, whether from the
+# CLI, the runner's webhook or a CMS save, can inherit a 027 umask and write
+# 640/750 files the web server cannot read: the whole site then answers 403
+# until someone fixes it by hand. It went down for about 50 minutes on
+# 2026-11-10 that way. Normalising here, as cwsi-beytrax already does, takes
+# the manual step out of every deploy.
+chmod -R u=rwX,go=rX dist
+echo "  ▸ dist/ permissions normalised (dirs 755, files 644)"
 # Loud, because serving a preview build from the real domain (or the reverse)
 # is invisible until a search engine notices.
 if grep -q "^Disallow: /" dist/robots.txt 2>/dev/null; then
