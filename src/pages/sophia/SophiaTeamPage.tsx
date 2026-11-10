@@ -19,9 +19,16 @@ import { ButtonText } from "@/components/ButtonText";
 export function SophiaTeamPage() {
   const page = useSection(SECTION.sophiaTeam);
 
-  const team = [...useCollection("board-members")].sort(
-    (a, b) => number(a, "order") - number(b, "order"),
-  );
+  // The clinic sets this order by dragging the rows in the panel, which Payload
+  // keeps in its own `_order` key (client, 2026-11-10). The numeric field is
+  // still read for a row the panel has not touched since, and as the tiebreaker
+  // while both carry the same key.
+  const team = [...useCollection("board-members")].sort((a, b) => {
+    const keyA = typeof a._order === "string" ? a._order : "";
+    const keyB = typeof b._order === "string" ? b._order : "";
+    if (keyA && keyB && keyA !== keyB) return keyA < keyB ? -1 : 1;
+    return number(a, "order") - number(b, "order");
+  });
 
   return (
     <>
