@@ -2,7 +2,7 @@ import { Seo } from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { useCollection, text, number } from "@/lib/content";
 import { alignStyle, useSection, SECTION } from "@/lib/sections";
-import { mediaUrl } from "@/lib/cms";
+import { mediaUrl, richTextMarked } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { AnimatedGradient } from "@/components/motion/AnimatedGradient";
 import { Reveal } from "@/components/motion/Reveal";
@@ -52,7 +52,12 @@ export function SophiaTeamPage() {
             {team.map((person, index) => {
               const photo = mediaUrl(person.photo);
               const slug = slugifyName(text(person, "name"));
-              const hasBio = Boolean(teamBios[slug]);
+              // A bio written in the panel counts the same as one bundled
+              // with the site. Until 2026-11-10 only the bundled list did, so
+              // a clinician the clinic added in the CMS got a "Learn more"
+              // button that led nowhere (client, 2026-11-10).
+              const hasBio =
+                richTextMarked(person.bio).length > 0 || Boolean(teamBios[slug]);
               return (
                 <Reveal
                   as="li"
