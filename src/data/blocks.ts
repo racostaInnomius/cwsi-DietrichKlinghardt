@@ -755,6 +755,8 @@ export const BLOCKS: Record<string, BlockDefault> = {
     paragraphs: [
       "Patients of the Sophia Health Institute by Dr. Klinghardt™ telling their own story, in their own words.",
     ],
+    // Shown only while no testimonial has been added yet.
+    subtitle: "Patient stories are on their way. Please check back soon.",
   },
   "sophia-accommodations-hotels": {
     page: "/sophia/accommodations",

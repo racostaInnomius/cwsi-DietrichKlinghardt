@@ -87,9 +87,13 @@ export function TestimonialsPage() {
       <section className="section wrap section--tight-top">
         {testimonials.length === 0 ? (
           /* Not an error: the clinic has not added one yet, and the page is
-             reachable from the menu the moment it ships. */
+             reachable from the menu the moment it ships. The wording is the
+             section's "Subtitle" so the clinic can change it from the panel
+             like the rest of the page (client, 2026-11-10). */
           <p className="testimonial-empty">
-            Patient stories are on their way. Please check back soon.
+            <Marked
+              text={page.subtitle || "Patient stories are on their way. Please check back soon."}
+            />
           </p>
         ) : (
           <div className="testimonial-grid">
