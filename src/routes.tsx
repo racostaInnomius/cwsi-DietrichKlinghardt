@@ -4,7 +4,7 @@ import { ContentProvider, loadSiteContent } from "@/lib/content";
 import { CartProvider } from "@/lib/cart";
 import { CurrencyProvider } from "@/lib/currency";
 import { AuthProvider } from "@/features/auth/AuthProvider";
-import { fetchCollection, fetchEvents } from "@/lib/cms";
+import { fetchCollection, fetchEvents, richTextMarked } from "@/lib/cms";
 import { slugifyName, teamBios } from "@/data/teamBios";
 import { trainingPaths } from "@/data/trainingPaths";
 import { SiteShell } from "@/components/shell/SiteShell";
@@ -213,16 +213,22 @@ export const routes: RouteRecord[] = [
           {
             path: "sophia/team/:slug",
             element: <TeamMemberPage />,
-            // One pre-rendered page per team member that has a local bio
-            // (see teamBios) — a CMS row added without a matching bio still
-            // renders client-side (TeamMemberPage's own not-found state)
-            // instead of failing the build.
+            // One pre-rendered page per team member who has a bio to show:
+            // the one written in the CMS, or the local one that shipped with
+            // the site (teamBios). Until 2026-11-10 only a local bio counted,
+            // so a clinician the clinic added in the panel got no page at all
+            // and "Learn more" landed on the index instead of on them.
+            // A row with no bio either way still has no page, which is what
+            // TeamMemberPage's not-found state is for.
             getStaticPaths: async () => {
               const board = await fetchCollection("board-members");
               return board
-                .map((row) => (typeof row.name === "string" ? slugifyName(row.name) : ""))
-                .filter((slug) => slug && teamBios[slug])
-                .map((slug) => `sophia/team/${slug}`);
+                .map((row) => ({
+                  slug: typeof row.name === "string" ? slugifyName(row.name) : "",
+                  hasCmsBio: richTextMarked(row.bio).length > 0,
+                }))
+                .filter(({ slug, hasCmsBio }) => slug && (hasCmsBio || teamBios[slug]))
+                .map(({ slug }) => `sophia/team/${slug}`);
             },
           },
           { path: "sophia/new-patients", element: <NewPatientsPage /> },
