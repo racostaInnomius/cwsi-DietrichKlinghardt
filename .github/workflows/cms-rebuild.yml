@@ -15,15 +15,18 @@ jobs:
   deploy:
     runs-on: [self-hosted, plesk]
     steps:
-      - name: Trigger Plesk pull + build
+      # Asks Plesk to fetch AND deploy, rather than posting to its webhook.
+      # The webhook only deploys when the pull brings new commits, so a save
+      # in the CMS (content changes, no code) used to reach Plesk, return 2xx
+      # and rebuild nothing: the static pages stayed on the old copy until the
+      # next code deploy (client, 2026-11-10). `--deploy` always runs the
+      # post-deployment action, scripts/plesk-deploy.sh, which builds the
+      # site and normalises dist/ permissions itself. The runner lives on the
+      # Plesk host as a user with sudo, the same command used by hand.
+      - name: Fetch and deploy through Plesk
         run: |
           set -euo pipefail
-          code=$(curl -sk -o /tmp/plesk-hook.out -w '%{http_code}' -X POST -m 30 \
-            -H 'X-GitHub-Event: push' \
-            -H 'Content-Type: application/json' \
-            -d '{"ref":"refs/heads/main"}' \
-            "https://127.0.0.1:8443/modules/git/public/web-hook.php?uuid=${{ secrets.PLESK_GIT_HOOK_UUID }}")
-          case "$code" in
-            2*) echo "Plesk accepted the deploy trigger." ;;
-            *) echo "::error::Plesk webhook returned HTTP $code"; exit 1 ;;
-          esac
+          umask 022
+          sudo plesk ext git --fetch  -domain dietrich-klinghardt.com -name cwsi-dietrich.git
+          sudo plesk ext git --deploy -domain dietrich-klinghardt.com -name cwsi-dietrich.git
+          echo "Plesk is building the site; dist/ is replaced when it finishes."
