@@ -1,5 +1,8 @@
 node_modules
 dist
+# Build copy and the outgoing dist/ of scripts/plesk-deploy.sh.
+.deploy-build
+dist.previous
 .env
 .DS_Store
 *.local
